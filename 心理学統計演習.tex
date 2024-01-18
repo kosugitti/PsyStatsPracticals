@@ -137,6 +137,7 @@
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 \usepackage[]{biblatex}
+\addbibresource{reference.bib}
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
@@ -156,7 +157,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, boxrule=0pt, enhanced, interior hidden, frame hidden, borderline west={3pt}{0pt}{shadecolor}, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, sharp corners, interior hidden, borderline west={3pt}{0pt}{shadecolor}, breakable, enhanced, frame hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -169,40 +170,885 @@
 \hypertarget{ux306fux3058ux3081ux306b}{%
 \chapter{はじめに}\label{ux306fux3058ux3081ux306b}}
 
-\begin{verbatim}
-この資料はCreative Commons BY-SA(CC BY-SA)ライセンスVersion 4.0に基づいて提供されています。著者に適切なクレジットを与える限り，この本を再利用，再編集，保持，改訂，再頒布(商用利用を含む)をすることができます。もし再編集したり，このオープンなテキストを変更したい場合，すべてのバージョンにわたってこれと同じライセンス，CC BY-SA を適用しなければなりません。
+この資料は，授業「心理学統計演習」についてのものです。
+演習という授業名にあるように，理論的な解説で「理解して進む」ことよりも，「手を動かして理解する」ことを目的にしています。
 
-This article is published under a Creative Commons BY-SA license (CC BY-SA) version 4.0. This means that this book can be reused, remixed, retained, revised and redistributed (including commercially) as long as appropriate credit is given to the authors. If you remix, or modify the original version of this open textbook, you must redistribute all versions of this open textbook under the same license - CC BY-SA.
-\end{verbatim}
-
-\bookmarksetup{startatroot}
-
-\hypertarget{youux306fshock}{%
-\chapter{YouはShock}\label{youux306fshock}}
-
-ちゃぷたーわんやでー
+この資料を活用する人は，理論的な(いわゆる座学の)心理学統計を履修済みであることを前提にしています。また，資料集という位置付けですので，行間の説明が省略されていることが多くあります。その点は講義時間中の講話で補完していくつもりですので，不明な点があれば授業時間中に質問してください。
 
 \bookmarksetup{startatroot}
 
-\hypertarget{ux611bux3067ux7a7aux304cux843dux3061ux3066ux304fux308b}{%
-\chapter{愛で空が落ちてくる}\label{ux611bux3067ux7a7aux304cux843dux3061ux3066ux304fux308b}}
+\hypertarget{ux30e9ux30a4ux30bbux30f3ux30b9ux7b49}{%
+\chapter{ライセンス等}\label{ux30e9ux30a4ux30bbux30f3ux30b9ux7b49}}
 
-おっれがほんとうのcあほぷああ2
+この資料はCreative Commons BY-SA(CC BY-SA)ライセンスVersion
+4.0に基づいて提供されています。
+著者に適切なクレジットを与える限り，この本を再利用，再編集，保持，改訂，再頒布(商用利用を含む)をすることができます。
+もし再編集したり，このオープンなテキストを変更したい場合，すべてのバージョンにわたってこれと同じライセンス，CC
+BY-SA を適用しなければなりません。
+
+This article is published under a Creative Commons BY-SA license (CC
+BY-SA) version 4.0. This means that this book can be reused, remixed,
+retained, revised and redistributed (including commercially) as long as
+appropriate credit is given to the authors. If you remix, or modify the
+original version of this open textbook, you must redistribute all
+versions of this open textbook under the same license - CC BY-SA.
+
+\bookmarksetup{startatroot}
+
+\hypertarget{ux306fux3058ux3081ux3088ux3046rrstudio}{%
+\chapter{はじめようR/RStudio}\label{ux306fux3058ux3081ux3088ux3046rrstudio}}
+
+「R」。この一文字で表現されるがゆえに，検索しにくいことこの上ないそれは，統計に特化したプログラミング言語であり，心理学はもちろん統計に関する学問領域で多岐にわたって利用されているものである。フリーソフトウェア，すなわち自由で開かれているソフトウェアであるから，ソースコードに至るまで公開されており，誰でも無償で利用できる。無償すなわち無料ではない。補償がないので無償なのだが，逆に金銭で計算をはじめ科学的真実性が保証されるわけではない，という至極まともな考え方は理解できるだろう。科学はもちろん，ソフトウェアも人類の共有財産として，オープンに育んでいこう。
+
+Rはコミュニティ活動も盛んで，Tokyo.Rを中心に日本の各地でRユーザからなる自主的な勉強会が開催されている\footnote{2024年1月現在で，TokyoだけでなくFukuoka，Sapporo，Yamaguchi，Irumaなどで地方コミュニティがあり，参加者みんなで楽しまれている。}。またR自体がインターネットを通じて公開されているように，導入から応用までさまざまな資料がオンラインで活用できる。以下では導入から解説していくが，頻繁にアップデートされるものでもあるので，必要に応じて検索し，なるべく時系列的に近い情報を吟味して活用することを薦める。
+
+\hypertarget{ux74b0ux5883ux306eux6e96ux5099}{%
+\section{環境の準備}\label{ux74b0ux5883ux306eux6e96ux5099}}
+
+\hypertarget{rux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb}{%
+\subsection{Rのインストール}\label{rux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb}}
+
+Rのインストールに関して，初心者でも利用可能な資料がオンラインで公開されている。
+
+RはThe \href{https://cran.r-project.org/}{Comprehensive R Archive
+Network}，通称CRAN\footnote{CRANは「しーらん」，あるいは「くらん」と発音される。筆者はしーらん派。}というネットワークで公開されている。CRANのトップページにはダウンロードリンクが用意されており，自分のプラットフォームにあった最新版をダウンロードしよう\footnote{VSCodeのようなエディタから使うことも可能であるし，Jupyter
+  Notebookの計算エンジンをRにすることも可能。最近では分析ソフトウェアを個々人で準備せず，環境として提供することも一般的になってきており，例えば\href{https://colab.research.google.com/}{Google
+  Colaboratory}のエンジンをRにすることもできるようになっている。ローカルPCに自前の環境を作るということが，時代遅れになる日も近いかもしれない。}。
+
+\hypertarget{rstudioux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb}{%
+\subsection{RStudioのインストール}\label{rstudioux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb}}
+
+Rのインストールが終われば，次はRStudioをインストールしよう。
+RStudioは総合開発環境(IDE)と呼ばれるものである。Rは単体で，統計の分析や関数の描画など，専門的な利用に耐えうる分析機能を有している。その本質はもちろん計算機能であって，計算を実行する命令文(スクリプト)を与えれば，必要な返答をあたえてくれる。このように分析の本質が計算機能であったとしても，実際の分析活動に際しては，スクリプトの下書きと清書，入出力データや描画ファイルの生成・管理，パッケージ(後述)の管理など，分析にまつわるさまざまな周辺活動が含まれる。喩えるなら料理の本質が包丁・まな板・コンロによる加工であったとしても，実際の調理に際しては，広い調理スペースや使いやすいシンク，ボウルやタッパーなどの補助的な調理器具があった方がスムーズにことが進む。
+いわば，R単体で分析をするのは飯盒炊爨のような必要最低限かつワイルドな調理法であり，RStudioは総合的な調理環境を提供してくれるものなのである。
+
+繰り返しになるが，本質的にはR単体で作業が可能である。なるべく単純な環境を維持したいというのであればR単体での利用を否定するものではないが，RStudioはエディタや文書作成ソフトとしても有用であるので，本授業ではRStudioを使うことを前提とする\footnote{VSCodeのようなエディタから使うことも可能であるし，Jupyter
+  Notebookの計算エンジンをRにすることも可能。最近では分析ソフトウェアを個々人で準備せず，環境として提供することも一般的になってきており，例えば\href{https://colab.research.google.com/}{Google
+  Colaboratory}のエンジンをRにすることもできるようになっている。ローカルPCに自前の環境を作るということが，時代遅れになる日も近いかもしれない。}。
+
+\hypertarget{ux74b0ux5883ux306eux6e96ux5099ux306bux95a2ux3059ux308bux5c0eux5165ux30b5ux30a4ux30c8}{%
+\subsection{環境の準備に関する導入サイト}\label{ux74b0ux5883ux306eux6e96ux5099ux306bux95a2ux3059ux308bux5c0eux5165ux30b5ux30a4ux30c8}}
+
+以下に執筆時点(2024年1月)で参照可能な，導入に関するWeb教材を挙げておく。自分に合ったものを適宜参照し，RとRStudioを自身のPC環境に導入してほしい。もちろん自身で「R
+RStudio
+インストール」などとして検索しても良いし，chatGPTに相談しても良い。
+
+\hypertarget{for-windows}{%
+\subsubsection{For Windows}\label{for-windows}}
+
+\begin{itemize}
+\tightlist
+\item
+  東京大学・大学院農学生命科学研究科アグリバイオインフォマティクス教育研究プログラムによる\href{https://www.iu.a.u-tokyo.ac.jp/textbook/R/R1.010_win.pdf}{PDF資料}
+\item
+  \href{https://syunsuke.github.io/r_install_guide_for_beginners/}{初心者向けRのインストールガイド}
+\item
+  関西学院大学商学部土方ゼミ\href{http://soc-research.org/ja/r_install_windows/}{資料}
+\item
+  多摩大学情報社会研究所・応用統計学室\href{多摩大学情報社会研究所・応用統計学室}{資料}
+\item
+  奥村
+  晴彦先生の\href{https://okumuralab.org/~okumura/stat/R-win.html}{ページ}
+\end{itemize}
+
+\hypertarget{for-macintosh}{%
+\subsubsection{For Macintosh}\label{for-macintosh}}
+
+\begin{itemize}
+\tightlist
+\item
+  東京大学・大学院農学生命科学研究科アグリバイオインフォマティクス教育研究プログラムによる\href{https://www.iu.a.u-tokyo.ac.jp/textbook/R/R1.010_mac.pdf}{PDF資料}
+\item
+  noteの\href{https://note.com/toshi_matsuura/n/n127cf28362e5}{記事}
+\item
+  いちばんやさしい，医療統計\href{https://best-biostatistics.com/r/rstudio_start.html\#i-3}{記事}
+\end{itemize}
+
+なお，Macの場合はHomebrewなどのパッケージ管理ソフトを使って導入することもできる(し，そのほうがいい)。その場合は以下の資料を参照。
+
+\begin{itemize}
+\tightlist
+\item
+  群馬大学大学院医学系研究科機能形態学の\href{https://anatomy.med.gunma-u.ac.jp/protocols/?p=979}{記事}
+\item
+  コアラさばお氏のnote\href{https://note.com/mackerelman/n/nfbf8054e90d5}{記事}
+\item
+  Ryu
+  Takahashi氏のQiita\href{https://qiita.com/ryu-takahashi2718/items/1118cad7a4ef4900da96}{記事}
+\item
+  Yuhki
+  Yano氏のQiita\href{https://qiita.com/y-vectorfield/items/dd1a8e2715cace9981ec}{記事}
+\end{itemize}
+
+\hypertarget{rstudioux306eux57faux790euxff14ux3064ux306eux30daux30a4ux30f3}{%
+\section{RStudioの基礎（４つのペイン）}\label{rstudioux306eux57faux790euxff14ux3064ux306eux30daux30a4ux30f3}}
+
+ここまでで，RおよびRStudioを利用する準備が整っているものとする。
+
+さて，RStudioを起動すると大きくわけて4つの領域に分かれた画面が出てくる。この領域のことを\textbf{ペイン}と呼ぶ。図中の「領域1」がないように見えるときもあるが，下のペインが最大化され折りたたまれているだけなので，ペイン上部のサイズ変更ボタンを操作することで出てくるだろう。
+
+\begin{figure}
+
+{\centering \includegraphics{Figs/01_RStudioStart.png}
+
+}
+
+\caption{RStudioの初期画面}
+
+\end{figure}
+
+このペインのレイアウトは，メニューのTools \textgreater{} Global
+Options\ldots{} \textgreater{} Pane
+Layoutから変更することもできる。基本的に4分割であることに変わりはないが，自分が利用しやすい位置にレイアウトを変更するとよい。
+
+\begin{figure}
+
+{\centering \includegraphics{Figs/01_PaneLayout.png}
+
+}
+
+\caption{レイアウト変更画面。このほかにも背景色などを変えることもできる}
+
+\end{figure}
+
+以下，各ペイン(領域)が何をするところかを簡単に解説する。
+
+\hypertarget{ux9818ux57df1ux30a8ux30c7ux30a3ux30bfux30daux30a4ux30f3}{%
+\subsection{領域1；エディタ・ペイン}\label{ux9818ux57df1ux30a8ux30c7ux30a3ux30bfux30daux30a4ux30f3}}
+
+エディタ領域。Rのスクリプトはもちろん，レポートの文章など，基本的に入力するときはこのペインに書く。ここで作業するファイルの種類は，File
+\textgreater{} New
+Fileから見ると明らかなように，R言語だけでなくC言語，Python言語などのスクリプトや，Rmd，md,Qmd,HTMLなどのマークアップ言語，StanやSQLなど特殊な言語などにも対応している。ペインの右下に現在開かれているファイルの種類が表示されているのを確認しておこう。
+
+R言語でスクリプトを書く例で解説しよう。Rは命令を逐次実行していくインタプリタ形式であり，ここに記述されたRコードを，右上のRunボタンでコンソールに送って計算を実行するように使う。一回の命令をコマンド，コマンドが積み重ねられた全体をスクリプト，あるいはプログラムと呼ぶ。複数のコマンドを実行したい場合は，エディタ領域で複数行選択してRunボタンを，スクリプトファイル全体を実行したいときはRunボタンのとなりにあるSourceを押す。CTRL+Enter(Macの場合はコマンド+Enter)でRunボタンのショートカットになる。
+
+\hypertarget{ux9818ux57df2ux30b3ux30f3ux30bdux30fcux30ebux30daux30a4ux30f3}{%
+\subsection{領域2；コンソール・ペイン}\label{ux9818ux57df2ux30b3ux30f3ux30bdux30fcux30ebux30daux30a4ux30f3}}
+
+R単体で利用する場合は，ここのペインだけを利用するようなものである。すなわち，ここに示されているのがR本体というか，Rの計算機能そのものである。ここに「＞」の記号が表示されているところをプロンプトといい，プロンプトが表示されているときはRが入力待ちの状態である。
+
+Rは逐次的に計算を行うので，プロンプトのある状態でコマンドを入力すると計算結果が返される。
+ここに直接コマンドを書いて行っても良いが，書き間違えたりすることもあるし，コマンドが複数行に渡ることが一般的になってくるので，エディタ領域に清書するつもりで記述していったほうがよい。ごくたまに，一時的に確認したいことがある時だけ，直接コンソールを触るようにすると良い。
+
+なお，コンソールを綺麗にしたいときは右上の箒ボタンをおすとよい。
+
+\hypertarget{ux9818ux57df3ux74b0ux5883ux30daux30a4ux30f3}{%
+\subsection{領域3；環境ペイン}\label{ux9818ux57df3ux74b0ux5883ux30daux30a4ux30f3}}
+
+基本的にこのペインと次の領域4のペインは複数のタブが含まれる。Pane
+Layoutでどちらにどのタブを含めるかを自分好みにカスタマイズすることもできる。ここでは代表的な2つのタブについてのみ言及する。
+
+\textbf{Environment}タブは，Rの実行メモリ内に保管されている変数や関数などが表示されている。「変数や関数など」をまとめて\textbf{オブジェクト}というが，ここで内容や構造をGUIで確認することができる。
+
+\textbf{History}タブは履歴である。これまでコンソールに送られてきたコマンドが順に記録されている。Historyタブからエディタ，コンソールにコマンドを送ることも可能であり，「さっきの命令をもう一度実行したい」といったときに参照すると良い。
+
+\hypertarget{ux9818ux57df4ux30d5ux30a1ux30a4ux30ebux30daux30a4ux30f3}{%
+\subsection{領域4；ファイルペイン}\label{ux9818ux57df4ux30d5ux30a1ux30a4ux30ebux30daux30a4ux30f3}}
+
+ここでも代表的なタブについてのみ解説する。
+
+\textbf{Files}タブはMacでいうFinder，Windowsでいうエクスプローラーのような，ファイル操作画面である。フォルダの作成，ファイルの削除，リネーム，コピーなどの操作が可能である。
+
+\textbf{Plot}タブはRコマンドで描画命令が出された時の結果がここに表示される。RStudioの利点の一つは，このPlotから図をファイルにExportすることが可能であり，その際にファイルサイズやファイル形式を指定できるところにある。
+
+\textbf{Packages}タブは読み込まれているパッケージ，(読み込まれていないが)保管しているパッケージのリストが表示されている。新しくパッケージを導入するときも，ここのinstallボタンから可能であり，保管しているパッケージのアップデートもボタンひとつで可能である。なお，パッケージについては後ほど言及する。
+
+\textbf{Help}タブはRコマンドでヘルプを表示する命令(\texttt{help}関数)が実行された時の結果が表示される領域である。ヘルプを使うことで関数の引数，戻り値，使用例などを参照できる。
+
+\hypertarget{ux305dux306eux307bux304bux306eux30bfux30d6}{%
+\subsection{そのほかのタブ}\label{ux305dux306eux307bux304bux306eux30bfux30d6}}
+
+そのほか，表示の有無もオプションになっているようないくつかのタブについて，簡単に解説しておく。
+
+\textbf{Connections}タブはRを外部データベースなどに繋げるときに参照する。大規模データをローカルにすべて取り込むことなく，SQLで必要なテーブルだけ取り出すといった操作をする際は必要になってくるだろう。
+
+\textbf{Git}タブはR，とくにRプロジェクト(後述)のバージョンを管理するときに利用する。Gitとは複数のプログラマによって同時並行的にプログラムを作っていく時の管理システムである。時系列的な差分の記録を得意とするシステムなので，レポートの作成時などに応用すればラボノートの記録としても利用できる。
+
+\textbf{Build}タブはRパッケージやWebサイトを構築するときに利用する。なおこの資料もRStudioを利用して作られており，資料を生成(原稿からHTMLやPDFにする)ときにはこのタブを利用している。
+
+\textbf{Tutorial}タブはチュートリアルツアーを楽しむ時のタブである。
+
+\textbf{Viewer}タブはRStudioで作られたHTMLやPDFなどを見るためのタブである。
+
+\textbf{Presentation}タブはRStudioで作られたプレゼンテーションを見るためのタブである。
+
+\textbf{Terminal}タブはWindows/MacでいうTerminal，Linuxでいう端末についてのタブであり，Rに限らず，コマンドラインを通じてOSに命令するときに使う。
+
+\textbf{Background
+Jobs}タブはその名の通りバックグラウンドで作業をさせるときに利用する。Rは基本的にシングルコアで計算が実行されるが，このタブを使ってスクリプトファイルをバックグラウンドで実行することで並列的に作業が可能になる。
+
+\hypertarget{rux306eux30d1ux30c3ux30b1ux30fcux30b8}{%
+\section{Rのパッケージ}\label{rux306eux30d1ux30c3ux30b1ux30fcux30b8}}
+
+Rは単体でも線型モデルなどの基本的な分析は可能であるが，より進んだ統計モデルを利用したい場合は専門の\textbf{パッケージ}を導入することになる。パッケージとは関数群のことであり，これもCRANやGithubなどインターネットを介して提供されている。ちなみに提供されているパッケージは，CRANで公開されているものだけで344,607件あり\footnote{2024年01月18日調べ}，Github\footnote{Gitはバージョン管理システムであるが，これをインターネット上のサーバ(レポジトリ)で行うものをGithubという。RStudioはGithubとも連携しており，プロジェクトをGithubと紐づけることで簡単にバージョン管理ができる。しかもここで言及しているように，Github上でパッケージを公開することもできるので，最近はCRANの校閲を待たずに公開できるGithubが好まれている側面もある。}で公開されているものなど，CRANを介さないパッケージも少なくない。
+
+パッケージを利用する際は，まずローカルにパッケージファイルをインストールしなければならない。その上で，Rを起動するごとに(セッションごとに)，関数\texttt{library}でパッケージを呼び出して利用する。インストールを毎回行う必要はないことに注意。
+
+インストールはRのコマンドでも可能だが，RStudioのPackagesペインを使って導入するのが簡単だろう。以下に，一部の有名かつ有用なパッケージ名とその簡単な説明を挙げる。本講義の中で使うものもあるので，事前に準備しておくことが望ましい。
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{tidyverse}パッケージ\autocite{tidyverse}；Rが飛躍的に使いやすくなったのは，このtidyverseパッケージ導入以後のことである。開発者のHadley
+  WickhamはR業界で神と崇められており，R業界に与えたインパクトは大きい。このパッケージは「パッケージ群」「パッケージのパッケージ」であり，tidyverseとはtidyな(整然とした)verse(世界)というような意味合いである。このパッケージは統計分析モデルを提供するものではなく，その前のデータの\textbf{前処理}に関する便利な関数を提供する\footnote{実は統計データの解析にかかる時間のほとんどが，解析に適切な形にデータを整形する「前処理」に費やされる。前処理，別名データハンドリングをいかに上手く，素早く，直感的にできるかは，その後の分析にも影響するほど重要な手順であるため，tidyverseパッケージの登場はありがたかった。これを使ったデータハンドリングだけの専門書\autocite{Kinosady2021}が重宝されるほどである。}。このパッケージをインストールすると，関連する依存パッケージが次々取り込まれるので，少々時間がかかる。
+\item
+  \emph{psych}パッケージ\autocite{psych}；名前の通り，心理学統計に関する統計モデルの多くが含まれている。特に特殊な相関係数や，因子分析モデルなどは非常に便利なので，インストールしておいて間違いない。
+\item
+  \emph{GPArotation}パッケージ\autocite{GPArotation}；因子分析における因子軸の回転に使うパッケージ。
+\item
+  \emph{styler}パッケージ；スタイルを整えてくれるパッケージ。スクリプトの清書に便利。
+\item
+  \emph{lavaan}パッケージ\autocite{lavaan}；潜在変数を含んだモデル(LAtent
+  VAriable ANalysis)の分析，要するに構造方程式モデリング(Structural
+  Equation Modeling;SEM，共分散構造分析ともいう)を実行するパッケージ。
+\item
+  \emph{ctv}パッケージ\autocite{CTV}; CRAN Task
+  Viewsの略で，膨大に膨れ上がったCRANから必要なパッケージを見つけ出すのは困難であることから，ある程度のジャンルごとに関連しそうなパッケージをまとめて導入してくれるのがこのパッケージ。例えば，このパッケージをインストールした後で，\texttt{install.views("Psychometrics")}とすると，心理統計関係の多くのパッケージを次々導入してくれる。
+\item
+  \emph{cmdstanr}パッケージ\autocite{cmdstanr}；複雑な統計モデルで利用される，確率的プログラミング言語stanをRから使うことができるようになるパッケージ。導入にはこのパッケージの他にもstanやコンパイル環境の準備が必要なので，\href{https://mc-stan.org/cmdstanr/articles/cmdstanr.html}{公式の導入サイト}も参考にしてほしい。
+\end{itemize}
+
+\hypertarget{rstudioux306eux30d7ux30edux30b8ux30a7ux30afux30c8}{%
+\section{RStudioのプロジェクト}\label{rstudioux306eux30d7ux30edux30b8ux30a7ux30afux30c8}}
+
+実際にRを使っていく前に，最後の準備としてRStudioにおけるプロジェクトについて解説しておく。
+
+みなさんも，PCをつかって文書を作ったり保管したりするときに，フォルダにまとめて入れておくことがあるだろう。フォルダは例えば「文書」\textgreater「心理学」\textgreater「心理学統計演習」のように階層的に整理することが一般的で，そうしておくことで必要なファイルをすぐに取り出すことができる。
+
+逆に言えば，こうしたフォルダ管理をしておかなければファイルがPCのなかで散乱してしまい，必要な情報を得るために逐一PCの中身を検索しなければならないだろう。
+
+R/RStudioをつかった分析実践の場合も同様で，一回のテーマについて複数のファイル(スクリプトファイル，データファイル，画像ファイル，レポートなど文書ファイル等々)があり，シーンに合わせて(例えば「授業」「卒論」など)フォルダで管理することになる。
+
+さらに，PC環境には作業フォルダ(Working
+Directory)\footnote{ここでは，フォルダとディレクトリは同じ意味であると思ってもらって良い。一般に，CUIではディレクトリ，GUIではフォルダという用語が好まれる。語幹directにあるように，ファイルやアクセス先など具体的な指し示す先を強調しているのがディレクトリであり，それにファイル群などまとまった容れもの，という意味を付加したのがフォルダである。フォルダの方が言葉としてわかりやすいし。}という概念がある。たとえばR/RStudioを起動・実行しているときに，Rが「今どこで」実行されているか，どこを管理場所としているか，を表す概念である。例えばこの作業フォルダの中に\texttt{sample.csv}というファイルがあって，それをスクリプト上から読み込みたい，というコマンドを実行するのであれば，そのままファイル名を書けば良い。しかし別の場所にそのファイルが保存されているのなら，作業フォルダから見た相対的な位置を含めて指示してやるか(相対パス)，あるいはPC環境全体からみた絶対的な位置を含めて(絶対パス)指示してやる必要がある。相対・絶対パスの違いは，「ここから二つ目の角を右」のように指示するか，住所で指示するかの違いであると考えれば良い。
+
+ともあれ，この作業フォルダがどこに設定されているかは，実行するときに常に気にしていなければならない。ちなみにこの作業フォルダは，RStudioのファイルペイン・Filesタブでひらいているところとは\textbf{限らない}ことに注意してほしい。GUI上でエクスプローラ/Finderで開いたからといって，作業フォルダが自動的に切り替わるようにはなっていない。
+
+そこでRStudioのプロジェクトである。RStudioには「プロジェクト」という概念があり，作業フォルダや環境の設定などをそこで管理することができる。新しくプロジェクトを始めるときはFile\textgreater New
+Project，すでに一度プロジェクトを作っているときはFile \textgreater{}
+Open
+Projectとしてプロジェクトファイル(拡張子が.projのファイル)を開くようにする。そうすると，作業フォルダが当該フォルダに設定される。プロジェクトをGitに連携しておくとバージョン管理などもフォルダ単位で行える。
+
+以後，本講義で外部ファイルを参照する場合，プロジェクトフォルダの中にそのファイルがあるものとして(パスを必要としない形で)論じるので注意されたし。
+
+\hypertarget{ux8ab2ux984c}{%
+\section{課題}\label{ux8ab2ux984c}}
+
+\begin{itemize}
+\tightlist
+\item
+  Rの最新版をCRANからダウンロードし，自分のPCにインストールしてください。
+\item
+  RStudioのDesktop版を\href{https://posit.co/download/rstudio-desktop/}{Posit社のサイト}からダウンロードし，自分のPCにインストールしてください。
+\item
+  RStidoを起動し，ペインレイアウトをデフォルトではない状態に並べ直してみてください。ソースペインを3列にするのも良いでしょう。
+\item
+  コンソールペインに書かれている文字を全て消去してみてください。
+\item
+  ファイルペインにあるFilesタブをつかって，色々なフォルダを開けてみたり，不要なファイルを削除したり，ファイル名を変更したりしてみてください。
+\item
+  ファイルペインにあるFilesタブを開き，\texttt{More}のところから\texttt{Go\ To\ Working\ Directory}を選択・実行してください。何か起こったでしょうか。
+\item
+  この授業のために，新しいプロジェクトを作成してください。プロジェクトは新しいフォルダでも，既存のフォルダでも構いません。
+\item
+  プロジェクトが開いた状態のとき，RStudioのウィンドウ・タブのどこかに「プロジェクト名」が表示されているはずです。確認してください。
+\item
+  またファイルペインのFilesタブから，色々なファイル操作をした上で，改めて\texttt{Go\ To\ Working\ Directory}をしてください。プロジェクトフォルダの中に戻ってこれたら成功です。
+\item
+  新しいRスクリプトファイルを開き，空白のままで結構ですからファイル名をつけて保存してください。
+\item
+  RStudioを終了あるいは最小化させ，OSのエクスプローラ/Finderから，プロジェクトフォルダに移動してください。先ほど作ったファイルが保存されていることを確認してください。
+\item
+  プロジェクトフォルダには，プロジェクト名+\texttt{.proj}というファイルが存在するはずです。これを開いて，RStudioのプロジェクトを開いてください。
+\item
+  RStudioのFile \textgreater{} Close
+  Projectからプロジェクトを閉じてください。画面の細部でどこが変わったか，確認してください。
+\item
+  RStudioを終了し，再びRStudioを起動してください。起動の方法はプロジェクトファイルからでも，アプリケーションの起動でも構いません。起動後に，プロジェクトを開いてください(あるいはプロジェクトが開かれていることを確認してください。)。
+\end{itemize}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux306eux57faux790e}{%
+\chapter{Rの基礎}\label{rux306eux57faux790e}}
+
+\hypertarget{rux3067ux8a08ux7b97}{%
+\section{Rで計算}\label{rux3067ux8a08ux7b97}}
+
+\hypertarget{rux306eux95a2ux6570}{%
+\section{Rの関数}\label{rux306eux95a2ux6570}}
+
+\hypertarget{ux30aaux30d6ux30b8ux30a7ux30afux30c8ux306eux578b}{%
+\section{オブジェクトの型}\label{ux30aaux30d6ux30b8ux30a7ux30afux30c8ux306eux578b}}
+
+\hypertarget{ux5909ux6570ux306eux578b}{%
+\section{変数の型}\label{ux5909ux6570ux306eux578b}}
+
+\hypertarget{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f}{%
+\section{外部ファイルの読み込み}\label{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0}{%
+\chapter{Rによるデータハンドリング}\label{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0}}
+
+\hypertarget{tidyverseux306eux5c0eux5165}{%
+\section{tidyverseの導入}\label{tidyverseux306eux5c0eux5165}}
+
+\hypertarget{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50}{%
+\section{パイプ演算子}\label{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50}}
+
+\hypertarget{ux5909ux6570ux3092ux4f5cux308b}{%
+\section{変数を作る}\label{ux5909ux6570ux3092ux4f5cux308b}}
+
+\hypertarget{ux884cux9078ux629eux3068ux5217ux9078ux629e}{%
+\section{行選択と列選択}\label{ux884cux9078ux629eux3068ux5217ux9078ux629e}}
+
+\hypertarget{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b}{%
+\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b}}
+
+\hypertarget{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c}{%
+\section{データ整形課題}\label{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux306bux3088ux308bux30ecux30ddux30fcux30c8ux306eux4f5cux6210}{%
+\chapter{Rによるレポートの作成}\label{rux306bux3088ux308bux30ecux30ddux30fcux30c8ux306eux4f5cux6210}}
+
+\hypertarget{rmdqmdux306eux4f7fux3044ux65b9}{%
+\section{Rmd/Qmdの使い方}\label{rmdqmdux306eux4f7fux3044ux65b9}}
+
+\hypertarget{ux30d7ux30edux30c3ux30c8ux306bux3088ux308bux57faux672cux7684ux306aux63cfux753b}{%
+\section{プロットによる基本的な描画}\label{ux30d7ux30edux30c3ux30c8ux306bux3088ux308bux57faux672cux7684ux306aux63cfux753b}}
+
+\hypertarget{ggplotux306bux3088ux308bux63cfux753b}{%
+\section{ggplotによる描画}\label{ggplotux306bux3088ux308bux63cfux753b}}
+
+\hypertarget{ux5404ux7a2egeomux306eux7df4ux7fd2}{%
+\section{各種geomの練習}\label{ux5404ux7a2egeomux306eux7df4ux7fd2}}
+
+\hypertarget{ggplotux30aaux30d6ux30b8ux30a7ux30afux30c8ux3092ux4e26ux3079ux308b}{%
+\section{ggplotオブジェクトを並べる}\label{ggplotux30aaux30d6ux30b8ux30a7ux30afux30c8ux3092ux4e26ux3079ux308b}}
+
+\hypertarget{ux30c6ux30fcux30deux306eux5909ux66f4ux30ecux30ddux30fcux30c8ux306bux5408ux308fux305bux308b}{%
+\section{テーマの変更（レポートに合わせる）}\label{ux30c6ux30fcux30deux306eux5909ux66f4ux30ecux30ddux30fcux30c8ux306bux5408ux308fux305bux308b}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux3067ux30d7ux30edux30b0ux30e9ux30dfux30f3ux30b0}{%
+\chapter{Rでプログラミング}\label{rux3067ux30d7ux30edux30b0ux30e9ux30dfux30f3ux30b0}}
+
+\hypertarget{ux4ee3ux5165}{%
+\section{代入}\label{ux4ee3ux5165}}
+
+\hypertarget{ux53cdux5fa9}{%
+\section{反復}\label{ux53cdux5fa9}}
+
+\hypertarget{ux6761ux4ef6ux5206ux5c90}{%
+\section{条件分岐}\label{ux6761ux4ef6ux5206ux5c90}}
+
+\hypertarget{ux3055ux307eux3056ux307eux306aux4e71ux6570}{%
+\section{さまざまな乱数}\label{ux3055ux307eux3056ux307eux306aux4e71ux6570}}
+
+\hypertarget{ux78baux7387ux5206ux5e03ux306eux95a2ux6570}{%
+\section{確率分布の関数}\label{ux78baux7387ux5206ux5e03ux306eux95a2ux6570}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{ux78baux7387ux3068ux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}{%
+\chapter{確率とシミュレーション}\label{ux78baux7387ux3068ux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}}
+
+\hypertarget{ux30b5ux30f3ux30d7ux30eaux30f3ux30b0ux95a2ux6570}{%
+\section{サンプリング関数}\label{ux30b5ux30f3ux30d7ux30eaux30f3ux30b0ux95a2ux6570}}
+
+\hypertarget{ux671fux5f85ux5024ux3068ux5206ux6563ux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}{%
+\section{期待値と分散のシミュレーション}\label{ux671fux5f85ux5024ux3068ux5206ux6563ux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}}
+
+\hypertarget{ux6bcdux96c6ux56e3ux3068ux6a19ux672c}{%
+\section{母集団と標本}\label{ux6bcdux96c6ux56e3ux3068ux6a19ux672c}}
+
+\hypertarget{ux4e00ux81f4ux6027}{%
+\section{一致性}\label{ux4e00ux81f4ux6027}}
+
+\hypertarget{ux4e0dux504fux6027}{%
+\section{不偏性}\label{ux4e0dux504fux6027}}
+
+\hypertarget{ux6709ux52b9ux6027}{%
+\section{有効性}\label{ux6709ux52b9ux6027}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{ux7d71ux8a08ux7684ux4eeeux8a2dux691cux5b9aux306eux8ad6ux7406ux3068ux30a8ux30e9ux30fc}{%
+\chapter{統計的仮設検定の論理とエラー}\label{ux7d71ux8a08ux7684ux4eeeux8a2dux691cux5b9aux306eux8ad6ux7406ux3068ux30a8ux30e9ux30fc}}
+
+\hypertarget{ux5e30ux7121ux4eeeux8aacux691cux5b9aux306eux8ad6ux7406}{%
+\section{帰無仮説検定の論理}\label{ux5e30ux7121ux4eeeux8aacux691cux5b9aux306eux8ad6ux7406}}
+
+\hypertarget{ux76f8ux95a2ux4fc2ux6570ux306eux691cux5b9a}{%
+\section{相関係数の検定}\label{ux76f8ux95a2ux4fc2ux6570ux306eux691cux5b9a}}
+
+\hypertarget{ux6a19ux672cux76f8ux95a2ux4fc2ux6570ux306eux5206ux5e03}{%
+\section{標本相関係数の分布}\label{ux6a19ux672cux76f8ux95a2ux4fc2ux6570ux306eux5206ux5e03}}
+
+\hypertarget{ux7a2eux985eux306eux691cux5b9aux306eux30a8ux30e9ux30fcux78baux7387}{%
+\section{２種類の検定のエラー確率}\label{ux7a2eux985eux306eux691cux5b9aux306eux30a8ux30e9ux30fcux78baux7387}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{ux5e73ux5747ux5024ux5deeux306eux691cux5b9a}{%
+\chapter{平均値差の検定}\label{ux5e73ux5747ux5024ux5deeux306eux691cux5b9a}}
+
+\hypertarget{ux4e00ux6a19ux672cux691cux5b9a}{%
+\section{一標本検定}\label{ux4e00ux6a19ux672cux691cux5b9a}}
+
+\hypertarget{ux4e8cux6a19ux672cux691cux5b9a}{%
+\section{二標本検定}\label{ux4e8cux6a19ux672cux691cux5b9a}}
+
+\hypertarget{ux4e8cux6a19ux672cux691cux5b9aux30a6ux30a7ux30ebux30c1ux306eux88dcux6b63}{%
+\section{二標本検定（ウェルチの補正）}\label{ux4e8cux6a19ux672cux691cux5b9aux30a6ux30a7ux30ebux30c1ux306eux88dcux6b63}}
+
+\hypertarget{ux5bfeux5fdcux306eux3042ux308bux4e8cux6a19ux672cux691cux5b9a}{%
+\section{対応のある二標本検定}\label{ux5bfeux5fdcux306eux3042ux308bux4e8cux6a19ux672cux691cux5b9a}}
+
+\hypertarget{ux30ecux30ddux30fcux30c8ux3092ux66f8ux304fux3088ux3046ux306aux8ab2ux984c}{%
+\section{レポートを書くような課題}\label{ux30ecux30ddux30fcux30c8ux3092ux66f8ux304fux3088ux3046ux306aux8ab2ux984c}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{ux5e73ux5747ux5024ux5deeux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}{%
+\chapter{平均値差のシミュレーション}\label{ux5e73ux5747ux5024ux5deeux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}}
+
+\hypertarget{ux4e00ux6a19ux672cux691cux5b9aux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}{%
+\section{一標本検定のシミュレーション}\label{ux4e00ux6a19ux672cux691cux5b9aux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}}
+
+\hypertarget{ux4e8cux6a19ux672cux691cux5b9aux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}{%
+\section{二標本検定のシミュレーション}\label{ux4e8cux6a19ux672cux691cux5b9aux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}}
+
+\hypertarget{ux30a6ux30a7ux30ebux30c1ux306eux88dcux6b63ux306fux88dcux6b63ux3067ux304dux3066ux308bux304b}{%
+\section{ウェルチの補正は補正できてるか}\label{ux30a6ux30a7ux30ebux30c1ux306eux88dcux6b63ux306fux88dcux6b63ux3067ux304dux3066ux308bux304b}}
+
+\hypertarget{ux5bfeux5fdcux306eux3042ux308bux4e8cux6a19ux672cux691cux5b9aux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}{%
+\section{対応のある二標本検定のシミュレーション}\label{ux5bfeux5fdcux306eux3042ux308bux4e8cux6a19ux672cux691cux5b9aux306eux30b7ux30dfux30e5ux30ecux30fcux30b7ux30e7ux30f3}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-1}{%
+\chapter{Rによるデータハンドリング}\label{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-1}}
+
+\hypertarget{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-1}{%
+\section{外部ファイルの読み込み}\label{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-1}}
+
+\hypertarget{tidyverseux306eux5c0eux5165-1}{%
+\section{tidyverseの導入}\label{tidyverseux306eux5c0eux5165-1}}
+
+\hypertarget{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-1}{%
+\section{パイプ演算子}\label{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-1}}
+
+\hypertarget{ux5909ux6570ux3092ux4f5cux308b-1}{%
+\section{変数を作る}\label{ux5909ux6570ux3092ux4f5cux308b-1}}
+
+\hypertarget{ux884cux9078ux629eux3068ux5217ux9078ux629e-1}{%
+\section{行選択と列選択}\label{ux884cux9078ux629eux3068ux5217ux9078ux629e-1}}
+
+\hypertarget{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-1}{%
+\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-1}}
+
+\hypertarget{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-1}{%
+\section{データ整形課題}\label{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-1}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-2}{%
+\chapter{Rによるデータハンドリング}\label{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-2}}
+
+\hypertarget{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-2}{%
+\section{外部ファイルの読み込み}\label{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-2}}
+
+\hypertarget{tidyverseux306eux5c0eux5165-2}{%
+\section{tidyverseの導入}\label{tidyverseux306eux5c0eux5165-2}}
+
+\hypertarget{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-2}{%
+\section{パイプ演算子}\label{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-2}}
+
+\hypertarget{ux5909ux6570ux3092ux4f5cux308b-2}{%
+\section{変数を作る}\label{ux5909ux6570ux3092ux4f5cux308b-2}}
+
+\hypertarget{ux884cux9078ux629eux3068ux5217ux9078ux629e-2}{%
+\section{行選択と列選択}\label{ux884cux9078ux629eux3068ux5217ux9078ux629e-2}}
+
+\hypertarget{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-2}{%
+\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-2}}
+
+\hypertarget{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-2}{%
+\section{データ整形課題}\label{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-2}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-3}{%
+\chapter{Rによるデータハンドリング}\label{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-3}}
+
+\hypertarget{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-3}{%
+\section{外部ファイルの読み込み}\label{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-3}}
+
+\hypertarget{tidyverseux306eux5c0eux5165-3}{%
+\section{tidyverseの導入}\label{tidyverseux306eux5c0eux5165-3}}
+
+\hypertarget{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-3}{%
+\section{パイプ演算子}\label{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-3}}
+
+\hypertarget{ux5909ux6570ux3092ux4f5cux308b-3}{%
+\section{変数を作る}\label{ux5909ux6570ux3092ux4f5cux308b-3}}
+
+\hypertarget{ux884cux9078ux629eux3068ux5217ux9078ux629e-3}{%
+\section{行選択と列選択}\label{ux884cux9078ux629eux3068ux5217ux9078ux629e-3}}
+
+\hypertarget{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-3}{%
+\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-3}}
+
+\hypertarget{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-3}{%
+\section{データ整形課題}\label{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-3}}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-4}{%
+\chapter{Rによるデータハンドリング}\label{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-4}}
+
+\hypertarget{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-4}{%
+\section{外部ファイルの読み込み}\label{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-4}}
+
+\hypertarget{tidyverseux306eux5c0eux5165-4}{%
+\section{tidyverseの導入}\label{tidyverseux306eux5c0eux5165-4}}
+
+\hypertarget{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-4}{%
+\section{パイプ演算子}\label{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-4}}
+
+\hypertarget{ux5909ux6570ux3092ux4f5cux308b-4}{%
+\section{変数を作る}\label{ux5909ux6570ux3092ux4f5cux308b-4}}
+
+\hypertarget{ux884cux9078ux629eux3068ux5217ux9078ux629e-4}{%
+\section{行選択と列選択}\label{ux884cux9078ux629eux3068ux5217ux9078ux629e-4}}
+
+\hypertarget{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-4}{%
+\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-4}}
+
+\hypertarget{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-4}{%
+\section{データ整形課題}\label{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-4}}
 
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{part}{Appendices}
 \appendix
 
-\hypertarget{youux306fshock-1}{%
-\chapter{YouはShock}\label{youux306fshock-1}}
+\hypertarget{ux306fux3058ux3081ux3088ux3046rrstudio-1}{%
+\chapter{はじめようR/RStudio}\label{ux306fux3058ux3081ux3088ux3046rrstudio-1}}
 
-ちゃぷたーわんやでー
+「R」。この一文字で表現されるがゆえに，検索しにくいことこの上ないそれは，統計に特化したプログラミング言語であり，心理学はもちろん統計に関する学問領域で多岐にわたって利用されているものである。フリーソフトウェア，すなわち自由で開かれているソフトウェアであるから，ソースコードに至るまで公開されており，誰でも無償で利用できる。無償すなわち無料ではない。補償がないので無償なのだが，逆に金銭で計算をはじめ科学的真実性が保証されるわけではない，という至極まともな考え方は理解できるだろう。科学はもちろん，ソフトウェアも人類の共有財産として，オープンに育んでいこう。
 
-\hypertarget{ux611bux3067ux7a7aux304cux843dux3061ux3066ux304fux308b-1}{%
-\chapter{愛で空が落ちてくる}\label{ux611bux3067ux7a7aux304cux843dux3061ux3066ux304fux308b-1}}
+Rはコミュニティ活動も盛んで，Tokyo.Rを中心に日本の各地でRユーザからなる自主的な勉強会が開催されている\footnote{2024年1月現在で，TokyoだけでなくFukuoka，Sapporo，Yamaguchi，Irumaなどで地方コミュニティがあり，参加者みんなで楽しまれている。}。またR自体がインターネットを通じて公開されているように，導入から応用までさまざまな資料がオンラインで活用できる。以下では導入から解説していくが，頻繁にアップデートされるものでもあるので，必要に応じて検索し，なるべく時系列的に近い情報を吟味して活用することを薦める。
 
-おっれがほんとうのcあほぷああ2
+\hypertarget{ux74b0ux5883ux306eux6e96ux5099-1}{%
+\section{環境の準備}\label{ux74b0ux5883ux306eux6e96ux5099-1}}
+
+\hypertarget{rux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb-1}{%
+\subsection{Rのインストール}\label{rux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb-1}}
+
+Rのインストールに関して，初心者でも利用可能な資料がオンラインで公開されている。
+
+RはThe \href{https://cran.r-project.org/}{Comprehensive R Archive
+Network}，通称CRAN\footnote{CRANは「しーらん」，あるいは「くらん」と発音される。筆者はしーらん派。}というネットワークで公開されている。CRANのトップページにはダウンロードリンクが用意されており，自分のプラットフォームにあった最新版をダウンロードしよう\footnote{VSCodeのようなエディタから使うことも可能であるし，Jupyter
+  Notebookの計算エンジンをRにすることも可能。最近では分析ソフトウェアを個々人で準備せず，環境として提供することも一般的になってきており，例えば\href{https://colab.research.google.com/}{Google
+  Colaboratory}のエンジンをRにすることもできるようになっている。ローカルPCに自前の環境を作るということが，時代遅れになる日も近いかもしれない。}。
+
+\hypertarget{rstudioux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb-1}{%
+\subsection{RStudioのインストール}\label{rstudioux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb-1}}
+
+Rのインストールが終われば，次はRStudioをインストールしよう。
+RStudioは総合開発環境(IDE)と呼ばれるものである。Rは単体で，統計の分析や関数の描画など，専門的な利用に耐えうる分析機能を有している。その本質はもちろん計算機能であって，計算を実行する命令文(スクリプト)を与えれば，必要な返答をあたえてくれる。このように分析の本質が計算機能であったとしても，実際の分析活動に際しては，スクリプトの下書きと清書，入出力データや描画ファイルの生成・管理，パッケージ(後述)の管理など，分析にまつわるさまざまな周辺活動が含まれる。喩えるなら料理の本質が包丁・まな板・コンロによる加工であったとしても，実際の調理に際しては，広い調理スペースや使いやすいシンク，ボウルやタッパーなどの補助的な調理器具があった方がスムーズにことが進む。
+いわば，R単体で分析をするのは飯盒炊爨のような必要最低限かつワイルドな調理法であり，RStudioは総合的な調理環境を提供してくれるものなのである。
+
+繰り返しになるが，本質的にはR単体で作業が可能である。なるべく単純な環境を維持したいというのであればR単体での利用を否定するものではないが，RStudioはエディタや文書作成ソフトとしても有用であるので，本授業ではRStudioを使うことを前提とする\footnote{VSCodeのようなエディタから使うことも可能であるし，Jupyter
+  Notebookの計算エンジンをRにすることも可能。最近では分析ソフトウェアを個々人で準備せず，環境として提供することも一般的になってきており，例えば\href{https://colab.research.google.com/}{Google
+  Colaboratory}のエンジンをRにすることもできるようになっている。ローカルPCに自前の環境を作るということが，時代遅れになる日も近いかもしれない。}。
+
+\hypertarget{ux74b0ux5883ux306eux6e96ux5099ux306bux95a2ux3059ux308bux5c0eux5165ux30b5ux30a4ux30c8-1}{%
+\subsection{環境の準備に関する導入サイト}\label{ux74b0ux5883ux306eux6e96ux5099ux306bux95a2ux3059ux308bux5c0eux5165ux30b5ux30a4ux30c8-1}}
+
+以下に執筆時点(2024年1月)で参照可能な，導入に関するWeb教材を挙げておく。自分に合ったものを適宜参照し，RとRStudioを自身のPC環境に導入してほしい。もちろん自身で「R
+RStudio
+インストール」などとして検索しても良いし，chatGPTに相談しても良い。
+
+\hypertarget{for-windows-1}{%
+\subsubsection{For Windows}\label{for-windows-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  東京大学・大学院農学生命科学研究科アグリバイオインフォマティクス教育研究プログラムによる\href{https://www.iu.a.u-tokyo.ac.jp/textbook/R/R1.010_win.pdf}{PDF資料}
+\item
+  \href{https://syunsuke.github.io/r_install_guide_for_beginners/}{初心者向けRのインストールガイド}
+\item
+  関西学院大学商学部土方ゼミ\href{http://soc-research.org/ja/r_install_windows/}{資料}
+\item
+  多摩大学情報社会研究所・応用統計学室\href{多摩大学情報社会研究所・応用統計学室}{資料}
+\item
+  奥村
+  晴彦先生の\href{https://okumuralab.org/~okumura/stat/R-win.html}{ページ}
+\end{itemize}
+
+\hypertarget{for-macintosh-1}{%
+\subsubsection{For Macintosh}\label{for-macintosh-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  東京大学・大学院農学生命科学研究科アグリバイオインフォマティクス教育研究プログラムによる\href{https://www.iu.a.u-tokyo.ac.jp/textbook/R/R1.010_mac.pdf}{PDF資料}
+\item
+  noteの\href{https://note.com/toshi_matsuura/n/n127cf28362e5}{記事}
+\item
+  いちばんやさしい，医療統計\href{https://best-biostatistics.com/r/rstudio_start.html\#i-3}{記事}
+\end{itemize}
+
+なお，Macの場合はHomebrewなどのパッケージ管理ソフトを使って導入することもできる(し，そのほうがいい)。その場合は以下の資料を参照。
+
+\begin{itemize}
+\tightlist
+\item
+  群馬大学大学院医学系研究科機能形態学の\href{https://anatomy.med.gunma-u.ac.jp/protocols/?p=979}{記事}
+\item
+  コアラさばお氏のnote\href{https://note.com/mackerelman/n/nfbf8054e90d5}{記事}
+\item
+  Ryu
+  Takahashi氏のQiita\href{https://qiita.com/ryu-takahashi2718/items/1118cad7a4ef4900da96}{記事}
+\item
+  Yuhki
+  Yano氏のQiita\href{https://qiita.com/y-vectorfield/items/dd1a8e2715cace9981ec}{記事}
+\end{itemize}
+
+\hypertarget{rstudioux306eux57faux790euxff14ux3064ux306eux30daux30a4ux30f3-1}{%
+\section{RStudioの基礎（４つのペイン）}\label{rstudioux306eux57faux790euxff14ux3064ux306eux30daux30a4ux30f3-1}}
+
+ここまでで，RおよびRStudioを利用する準備が整っているものとする。
+
+さて，RStudioを起動すると大きくわけて4つの領域に分かれた画面が出てくる。この領域のことを\textbf{ペイン}と呼ぶ。図中の「領域1」がないように見えるときもあるが，下のペインが最大化され折りたたまれているだけなので，ペイン上部のサイズ変更ボタンを操作することで出てくるだろう。
+
+\begin{figure}
+
+{\centering \includegraphics{Figs/01_RStudioStart.png}
+
+}
+
+\caption{RStudioの初期画面}
+
+\end{figure}
+
+このペインのレイアウトは，メニューのTools \textgreater{} Global
+Options\ldots{} \textgreater{} Pane
+Layoutから変更することもできる。基本的に4分割であることに変わりはないが，自分が利用しやすい位置にレイアウトを変更するとよい。
+
+\begin{figure}
+
+{\centering \includegraphics{Figs/01_PaneLayout.png}
+
+}
+
+\caption{レイアウト変更画面。このほかにも背景色などを変えることもできる}
+
+\end{figure}
+
+以下，各ペイン(領域)が何をするところかを簡単に解説する。
+
+\hypertarget{ux9818ux57df1ux30a8ux30c7ux30a3ux30bfux30daux30a4ux30f3-1}{%
+\subsection{領域1；エディタ・ペイン}\label{ux9818ux57df1ux30a8ux30c7ux30a3ux30bfux30daux30a4ux30f3-1}}
+
+エディタ領域。Rのスクリプトはもちろん，レポートの文章など，基本的に入力するときはこのペインに書く。ここで作業するファイルの種類は，File
+\textgreater{} New
+Fileから見ると明らかなように，R言語だけでなくC言語，Python言語などのスクリプトや，Rmd，md,Qmd,HTMLなどのマークアップ言語，StanやSQLなど特殊な言語などにも対応している。ペインの右下に現在開かれているファイルの種類が表示されているのを確認しておこう。
+
+R言語でスクリプトを書く例で解説しよう。Rは命令を逐次実行していくインタプリタ形式であり，ここに記述されたRコードを，右上のRunボタンでコンソールに送って計算を実行するように使う。一回の命令をコマンド，コマンドが積み重ねられた全体をスクリプト，あるいはプログラムと呼ぶ。複数のコマンドを実行したい場合は，エディタ領域で複数行選択してRunボタンを，スクリプトファイル全体を実行したいときはRunボタンのとなりにあるSourceを押す。CTRL+Enter(Macの場合はコマンド+Enter)でRunボタンのショートカットになる。
+
+\hypertarget{ux9818ux57df2ux30b3ux30f3ux30bdux30fcux30ebux30daux30a4ux30f3-1}{%
+\subsection{領域2；コンソール・ペイン}\label{ux9818ux57df2ux30b3ux30f3ux30bdux30fcux30ebux30daux30a4ux30f3-1}}
+
+R単体で利用する場合は，ここのペインだけを利用するようなものである。すなわち，ここに示されているのがR本体というか，Rの計算機能そのものである。ここに「＞」の記号が表示されているところをプロンプトといい，プロンプトが表示されているときはRが入力待ちの状態である。
+
+Rは逐次的に計算を行うので，プロンプトのある状態でコマンドを入力すると計算結果が返される。
+ここに直接コマンドを書いて行っても良いが，書き間違えたりすることもあるし，コマンドが複数行に渡ることが一般的になってくるので，エディタ領域に清書するつもりで記述していったほうがよい。ごくたまに，一時的に確認したいことがある時だけ，直接コンソールを触るようにすると良い。
+
+なお，コンソールを綺麗にしたいときは右上の箒ボタンをおすとよい。
+
+\hypertarget{ux9818ux57df3ux74b0ux5883ux30daux30a4ux30f3-1}{%
+\subsection{領域3；環境ペイン}\label{ux9818ux57df3ux74b0ux5883ux30daux30a4ux30f3-1}}
+
+基本的にこのペインと次の領域4のペインは複数のタブが含まれる。Pane
+Layoutでどちらにどのタブを含めるかを自分好みにカスタマイズすることもできる。ここでは代表的な2つのタブについてのみ言及する。
+
+\textbf{Environment}タブは，Rの実行メモリ内に保管されている変数や関数などが表示されている。「変数や関数など」をまとめて\textbf{オブジェクト}というが，ここで内容や構造をGUIで確認することができる。
+
+\textbf{History}タブは履歴である。これまでコンソールに送られてきたコマンドが順に記録されている。Historyタブからエディタ，コンソールにコマンドを送ることも可能であり，「さっきの命令をもう一度実行したい」といったときに参照すると良い。
+
+\hypertarget{ux9818ux57df4ux30d5ux30a1ux30a4ux30ebux30daux30a4ux30f3-1}{%
+\subsection{領域4；ファイルペイン}\label{ux9818ux57df4ux30d5ux30a1ux30a4ux30ebux30daux30a4ux30f3-1}}
+
+ここでも代表的なタブについてのみ解説する。
+
+\textbf{Files}タブはMacでいうFinder，Windowsでいうエクスプローラーのような，ファイル操作画面である。フォルダの作成，ファイルの削除，リネーム，コピーなどの操作が可能である。
+
+\textbf{Plot}タブはRコマンドで描画命令が出された時の結果がここに表示される。RStudioの利点の一つは，このPlotから図をファイルにExportすることが可能であり，その際にファイルサイズやファイル形式を指定できるところにある。
+
+\textbf{Packages}タブは読み込まれているパッケージ，(読み込まれていないが)保管しているパッケージのリストが表示されている。新しくパッケージを導入するときも，ここのinstallボタンから可能であり，保管しているパッケージのアップデートもボタンひとつで可能である。なお，パッケージについては後ほど言及する。
+
+\textbf{Help}タブはRコマンドでヘルプを表示する命令(\texttt{help}関数)が実行された時の結果が表示される領域である。ヘルプを使うことで関数の引数，戻り値，使用例などを参照できる。
+
+\hypertarget{ux305dux306eux307bux304bux306eux30bfux30d6-1}{%
+\subsection{そのほかのタブ}\label{ux305dux306eux307bux304bux306eux30bfux30d6-1}}
+
+そのほか，表示の有無もオプションになっているようないくつかのタブについて，簡単に解説しておく。
+
+\textbf{Connections}タブはRを外部データベースなどに繋げるときに参照する。大規模データをローカルにすべて取り込むことなく，SQLで必要なテーブルだけ取り出すといった操作をする際は必要になってくるだろう。
+
+\textbf{Git}タブはR，とくにRプロジェクト(後述)のバージョンを管理するときに利用する。Gitとは複数のプログラマによって同時並行的にプログラムを作っていく時の管理システムである。時系列的な差分の記録を得意とするシステムなので，レポートの作成時などに応用すればラボノートの記録としても利用できる。
+
+\textbf{Build}タブはRパッケージやWebサイトを構築するときに利用する。なおこの資料もRStudioを利用して作られており，資料を生成(原稿からHTMLやPDFにする)ときにはこのタブを利用している。
+
+\textbf{Tutorial}タブはチュートリアルツアーを楽しむ時のタブである。
+
+\textbf{Viewer}タブはRStudioで作られたHTMLやPDFなどを見るためのタブである。
+
+\textbf{Presentation}タブはRStudioで作られたプレゼンテーションを見るためのタブである。
+
+\textbf{Terminal}タブはWindows/MacでいうTerminal，Linuxでいう端末についてのタブであり，Rに限らず，コマンドラインを通じてOSに命令するときに使う。
+
+\textbf{Background
+Jobs}タブはその名の通りバックグラウンドで作業をさせるときに利用する。Rは基本的にシングルコアで計算が実行されるが，このタブを使ってスクリプトファイルをバックグラウンドで実行することで並列的に作業が可能になる。
+
+\hypertarget{rux306eux30d1ux30c3ux30b1ux30fcux30b8-1}{%
+\section{Rのパッケージ}\label{rux306eux30d1ux30c3ux30b1ux30fcux30b8-1}}
+
+Rは単体でも線型モデルなどの基本的な分析は可能であるが，より進んだ統計モデルを利用したい場合は専門の\textbf{パッケージ}を導入することになる。パッケージとは関数群のことであり，これもCRANやGithubなどインターネットを介して提供されている。ちなみに提供されているパッケージは，CRANで公開されているものだけで344,607件あり\footnote{2024年01月18日調べ}，Github\footnote{Gitはバージョン管理システムであるが，これをインターネット上のサーバ(レポジトリ)で行うものをGithubという。RStudioはGithubとも連携しており，プロジェクトをGithubと紐づけることで簡単にバージョン管理ができる。しかもここで言及しているように，Github上でパッケージを公開することもできるので，最近はCRANの校閲を待たずに公開できるGithubが好まれている側面もある。}で公開されているものなど，CRANを介さないパッケージも少なくない。
+
+パッケージを利用する際は，まずローカルにパッケージファイルをインストールしなければならない。その上で，Rを起動するごとに(セッションごとに)，関数\texttt{library}でパッケージを呼び出して利用する。インストールを毎回行う必要はないことに注意。
+
+インストールはRのコマンドでも可能だが，RStudioのPackagesペインを使って導入するのが簡単だろう。以下に，一部の有名かつ有用なパッケージ名とその簡単な説明を挙げる。本講義の中で使うものもあるので，事前に準備しておくことが望ましい。
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{tidyverse}パッケージ\autocite{tidyverse}；Rが飛躍的に使いやすくなったのは，このtidyverseパッケージ導入以後のことである。開発者のHadley
+  WickhamはR業界で神と崇められており，R業界に与えたインパクトは大きい。このパッケージは「パッケージ群」「パッケージのパッケージ」であり，tidyverseとはtidyな(整然とした)verse(世界)というような意味合いである。このパッケージは統計分析モデルを提供するものではなく，その前のデータの\textbf{前処理}に関する便利な関数を提供する\footnote{実は統計データの解析にかかる時間のほとんどが，解析に適切な形にデータを整形する「前処理」に費やされる。前処理，別名データハンドリングをいかに上手く，素早く，直感的にできるかは，その後の分析にも影響するほど重要な手順であるため，tidyverseパッケージの登場はありがたかった。これを使ったデータハンドリングだけの専門書\autocite{Kinosady2021}が重宝されるほどである。}。このパッケージをインストールすると，関連する依存パッケージが次々取り込まれるので，少々時間がかかる。
+\item
+  \emph{psych}パッケージ\autocite{psych}；名前の通り，心理学統計に関する統計モデルの多くが含まれている。特に特殊な相関係数や，因子分析モデルなどは非常に便利なので，インストールしておいて間違いない。
+\item
+  \emph{GPArotation}パッケージ\autocite{GPArotation}；因子分析における因子軸の回転に使うパッケージ。
+\item
+  \emph{styler}パッケージ；スタイルを整えてくれるパッケージ。スクリプトの清書に便利。
+\item
+  \emph{lavaan}パッケージ\autocite{lavaan}；潜在変数を含んだモデル(LAtent
+  VAriable ANalysis)の分析，要するに構造方程式モデリング(Structural
+  Equation Modeling;SEM，共分散構造分析ともいう)を実行するパッケージ。
+\item
+  \emph{ctv}パッケージ\autocite{CTV}; CRAN Task
+  Viewsの略で，膨大に膨れ上がったCRANから必要なパッケージを見つけ出すのは困難であることから，ある程度のジャンルごとに関連しそうなパッケージをまとめて導入してくれるのがこのパッケージ。例えば，このパッケージをインストールした後で，\texttt{install.views("Psychometrics")}とすると，心理統計関係の多くのパッケージを次々導入してくれる。
+\item
+  \emph{cmdstanr}パッケージ\autocite{cmdstanr}；複雑な統計モデルで利用される，確率的プログラミング言語stanをRから使うことができるようになるパッケージ。導入にはこのパッケージの他にもstanやコンパイル環境の準備が必要なので，\href{https://mc-stan.org/cmdstanr/articles/cmdstanr.html}{公式の導入サイト}も参考にしてほしい。
+\end{itemize}
+
+\hypertarget{rstudioux306eux30d7ux30edux30b8ux30a7ux30afux30c8-1}{%
+\section{RStudioのプロジェクト}\label{rstudioux306eux30d7ux30edux30b8ux30a7ux30afux30c8-1}}
+
+実際にRを使っていく前に，最後の準備としてRStudioにおけるプロジェクトについて解説しておく。
+
+みなさんも，PCをつかって文書を作ったり保管したりするときに，フォルダにまとめて入れておくことがあるだろう。フォルダは例えば「文書」\textgreater「心理学」\textgreater「心理学統計演習」のように階層的に整理することが一般的で，そうしておくことで必要なファイルをすぐに取り出すことができる。
+
+逆に言えば，こうしたフォルダ管理をしておかなければファイルがPCのなかで散乱してしまい，必要な情報を得るために逐一PCの中身を検索しなければならないだろう。
+
+R/RStudioをつかった分析実践の場合も同様で，一回のテーマについて複数のファイル(スクリプトファイル，データファイル，画像ファイル，レポートなど文書ファイル等々)があり，シーンに合わせて(例えば「授業」「卒論」など)フォルダで管理することになる。
+
+さらに，PC環境には作業フォルダ(Working
+Directory)\footnote{ここでは，フォルダとディレクトリは同じ意味であると思ってもらって良い。一般に，CUIではディレクトリ，GUIではフォルダという用語が好まれる。語幹directにあるように，ファイルやアクセス先など具体的な指し示す先を強調しているのがディレクトリであり，それにファイル群などまとまった容れもの，という意味を付加したのがフォルダである。フォルダの方が言葉としてわかりやすいし。}という概念がある。たとえばR/RStudioを起動・実行しているときに，Rが「今どこで」実行されているか，どこを管理場所としているか，を表す概念である。例えばこの作業フォルダの中に\texttt{sample.csv}というファイルがあって，それをスクリプト上から読み込みたい，というコマンドを実行するのであれば，そのままファイル名を書けば良い。しかし別の場所にそのファイルが保存されているのなら，作業フォルダから見た相対的な位置を含めて指示してやるか(相対パス)，あるいはPC環境全体からみた絶対的な位置を含めて(絶対パス)指示してやる必要がある。相対・絶対パスの違いは，「ここから二つ目の角を右」のように指示するか，住所で指示するかの違いであると考えれば良い。
+
+ともあれ，この作業フォルダがどこに設定されているかは，実行するときに常に気にしていなければならない。ちなみにこの作業フォルダは，RStudioのファイルペイン・Filesタブでひらいているところとは\textbf{限らない}ことに注意してほしい。GUI上でエクスプローラ/Finderで開いたからといって，作業フォルダが自動的に切り替わるようにはなっていない。
+
+そこでRStudioのプロジェクトである。RStudioには「プロジェクト」という概念があり，作業フォルダや環境の設定などをそこで管理することができる。新しくプロジェクトを始めるときはFile\textgreater New
+Project，すでに一度プロジェクトを作っているときはFile \textgreater{}
+Open
+Projectとしてプロジェクトファイル(拡張子が.projのファイル)を開くようにする。そうすると，作業フォルダが当該フォルダに設定される。プロジェクトをGitに連携しておくとバージョン管理などもフォルダ単位で行える。
+
+以後，本講義で外部ファイルを参照する場合，プロジェクトフォルダの中にそのファイルがあるものとして(パスを必要としない形で)論じるので注意されたし。
+
+\hypertarget{ux8ab2ux984c-1}{%
+\section{課題}\label{ux8ab2ux984c-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Rの最新版をCRANからダウンロードし，自分のPCにインストールしてください。
+\item
+  RStudioのDesktop版を\href{https://posit.co/download/rstudio-desktop/}{Posit社のサイト}からダウンロードし，自分のPCにインストールしてください。
+\item
+  RStidoを起動し，ペインレイアウトをデフォルトではない状態に並べ直してみてください。ソースペインを3列にするのも良いでしょう。
+\item
+  コンソールペインに書かれている文字を全て消去してみてください。
+\item
+  ファイルペインにあるFilesタブをつかって，色々なフォルダを開けてみたり，不要なファイルを削除したり，ファイル名を変更したりしてみてください。
+\item
+  ファイルペインにあるFilesタブを開き，\texttt{More}のところから\texttt{Go\ To\ Working\ Directory}を選択・実行してください。何か起こったでしょうか。
+\item
+  この授業のために，新しいプロジェクトを作成してください。プロジェクトは新しいフォルダでも，既存のフォルダでも構いません。
+\item
+  プロジェクトが開いた状態のとき，RStudioのウィンドウ・タブのどこかに「プロジェクト名」が表示されているはずです。確認してください。
+\item
+  またファイルペインのFilesタブから，色々なファイル操作をした上で，改めて\texttt{Go\ To\ Working\ Directory}をしてください。プロジェクトフォルダの中に戻ってこれたら成功です。
+\item
+  新しいRスクリプトファイルを開き，空白のままで結構ですからファイル名をつけて保存してください。
+\item
+  RStudioを終了あるいは最小化させ，OSのエクスプローラ/Finderから，プロジェクトフォルダに移動してください。先ほど作ったファイルが保存されていることを確認してください。
+\item
+  プロジェクトフォルダには，プロジェクト名+\texttt{.proj}というファイルが存在するはずです。これを開いて，RStudioのプロジェクトを開いてください。
+\item
+  RStudioのFile \textgreater{} Close
+  Projectからプロジェクトを閉じてください。画面の細部でどこが変わったか，確認してください。
+\item
+  RStudioを終了し，再びRStudioを起動してください。起動の方法はプロジェクトファイルからでも，アプリケーションの起動でも構いません。起動後に，プロジェクトを開いてください(あるいはプロジェクトが開かれていることを確認してください。)。
+\end{itemize}
+
+\hypertarget{rux306eux57faux790e-1}{%
+\chapter{Rの基礎}\label{rux306eux57faux790e-1}}
+
+\hypertarget{rux3067ux8a08ux7b97-1}{%
+\section{Rで計算}\label{rux3067ux8a08ux7b97-1}}
+
+\hypertarget{rux306eux95a2ux6570-1}{%
+\section{Rの関数}\label{rux306eux95a2ux6570-1}}
+
+\hypertarget{ux30aaux30d6ux30b8ux30a7ux30afux30c8ux306eux578b-1}{%
+\section{オブジェクトの型}\label{ux30aaux30d6ux30b8ux30a7ux30afux30c8ux306eux578b-1}}
+
+\hypertarget{ux5909ux6570ux306eux578b-1}{%
+\section{変数の型}\label{ux5909ux6570ux306eux578b-1}}
+
+\hypertarget{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-5}{%
+\section{外部ファイルの読み込み}\label{ux5916ux90e8ux30d5ux30a1ux30a4ux30ebux306eux8aadux307fux8fbcux307f-5}}
+
+\hypertarget{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-5}{%
+\chapter{Rによるデータハンドリング}\label{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0-5}}
+
+\hypertarget{tidyverseux306eux5c0eux5165-5}{%
+\section{tidyverseの導入}\label{tidyverseux306eux5c0eux5165-5}}
+
+\hypertarget{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-5}{%
+\section{パイプ演算子}\label{ux30d1ux30a4ux30d7ux6f14ux7b97ux5b50-5}}
+
+\hypertarget{ux5909ux6570ux3092ux4f5cux308b-5}{%
+\section{変数を作る}\label{ux5909ux6570ux3092ux4f5cux308b-5}}
+
+\hypertarget{ux884cux9078ux629eux3068ux5217ux9078ux629e-5}{%
+\section{行選択と列選択}\label{ux884cux9078ux629eux3068ux5217ux9078ux629e-5}}
+
+\hypertarget{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-5}{%
+\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b-5}}
+
+\hypertarget{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-5}{%
+\section{データ整形課題}\label{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c-5}}
 
 
 \printbibliography
