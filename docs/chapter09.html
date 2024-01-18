@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>心理学統計演習 - 10&nbsp; 平均値差のシミュレーション</title>
+<title>心理学統計演習 - 10&nbsp; 多群の平均値差の検定</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -74,7 +74,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter09.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">平均値差のシミュレーション</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter09.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -156,31 +156,31 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter09.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">平均値差のシミュレーション</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">帰無仮説検定のシミュレーション</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">回帰分析</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></span></a>
   </div>
 </li>
     </ul>
@@ -193,10 +193,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#一標本検定のシミュレーション" id="toc-一標本検定のシミュレーション" class="nav-link active" data-scroll-target="#一標本検定のシミュレーション"><span class="header-section-number">10.1</span> 一標本検定のシミュレーション</a></li>
-  <li><a href="#二標本検定のシミュレーション" id="toc-二標本検定のシミュレーション" class="nav-link" data-scroll-target="#二標本検定のシミュレーション"><span class="header-section-number">10.2</span> 二標本検定のシミュレーション</a></li>
-  <li><a href="#ウェルチの補正は補正できてるか" id="toc-ウェルチの補正は補正できてるか" class="nav-link" data-scroll-target="#ウェルチの補正は補正できてるか"><span class="header-section-number">10.3</span> ウェルチの補正は補正できてるか</a></li>
-  <li><a href="#対応のある二標本検定のシミュレーション" id="toc-対応のある二標本検定のシミュレーション" class="nav-link" data-scroll-target="#対応のある二標本検定のシミュレーション"><span class="header-section-number">10.4</span> 対応のある二標本検定のシミュレーション</a></li>
+  <li><a href="#分散分析の基礎" id="toc-分散分析の基礎" class="nav-link active" data-scroll-target="#分散分析の基礎"><span class="header-section-number">10.1</span> 分散分析の基礎</a></li>
+  <li><a href="#検定の多重性" id="toc-検定の多重性" class="nav-link" data-scroll-target="#検定の多重性"><span class="header-section-number">10.2</span> 検定の多重性</a></li>
+  <li><a href="#anova君を使う" id="toc-anova君を使う" class="nav-link" data-scroll-target="#anova君を使う"><span class="header-section-number">10.3</span> ANOVA君を使う</a></li>
+  <li><a href="#betweenデザイン" id="toc-betweenデザイン" class="nav-link" data-scroll-target="#betweenデザイン"><span class="header-section-number">10.4</span> Betweenデザイン</a></li>
+  <li><a href="#withinデザイン" id="toc-withinデザイン" class="nav-link" data-scroll-target="#withinデザイン"><span class="header-section-number">10.5</span> Withinデザイン</a></li>
   </ul>
 </nav>
     </div>
@@ -205,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">平均値差のシミュレーション</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></h1>
 </div>
 
 
@@ -220,17 +221,20 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="一標本検定のシミュレーション" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="一標本検定のシミュレーション"><span class="header-section-number">10.1</span> 一標本検定のシミュレーション</h2>
+<section id="分散分析の基礎" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="分散分析の基礎"><span class="header-section-number">10.1</span> 分散分析の基礎</h2>
 </section>
-<section id="二標本検定のシミュレーション" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="二標本検定のシミュレーション"><span class="header-section-number">10.2</span> 二標本検定のシミュレーション</h2>
+<section id="検定の多重性" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="検定の多重性"><span class="header-section-number">10.2</span> 検定の多重性</h2>
 </section>
-<section id="ウェルチの補正は補正できてるか" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="ウェルチの補正は補正できてるか"><span class="header-section-number">10.3</span> ウェルチの補正は補正できてるか</h2>
+<section id="anova君を使う" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="anova君を使う"><span class="header-section-number">10.3</span> ANOVA君を使う</h2>
 </section>
-<section id="対応のある二標本検定のシミュレーション" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="対応のある二標本検定のシミュレーション"><span class="header-section-number">10.4</span> 対応のある二標本検定のシミュレーション</h2>
+<section id="betweenデザイン" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="betweenデザイン"><span class="header-section-number">10.4</span> Betweenデザイン</h2>
+</section>
+<section id="withinデザイン" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="withinデザイン"><span class="header-section-number">10.5</span> Withinデザイン</h2>
 
 
 </section>
@@ -477,7 +481,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./chapter10.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">帰無仮説検定のシミュレーション</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
