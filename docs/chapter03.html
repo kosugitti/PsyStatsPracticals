@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -62,6 +96,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -195,10 +231,12 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#tidyverseの導入" id="toc-tidyverseの導入" class="nav-link active" data-scroll-target="#tidyverseの導入"><span class="header-section-number">4.1</span> tidyverseの導入</a></li>
   <li><a href="#パイプ演算子" id="toc-パイプ演算子" class="nav-link" data-scroll-target="#パイプ演算子"><span class="header-section-number">4.2</span> パイプ演算子</a></li>
-  <li><a href="#変数を作る" id="toc-変数を作る" class="nav-link" data-scroll-target="#変数を作る"><span class="header-section-number">4.3</span> 変数を作る</a></li>
+  <li><a href="#課題1" id="toc-課題1" class="nav-link" data-scroll-target="#課題1"><span class="header-section-number">4.3</span> 課題1</a></li>
   <li><a href="#行選択と列選択" id="toc-行選択と列選択" class="nav-link" data-scroll-target="#行選択と列選択"><span class="header-section-number">4.4</span> 行選択と列選択</a></li>
-  <li><a href="#ロング型とワイド型" id="toc-ロング型とワイド型" class="nav-link" data-scroll-target="#ロング型とワイド型"><span class="header-section-number">4.5</span> ロング型とワイド型</a></li>
-  <li><a href="#データ整形課題" id="toc-データ整形課題" class="nav-link" data-scroll-target="#データ整形課題"><span class="header-section-number">4.6</span> データ整形課題</a></li>
+  <li><a href="#変数を作る再割り当てする" id="toc-変数を作る再割り当てする" class="nav-link" data-scroll-target="#変数を作る再割り当てする"><span class="header-section-number">4.5</span> 変数を作る・再割り当てする</a></li>
+  <li><a href="#ロング型とワイド型" id="toc-ロング型とワイド型" class="nav-link" data-scroll-target="#ロング型とワイド型"><span class="header-section-number">4.6</span> ロング型とワイド型</a></li>
+  <li><a href="#データの結合" id="toc-データの結合" class="nav-link" data-scroll-target="#データの結合"><span class="header-section-number">4.7</span> データの結合</a></li>
+  <li><a href="#データ整形課題" id="toc-データ整形課題" class="nav-link" data-scroll-target="#データ整形課題"><span class="header-section-number">4.8</span> データ整形課題</a></li>
   </ul>
 </nav>
     </div>
@@ -222,25 +260,92 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p>心理学を始め，データを扱うサイエンスでは，データ収集の計画，実行と，データに基づいた解析結果，それを踏まえてのコミュニケーションとの間に，「データをわかりやすい形に加工し，可視化し，分析する」という手順がある。このデータの加工を<strong>データハンドリング</strong>という。統計といえば「分析」に注目されがちだが，実際にはデータハンドリングと可視化のステップが最も時間を必要とし，重要なプロセスである。</p>
 <section id="tidyverseの導入" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="tidyverseの導入"><span class="header-section-number">4.1</span> tidyverseの導入</h2>
+<p>本講義では<code>tidyverse</code>をつかったデータハンドリングを扱う。<code>tidyverse</code>は，データに対する統一的な設計方針を表す概念でもあり，具体的にはそれを実装したパッケージ名でもある。まずは<code>tidyverse</code>パッケージをインストール(ダウンロード)し，次のコードでRに読み込んでおく。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<p>Attaching core tidyverse packages,と表示され，複数のパッケージ名にチェックマークが入っていたものが表示されただろう。<code>tidyverse</code>パッケージはこれらの下位パッケージを含むパッケージ群である。これに含まれる<code>dplyr</code>,<code>tidyr</code>パッケージはデータの整形に，<code>readr</code>はファイルの読み込みに，<code>forecats</code>はFactor型変数の操作に，<code>stringr</code>は文字型変数の操作に，<code>lubridate</code>は日付型変数の操作に，<code>tibble</code>はデータフレーム型オブジェクトの操作に，<code>purrr</code>はデータに適用する関数に，<code>ggplot2</code>は可視化に特化したパッケージである。</p>
+<p>続いてConflictsについての言及がある。<code>tidyverse</code>パッケージに限らず，パッケージを読み込むと表示されることのあるこの警告は，「関数名の衝突」を意味している。ここまで，Rを起動するだけで，<code>sqrt</code>,<code>mean</code>などの関数が利用できた。これはRの基本関数であるが，具体的には<code>base</code>パッケージに含まれた関数である。Rは起動時に<code>base</code>などいくつかのパッケージを自動的に読み込んでいるのである。これに別途パッケージを読み込むとき，あとで読み込まれたパッケージが同名の関数を使っていることがある。このとき，関数名は後から読み込んだもので上書きされる。そのことについての警告が表示されているのである。具体的にみると，<code>dplyr::filter() masks stats::filter()</code>とあるのは，最初に読み込んでいた<code>stats</code>パッケージの<code>filter</code>関数は，(<code>tidyverse</code>パッケージに含まれる)<code>dplyr</code>パッケージのもつ同名の関数で上書きされ，今後はこちらが優先的に利用されるよ，ということを示している。</p>
+<p>このような同音異字関数は，関数を特定するときに混乱を招くかもしれない。あるパッケージの関数であることを明示したい場合は，この警告文にあるように，パッケージ名<code>::</code>関数名，という書き方にすると良い。</p>
 </section>
 <section id="パイプ演算子" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="パイプ演算子"><span class="header-section-number">4.2</span> パイプ演算子</h2>
+<p>続いてパイプ演算子について解説する。パイプ演算子は<code>tidyverse</code>パッケージに含まれていた<code>magrittr</code>パッケージで導入されたもので，これによってデータハンドリングの利便性が一気に向上した。そこでRもver 4.2からこの演算子を導入し，特段パッケージのインストールを必要としなくとも使えるようになった。このR本体のパイプ演算子のことを，<code>tidyverse</code>のそれと区別して，ナイーブパイプと呼ぶこともある。</p>
+<p>ともあれこのパイプ演算子がいかに優れたものであるかを解説しよう。次のスクリプトは，あるデータセットの標準偏差を計算するものである<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。数式で表現すると次の通り。ここで<span class="math inline">\(\bar{x}\)</span>はデータベクトル<span class="math inline">\(x\)</span>の算術平均。 <span class="math display">\[v = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">13</span>,<span class="dv">15</span>,<span class="dv">12</span>,<span class="dv">14</span>) <span class="co"># データ</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">mean</span>(dat)           <span class="co"># 平均</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dev <span class="ot">&lt;-</span> dat <span class="sc">-</span> M           <span class="co"># 平均偏差</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>pow <span class="ot">&lt;-</span> dev<span class="sc">^</span><span class="dv">2</span>             <span class="co"># 平均偏差の2乗</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(pow)    <span class="co"># 平均偏差の2乗の平均が分散</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(variance) <span class="co"># 分散の正の平方根が標準偏差</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>このように，標準偏差オブジェクト<code>standardDev</code>を作るまでに平均オブジェクト<code>M</code>，平均偏差ベクトル<code>dev</code>，その2乗したもの<code>pow</code>，分散<code>variance</code>と4つものオブジェクトを作って答えに到達している。また，作られるオブジェクトが左側にあり，その右側にどのような演算をしているかが記述されているため，頭の中では「オブジェクトを作る，次の計算で」と読んでいったことだろう。</p>
+<p>パイプ演算子はこの思考の流れをそのまま具現化する。パイプ演算子は<code>%&gt;%</code>と書き，左側の演算結果をパイプ演算子の右側に来る関数の第一引数として右側に渡す役目をする。これを踏まえて上のスクリプトを書き直してみよう。ちなみにパイプ演算子はショートカット<code>Ctrl(Cmd)+Shift+M</code>で入力できる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">13</span>,<span class="dv">15</span>,<span class="dv">12</span>,<span class="dv">14</span>) </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  { . <span class="sc">-</span> <span class="fu">mean</span>(.) } <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  { .<span class="sc">^</span><span class="dv">2</span> } <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>ここでピリオド(<code>.</code>)は，前の関数から引き継いだもの(プレイスホルダー)であり，二行目は<code>{dat - mean(dat)}</code>，すなわち平均偏差の計算を意味している。それを次のパイプで二乗し，平均し，平方根を取っている。平均や平方根を取るときにプレイスホルダーが明示されていないのは，引き受けた引数がどこに入るかが明らかなので省略しているからである。</p>
+<p>この例に見るように，パイプ演算子を使うと，データ<span class="math inline">\(\to\)</span>平均偏差$<span class="math inline">\(2乗\)</span><span class="math inline">\(平均\)</span>$平方根，という計算の流れと，スクリプトの流れが一致しているため，理解しやすくなったのではないだろうか。</p>
+<p>また，ここでの計算は，次のように書くこともできる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((dat<span class="sc">-</span> <span class="fu">mean</span>(dat))<span class="sc">^</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>この書き方は，関数の中に関数がある入れ子状態になっており，<span class="math inline">\(y = h(g(f(x)))\)</span>のような形式である。これも対応するカッコの内側から読み解いていく必要があり，思考の流れと逆転しているため理解が難しい。パイプ演算子を使うと，<code>x %&gt;% f() %&gt;% g() %&gt;% h() -&gt; y</code>のように記述できるため，苦労せずに読むことができる。</p>
+<p>以下はこのパイプ演算子を使った記述で進めていくので，この表記法(およびショートカット)に慣れていこう。</p>
 </section>
-<section id="変数を作る" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="変数を作る"><span class="header-section-number">4.3</span> 変数を作る</h2>
+<section id="課題1" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="課題1"><span class="header-section-number">4.3</span> 課題1</h2>
+<ul>
+<li><code>sqrt</code>,<code>mean</code>関数が<code>base</code>パッケージに含まれることをヘルプで確認してみよう。どこを見れば良いだろうか?<code>filter</code>,<code>lag</code>関数はどうだろうか?</li>
+<li><code>tidyverse</code>パッケージを読み込んだことで，<code>filter</code>関数は<code>dplyr</code>パッケージのものが優先されることになった。<code>dplyr</code>パッケージの<code>filter</code>関数をヘルプで見てみよう。</li>
+<li>上書きされる前の<code>stats</code>パッケージの<code>filter</code>関数に関するヘルプを見てみよう。</li>
+<li>先ほどのデータを使って，平均値絶対偏差(MeanAD)および中央絶対偏差(MAD)をパイプ演算子を使って算出してみよう。なお平均値絶対偏差，中央値絶対偏差は次のように定義される。また絶対値を計算するR関数は<code>abs</code>である。</li>
+</ul>
+<p><span class="math display">\[MeanAD = \frac{1}{n}\sum_{i=1}^n|x_i - \bar{x}|\]</span> <span class="math display">\[MAD = median(|x_1-median(x)|,\cdots,|x_n-median(x)|)\]</span></p>
 </section>
 <section id="行選択と列選択" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="行選択と列選択"><span class="header-section-number">4.4</span> 行選択と列選択</h2>
 </section>
-<section id="ロング型とワイド型" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="ロング型とワイド型"><span class="header-section-number">4.5</span> ロング型とワイド型</h2>
+<section id="変数を作る再割り当てする" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="変数を作る再割り当てする"><span class="header-section-number">4.5</span> 変数を作る・再割り当てする</h2>
 </section>
-<section id="データ整形課題" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="データ整形課題"><span class="header-section-number">4.6</span> データ整形課題</h2>
+<section id="ロング型とワイド型" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="ロング型とワイド型"><span class="header-section-number">4.6</span> ロング型とワイド型</h2>
+</section>
+<section id="データの結合" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="データの結合"><span class="header-section-number">4.7</span> データの結合</h2>
+</section>
+<section id="データ整形課題" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="データ整形課題"><span class="header-section-number">4.8</span> データ整形課題</h2>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>もちろん<code>sd(dat)</code> の一行で済む話だが，ここでは説明のために各ステップを書き下している。もっとも，<code>sd</code>関数で計算されるのは<span class="math inline">\(n-1\)</span>で割った不偏分散の平方根であり，標本標準偏差とは異なるものである。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
