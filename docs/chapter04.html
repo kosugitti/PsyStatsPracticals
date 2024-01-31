@@ -24,6 +24,7 @@ ul.task-list li input[type="checkbox"] {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -255,7 +256,12 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#rmdqmdの使い方" id="toc-rmdqmdの使い方" class="nav-link active" data-scroll-target="#rmdqmdの使い方"><span class="header-section-number">4.1</span> Rmd/Qmdの使い方</a></li>
+  <li><a href="#rmdquartoの使い方" id="toc-rmdquartoの使い方" class="nav-link active" data-scroll-target="#rmdquartoの使い方"><span class="header-section-number">4.1</span> Rmd/Quartoの使い方</a>
+  <ul class="collapse">
+  <li><a href="#概略" id="toc-概略" class="nav-link" data-scroll-target="#概略"><span class="header-section-number">4.1.1</span> 概略</a></li>
+  <li><a href="#ファイルの作成とknit" id="toc-ファイルの作成とknit" class="nav-link" data-scroll-target="#ファイルの作成とknit"><span class="header-section-number">4.1.2</span> ファイルの作成とknit</a></li>
+  <li><a href="#マークダウンの記法" id="toc-マークダウンの記法" class="nav-link" data-scroll-target="#マークダウンの記法"><span class="header-section-number">4.1.3</span> マークダウンの記法</a></li>
+  </ul></li>
   <li><a href="#プロットによる基本的な描画" id="toc-プロットによる基本的な描画" class="nav-link" data-scroll-target="#プロットによる基本的な描画"><span class="header-section-number">4.2</span> プロットによる基本的な描画</a></li>
   <li><a href="#ggplotによる描画" id="toc-ggplotによる描画" class="nav-link" data-scroll-target="#ggplotによる描画"><span class="header-section-number">4.3</span> ggplotによる描画</a></li>
   <li><a href="#各種geomの練習" id="toc-各種geomの練習" class="nav-link" data-scroll-target="#各種geomの練習"><span class="header-section-number">4.4</span> 各種geomの練習</a></li>
@@ -287,8 +293,92 @@ div.csl-indent {
 </header>
 
 
-<section id="rmdqmdの使い方" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="rmdqmdの使い方"><span class="header-section-number">4.1</span> Rmd/Qmdの使い方</h2>
+<section id="rmdquartoの使い方" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="rmdquartoの使い方"><span class="header-section-number">4.1</span> Rmd/Quartoの使い方</h2>
+<section id="概略" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="概略"><span class="header-section-number">4.1.1</span> 概略</h3>
+<p>今回はRStudioを使った文書作成法について解説する。皆さんは、これまで作成と言えば、基本的にMicrosoft Wordのような文書作成ソフトを使ってきたものと思う。また，統計解析といえばR(やその他のソフト)，図表の作成はExcelといったように，用途ごとに異なるアプリケーションを活用するのが一般的であろう。</p>
+<p>このやり方は，統計解析の数値結果を表計算ソフトに，そこで作った図表を文書作成ソフトにコピー＆ペーストする，という転記作業が何度も発生する。ここで転記ミス・貼り付け間違いが生じると，当然ながら出来上がる文書は間違ったものになる。こうした転記ミスのことを「コピペ汚染」と呼ぶこともある。</p>
+<p>問題はこの環境をまたぐ作業にあるわけで，計算・作図・文書が一つの環境で済めばこうした問題が起こらない。これを解決するのがR markdonやQuartoという書式・ソフトウェアなのである。</p>
+<p>Rmarkdownの<code>markdown</code>とは書式の一種である。マークアップ言語と呼ばれる書き方の一種で，なかでもRとの連携に特化したのがRmarkdownである。マークアップ言語とは，言語の中に専門の記号を埋め込み，その書式に対応した読み込みアプリで，表示の際に書式を整える方式のことを指す。有名なマークアップ言語としては，数式に特化した LaTeX や，インターネットウェブサイトで用いられている HTML などがある。</p>
+<p>Rmarkdownはmarkdownの書式を踏襲しつつ，Rでの実行結果を文中に埋め込むコマンドを有している。Rのコマンドで計算したり図表を作成しつつ，その結果を埋め込む場所をマークアップ言語で指定する。最終的に文書を閲覧する場合は，マークアップ言語を出力ファイルに変換する(コンパイルする，ニットするという)必要があり，その時Rでの計算が実行される。コンパイルのたびに計算されるので，同じコードでも乱数を使ったコードを書いていたり，一部読み込みファイルを変更するだけで，出力される結果は変わる。しかしコピペ汚染のように，間違った値・図表が含まれるものではないので，研究の再現性にも一役買うことになる。再現可能な文書の作成について、詳しくは@Takahashi201805 を参考にすると良い。</p>
+<p>QuartoはRmarkdownをさらに拡張させたもので，RStudioを提供しているPosit社が今もっとも注力しているソフトのひとつである。RmarkdownはRとmarkdownの連携であったが，QuartoはRだけでなく，PythonやJuliaといった他の言語にも対応しているし，これら複数の計算言語の混在も許す。すなわち，一部はRで計算し，その結果をPythonで検算してJuliaで描画する，といったことを一枚のファイルで書き込むことも可能である。</p>
+<p>なおこの授業資料もQuartoで作成している。このようにQuartoはプレゼンテーション資料やウェブサイトも作成できるし，出力形式もウェブサイトだけでなくPDFやePUB(電子書籍の形式)にすることが可能である。なおこの授業の資料もウェブサイトと同時に<a href="心理学統計実習.PDF">PDF形式</a>と，<a href="心理学統計実習.epub">ePUB形式</a>で出力されている。Quartoについて専門の解説書はまだないが，インターネットに充実したドキュメントがあるので検索するといいだろう。まだ新しい技術なので，<a href="https://quarto.org/">公式</a>を第一に参照すると良い。</p>
+</section>
+<section id="ファイルの作成とknit" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="ファイルの作成とknit"><span class="header-section-number">4.1.2</span> ファイルの作成とknit</h3>
+<p>RmarkdownはRStudioとの相性がよく，RStudioのFile &gt; New Fileから<code>R Markdown</code>を選ぶとRmarkdownファイルがサンプルとともに作成される。作成時に文書のタイトル，著者名，作成日時や出力フォーマットが指定できるサブウィンドゥが開き，作成するとサンプルコードが含まれたR markdownファイルが表示されるだろう。</p>
+<p>Quartoも同様に，RStudioのFile &gt; New Fileから<code>Quarto Document</code>を選ぶことで新しいファイル画面が開く。なおRmarkdownファイルの拡張子は<code>Rmd</code>とすることが一般的であり，Quartoは<code>Qmd</code>とすることが一般的である。もっとも，QuartoはRStudio以外のエディタから利用することも考えられていて，例えばVS Codeなどの一般的なエディタで作成し，コマンドライン経由でコンパイルすることも可能である。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Figs/04_RmdSample.png" class="img-fluid figure-img"></p>
+<figcaption>Rmarkdownファイルのサンプル</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Figs/04_QmdSample.png" class="img-fluid figure-img"></p>
+<figcaption>Quartoファイルのサンプル</figcaption>
+</figure>
+</div>
+<p>Rmarkdown，Quartoともに，ファイルの冒頭に4つのハイフンで囲まれた領域が見て取れるだろう。これはYAMLヘッダ(YAMLはYet Another Markup Languageの略。ここはまだマークアップ領域じゃないよということ)と呼ばれる，文書全体に対する設定をする領域のことである。</p>
+<p>この領域を一瞥すると，タイトルや著者名，出力形式などが記載されていることが見て取れる。YAMLヘッダはインデントに敏感で，また正しくない記述が含まれているとエラーになって出力ファイルが作られないことが少なくないため，ここを手動で書き換えるときは注意が必要である。とはいえ，ここを自在に書き換えることができるようになると，様々な応用が効くので興味があるものは調べて色々トライしてもらいたい。</p>
+<p>さて，Rmd/Qmdのファイル上部にKnitあるいはRenderと書かれたボタンがあるだろう。これをクリックすると，表示用ファイルへの変換が実行される。<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Rmarkdownの場合は，すでにサンプルコードが含まれているので，数値および図表のはいったHTMLドキュメントが表示されるだろう。以下はこのサンプルコードを例に説明するため，Rmarkdownとそのコンパイル(knit))を一度試してもらいたい。その上で，元のRmdファイルと出来上がったファイルとの対応関係を確認してみよう。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Figs/04_coresspRmd.png" class="img-fluid figure-img"></p>
+<figcaption>Rmdファイルと出力結果の対応</figcaption>
+</figure>
+</div>
+<p>おおよそ，何がどのように変換されているかの対応が推察できるだろう。 出力ファイルの冒頭には，YAMLで設定したタイトル，著者名，日付などが表示されているし，<code>#</code>の印がついていた一行は見出しとして強調されている。</p>
+<p>特に注目したいのが，元のファイルで3つのクォーテーションで囲まれた灰色の領域である。この領域のことを特に<strong>チャンク</strong>といい，ここに書かれたRスクリプトが変換時に実行され，結果として出力される。出力ファイルをみると，<code>summary(cars)</code> というチャンクで指定された命令文があり，その結果(carsというデータセットの要約)が出力されているのが見て取れる。繰り返しになるが，ポイントは原稿ファイルには計算を指示するスクリプトが書かれているだけで，出力結果を書いていないことにある。原稿は指示だけなのである。こうすることで，コピー＆ペーストのミスがなくなるし，同じRmd/Qmd原稿とデータを持っていれば，ことなるPC上でも同じ出力が得られる。環境を統合することで，ミスの防止と再現可能性に貢献しているのがわかるだろう。</p>
+<p>今回は<code>cars</code>というRがデフォルトでもっているサンプルデータの例なので，どの環境でも同じ結果が出力されている。しかしもちろん，個別のデータファイルであっても，同じファイルで同じ読み込み方，同じ加工をしていれば，環境が違っても追跡可能である。注意して欲しいのは，コンパイルするときは新しい環境から行われるという点ある。すなわち，<strong>原稿ファイルにないオブジェクトの利用はできない</strong>のである。これは再現性を担保するという意味では当然のことで，「事前に別途処理しておいたデータ」から分析を始められても，その事前処理が適切だったかどうかがチェックできないからである。Rmd/Qmdファイルと，CSVファイルなどの素データが共有されていれば再現できる，という利点を活かすため，データハンドリングを含めた前処理も全てチャンクに書き込み，新しい環境で最初からトレースできるようにする必要がある。不便に感じるところもあるかもしれないが，科学的営みとして重要な手続きであることを理解してもらいたい。<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>RStudiでは，ビジュアルモードやアウトライン表示，チャンク挿入ボタンやチャンクごとの実行・設定などRmd/Qmdファイルの編集に便利な機能も複数用意されているので，<span class="citation" data-cites="Takahashi201805">高橋 (<a href="chapter01.html#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span> などを参考にいろいろ試してみるといいだろう。</p>
+</section>
+<section id="マークダウンの記法" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="マークダウンの記法"><span class="header-section-number">4.1.3</span> マークダウンの記法</h3>
+<p>以下では，マークダウン記法について基本的な利用法を解説する。</p>
+<section id="見出しと強調" class="level4" data-number="4.1.3.1">
+<h4 data-number="4.1.3.1" class="anchored" data-anchor-id="見出しと強調"><span class="header-section-number">4.1.3.1</span> 見出しと強調</h4>
+<p>すでに見たように，マークダウンでは<code>#</code>記号で見出しを作ることができる。<code>#</code>の数が見出しレベルに対応し，<code>#</code>はトップレベル，本でいうところの「章,chapter」，HTMLでいうところの<code>H1</code>に相当する。<code>#</code>記号の後ろに半角スペースが必要なことに注意されたし。以下，<code>##</code>で「節,section」あるいは<code>H2</code>，<code>###</code>で小節(subsection,<code>H3</code>)，<code>####</code>で小小節(subsubsection,<code>H4</code>)…と続く。</p>
+<p>心理学を始め，科学論文の書き方としての「パラグラフライティング」を既にみしっていることだろう。文章をセクション，サブセクション，パラグラフ，センテンスのように階層的に分割し，それぞれの区分が4つの下位区分を含むような文章構造である。心理学の場合は特に「問題，方法，結果，考察」の4セクションで一論文が構成されるのが基本である。こうしたアウトラインを意識した書き方は読み手にも優しく，マークダウンの記法ではそれが自然と実装できるようになっている。</p>
+<p>これとは別に，一部を太字や斜体で強調したいこともあるだろう。そのような場合はアスタリスクを1つ，あるいは2つつけて<em>強調</em>したり<strong>強調</strong>したりできる。</p>
+</section>
+<section id="図表とリンク" class="level4" data-number="4.1.3.2">
+<h4 data-number="4.1.3.2" class="anchored" data-anchor-id="図表とリンク"><span class="header-section-number">4.1.3.2</span> 図表とリンク</h4>
+<p>文中に図表を挿入したいこともあるだろう。表の挿入は，マークダウン独自の記法があり，縦棒<code>|</code>やハイフン<code>-</code>を駆使して以下のように表記する。</p>
+<pre><code>| Header 1 | Header 2 | Header 3 |
+| -------- | -------- | -------- |
+| Row 1    | Data 1   | Data 2   |
+| Row 2    | Data 3   | Data 4   |</code></pre>
+<p>Rのコードの中には分析結果をマークダウン形式で出力してくれる関数もあるし，表計算ソフトなどでできた表があるなら，chatGPTなど生成AIを利用するとすぐに書式変換してくれるので，そういったツールを活用すると良い。</p>
+<p>図の挿入は，マークダウンでは図のファイルへのリンクと考えると良い。次のように，大括弧で括った文字がキャプション，つづく小括弧で括ったものが図へのリンクとなる。実際に表示されるときは図が示される。</p>
+<pre><code>![図のキャプション](図へのリンク)</code></pre>
+<p>同様に，ウェブサイトへのリンクなども，<code>[表示名](リンク先)</code>の書式で対応できる。</p>
+</section>
+<section id="リスト" class="level4" data-number="4.1.3.3">
+<h4 data-number="4.1.3.3" class="anchored" data-anchor-id="リスト"><span class="header-section-number">4.1.3.3</span> リスト</h4>
+<p>並列的に箇条書きを示したい場合は，プラスあるいはマイナスでリストアップする。注意すべきは，リストの前後に改行を入れておくべきことである。</p>
+<pre><code>ここまで前の文
+
++  list item 1
++  list item 2
++  list item 3
+    - sub item 1
+    - sub item 2
+
+ここから次の文</code></pre>
+</section>
+<section id="チャンク" class="level4" data-number="4.1.3.4">
+<h4 data-number="4.1.3.4" class="anchored" data-anchor-id="チャンク"><span class="header-section-number">4.1.3.4</span> チャンク</h4>
+<p>既に述べたように，チャンク(chunk)と呼ばれる領域は実行されるコードを記載するところである。チャンクはまず，バックスラッシュ3つ繋げることでコードブロックであることを示し，次に <code>r</code>と書くことで計算エンジンがRであることを明示する。ここにJuiliaやPythonなど他の計算エンジンを指定することも可能である。</p>
+<p>可能であれば，チャンク名をつけておくと良い。次の例は，チャンク名として「chunksample」を与えたものである。チャンク名をつけておくと，RStudioでは見出しジャンプをつかって移動することもできるので，編集時に便利である。</p>
+<p>```{r chunksample,echo = FALSE}<br> summary(cars)<br> ```<br></p>
+<p>さらに，<code>echo = FALSE</code>のようにチャンクオプションを指定することができる。<code>echo=FALSE</code>は入力したスクリプトを表示せず，結果だけにするオプションである。そのほか「計算結果を含めない」「表示せずに計算は実行する」等様々な指定が可能である。</p>
+<p>なおQuartoではこのチャンクオプションを次のように書くこともできる。</p>
+<p>```{r}<br> #| echo: FALSE<br> #| include: FALSE<br> summary(cars)<br> ```<br></p>
+</section>
+</section>
 </section>
 <section id="プロットによる基本的な描画" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="プロットによる基本的な描画"><span class="header-section-number">4.2</span> プロットによる基本的な描画</h2>
@@ -307,11 +397,22 @@ div.csl-indent {
 </section>
 <section id="references" class="level2" data-number="4.7">
 <h2 data-number="4.7" class="anchored" data-anchor-id="references"><span class="header-section-number">4.7</span> References</h2>
-<div id="refs" role="list" style="display: none">
-
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Takahashi201805" class="csl-entry" role="listitem">
+高橋康介. 2018. <span>“再現可能性のすゝめ.”</span> In, edited by 石田基広. Vol. 3. Wonderful r. 共立出版.
 </div>
+</div>
+<p><br>
+</p>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>もし新しく開いているファイルに名前がつけられていないのなら(Untitledのままになっているようであれば),ファイル名の指定画面が開く。また環境によっては，初回実行時にコンパイルに必要な関連パッケージのダウンロードが求められることがある。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>もっとも，Rのバージョンやパッケージのバージョンによっては同じ計算結果が出ない可能性がある。より本質的な計算過程に違いがあるかもしれないのである。そのため，R本体やパッケージのバージョンごとパッキングして共有する工夫も考えられている。Dockerと呼ばれるシステムは，解析環境ごと保全し共有するシステムの例である。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->

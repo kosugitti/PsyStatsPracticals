@@ -172,7 +172,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={心理学統計演習},
+  pdftitle={心理学統計実習},
   pdfauthor={Koji Kosugi},
   colorlinks=true,
   linkcolor={blue},
@@ -181,7 +181,14 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-\title{心理学統計演習}
+\title{心理学統計実習}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Exercises in Psychological Statistics with R/RStudio}
 \author{Koji Kosugi}
 \date{}
 
@@ -196,16 +203,20 @@
 }
 \bookmarksetup{startatroot}
 
-\chapter{はじめに}\label{ux306fux3058ux3081ux306b}
+\chapter*{はじめに}\label{ux306fux3058ux3081ux306b}
+\addcontentsline{toc}{chapter}{はじめに}
+
+\markboth{はじめに}{はじめに}
 
 この資料は，授業「心理学統計演習」についてのものです。
 演習という授業名にあるように，理論的な解説で「理解して進む」ことよりも，「手を動かして理解する」ことを目的にしています。
 
 この資料を活用する人は，理論的な(いわゆる座学の)心理学統計を履修済みであることを前提にしています。また，資料集という位置付けですので，行間の説明が省略されていることが多くあります。その点は講義時間中の講話で補完していくつもりですので，不明な点があれば授業時間中に質問してください。
 
-\bookmarksetup{startatroot}
+\section*{ライセンス等}\label{ux30e9ux30a4ux30bbux30f3ux30b9ux7b49}
+\addcontentsline{toc}{section}{ライセンス等}
 
-\chapter{ライセンス等}\label{ux30e9ux30a4ux30bbux30f3ux30b9ux7b49}
+\markright{ライセンス等}
 
 この資料はCreative Commons BY-SA(CC BY-SA)ライセンスVersion
 4.0に基づいて提供されています。
@@ -226,8 +237,7 @@ versions of this open textbook under the same license - CC BY-SA.
 
 「R」。この一文字で表現されるがゆえに，検索しにくいことこの上ないそれは，統計に特化したプログラミング言語であり，心理学はもちろん統計に関する学問領域で多岐にわたって利用されているものである。フリーソフトウェア，すなわち自由で開かれているソフトウェアであるから，ソースコードに至るまで公開されており，誰でも無償で利用できる。無償すなわち無料ではない。補償がないので無償なのだが，逆に金銭で計算をはじめ科学的真実性が保証されるわけではない，という至極まともな考え方は理解できるだろう。科学はもちろん，ソフトウェアも人類の共有財産として，オープンに育んでいこう。
 
-Rはコミュニティ活動も盛んで，Tokyo.Rを中心に日本の各地でRユーザからなる自主的な勉強会が開催されている\footnote{もちろん\texttt{sd(dat)}
-  の一行で済む話だが，ここでは説明のために各ステップを書き下している。もっとも，\texttt{sd}関数で計算されるのは\(n-1\)で割った不偏分散の平方根であり，標本標準偏差とは異なるものである。}。またR自体がインターネットを通じて公開されているように，導入から応用までさまざまな資料がオンラインで活用できる。以下では導入から解説していくが，頻繁にアップデートされるものでもあるので，必要に応じて検索し，なるべく時系列的に近い情報を吟味して活用することを薦める。
+Rはコミュニティ活動も盛んで，Tokyo.Rを中心に日本の各地でRユーザからなる自主的な勉強会が開催されている\footnote{2024年1月現在で，TokyoだけでなくFukuoka，Sapporo，Yamaguchi，Irumaなどで地方コミュニティがあり，参加者みんなで楽しまれている。}。またR自体がインターネットを通じて公開されているように，導入から応用までさまざまな資料がオンラインで活用できる。以下では導入から解説していくが，頻繁にアップデートされるものでもあるので，必要に応じて検索し，なるべく時系列的に近い情報を吟味して活用することを薦める。
 
 \section{環境の準備}\label{ux74b0ux5883ux306eux6e96ux5099}
 
@@ -236,7 +246,7 @@ Rはコミュニティ活動も盛んで，Tokyo.Rを中心に日本の各地で
 Rのインストールに関して，初心者でも利用可能な資料がオンラインで公開されている。
 
 RはThe \href{https://cran.r-project.org/}{Comprehensive R Archive
-Network}，通称CRAN\footnote{UTF-8というのは文字コードの一種で，0と1からなる機械のデータを人間語に翻訳するためのコードであり，世界的にもっとも一般的な文字コードである。しかしWindowsOSはいまだにデフォルトでShift-JISというローカルな文字コードにしているため，このファイルを一度Windows機のExcelなどで開くと文字化けし，以下の手続が正常に作用しなくなることがよくある。本講義で使う場合は，ダウンロード後にExcelなどで開くことなく，直接Rから読み込むようにされたし。}というネットワークで公開されている。CRANのトップページにはダウンロードリンクが用意されており，自分のプラットフォームにあった最新版をダウンロードしよう\footnote{この授業のために自身のPCにRをインストールしたとして，次に使うときに半年以上間隔が空いたのなら，改めて最新版をチェックし，バージョンが上がっていたら旧版をアンインストールして最新版をインストールするところから始めた方が良い。Rで利用するパッケージなどが新しい版にしか対応していないことなどもある。Rと畳は新しい方が良い。}。
+Network}，通称CRAN\footnote{CRANは「しーらん」，あるいは「くらん」と発音される。筆者はしーらん派。}というネットワークで公開されている。CRANのトップページにはダウンロードリンクが用意されており，自分のプラットフォームにあった最新版をダウンロードしよう\footnote{この授業のために自身のPCにRをインストールしたとして，次に使うときに半年以上間隔が空いたのなら，改めて最新版をチェックし，バージョンが上がっていたら旧版をアンインストールして最新版をインストールするところから始めた方が良い。Rで利用するパッケージなどが新しい版にしか対応していないことなどもある。Rと畳は新しい方が良い。}。
 
 \subsection{RStudioのインストール}\label{rstudioux306eux30a4ux30f3ux30b9ux30c8ux30fcux30eb}
 
@@ -704,8 +714,10 @@ rootを取る関数\texttt{sqrt}であり，引数として数字を与えると
 \end{Highlighting}
 \end{Shaded}
 
-数値型は整数(integer)，実数(double)を含み\footnote{もちろん\texttt{sd(dat)}
-  の一行で済む話だが，ここでは説明のために各ステップを書き下している。もっとも，\texttt{sd}関数で計算されるのは\(n-1\)で割った不偏分散の平方根であり，標本標準偏差とは異なるものである。}，そのほか，複素数型(complex)，欠損値を表す\texttt{NA}，非数値を表す\texttt{NaN}(Not
+数値型は整数(integer)，実数(double)を含み\footnote{実数はreal
+  numberじゃないのか，という指摘もあろうかとおもう。ここでは電子計算機上の数値の分類である，倍精度浮動小数点数(double-precision
+  floating-point
+  number)の意味である。倍精度とは単精度の倍を意味しており，単精度は32ビットを，倍精度は64ビットを単位として一つの数字を表す仕組みのことである。}，そのほか，複素数型(complex)，欠損値を表す\texttt{NA}，非数値を表す\texttt{NaN}(Not
 a Number)，無限大を表す\texttt{Inf}などがある。
 
 文字型はすでに説明した通りで，対になるクォーテーションが必要であることに注意してほしい。終わりを表すクォーテーションがなければ，Rは続く数字や文字も含めた「語」として処理する。この場合，enterキーを押しても文字入力が閉じられていないため，コンソールには「+」の表示が出る(この記号は前の行から入力が続いており，プロンプト状態ではないことを表している)。
@@ -1212,9 +1224,9 @@ Codeを実行してみよう。スクリプトファイルが綺麗に整った�
   \item
     \(9.6 \div 4\)
   \item
-    \(2^3 + \frac{1}{2}\)
+    \(2.3 + \frac{1}{2}\)
   \item
-    \(3\times (2^2 + \frac{4}{5})\)
+    \(3\times (2.2 + \frac{4}{5})\)
   \item
     \((-2)^4\)
   \item
@@ -1263,6 +1275,9 @@ Seoul & 949 & 605 & 15,688 \\
   課題を記述したスクリプトファイルに対して，Reformatなどで整形してください。
 \end{itemize}
 
+\section{References}\label{references-1}
+
+
 \bookmarksetup{startatroot}
 
 \chapter{Rによるデータハンドリング}\label{rux306bux3088ux308bux30c7ux30fcux30bfux30cfux30f3ux30c9ux30eaux30f3ux30b0}
@@ -1310,11 +1325,11 @@ packages,と表示され，複数のパッケージ名にチェックマーク�
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{dat }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{13}\NormalTok{,}\DecValTok{15}\NormalTok{,}\DecValTok{12}\NormalTok{,}\DecValTok{14}\NormalTok{) }\CommentTok{\# データ}
-\NormalTok{M }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(dat)           }\CommentTok{\# 平均}
-\NormalTok{dev }\OtherTok{\textless{}{-}}\NormalTok{ dat }\SpecialCharTok{{-}}\NormalTok{ M           }\CommentTok{\# 平均偏差}
-\NormalTok{pow }\OtherTok{\textless{}{-}}\NormalTok{ dev}\SpecialCharTok{\^{}}\DecValTok{2}             \CommentTok{\# 平均偏差の2乗}
-\NormalTok{variance }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(pow)    }\CommentTok{\# 平均偏差の2乗の平均が分散}
+\NormalTok{dat }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{13}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{14}\NormalTok{) }\CommentTok{\# データ}
+\NormalTok{M }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(dat) }\CommentTok{\# 平均}
+\NormalTok{dev }\OtherTok{\textless{}{-}}\NormalTok{ dat }\SpecialCharTok{{-}}\NormalTok{ M }\CommentTok{\# 平均偏差}
+\NormalTok{pow }\OtherTok{\textless{}{-}}\NormalTok{ dev}\SpecialCharTok{\^{}}\DecValTok{2} \CommentTok{\# 平均偏差の2乗}
+\NormalTok{variance }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(pow) }\CommentTok{\# 平均偏差の2乗の平均が分散}
 \NormalTok{standardDev }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(variance) }\CommentTok{\# 分散の正の平方根が標準偏差}
 \end{Highlighting}
 \end{Shaded}
@@ -1325,10 +1340,10 @@ packages,と表示され，複数のパッケージ名にチェックマーク�
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{dat }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{13}\NormalTok{,}\DecValTok{15}\NormalTok{,}\DecValTok{12}\NormalTok{,}\DecValTok{14}\NormalTok{) }
+\NormalTok{dat }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{13}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{14}\NormalTok{)}
 \NormalTok{standardDev }\OtherTok{\textless{}{-}}\NormalTok{ dat }\SpecialCharTok{\%\textgreater{}\%}
-\NormalTok{  \{ . }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(.) \} }\SpecialCharTok{\%\textgreater{}\%}
-\NormalTok{  \{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{ \} }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  \{. }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(.)\} }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  \{.}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{\} }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{mean}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{sqrt}\NormalTok{()}
 \end{Highlighting}
@@ -1342,7 +1357,7 @@ packages,と表示され，複数のパッケージ名にチェックマーク�
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{standardDev }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((dat}\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(dat))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{standardDev }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((dat }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(dat))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1377,7 +1392,7 @@ packages,と表示され，複数のパッケージ名にチェックマーク�
 列選択は\texttt{select}関数である。これは\texttt{tidyverse}パッケージ内の\texttt{dplyr}パッケージに含まれている。
 \texttt{select}関数は\texttt{MASS}パッケージなど，他のパッケージに同名の関数が含まれることが多いので注意が必要である。
 
-例示のために，Rがデフォルトで持つサンプルデータ，\texttt{iris}を用いる。
+例示のために，Rがデフォルトで持つサンプルデータ，\texttt{iris}を用いる。なお，\texttt{iris}データは150行あるので，以下ではデータセットの冒頭を表示する\texttt{head}関数を用いているが，演習の際には\texttt{head}を用いなくても良い。
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1399,485 +1414,53 @@ packages,と表示され，複数のパッケージ名にチェックマーク�
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# 一部の変数を抜き出す}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(Sepal.Length,Species)}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(Sepal.Length, Species) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-    Sepal.Length    Species
-1            5.1     setosa
-2            4.9     setosa
-3            4.7     setosa
-4            4.6     setosa
-5            5.0     setosa
-6            5.4     setosa
-7            4.6     setosa
-8            5.0     setosa
-9            4.4     setosa
-10           4.9     setosa
-11           5.4     setosa
-12           4.8     setosa
-13           4.8     setosa
-14           4.3     setosa
-15           5.8     setosa
-16           5.7     setosa
-17           5.4     setosa
-18           5.1     setosa
-19           5.7     setosa
-20           5.1     setosa
-21           5.4     setosa
-22           5.1     setosa
-23           4.6     setosa
-24           5.1     setosa
-25           4.8     setosa
-26           5.0     setosa
-27           5.0     setosa
-28           5.2     setosa
-29           5.2     setosa
-30           4.7     setosa
-31           4.8     setosa
-32           5.4     setosa
-33           5.2     setosa
-34           5.5     setosa
-35           4.9     setosa
-36           5.0     setosa
-37           5.5     setosa
-38           4.9     setosa
-39           4.4     setosa
-40           5.1     setosa
-41           5.0     setosa
-42           4.5     setosa
-43           4.4     setosa
-44           5.0     setosa
-45           5.1     setosa
-46           4.8     setosa
-47           5.1     setosa
-48           4.6     setosa
-49           5.3     setosa
-50           5.0     setosa
-51           7.0 versicolor
-52           6.4 versicolor
-53           6.9 versicolor
-54           5.5 versicolor
-55           6.5 versicolor
-56           5.7 versicolor
-57           6.3 versicolor
-58           4.9 versicolor
-59           6.6 versicolor
-60           5.2 versicolor
-61           5.0 versicolor
-62           5.9 versicolor
-63           6.0 versicolor
-64           6.1 versicolor
-65           5.6 versicolor
-66           6.7 versicolor
-67           5.6 versicolor
-68           5.8 versicolor
-69           6.2 versicolor
-70           5.6 versicolor
-71           5.9 versicolor
-72           6.1 versicolor
-73           6.3 versicolor
-74           6.1 versicolor
-75           6.4 versicolor
-76           6.6 versicolor
-77           6.8 versicolor
-78           6.7 versicolor
-79           6.0 versicolor
-80           5.7 versicolor
-81           5.5 versicolor
-82           5.5 versicolor
-83           5.8 versicolor
-84           6.0 versicolor
-85           5.4 versicolor
-86           6.0 versicolor
-87           6.7 versicolor
-88           6.3 versicolor
-89           5.6 versicolor
-90           5.5 versicolor
-91           5.5 versicolor
-92           6.1 versicolor
-93           5.8 versicolor
-94           5.0 versicolor
-95           5.6 versicolor
-96           5.7 versicolor
-97           5.7 versicolor
-98           6.2 versicolor
-99           5.1 versicolor
-100          5.7 versicolor
-101          6.3  virginica
-102          5.8  virginica
-103          7.1  virginica
-104          6.3  virginica
-105          6.5  virginica
-106          7.6  virginica
-107          4.9  virginica
-108          7.3  virginica
-109          6.7  virginica
-110          7.2  virginica
-111          6.5  virginica
-112          6.4  virginica
-113          6.8  virginica
-114          5.7  virginica
-115          5.8  virginica
-116          6.4  virginica
-117          6.5  virginica
-118          7.7  virginica
-119          7.7  virginica
-120          6.0  virginica
-121          6.9  virginica
-122          5.6  virginica
-123          7.7  virginica
-124          6.3  virginica
-125          6.7  virginica
-126          7.2  virginica
-127          6.2  virginica
-128          6.1  virginica
-129          6.4  virginica
-130          7.2  virginica
-131          7.4  virginica
-132          7.9  virginica
-133          6.4  virginica
-134          6.3  virginica
-135          6.1  virginica
-136          7.7  virginica
-137          6.3  virginica
-138          6.4  virginica
-139          6.0  virginica
-140          6.9  virginica
-141          6.7  virginica
-142          6.9  virginica
-143          5.8  virginica
-144          6.8  virginica
-145          6.7  virginica
-146          6.7  virginica
-147          6.3  virginica
-148          6.5  virginica
-149          6.2  virginica
-150          5.9  virginica
+  Sepal.Length Species
+1          5.1  setosa
+2          4.9  setosa
+3          4.7  setosa
+4          4.6  setosa
+5          5.0  setosa
+6          5.4  setosa
 \end{verbatim}
 
 逆に，一部の変数を除外したい場合はマイナスをつける。
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{Species)}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{Species) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-    Sepal.Length Sepal.Width Petal.Length Petal.Width
-1            5.1         3.5          1.4         0.2
-2            4.9         3.0          1.4         0.2
-3            4.7         3.2          1.3         0.2
-4            4.6         3.1          1.5         0.2
-5            5.0         3.6          1.4         0.2
-6            5.4         3.9          1.7         0.4
-7            4.6         3.4          1.4         0.3
-8            5.0         3.4          1.5         0.2
-9            4.4         2.9          1.4         0.2
-10           4.9         3.1          1.5         0.1
-11           5.4         3.7          1.5         0.2
-12           4.8         3.4          1.6         0.2
-13           4.8         3.0          1.4         0.1
-14           4.3         3.0          1.1         0.1
-15           5.8         4.0          1.2         0.2
-16           5.7         4.4          1.5         0.4
-17           5.4         3.9          1.3         0.4
-18           5.1         3.5          1.4         0.3
-19           5.7         3.8          1.7         0.3
-20           5.1         3.8          1.5         0.3
-21           5.4         3.4          1.7         0.2
-22           5.1         3.7          1.5         0.4
-23           4.6         3.6          1.0         0.2
-24           5.1         3.3          1.7         0.5
-25           4.8         3.4          1.9         0.2
-26           5.0         3.0          1.6         0.2
-27           5.0         3.4          1.6         0.4
-28           5.2         3.5          1.5         0.2
-29           5.2         3.4          1.4         0.2
-30           4.7         3.2          1.6         0.2
-31           4.8         3.1          1.6         0.2
-32           5.4         3.4          1.5         0.4
-33           5.2         4.1          1.5         0.1
-34           5.5         4.2          1.4         0.2
-35           4.9         3.1          1.5         0.2
-36           5.0         3.2          1.2         0.2
-37           5.5         3.5          1.3         0.2
-38           4.9         3.6          1.4         0.1
-39           4.4         3.0          1.3         0.2
-40           5.1         3.4          1.5         0.2
-41           5.0         3.5          1.3         0.3
-42           4.5         2.3          1.3         0.3
-43           4.4         3.2          1.3         0.2
-44           5.0         3.5          1.6         0.6
-45           5.1         3.8          1.9         0.4
-46           4.8         3.0          1.4         0.3
-47           5.1         3.8          1.6         0.2
-48           4.6         3.2          1.4         0.2
-49           5.3         3.7          1.5         0.2
-50           5.0         3.3          1.4         0.2
-51           7.0         3.2          4.7         1.4
-52           6.4         3.2          4.5         1.5
-53           6.9         3.1          4.9         1.5
-54           5.5         2.3          4.0         1.3
-55           6.5         2.8          4.6         1.5
-56           5.7         2.8          4.5         1.3
-57           6.3         3.3          4.7         1.6
-58           4.9         2.4          3.3         1.0
-59           6.6         2.9          4.6         1.3
-60           5.2         2.7          3.9         1.4
-61           5.0         2.0          3.5         1.0
-62           5.9         3.0          4.2         1.5
-63           6.0         2.2          4.0         1.0
-64           6.1         2.9          4.7         1.4
-65           5.6         2.9          3.6         1.3
-66           6.7         3.1          4.4         1.4
-67           5.6         3.0          4.5         1.5
-68           5.8         2.7          4.1         1.0
-69           6.2         2.2          4.5         1.5
-70           5.6         2.5          3.9         1.1
-71           5.9         3.2          4.8         1.8
-72           6.1         2.8          4.0         1.3
-73           6.3         2.5          4.9         1.5
-74           6.1         2.8          4.7         1.2
-75           6.4         2.9          4.3         1.3
-76           6.6         3.0          4.4         1.4
-77           6.8         2.8          4.8         1.4
-78           6.7         3.0          5.0         1.7
-79           6.0         2.9          4.5         1.5
-80           5.7         2.6          3.5         1.0
-81           5.5         2.4          3.8         1.1
-82           5.5         2.4          3.7         1.0
-83           5.8         2.7          3.9         1.2
-84           6.0         2.7          5.1         1.6
-85           5.4         3.0          4.5         1.5
-86           6.0         3.4          4.5         1.6
-87           6.7         3.1          4.7         1.5
-88           6.3         2.3          4.4         1.3
-89           5.6         3.0          4.1         1.3
-90           5.5         2.5          4.0         1.3
-91           5.5         2.6          4.4         1.2
-92           6.1         3.0          4.6         1.4
-93           5.8         2.6          4.0         1.2
-94           5.0         2.3          3.3         1.0
-95           5.6         2.7          4.2         1.3
-96           5.7         3.0          4.2         1.2
-97           5.7         2.9          4.2         1.3
-98           6.2         2.9          4.3         1.3
-99           5.1         2.5          3.0         1.1
-100          5.7         2.8          4.1         1.3
-101          6.3         3.3          6.0         2.5
-102          5.8         2.7          5.1         1.9
-103          7.1         3.0          5.9         2.1
-104          6.3         2.9          5.6         1.8
-105          6.5         3.0          5.8         2.2
-106          7.6         3.0          6.6         2.1
-107          4.9         2.5          4.5         1.7
-108          7.3         2.9          6.3         1.8
-109          6.7         2.5          5.8         1.8
-110          7.2         3.6          6.1         2.5
-111          6.5         3.2          5.1         2.0
-112          6.4         2.7          5.3         1.9
-113          6.8         3.0          5.5         2.1
-114          5.7         2.5          5.0         2.0
-115          5.8         2.8          5.1         2.4
-116          6.4         3.2          5.3         2.3
-117          6.5         3.0          5.5         1.8
-118          7.7         3.8          6.7         2.2
-119          7.7         2.6          6.9         2.3
-120          6.0         2.2          5.0         1.5
-121          6.9         3.2          5.7         2.3
-122          5.6         2.8          4.9         2.0
-123          7.7         2.8          6.7         2.0
-124          6.3         2.7          4.9         1.8
-125          6.7         3.3          5.7         2.1
-126          7.2         3.2          6.0         1.8
-127          6.2         2.8          4.8         1.8
-128          6.1         3.0          4.9         1.8
-129          6.4         2.8          5.6         2.1
-130          7.2         3.0          5.8         1.6
-131          7.4         2.8          6.1         1.9
-132          7.9         3.8          6.4         2.0
-133          6.4         2.8          5.6         2.2
-134          6.3         2.8          5.1         1.5
-135          6.1         2.6          5.6         1.4
-136          7.7         3.0          6.1         2.3
-137          6.3         3.4          5.6         2.4
-138          6.4         3.1          5.5         1.8
-139          6.0         3.0          4.8         1.8
-140          6.9         3.1          5.4         2.1
-141          6.7         3.1          5.6         2.4
-142          6.9         3.1          5.1         2.3
-143          5.8         2.7          5.1         1.9
-144          6.8         3.2          5.9         2.3
-145          6.7         3.3          5.7         2.5
-146          6.7         3.0          5.2         2.3
-147          6.3         2.5          5.0         1.9
-148          6.5         3.0          5.2         2.0
-149          6.2         3.4          5.4         2.3
-150          5.9         3.0          5.1         1.8
+  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1          5.1         3.5          1.4         0.2
+2          4.9         3.0          1.4         0.2
+3          4.7         3.2          1.3         0.2
+4          4.6         3.1          1.5         0.2
+5          5.0         3.6          1.4         0.2
+6          5.4         3.9          1.7         0.4
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# 複数変数の除外}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(Petal.Length,Petal.Width))}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(Petal.Length, Petal.Width)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-    Sepal.Length Sepal.Width    Species
-1            5.1         3.5     setosa
-2            4.9         3.0     setosa
-3            4.7         3.2     setosa
-4            4.6         3.1     setosa
-5            5.0         3.6     setosa
-6            5.4         3.9     setosa
-7            4.6         3.4     setosa
-8            5.0         3.4     setosa
-9            4.4         2.9     setosa
-10           4.9         3.1     setosa
-11           5.4         3.7     setosa
-12           4.8         3.4     setosa
-13           4.8         3.0     setosa
-14           4.3         3.0     setosa
-15           5.8         4.0     setosa
-16           5.7         4.4     setosa
-17           5.4         3.9     setosa
-18           5.1         3.5     setosa
-19           5.7         3.8     setosa
-20           5.1         3.8     setosa
-21           5.4         3.4     setosa
-22           5.1         3.7     setosa
-23           4.6         3.6     setosa
-24           5.1         3.3     setosa
-25           4.8         3.4     setosa
-26           5.0         3.0     setosa
-27           5.0         3.4     setosa
-28           5.2         3.5     setosa
-29           5.2         3.4     setosa
-30           4.7         3.2     setosa
-31           4.8         3.1     setosa
-32           5.4         3.4     setosa
-33           5.2         4.1     setosa
-34           5.5         4.2     setosa
-35           4.9         3.1     setosa
-36           5.0         3.2     setosa
-37           5.5         3.5     setosa
-38           4.9         3.6     setosa
-39           4.4         3.0     setosa
-40           5.1         3.4     setosa
-41           5.0         3.5     setosa
-42           4.5         2.3     setosa
-43           4.4         3.2     setosa
-44           5.0         3.5     setosa
-45           5.1         3.8     setosa
-46           4.8         3.0     setosa
-47           5.1         3.8     setosa
-48           4.6         3.2     setosa
-49           5.3         3.7     setosa
-50           5.0         3.3     setosa
-51           7.0         3.2 versicolor
-52           6.4         3.2 versicolor
-53           6.9         3.1 versicolor
-54           5.5         2.3 versicolor
-55           6.5         2.8 versicolor
-56           5.7         2.8 versicolor
-57           6.3         3.3 versicolor
-58           4.9         2.4 versicolor
-59           6.6         2.9 versicolor
-60           5.2         2.7 versicolor
-61           5.0         2.0 versicolor
-62           5.9         3.0 versicolor
-63           6.0         2.2 versicolor
-64           6.1         2.9 versicolor
-65           5.6         2.9 versicolor
-66           6.7         3.1 versicolor
-67           5.6         3.0 versicolor
-68           5.8         2.7 versicolor
-69           6.2         2.2 versicolor
-70           5.6         2.5 versicolor
-71           5.9         3.2 versicolor
-72           6.1         2.8 versicolor
-73           6.3         2.5 versicolor
-74           6.1         2.8 versicolor
-75           6.4         2.9 versicolor
-76           6.6         3.0 versicolor
-77           6.8         2.8 versicolor
-78           6.7         3.0 versicolor
-79           6.0         2.9 versicolor
-80           5.7         2.6 versicolor
-81           5.5         2.4 versicolor
-82           5.5         2.4 versicolor
-83           5.8         2.7 versicolor
-84           6.0         2.7 versicolor
-85           5.4         3.0 versicolor
-86           6.0         3.4 versicolor
-87           6.7         3.1 versicolor
-88           6.3         2.3 versicolor
-89           5.6         3.0 versicolor
-90           5.5         2.5 versicolor
-91           5.5         2.6 versicolor
-92           6.1         3.0 versicolor
-93           5.8         2.6 versicolor
-94           5.0         2.3 versicolor
-95           5.6         2.7 versicolor
-96           5.7         3.0 versicolor
-97           5.7         2.9 versicolor
-98           6.2         2.9 versicolor
-99           5.1         2.5 versicolor
-100          5.7         2.8 versicolor
-101          6.3         3.3  virginica
-102          5.8         2.7  virginica
-103          7.1         3.0  virginica
-104          6.3         2.9  virginica
-105          6.5         3.0  virginica
-106          7.6         3.0  virginica
-107          4.9         2.5  virginica
-108          7.3         2.9  virginica
-109          6.7         2.5  virginica
-110          7.2         3.6  virginica
-111          6.5         3.2  virginica
-112          6.4         2.7  virginica
-113          6.8         3.0  virginica
-114          5.7         2.5  virginica
-115          5.8         2.8  virginica
-116          6.4         3.2  virginica
-117          6.5         3.0  virginica
-118          7.7         3.8  virginica
-119          7.7         2.6  virginica
-120          6.0         2.2  virginica
-121          6.9         3.2  virginica
-122          5.6         2.8  virginica
-123          7.7         2.8  virginica
-124          6.3         2.7  virginica
-125          6.7         3.3  virginica
-126          7.2         3.2  virginica
-127          6.2         2.8  virginica
-128          6.1         3.0  virginica
-129          6.4         2.8  virginica
-130          7.2         3.0  virginica
-131          7.4         2.8  virginica
-132          7.9         3.8  virginica
-133          6.4         2.8  virginica
-134          6.3         2.8  virginica
-135          6.1         2.6  virginica
-136          7.7         3.0  virginica
-137          6.3         3.4  virginica
-138          6.4         3.1  virginica
-139          6.0         3.0  virginica
-140          6.9         3.1  virginica
-141          6.7         3.1  virginica
-142          6.9         3.1  virginica
-143          5.8         2.7  virginica
-144          6.8         3.2  virginica
-145          6.7         3.3  virginica
-146          6.7         3.0  virginica
-147          6.3         2.5  virginica
-148          6.5         3.0  virginica
-149          6.2         3.4  virginica
-150          5.9         3.0  virginica
+  Sepal.Length Sepal.Width Species
+1          5.1         3.5  setosa
+2          4.9         3.0  setosa
+3          4.7         3.2  setosa
+4          4.6         3.1  setosa
+5          5.0         3.6  setosa
+6          5.4         3.9  setosa
 \end{verbatim}
 
 これだけでも便利だが，\texttt{select}関数は適用時に抜き出す条件を指定してやればよく，そのために便利な以下のような関数がある。
@@ -1899,645 +1482,69 @@ packages,と表示され，複数のパッケージ名にチェックマーク�
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# starts\_withで特定の文字から始まる変数を抜き出す}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Petal"}\NormalTok{))}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Petal"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-    Petal.Length Petal.Width
-1            1.4         0.2
-2            1.4         0.2
-3            1.3         0.2
-4            1.5         0.2
-5            1.4         0.2
-6            1.7         0.4
-7            1.4         0.3
-8            1.5         0.2
-9            1.4         0.2
-10           1.5         0.1
-11           1.5         0.2
-12           1.6         0.2
-13           1.4         0.1
-14           1.1         0.1
-15           1.2         0.2
-16           1.5         0.4
-17           1.3         0.4
-18           1.4         0.3
-19           1.7         0.3
-20           1.5         0.3
-21           1.7         0.2
-22           1.5         0.4
-23           1.0         0.2
-24           1.7         0.5
-25           1.9         0.2
-26           1.6         0.2
-27           1.6         0.4
-28           1.5         0.2
-29           1.4         0.2
-30           1.6         0.2
-31           1.6         0.2
-32           1.5         0.4
-33           1.5         0.1
-34           1.4         0.2
-35           1.5         0.2
-36           1.2         0.2
-37           1.3         0.2
-38           1.4         0.1
-39           1.3         0.2
-40           1.5         0.2
-41           1.3         0.3
-42           1.3         0.3
-43           1.3         0.2
-44           1.6         0.6
-45           1.9         0.4
-46           1.4         0.3
-47           1.6         0.2
-48           1.4         0.2
-49           1.5         0.2
-50           1.4         0.2
-51           4.7         1.4
-52           4.5         1.5
-53           4.9         1.5
-54           4.0         1.3
-55           4.6         1.5
-56           4.5         1.3
-57           4.7         1.6
-58           3.3         1.0
-59           4.6         1.3
-60           3.9         1.4
-61           3.5         1.0
-62           4.2         1.5
-63           4.0         1.0
-64           4.7         1.4
-65           3.6         1.3
-66           4.4         1.4
-67           4.5         1.5
-68           4.1         1.0
-69           4.5         1.5
-70           3.9         1.1
-71           4.8         1.8
-72           4.0         1.3
-73           4.9         1.5
-74           4.7         1.2
-75           4.3         1.3
-76           4.4         1.4
-77           4.8         1.4
-78           5.0         1.7
-79           4.5         1.5
-80           3.5         1.0
-81           3.8         1.1
-82           3.7         1.0
-83           3.9         1.2
-84           5.1         1.6
-85           4.5         1.5
-86           4.5         1.6
-87           4.7         1.5
-88           4.4         1.3
-89           4.1         1.3
-90           4.0         1.3
-91           4.4         1.2
-92           4.6         1.4
-93           4.0         1.2
-94           3.3         1.0
-95           4.2         1.3
-96           4.2         1.2
-97           4.2         1.3
-98           4.3         1.3
-99           3.0         1.1
-100          4.1         1.3
-101          6.0         2.5
-102          5.1         1.9
-103          5.9         2.1
-104          5.6         1.8
-105          5.8         2.2
-106          6.6         2.1
-107          4.5         1.7
-108          6.3         1.8
-109          5.8         1.8
-110          6.1         2.5
-111          5.1         2.0
-112          5.3         1.9
-113          5.5         2.1
-114          5.0         2.0
-115          5.1         2.4
-116          5.3         2.3
-117          5.5         1.8
-118          6.7         2.2
-119          6.9         2.3
-120          5.0         1.5
-121          5.7         2.3
-122          4.9         2.0
-123          6.7         2.0
-124          4.9         1.8
-125          5.7         2.1
-126          6.0         1.8
-127          4.8         1.8
-128          4.9         1.8
-129          5.6         2.1
-130          5.8         1.6
-131          6.1         1.9
-132          6.4         2.0
-133          5.6         2.2
-134          5.1         1.5
-135          5.6         1.4
-136          6.1         2.3
-137          5.6         2.4
-138          5.5         1.8
-139          4.8         1.8
-140          5.4         2.1
-141          5.6         2.4
-142          5.1         2.3
-143          5.1         1.9
-144          5.9         2.3
-145          5.7         2.5
-146          5.2         2.3
-147          5.0         1.9
-148          5.2         2.0
-149          5.4         2.3
-150          5.1         1.8
+  Petal.Length Petal.Width
+1          1.4         0.2
+2          1.4         0.2
+3          1.3         0.2
+4          1.5         0.2
+5          1.4         0.2
+6          1.7         0.4
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# ends\_withで特定の文字で終わる変数を抜き出す}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{ends\_with}\NormalTok{(}\StringTok{"Length"}\NormalTok{))}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{ends\_with}\NormalTok{(}\StringTok{"Length"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-    Sepal.Length Petal.Length
-1            5.1          1.4
-2            4.9          1.4
-3            4.7          1.3
-4            4.6          1.5
-5            5.0          1.4
-6            5.4          1.7
-7            4.6          1.4
-8            5.0          1.5
-9            4.4          1.4
-10           4.9          1.5
-11           5.4          1.5
-12           4.8          1.6
-13           4.8          1.4
-14           4.3          1.1
-15           5.8          1.2
-16           5.7          1.5
-17           5.4          1.3
-18           5.1          1.4
-19           5.7          1.7
-20           5.1          1.5
-21           5.4          1.7
-22           5.1          1.5
-23           4.6          1.0
-24           5.1          1.7
-25           4.8          1.9
-26           5.0          1.6
-27           5.0          1.6
-28           5.2          1.5
-29           5.2          1.4
-30           4.7          1.6
-31           4.8          1.6
-32           5.4          1.5
-33           5.2          1.5
-34           5.5          1.4
-35           4.9          1.5
-36           5.0          1.2
-37           5.5          1.3
-38           4.9          1.4
-39           4.4          1.3
-40           5.1          1.5
-41           5.0          1.3
-42           4.5          1.3
-43           4.4          1.3
-44           5.0          1.6
-45           5.1          1.9
-46           4.8          1.4
-47           5.1          1.6
-48           4.6          1.4
-49           5.3          1.5
-50           5.0          1.4
-51           7.0          4.7
-52           6.4          4.5
-53           6.9          4.9
-54           5.5          4.0
-55           6.5          4.6
-56           5.7          4.5
-57           6.3          4.7
-58           4.9          3.3
-59           6.6          4.6
-60           5.2          3.9
-61           5.0          3.5
-62           5.9          4.2
-63           6.0          4.0
-64           6.1          4.7
-65           5.6          3.6
-66           6.7          4.4
-67           5.6          4.5
-68           5.8          4.1
-69           6.2          4.5
-70           5.6          3.9
-71           5.9          4.8
-72           6.1          4.0
-73           6.3          4.9
-74           6.1          4.7
-75           6.4          4.3
-76           6.6          4.4
-77           6.8          4.8
-78           6.7          5.0
-79           6.0          4.5
-80           5.7          3.5
-81           5.5          3.8
-82           5.5          3.7
-83           5.8          3.9
-84           6.0          5.1
-85           5.4          4.5
-86           6.0          4.5
-87           6.7          4.7
-88           6.3          4.4
-89           5.6          4.1
-90           5.5          4.0
-91           5.5          4.4
-92           6.1          4.6
-93           5.8          4.0
-94           5.0          3.3
-95           5.6          4.2
-96           5.7          4.2
-97           5.7          4.2
-98           6.2          4.3
-99           5.1          3.0
-100          5.7          4.1
-101          6.3          6.0
-102          5.8          5.1
-103          7.1          5.9
-104          6.3          5.6
-105          6.5          5.8
-106          7.6          6.6
-107          4.9          4.5
-108          7.3          6.3
-109          6.7          5.8
-110          7.2          6.1
-111          6.5          5.1
-112          6.4          5.3
-113          6.8          5.5
-114          5.7          5.0
-115          5.8          5.1
-116          6.4          5.3
-117          6.5          5.5
-118          7.7          6.7
-119          7.7          6.9
-120          6.0          5.0
-121          6.9          5.7
-122          5.6          4.9
-123          7.7          6.7
-124          6.3          4.9
-125          6.7          5.7
-126          7.2          6.0
-127          6.2          4.8
-128          6.1          4.9
-129          6.4          5.6
-130          7.2          5.8
-131          7.4          6.1
-132          7.9          6.4
-133          6.4          5.6
-134          6.3          5.1
-135          6.1          5.6
-136          7.7          6.1
-137          6.3          5.6
-138          6.4          5.5
-139          6.0          4.8
-140          6.9          5.4
-141          6.7          5.6
-142          6.9          5.1
-143          5.8          5.1
-144          6.8          5.9
-145          6.7          5.7
-146          6.7          5.2
-147          6.3          5.0
-148          6.5          5.2
-149          6.2          5.4
-150          5.9          5.1
+  Sepal.Length Petal.Length
+1          5.1          1.4
+2          4.9          1.4
+3          4.7          1.3
+4          4.6          1.5
+5          5.0          1.4
+6          5.4          1.7
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# containsで部分一致する変数を取り出す}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{contains}\NormalTok{(}\StringTok{"etal"}\NormalTok{))}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{contains}\NormalTok{(}\StringTok{"etal"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-    Petal.Length Petal.Width
-1            1.4         0.2
-2            1.4         0.2
-3            1.3         0.2
-4            1.5         0.2
-5            1.4         0.2
-6            1.7         0.4
-7            1.4         0.3
-8            1.5         0.2
-9            1.4         0.2
-10           1.5         0.1
-11           1.5         0.2
-12           1.6         0.2
-13           1.4         0.1
-14           1.1         0.1
-15           1.2         0.2
-16           1.5         0.4
-17           1.3         0.4
-18           1.4         0.3
-19           1.7         0.3
-20           1.5         0.3
-21           1.7         0.2
-22           1.5         0.4
-23           1.0         0.2
-24           1.7         0.5
-25           1.9         0.2
-26           1.6         0.2
-27           1.6         0.4
-28           1.5         0.2
-29           1.4         0.2
-30           1.6         0.2
-31           1.6         0.2
-32           1.5         0.4
-33           1.5         0.1
-34           1.4         0.2
-35           1.5         0.2
-36           1.2         0.2
-37           1.3         0.2
-38           1.4         0.1
-39           1.3         0.2
-40           1.5         0.2
-41           1.3         0.3
-42           1.3         0.3
-43           1.3         0.2
-44           1.6         0.6
-45           1.9         0.4
-46           1.4         0.3
-47           1.6         0.2
-48           1.4         0.2
-49           1.5         0.2
-50           1.4         0.2
-51           4.7         1.4
-52           4.5         1.5
-53           4.9         1.5
-54           4.0         1.3
-55           4.6         1.5
-56           4.5         1.3
-57           4.7         1.6
-58           3.3         1.0
-59           4.6         1.3
-60           3.9         1.4
-61           3.5         1.0
-62           4.2         1.5
-63           4.0         1.0
-64           4.7         1.4
-65           3.6         1.3
-66           4.4         1.4
-67           4.5         1.5
-68           4.1         1.0
-69           4.5         1.5
-70           3.9         1.1
-71           4.8         1.8
-72           4.0         1.3
-73           4.9         1.5
-74           4.7         1.2
-75           4.3         1.3
-76           4.4         1.4
-77           4.8         1.4
-78           5.0         1.7
-79           4.5         1.5
-80           3.5         1.0
-81           3.8         1.1
-82           3.7         1.0
-83           3.9         1.2
-84           5.1         1.6
-85           4.5         1.5
-86           4.5         1.6
-87           4.7         1.5
-88           4.4         1.3
-89           4.1         1.3
-90           4.0         1.3
-91           4.4         1.2
-92           4.6         1.4
-93           4.0         1.2
-94           3.3         1.0
-95           4.2         1.3
-96           4.2         1.2
-97           4.2         1.3
-98           4.3         1.3
-99           3.0         1.1
-100          4.1         1.3
-101          6.0         2.5
-102          5.1         1.9
-103          5.9         2.1
-104          5.6         1.8
-105          5.8         2.2
-106          6.6         2.1
-107          4.5         1.7
-108          6.3         1.8
-109          5.8         1.8
-110          6.1         2.5
-111          5.1         2.0
-112          5.3         1.9
-113          5.5         2.1
-114          5.0         2.0
-115          5.1         2.4
-116          5.3         2.3
-117          5.5         1.8
-118          6.7         2.2
-119          6.9         2.3
-120          5.0         1.5
-121          5.7         2.3
-122          4.9         2.0
-123          6.7         2.0
-124          4.9         1.8
-125          5.7         2.1
-126          6.0         1.8
-127          4.8         1.8
-128          4.9         1.8
-129          5.6         2.1
-130          5.8         1.6
-131          6.1         1.9
-132          6.4         2.0
-133          5.6         2.2
-134          5.1         1.5
-135          5.6         1.4
-136          6.1         2.3
-137          5.6         2.4
-138          5.5         1.8
-139          4.8         1.8
-140          5.4         2.1
-141          5.6         2.4
-142          5.1         2.3
-143          5.1         1.9
-144          5.9         2.3
-145          5.7         2.5
-146          5.2         2.3
-147          5.0         1.9
-148          5.2         2.0
-149          5.4         2.3
-150          5.1         1.8
+  Petal.Length Petal.Width
+1          1.4         0.2
+2          1.4         0.2
+3          1.3         0.2
+4          1.5         0.2
+5          1.4         0.2
+6          1.7         0.4
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# matchesで正規表現による選択をする}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{matches}\NormalTok{(}\StringTok{".t."}\NormalTok{))}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{matches}\NormalTok{(}\StringTok{".t."}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-    Sepal.Length Sepal.Width Petal.Length Petal.Width
-1            5.1         3.5          1.4         0.2
-2            4.9         3.0          1.4         0.2
-3            4.7         3.2          1.3         0.2
-4            4.6         3.1          1.5         0.2
-5            5.0         3.6          1.4         0.2
-6            5.4         3.9          1.7         0.4
-7            4.6         3.4          1.4         0.3
-8            5.0         3.4          1.5         0.2
-9            4.4         2.9          1.4         0.2
-10           4.9         3.1          1.5         0.1
-11           5.4         3.7          1.5         0.2
-12           4.8         3.4          1.6         0.2
-13           4.8         3.0          1.4         0.1
-14           4.3         3.0          1.1         0.1
-15           5.8         4.0          1.2         0.2
-16           5.7         4.4          1.5         0.4
-17           5.4         3.9          1.3         0.4
-18           5.1         3.5          1.4         0.3
-19           5.7         3.8          1.7         0.3
-20           5.1         3.8          1.5         0.3
-21           5.4         3.4          1.7         0.2
-22           5.1         3.7          1.5         0.4
-23           4.6         3.6          1.0         0.2
-24           5.1         3.3          1.7         0.5
-25           4.8         3.4          1.9         0.2
-26           5.0         3.0          1.6         0.2
-27           5.0         3.4          1.6         0.4
-28           5.2         3.5          1.5         0.2
-29           5.2         3.4          1.4         0.2
-30           4.7         3.2          1.6         0.2
-31           4.8         3.1          1.6         0.2
-32           5.4         3.4          1.5         0.4
-33           5.2         4.1          1.5         0.1
-34           5.5         4.2          1.4         0.2
-35           4.9         3.1          1.5         0.2
-36           5.0         3.2          1.2         0.2
-37           5.5         3.5          1.3         0.2
-38           4.9         3.6          1.4         0.1
-39           4.4         3.0          1.3         0.2
-40           5.1         3.4          1.5         0.2
-41           5.0         3.5          1.3         0.3
-42           4.5         2.3          1.3         0.3
-43           4.4         3.2          1.3         0.2
-44           5.0         3.5          1.6         0.6
-45           5.1         3.8          1.9         0.4
-46           4.8         3.0          1.4         0.3
-47           5.1         3.8          1.6         0.2
-48           4.6         3.2          1.4         0.2
-49           5.3         3.7          1.5         0.2
-50           5.0         3.3          1.4         0.2
-51           7.0         3.2          4.7         1.4
-52           6.4         3.2          4.5         1.5
-53           6.9         3.1          4.9         1.5
-54           5.5         2.3          4.0         1.3
-55           6.5         2.8          4.6         1.5
-56           5.7         2.8          4.5         1.3
-57           6.3         3.3          4.7         1.6
-58           4.9         2.4          3.3         1.0
-59           6.6         2.9          4.6         1.3
-60           5.2         2.7          3.9         1.4
-61           5.0         2.0          3.5         1.0
-62           5.9         3.0          4.2         1.5
-63           6.0         2.2          4.0         1.0
-64           6.1         2.9          4.7         1.4
-65           5.6         2.9          3.6         1.3
-66           6.7         3.1          4.4         1.4
-67           5.6         3.0          4.5         1.5
-68           5.8         2.7          4.1         1.0
-69           6.2         2.2          4.5         1.5
-70           5.6         2.5          3.9         1.1
-71           5.9         3.2          4.8         1.8
-72           6.1         2.8          4.0         1.3
-73           6.3         2.5          4.9         1.5
-74           6.1         2.8          4.7         1.2
-75           6.4         2.9          4.3         1.3
-76           6.6         3.0          4.4         1.4
-77           6.8         2.8          4.8         1.4
-78           6.7         3.0          5.0         1.7
-79           6.0         2.9          4.5         1.5
-80           5.7         2.6          3.5         1.0
-81           5.5         2.4          3.8         1.1
-82           5.5         2.4          3.7         1.0
-83           5.8         2.7          3.9         1.2
-84           6.0         2.7          5.1         1.6
-85           5.4         3.0          4.5         1.5
-86           6.0         3.4          4.5         1.6
-87           6.7         3.1          4.7         1.5
-88           6.3         2.3          4.4         1.3
-89           5.6         3.0          4.1         1.3
-90           5.5         2.5          4.0         1.3
-91           5.5         2.6          4.4         1.2
-92           6.1         3.0          4.6         1.4
-93           5.8         2.6          4.0         1.2
-94           5.0         2.3          3.3         1.0
-95           5.6         2.7          4.2         1.3
-96           5.7         3.0          4.2         1.2
-97           5.7         2.9          4.2         1.3
-98           6.2         2.9          4.3         1.3
-99           5.1         2.5          3.0         1.1
-100          5.7         2.8          4.1         1.3
-101          6.3         3.3          6.0         2.5
-102          5.8         2.7          5.1         1.9
-103          7.1         3.0          5.9         2.1
-104          6.3         2.9          5.6         1.8
-105          6.5         3.0          5.8         2.2
-106          7.6         3.0          6.6         2.1
-107          4.9         2.5          4.5         1.7
-108          7.3         2.9          6.3         1.8
-109          6.7         2.5          5.8         1.8
-110          7.2         3.6          6.1         2.5
-111          6.5         3.2          5.1         2.0
-112          6.4         2.7          5.3         1.9
-113          6.8         3.0          5.5         2.1
-114          5.7         2.5          5.0         2.0
-115          5.8         2.8          5.1         2.4
-116          6.4         3.2          5.3         2.3
-117          6.5         3.0          5.5         1.8
-118          7.7         3.8          6.7         2.2
-119          7.7         2.6          6.9         2.3
-120          6.0         2.2          5.0         1.5
-121          6.9         3.2          5.7         2.3
-122          5.6         2.8          4.9         2.0
-123          7.7         2.8          6.7         2.0
-124          6.3         2.7          4.9         1.8
-125          6.7         3.3          5.7         2.1
-126          7.2         3.2          6.0         1.8
-127          6.2         2.8          4.8         1.8
-128          6.1         3.0          4.9         1.8
-129          6.4         2.8          5.6         2.1
-130          7.2         3.0          5.8         1.6
-131          7.4         2.8          6.1         1.9
-132          7.9         3.8          6.4         2.0
-133          6.4         2.8          5.6         2.2
-134          6.3         2.8          5.1         1.5
-135          6.1         2.6          5.6         1.4
-136          7.7         3.0          6.1         2.3
-137          6.3         3.4          5.6         2.4
-138          6.4         3.1          5.5         1.8
-139          6.0         3.0          4.8         1.8
-140          6.9         3.1          5.4         2.1
-141          6.7         3.1          5.6         2.4
-142          6.9         3.1          5.1         2.3
-143          5.8         2.7          5.1         1.9
-144          6.8         3.2          5.9         2.3
-145          6.7         3.3          5.7         2.5
-146          6.7         3.0          5.2         2.3
-147          6.3         2.5          5.0         1.9
-148          6.5         3.0          5.2         2.0
-149          6.2         3.4          5.4         2.3
-150          5.9         3.0          5.1         1.8
+  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1          5.1         3.5          1.4         0.2
+2          4.9         3.0          1.4         0.2
+3          4.7         3.2          1.3         0.2
+4          4.6         3.1          1.5         0.2
+5          5.0         3.6          1.4         0.2
+6          5.4         3.9          1.7         0.4
 \end{verbatim}
 
 ここで触れた\textbf{正規表現}とは，文字列を特定するためのパターンを指定する表記ルールであり，R言語に限らずプログラミング言語一般で用いられるものである。書誌検索などでも用いられることがあり，任意の文字列や先頭・末尾の語などを記号(メタ文字)を使って表現するものである。詳しくは正規表現で検索すると良い(たとえば\href{https://userweb.mnet.ne.jp/nakama/}{こちらのサイト}などがわかりやすい。)
@@ -2550,190 +1557,100 @@ packages,と表示され，複数のパッケージ名にチェックマーク�
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# Sepal.Length変数が6以上のケースを抜き出す}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(Sepal.Length }\SpecialCharTok{\textgreater{}} \DecValTok{6}\NormalTok{)}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(Sepal.Length }\SpecialCharTok{\textgreater{}} \DecValTok{6}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-1           7.0         3.2          4.7         1.4 versicolor
-2           6.4         3.2          4.5         1.5 versicolor
-3           6.9         3.1          4.9         1.5 versicolor
-4           6.5         2.8          4.6         1.5 versicolor
-5           6.3         3.3          4.7         1.6 versicolor
-6           6.6         2.9          4.6         1.3 versicolor
-7           6.1         2.9          4.7         1.4 versicolor
-8           6.7         3.1          4.4         1.4 versicolor
-9           6.2         2.2          4.5         1.5 versicolor
-10          6.1         2.8          4.0         1.3 versicolor
-11          6.3         2.5          4.9         1.5 versicolor
-12          6.1         2.8          4.7         1.2 versicolor
-13          6.4         2.9          4.3         1.3 versicolor
-14          6.6         3.0          4.4         1.4 versicolor
-15          6.8         2.8          4.8         1.4 versicolor
-16          6.7         3.0          5.0         1.7 versicolor
-17          6.7         3.1          4.7         1.5 versicolor
-18          6.3         2.3          4.4         1.3 versicolor
-19          6.1         3.0          4.6         1.4 versicolor
-20          6.2         2.9          4.3         1.3 versicolor
-21          6.3         3.3          6.0         2.5  virginica
-22          7.1         3.0          5.9         2.1  virginica
-23          6.3         2.9          5.6         1.8  virginica
-24          6.5         3.0          5.8         2.2  virginica
-25          7.6         3.0          6.6         2.1  virginica
-26          7.3         2.9          6.3         1.8  virginica
-27          6.7         2.5          5.8         1.8  virginica
-28          7.2         3.6          6.1         2.5  virginica
-29          6.5         3.2          5.1         2.0  virginica
-30          6.4         2.7          5.3         1.9  virginica
-31          6.8         3.0          5.5         2.1  virginica
-32          6.4         3.2          5.3         2.3  virginica
-33          6.5         3.0          5.5         1.8  virginica
-34          7.7         3.8          6.7         2.2  virginica
-35          7.7         2.6          6.9         2.3  virginica
-36          6.9         3.2          5.7         2.3  virginica
-37          7.7         2.8          6.7         2.0  virginica
-38          6.3         2.7          4.9         1.8  virginica
-39          6.7         3.3          5.7         2.1  virginica
-40          7.2         3.2          6.0         1.8  virginica
-41          6.2         2.8          4.8         1.8  virginica
-42          6.1         3.0          4.9         1.8  virginica
-43          6.4         2.8          5.6         2.1  virginica
-44          7.2         3.0          5.8         1.6  virginica
-45          7.4         2.8          6.1         1.9  virginica
-46          7.9         3.8          6.4         2.0  virginica
-47          6.4         2.8          5.6         2.2  virginica
-48          6.3         2.8          5.1         1.5  virginica
-49          6.1         2.6          5.6         1.4  virginica
-50          7.7         3.0          6.1         2.3  virginica
-51          6.3         3.4          5.6         2.4  virginica
-52          6.4         3.1          5.5         1.8  virginica
-53          6.9         3.1          5.4         2.1  virginica
-54          6.7         3.1          5.6         2.4  virginica
-55          6.9         3.1          5.1         2.3  virginica
-56          6.8         3.2          5.9         2.3  virginica
-57          6.7         3.3          5.7         2.5  virginica
-58          6.7         3.0          5.2         2.3  virginica
-59          6.3         2.5          5.0         1.9  virginica
-60          6.5         3.0          5.2         2.0  virginica
-61          6.2         3.4          5.4         2.3  virginica
+  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          7.0         3.2          4.7         1.4 versicolor
+2          6.4         3.2          4.5         1.5 versicolor
+3          6.9         3.1          4.9         1.5 versicolor
+4          6.5         2.8          4.6         1.5 versicolor
+5          6.3         3.3          4.7         1.6 versicolor
+6          6.6         2.9          4.6         1.3 versicolor
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# 特定の種別だけ抜き出す}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(Species }\SpecialCharTok{==} \StringTok{"versicolor"}\NormalTok{)}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(Species }\SpecialCharTok{==} \StringTok{"versicolor"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-1           7.0         3.2          4.7         1.4 versicolor
-2           6.4         3.2          4.5         1.5 versicolor
-3           6.9         3.1          4.9         1.5 versicolor
-4           5.5         2.3          4.0         1.3 versicolor
-5           6.5         2.8          4.6         1.5 versicolor
-6           5.7         2.8          4.5         1.3 versicolor
-7           6.3         3.3          4.7         1.6 versicolor
-8           4.9         2.4          3.3         1.0 versicolor
-9           6.6         2.9          4.6         1.3 versicolor
-10          5.2         2.7          3.9         1.4 versicolor
-11          5.0         2.0          3.5         1.0 versicolor
-12          5.9         3.0          4.2         1.5 versicolor
-13          6.0         2.2          4.0         1.0 versicolor
-14          6.1         2.9          4.7         1.4 versicolor
-15          5.6         2.9          3.6         1.3 versicolor
-16          6.7         3.1          4.4         1.4 versicolor
-17          5.6         3.0          4.5         1.5 versicolor
-18          5.8         2.7          4.1         1.0 versicolor
-19          6.2         2.2          4.5         1.5 versicolor
-20          5.6         2.5          3.9         1.1 versicolor
-21          5.9         3.2          4.8         1.8 versicolor
-22          6.1         2.8          4.0         1.3 versicolor
-23          6.3         2.5          4.9         1.5 versicolor
-24          6.1         2.8          4.7         1.2 versicolor
-25          6.4         2.9          4.3         1.3 versicolor
-26          6.6         3.0          4.4         1.4 versicolor
-27          6.8         2.8          4.8         1.4 versicolor
-28          6.7         3.0          5.0         1.7 versicolor
-29          6.0         2.9          4.5         1.5 versicolor
-30          5.7         2.6          3.5         1.0 versicolor
-31          5.5         2.4          3.8         1.1 versicolor
-32          5.5         2.4          3.7         1.0 versicolor
-33          5.8         2.7          3.9         1.2 versicolor
-34          6.0         2.7          5.1         1.6 versicolor
-35          5.4         3.0          4.5         1.5 versicolor
-36          6.0         3.4          4.5         1.6 versicolor
-37          6.7         3.1          4.7         1.5 versicolor
-38          6.3         2.3          4.4         1.3 versicolor
-39          5.6         3.0          4.1         1.3 versicolor
-40          5.5         2.5          4.0         1.3 versicolor
-41          5.5         2.6          4.4         1.2 versicolor
-42          6.1         3.0          4.6         1.4 versicolor
-43          5.8         2.6          4.0         1.2 versicolor
-44          5.0         2.3          3.3         1.0 versicolor
-45          5.6         2.7          4.2         1.3 versicolor
-46          5.7         3.0          4.2         1.2 versicolor
-47          5.7         2.9          4.2         1.3 versicolor
-48          6.2         2.9          4.3         1.3 versicolor
-49          5.1         2.5          3.0         1.1 versicolor
-50          5.7         2.8          4.1         1.3 versicolor
+  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          7.0         3.2          4.7         1.4 versicolor
+2          6.4         3.2          4.5         1.5 versicolor
+3          6.9         3.1          4.9         1.5 versicolor
+4          5.5         2.3          4.0         1.3 versicolor
+5          6.5         2.8          4.6         1.5 versicolor
+6          5.7         2.8          4.5         1.3 versicolor
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# 複数指定の例}
-\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(Species }\SpecialCharTok{!=} \StringTok{"versicolor"}\NormalTok{, Sepal.Length }\SpecialCharTok{\textgreater{}} \DecValTok{6}\NormalTok{)}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(Species }\SpecialCharTok{!=} \StringTok{"versicolor"}\NormalTok{, Sepal.Length }\SpecialCharTok{\textgreater{}} \DecValTok{6}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-   Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
-1           6.3         3.3          6.0         2.5 virginica
-2           7.1         3.0          5.9         2.1 virginica
-3           6.3         2.9          5.6         1.8 virginica
-4           6.5         3.0          5.8         2.2 virginica
-5           7.6         3.0          6.6         2.1 virginica
-6           7.3         2.9          6.3         1.8 virginica
-7           6.7         2.5          5.8         1.8 virginica
-8           7.2         3.6          6.1         2.5 virginica
-9           6.5         3.2          5.1         2.0 virginica
-10          6.4         2.7          5.3         1.9 virginica
-11          6.8         3.0          5.5         2.1 virginica
-12          6.4         3.2          5.3         2.3 virginica
-13          6.5         3.0          5.5         1.8 virginica
-14          7.7         3.8          6.7         2.2 virginica
-15          7.7         2.6          6.9         2.3 virginica
-16          6.9         3.2          5.7         2.3 virginica
-17          7.7         2.8          6.7         2.0 virginica
-18          6.3         2.7          4.9         1.8 virginica
-19          6.7         3.3          5.7         2.1 virginica
-20          7.2         3.2          6.0         1.8 virginica
-21          6.2         2.8          4.8         1.8 virginica
-22          6.1         3.0          4.9         1.8 virginica
-23          6.4         2.8          5.6         2.1 virginica
-24          7.2         3.0          5.8         1.6 virginica
-25          7.4         2.8          6.1         1.9 virginica
-26          7.9         3.8          6.4         2.0 virginica
-27          6.4         2.8          5.6         2.2 virginica
-28          6.3         2.8          5.1         1.5 virginica
-29          6.1         2.6          5.6         1.4 virginica
-30          7.7         3.0          6.1         2.3 virginica
-31          6.3         3.4          5.6         2.4 virginica
-32          6.4         3.1          5.5         1.8 virginica
-33          6.9         3.1          5.4         2.1 virginica
-34          6.7         3.1          5.6         2.4 virginica
-35          6.9         3.1          5.1         2.3 virginica
-36          6.8         3.2          5.9         2.3 virginica
-37          6.7         3.3          5.7         2.5 virginica
-38          6.7         3.0          5.2         2.3 virginica
-39          6.3         2.5          5.0         1.9 virginica
-40          6.5         3.0          5.2         2.0 virginica
-41          6.2         3.4          5.4         2.3 virginica
+  Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+1          6.3         3.3          6.0         2.5 virginica
+2          7.1         3.0          5.9         2.1 virginica
+3          6.3         2.9          5.6         1.8 virginica
+4          6.5         3.0          5.8         2.2 virginica
+5          7.6         3.0          6.6         2.1 virginica
+6          7.3         2.9          6.3         1.8 virginica
 \end{verbatim}
 
 ここで\texttt{==}とあるのは一致しているかどうかの判別をするための演算子である。\texttt{=}ひとつだと「オブジェクトへの代入」と同じになるので，判別条件の時には重ねて表記する。同様に，\texttt{!=}とあるのはnot
-equal，つまり不一致条件の判別である。
+equal，つまり不一致のとき真になる演算子である。
+
+\section{変数を作る・再割り当てする}\label{ux5909ux6570ux3092ux4f5cux308bux518dux5272ux308aux5f53ux3066ux3059ux308b}
+
+既存の変数から別の変数を作る，あるいは値の再割り当ては，データハンドリング時に最もよく行う操作のひとつである。たとえば連続変数をある値を境に「高群・低群」というカテゴリカルな変数に作り変えたり，単位を変換するために線形変換したりすることがあるだろう。このように，変数を操作するときに「既存の変数を加工して特徴量を作りだす」というときの操作は，基本的に\texttt{dplyr}の\texttt{mutate}関数を用いる。次の例をみてみよう。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mutate}\NormalTok{(iris, }\AttributeTok{Twice =}\NormalTok{ Sepal.Length }\SpecialCharTok{*} \DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species Twice
+1          5.1         3.5          1.4         0.2  setosa  10.2
+2          4.9         3.0          1.4         0.2  setosa   9.8
+3          4.7         3.2          1.3         0.2  setosa   9.4
+4          4.6         3.1          1.5         0.2  setosa   9.2
+5          5.0         3.6          1.4         0.2  setosa  10.0
+6          5.4         3.9          1.7         0.4  setosa  10.8
+\end{verbatim}
+
+新しく\texttt{Twice}変数ができたのが確認できるだろう。この関数はパイプ演算子の中で使うことができる(というかその方が主な使い方である)。次の例は，\texttt{Sepal.Length}変数を高群と低群の2群に分けるものである。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(Sepal.Length) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Sepal.HL =} \FunctionTok{ifelse}\NormalTok{(Sepal.Length }\SpecialCharTok{\textgreater{}} \FunctionTok{mean}\NormalTok{(Sepal.Length), }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Sepal.HL =} \FunctionTok{factor}\NormalTok{(Sepal.HL, }\AttributeTok{label =} \FunctionTok{c}\NormalTok{(}\StringTok{"High"}\NormalTok{, }\StringTok{"Low"}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  Sepal.Length Sepal.HL
+1          5.1      Low
+2          4.9      Low
+3          4.7      Low
+4          4.6      Low
+5          5.0      Low
+6          5.4      Low
+\end{verbatim}
+
+ここでもちいた\texttt{ifelse}関数は，\texttt{if(条件判断,真のときの処理,偽のときの処理)}という形でもちいる条件分岐関数であり，ここでは平均より大きければ1，そうでなければ2を返すようになっている。\texttt{mutate}関数でこの結果をSepal.HL変数に代入(生成)し，次の\texttt{mutate}関数では今作ったSepal.HL変数をFactor型に変換して，その結果をまたSepal.HL変数に代入(上書き)している。このように，変数の生成先を生成元と同じにしておくと上書きされるため，たとえば変数の型変換(文字型から数値型へ，数値型からFactor型へ，など)にも用いることができる。
 
 \section{課題2}\label{ux8ab2ux984c2}
 
@@ -2744,45 +1661,392 @@ equal，つまり不一致条件の判別である。
 \item
   \texttt{df}には複数の変数が含まれている。変数名の一覧は\texttt{names}関数で行う。\texttt{df}オブジェクトに含まれる変数名を確認しよう。
 \item
-  \texttt{df}には多くの変数があるが，必要なのは年度(Year)，選手名(Name)，所属球団(team)，身長(height),体重(weight)，年俸(salary)だけである。変数選択をして，これらの変数だけからなる\texttt{df2}オブジェクトを作ろう。
+  \texttt{df}には多くの変数があるが，必要なのは年度(Year)，選手名(Name)，所属球団(team)，身長(height),体重(weight)，年俸(salary),守備位置(position)だけである。変数選択をして，これらの変数だけからなる\texttt{df2}オブジェクトを作ろう。
 \item
   \texttt{df2}に含まれるデータは数年分のデータが含まれる。\texttt{2020年度}のデータだけ分析したいので，選別してみよう。
 \item
   同じく\texttt{2020年度}の\texttt{阪神タイガース}に関するデータだけを選別してみよう。
 \item
   同じく\texttt{2020年度}の\texttt{阪神タイガース}以外のデータセットはどのようにして選別できるだろうか。
+\item
+  選手の身体的特徴を表すBMI変数をつくろう。なお，BMIは体重(kg)を身長(m)の二乗で除したものである。変数\texttt{height}の単位がcmであることに注意しよう。
+\item
+  投手と野手を区別する，新しい変数\texttt{position2}を作ってみよう。これはFactor型にしよう。なお，野手は投手でないもの，すなわち内野手，外野手，捕手のいずれかである。
+\item
+  日本プロ野球界は大きく分けてセリーグ(Central League)とパリーグ(Pacific
+  League)にわかれている。セリーグに所属する球団はGiants, Carp, Tigers,
+  Swallows, Dragons,
+  DeNAであり，パ・リーグはそれ以外である。\texttt{df2}を加工して，所属するリーグの変数\texttt{League}をつくってみよう。この変数もFactor型にしておこう。
+\item
+  変数\texttt{Year}は語尾に「年度」という文字が入っているため文字列型になっており，実際に使うときは不便である。「年度」という文字を除外した，数値型変数に変換しよう。
 \end{itemize}
+
+\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b}
+
+ここまでみてきたデータは行列の2次元に，ケース\(\times\)変数の形で格納されていた。この形式は，人間が見て管理するときにわかりやすい形式をしているが，計算機にとっては必ずしもそうではない。たとえば「神エクセル」と揶揄されることがあるように，稀に表計算ソフトを方眼紙ソフトあるいは原稿用紙ソフトと勘違いしたかのような使い方がなされる場合がある。人間にとってはわかりやすい(見て把握しやすい)かもしれないが，計算機にとって構造が把握できないため，データ解析に不向きである。巷には，こうした分析しにくい電子データがまだまだたくさん存在する。
+
+これをうけて2020年12月，総務省により機械判読可能なデータの表記方法の統一ルールが策定された\autocite{soumu}。それには次のようなチェック項目が含まれている。
+
+\begin{itemize}
+\tightlist
+\item
+  ファイル形式はExcelかCSVとなっているか
+\item
+  1セル1データとなっているか
+\item
+  数値データは数値属性とし，文字列を含まないこと
+\item
+  セルの結合をしていないか
+\item
+  スペースや改行等で体裁を整えていないか
+\item
+  項目名を省略していないか
+\item
+  数式を使用している場合は，数値データに修正しているか
+\item
+  オブジェクトを使用していないか
+\item
+  データの単位を記載しているか
+\item
+  機種依存文字を使用していないか
+\item
+  データが分断されていないか
+\item
+  1シートに複数の表が掲載されていないか
+\end{itemize}
+
+データの入力の基本は，\textbf{1行に1ケースの情報が入っている，過不足のない1つのデータセットを作ること}といえるだろう。
+
+同様に，計算機にとって分析しやすいデータの形について，\textcite{Hadley2014}
+が提唱したのが\textbf{整然データ(Tidy
+Data)}という考え方である。整然データとは，次の4つの特徴を持ったデータ形式のことを指す。
+
+\begin{itemize}
+\tightlist
+\item
+  個々の変数(variable)が1つの列(column)をなす。
+\item
+  個々の観測(observation)が1つの行(row)をなす。
+\item
+  個々の観測の構成単位の類型(type of observational
+  unit)が1つの表(table)をなす。
+\item
+  個々の値(value)が1つのセル(cell)をなす。
+\end{itemize}
+
+この形式のデータであれば，計算機が変数と値の対応構造を把握しやすく，分析しやすいデータになる。データハンドリングの目的は，混乱している雑多なデータを，利用しやすい整然データの形に整えることであると言っても過言ではない。
+さて，ここでよく考えてみると，変数名も一つの変数だと考えることに気づく。一般に，行列型のデータは次のような書式になっている。
+
+\begin{longtable}[]{@{}lllll@{}}
+\caption{ロング型データ}\tabularnewline
+\toprule\noalign{}
+& 午前 & 午後 & 夕方 & 深夜 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+& 午前 & 午後 & 夕方 & 深夜 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+東京 & 晴 & 晴 & 雨 & 雨 \\
+大阪 & 晴 & 曇 & 晴 & 晴 \\
+福岡 & 晴 & 曇 & 曇 & 雨 \\
+\end{longtable}
+
+ここで，たとえば大阪の夕方の天気を見ようとすると「晴れ」であることは明らかだが，この時の視線の動きは大阪行の，夕方列，という参照の仕方である。言い方を変えると，大阪・夕方の「晴れ」を参照するときに，行と列の両方のラベルを参照する必要がある。
+
+ここで同じデータを次のように並べ替えてみよう。
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{ロング型データ}\tabularnewline
+\toprule\noalign{}
+地域 & 時間帯 & 天候 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+地域 & 時間帯 & 天候 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+東京 & 午前 & 晴 \\
+東京 & 午後 & 晴 \\
+東京 & 夕方 & 雨 \\
+東京 & 深夜 & 雨 \\
+大阪 & 午前 & 晴 \\
+大阪 & 午後 & 曇 \\
+大阪 & 夕方 & 晴 \\
+大阪 & 深夜 & 晴 \\
+福岡 & 午前 & 晴 \\
+福岡 & 午後 & 曇 \\
+福岡 & 夕方 & 曇 \\
+福岡 & 深夜 & 雨 \\
+\end{longtable}
+
+このデータが表す情報は同じだが，大阪・夕方の条件を絞り込むことは行選択だけでよく，計算機にとって使いやすい。この形式をロング型データ，あるいは「縦持ち」データという。これに対して前者の形式をワイド型データ，あるいは「横持ち」データという。
+
+ロング型データにする利点のひとつは，欠損値の扱いである。ワイド型データで欠損値が含まれる場合，その行あるいは列全体を削除するのは無駄が多く，かと言って行・列両方を特定するのは技術的にも面倒である。これに対しロング型データの場合は，当該行を絞り込んで削除するだけで良い。
+
+\texttt{tidyverse}には(正確には\texttt{tidyr}には)，このようなロング型データ，ワイド型データの変換関数が用意されている。
+実例とともに見てみよう。まずはワイド型データをロング型に変換する\texttt{pivot\_longer}である。
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"Baseball.csv"}\NormalTok{)}
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pivot\_longer}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{Species)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-Rows: 7944 Columns: 17
--- Column specification --------------------------------------------------------
-Delimiter: ","
-chr  (6): Year, Name, team, bloodType, UniformNum, position
-dbl (11): salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save, Hold
-
-i Use `spec()` to retrieve the full column specification for this data.
-i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 600 x 3
+   Species name         value
+   <fct>   <chr>        <dbl>
+ 1 setosa  Sepal.Length   5.1
+ 2 setosa  Sepal.Width    3.5
+ 3 setosa  Petal.Length   1.4
+ 4 setosa  Petal.Width    0.2
+ 5 setosa  Sepal.Length   4.9
+ 6 setosa  Sepal.Width    3  
+ 7 setosa  Petal.Length   1.4
+ 8 setosa  Petal.Width    0.2
+ 9 setosa  Sepal.Length   4.7
+10 setosa  Sepal.Width    3.2
+# i 590 more rows
 \end{verbatim}
 
-\section{変数を作る・再割り当てする}\label{ux5909ux6570ux3092ux4f5cux308bux518dux5272ux308aux5f53ux3066ux3059ux308b}
+ここでは元の\texttt{iris}データについて，\texttt{Species}セルを軸として，それ以外の変数名と値を\texttt{name},\texttt{value}に割り当てて縦持ちにしている。
 
-\section{ロング型とワイド型}\label{ux30edux30f3ux30b0ux578bux3068ux30efux30a4ux30c9ux578b}
+逆に，ロング型のデータをワイド型に持ち替えるには，\texttt{pivot\_wider}を使う。
+実例は以下の通りである。
 
-\section{データの結合}\label{ux30c7ux30fcux30bfux306eux7d50ux5408}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{Species) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rowid\_to\_column}\NormalTok{(}\StringTok{"ID"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{ID) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{id\_cols =}\NormalTok{ ID, }\AttributeTok{names\_from =}\NormalTok{ name, }\AttributeTok{values\_from =}\NormalTok{ value)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 150 x 5
+      ID Sepal.Length Sepal.Width Petal.Length Petal.Width
+   <int>        <dbl>       <dbl>        <dbl>       <dbl>
+ 1     1          5.1         3.5          1.4         0.2
+ 2     2          4.9         3            1.4         0.2
+ 3     3          4.7         3.2          1.3         0.2
+ 4     4          4.6         3.1          1.5         0.2
+ 5     5          5           3.6          1.4         0.2
+ 6     6          5.4         3.9          1.7         0.4
+ 7     7          4.6         3.4          1.4         0.3
+ 8     8          5           3.4          1.5         0.2
+ 9     9          4.4         2.9          1.4         0.2
+10    10          4.9         3.1          1.5         0.1
+# i 140 more rows
+\end{verbatim}
+
+今回は\texttt{Species}変数を除外し，別途\texttt{ID}変数として行番号を変数に付与した。この行番号をキーに，変数名は\texttt{names}列から，その値は\texttt{value}列から持ってくることでロング型をワイド型に変えている\footnote{\texttt{Species}変数を除外したのは，これをキーにしたロング型をワイド型に変えることができない(Speciesは3水準しかない)からで，個体を識別するIDが別途必要だったからである。Species情報が欠落することになったが，これはロング型データの\texttt{value}列が\texttt{char}型と\texttt{double}型の両方を同時に持てないからである。この問題を回避するためには，Factor型のデータを\texttt{as.numeric()}関数で数値化することなどが考えられる。}。
+
+\section{グループ化と要約統計量}\label{ux30b0ux30ebux30fcux30d7ux5316ux3068ux8981ux7d04ux7d71ux8a08ux91cf}
+
+データをロング型にすることで，変数やケースの絞り込みが容易になる。その上で，ある群ごとに要約した統計量を算出したい場合は，\texttt{group\_by}変数によるグループ化と，\texttt{summarise}あるいは\texttt{reframe}がある。実例を通して確認しよう。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(Species)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 150 x 5
+# Groups:   Species [3]
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          <dbl>       <dbl>        <dbl>       <dbl> <fct>  
+ 1          5.1         3.5          1.4         0.2 setosa 
+ 2          4.9         3            1.4         0.2 setosa 
+ 3          4.7         3.2          1.3         0.2 setosa 
+ 4          4.6         3.1          1.5         0.2 setosa 
+ 5          5           3.6          1.4         0.2 setosa 
+ 6          5.4         3.9          1.7         0.4 setosa 
+ 7          4.6         3.4          1.4         0.3 setosa 
+ 8          5           3.4          1.5         0.2 setosa 
+ 9          4.4         2.9          1.4         0.2 setosa 
+10          4.9         3.1          1.5         0.1 setosa 
+# i 140 more rows
+\end{verbatim}
+
+上のコードでは，一見したところ表示されたデータに違いがないように見えるが，出力時に\texttt{Species{[}3{]}}と表示されていることがわかる。ここで，Species変数の3水準で群分けされていることが示されている。これを踏まえて，\texttt{summarise}してみよう。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(Species) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{n =} \FunctionTok{n}\NormalTok{(),}
+            \AttributeTok{Mean =} \FunctionTok{mean}\NormalTok{(Sepal.Length),}
+            \AttributeTok{Max =} \FunctionTok{max}\NormalTok{(Sepal.Length),}
+            \AttributeTok{IQR =} \FunctionTok{IQR}\NormalTok{(Sepal.Length))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 3 x 5
+  Species        n  Mean   Max   IQR
+  <fct>      <int> <dbl> <dbl> <dbl>
+1 setosa        50  5.01   5.8 0.400
+2 versicolor    50  5.94   7   0.7  
+3 virginica     50  6.59   7.9 0.675
+\end{verbatim}
+
+ここではケース数(\texttt{n})，平均(\texttt{mean})，最大値(\texttt{max})，四分位範囲(\texttt{IQR})\footnote{四分位範囲(Inter
+  Quantaile
+  Range)とは，データを値の順に4分割した時の上位1/4の値から，上位3/4の値を引いた範囲である。}を算出した。
+
+また，ここでは\texttt{Sepal.Length}についてのみ算出したが，他の数値型変数に対しても同様の計算がしたい場合は，\texttt{across}関数を使うことができる。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(Species) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{c}\NormalTok{(Sepal.Length,Sepal.Width,Petal.Length),}
+  \SpecialCharTok{\textasciitilde{}}\FunctionTok{mean}\NormalTok{(.x)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 3 x 4
+  Species    Sepal.Length Sepal.Width Petal.Length
+  <fct>             <dbl>       <dbl>        <dbl>
+1 setosa             5.01        3.43         1.46
+2 versicolor         5.94        2.77         4.26
+3 virginica          6.59        2.97         5.55
+\end{verbatim}
+
+ここで，\texttt{\textasciitilde{}mean(.x)}の書き方について言及しておく。チルダ(tilda,\texttt{\textasciitilde{}})で始まるこの式を，Rでは特にラムダ関数とかラムダ式と呼ぶ。これはこの場で使う即席関数の作り方である。別の方法として，正式に関数を作る関数\texttt{function}を使って次のように書くこともできる。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(Species) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\FunctionTok{across}\NormalTok{(}
+        \FunctionTok{c}\NormalTok{(Sepal.Length, Sepal.Width, Petal.Length),}
+        \ControlFlowTok{function}\NormalTok{(x) \{}
+            \FunctionTok{mean}\NormalTok{(x)}
+\NormalTok{        \}}
+\NormalTok{    ))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 3 x 4
+  Species    Sepal.Length Sepal.Width Petal.Length
+  <fct>             <dbl>       <dbl>        <dbl>
+1 setosa             5.01        3.43         1.46
+2 versicolor         5.94        2.77         4.26
+3 virginica          6.59        2.97         5.55
+\end{verbatim}
+
+ラムダ関数や自作関数の作り方については，後ほどあらためて触れるとして，ここでは複数の変数に関数をあてがう方法を確認して置いて欲しい。\texttt{across}関数で変数を選ぶ際は，\texttt{select}関数の時に紹介した\texttt{starts\_with}なども利用できる。次に示す例は，複数の変数を選択し，かつ，複数の関数を適用する例である。複数の関数を適用するために，ラムダ関数をリストで与えることができる。
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(Species)  }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Sepal"}\NormalTok{),}
+            \AttributeTok{.fns =} \FunctionTok{list}\NormalTok{(}\AttributeTok{M  =} \SpecialCharTok{\textasciitilde{}}\FunctionTok{mean}\NormalTok{(.x),}
+                        \AttributeTok{Q1 =} \SpecialCharTok{\textasciitilde{}}\FunctionTok{quantile}\NormalTok{(.x,}\FloatTok{0.25}\NormalTok{),}
+                        \AttributeTok{Q3 =} \SpecialCharTok{\textasciitilde{}}\FunctionTok{quantile}\NormalTok{(.x,}\FloatTok{0.75}\NormalTok{))}
+\NormalTok{            ))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 3 x 7
+  Species    Sepal.Length_M Sepal.Length_Q1 Sepal.Length_Q3 Sepal.Width_M
+  <fct>               <dbl>           <dbl>           <dbl>         <dbl>
+1 setosa               5.01            4.8              5.2          3.43
+2 versicolor           5.94            5.6              6.3          2.77
+3 virginica            6.59            6.22             6.9          2.97
+# i 2 more variables: Sepal.Width_Q1 <dbl>, Sepal.Width_Q3 <dbl>
+\end{verbatim}
 
 \section{データ整形課題}\label{ux30c7ux30fcux30bfux6574ux5f62ux8ab2ux984c}
+
+\begin{itemize}
+\tightlist
+\item
+  上で作った\texttt{df2}オブジェクトを利用する。環境に\texttt{df2}オブジェクトが残っていない場合は，もう一度上の課題に戻って作り直しておこう。
+\item
+  年度(Year)でグルーピングし，年度ごとの登録選手数(データの数)，平均年俸を見てみよう。
+\item
+  年度(Year)とチーム(team)でグルーピングし，同じく年度ごとの登録選手数(データの数)，平均年俸を見てみよう。
+\item
+  つづいて，一行に1年度分，列に各チームと変数の組み合わせが入った，ワイド型データをつくりたい。\texttt{pivot\_wider}にして上のオブジェクトをワイド型にしてみよう。
+\item
+  ワイド型になったデータを，\texttt{Year}変数をキーにして\texttt{pivot\_longer}でロング型データに変えてみよう。
+\end{itemize}
+
+\section{References}\label{references-2}
+
 
 \bookmarksetup{startatroot}
 
 \chapter{Rによるレポートの作成}\label{rux306bux3088ux308bux30ecux30ddux30fcux30c8ux306eux4f5cux6210}
 
-\section{Rmd/Qmdの使い方}\label{rmdqmdux306eux4f7fux3044ux65b9}
+\section{Rmd/Quartoの使い方}\label{rmdquartoux306eux4f7fux3044ux65b9}
+
+\subsection{概略}\label{ux6982ux7565}
+
+今回はRStudioを使った文書作成法について解説する。皆さんは、これまで作成と言えば、基本的にMicrosoft
+Wordのような文書作成ソフトを使ってきたものと思う。また，統計解析といえばR(やその他のソフト)，図表の作成はExcelといったように，用途ごとに異なるアプリケーションを活用するのが一般的であろう。
+
+このやり方は，統計解析の数値結果を表計算ソフトに，そこで作った図表を文書作成ソフトにコピー＆ペーストする，という転記作業が何度も発生する。ここで転記ミス・貼り付け間違いが生じると，当然ながら出来上がる文書は間違ったものになる。こうした転記ミスのことを「コピペ汚染」と呼ぶこともある。
+
+問題はこの環境をまたぐ作業にあるわけで，計算・作図・文書が一つの環境で済めばこうした問題が起こらない。これを解決するのがR
+markdonやQuartoという書式・ソフトウェアなのである。
+
+Rmarkdownの\texttt{markdown}とは書式の一種である。マークアップ言語と呼ばれる書き方の一種で，なかでもRとの連携に特化したのがRmarkdownである。マークアップ言語とは，言語の中に専門の記号を埋め込み，その書式に対応した読み込みアプリで，表示の際に書式を整える方式のことを指す。有名なマークアップ言語としては，数式に特化した
+LaTeX や，インターネットウェブサイトで用いられている HTML などがある。
+
+Rmarkdownはmarkdownの書式を踏襲しつつ，Rでの実行結果を文中に埋め込むコマンドを有している。Rのコマンドで計算したり図表を作成しつつ，その結果を埋め込む場所をマークアップ言語で指定する。最終的に文書を閲覧する場合は，マークアップ言語を出力ファイルに変換する(コンパイルする，ニットするという)必要があり，その時Rでの計算が実行される。コンパイルのたびに計算されるので，同じコードでも乱数を使ったコードを書いていたり，一部読み込みファイルを変更するだけで，出力される結果は変わる。しかしコピペ汚染のように，間違った値・図表が含まれるものではないので，研究の再現性にも一役買うことになる。再現可能な文書の作成について、詳しくは@Takahashi201805
+を参考にすると良い。
+
+QuartoはRmarkdownをさらに拡張させたもので，RStudioを提供しているPosit社が今もっとも注力しているソフトのひとつである。RmarkdownはRとmarkdownの連携であったが，QuartoはRだけでなく，PythonやJuliaといった他の言語にも対応しているし，これら複数の計算言語の混在も許す。すなわち，一部はRで計算し，その結果をPythonで検算してJuliaで描画する，といったことを一枚のファイルで書き込むことも可能である。
+
+なおこの授業資料もQuartoで作成している。このようにQuartoはプレゼンテーション資料やウェブサイトも作成できるし，出力形式もウェブサイトだけでなくPDFやePUB(電子書籍の形式)にすることが可能である。なおこの授業の資料もウェブサイトと同時に\href{EiPS.PDF}{PDF形式}と，\href{EiPS.epub}{ePUB形式}で出力されている。Quartoについて専門の解説書はまだないが，インターネットに充実したドキュメントがあるので検索するといいだろう。まだ新しい技術なので，\href{https://quarto.org/}{公式}を第一に参照すると良い。
+
+\subsection{ファイルの作成とknit}\label{ux30d5ux30a1ux30a4ux30ebux306eux4f5cux6210ux3068knit}
+
+RmarkdownはRStudioとの相性がよく，RStudioのFile \textgreater{} New
+Fileから\texttt{R\ Markdown}を選ぶとRmarkdownファイルがサンプルとともに作成される。作成時に文書のタイトル，著者名，作成日時や出力フォーマットが指定できるサブウィンドゥが開き，作成するとサンプルコードが含まれたR
+markdownファイルが表示されるだろう。
+
+Quartoも同様に，RStudioのFile \textgreater{} New
+Fileから\texttt{Quarto\ Document}を選ぶことで新しいファイル画面が開く。なおRmarkdownファイルの拡張子は\texttt{Rmd}とすることが一般的であり，Quartoは\texttt{Qmd}とすることが一般的である。もっとも，QuartoはRStudio以外のエディタから利用することも考えられていて，例えばVS
+Codeなどの一般的なエディタで作成し，コマンドライン経由でコンパイルすることも可能である。
+
+\begin{figure}[H]
+
+{\centering \includegraphics{Figs/04_RmdSample.png}
+
+}
+
+\caption{Rmarkdownファイルのサンプル}
+
+\end{figure}%%
+\begin{figure}[H]
+
+{\centering \includegraphics{Figs/04_QmdSample.png}
+
+}
+
+\caption{Quartoファイルのサンプル}
+
+\end{figure}%
+
+Rmarkdown，Quartoともに，ファイルの冒頭に4つのハイフンで囲まれた領域が見て取れるだろう。これはYAML(Yet
+Another Markup
+Languageの略。ここはまだマークアップ領域じゃないよということ)と呼ばれる，文書全体に対する設定をする領域のことである。
 
 \section{プロットによる基本的な描画}\label{ux30d7ux30edux30c3ux30c8ux306bux3088ux308bux57faux672cux7684ux306aux63cfux753b}
 
@@ -2794,6 +2058,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 
 \section{テーマの変更（レポートに合わせる）}\label{ux30c6ux30fcux30deux306eux5909ux66f4ux30ecux30ddux30fcux30c8ux306bux5408ux308fux305bux308b}
 
+\section{References}\label{references-3}
+
+
 \bookmarksetup{startatroot}
 
 \chapter{Rでプログラミング}\label{rux3067ux30d7ux30edux30b0ux30e9ux30dfux30f3ux30b0}
@@ -2804,9 +2071,14 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 
 \section{条件分岐}\label{ux6761ux4ef6ux5206ux5c90}
 
+\section{自作関数}\label{ux81eaux4f5cux95a2ux6570}
+
 \section{さまざまな乱数}\label{ux3055ux307eux3056ux307eux306aux4e71ux6570}
 
 \section{確率分布の関数}\label{ux78baux7387ux5206ux5e03ux306eux95a2ux6570}
+
+\section{References}\label{references-4}
+
 
 \bookmarksetup{startatroot}
 
@@ -2824,6 +2096,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 
 \section{有効性}\label{ux6709ux52b9ux6027}
 
+\section{References}\label{references-5}
+
+
 \bookmarksetup{startatroot}
 
 \chapter{統計的仮設検定の論理とエラー}\label{ux7d71ux8a08ux7684ux4eeeux8a2dux691cux5b9aux306eux8ad6ux7406ux3068ux30a8ux30e9ux30fc}
@@ -2835,6 +2110,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 \section{標本相関係数の分布}\label{ux6a19ux672cux76f8ux95a2ux4fc2ux6570ux306eux5206ux5e03}
 
 \section{２種類の検定のエラー確率}\label{ux7a2eux985eux306eux691cux5b9aux306eux30a8ux30e9ux30fcux78baux7387}
+
+\section{References}\label{references-6}
+
 
 \bookmarksetup{startatroot}
 
@@ -2850,6 +2128,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 
 \section{レポートを書くような課題}\label{ux30ecux30ddux30fcux30c8ux3092ux66f8ux304fux3088ux3046ux306aux8ab2ux984c}
 
+\section{References}\label{references-7}
+
+
 \bookmarksetup{startatroot}
 
 \chapter{多群の平均値差の検定}\label{ux591aux7fa4ux306eux5e73ux5747ux5024ux5deeux306eux691cux5b9a}
@@ -2863,6 +2144,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 \section{Betweenデザイン}\label{betweenux30c7ux30b6ux30a4ux30f3}
 
 \section{Withinデザイン}\label{withinux30c7ux30b6ux30a4ux30f3}
+
+\section{References}\label{references-8}
+
 
 \bookmarksetup{startatroot}
 
@@ -2879,6 +2163,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 \subsection{二標本t検定}\label{ux4e8cux6a19ux672ctux691cux5b9a}
 
 \subsection{相関係数のサンプルサイズ設計}\label{ux76f8ux95a2ux4fc2ux6570ux306eux30b5ux30f3ux30d7ux30ebux30b5ux30a4ux30baux8a2dux8a08}
+
+\section{References}\label{references-9}
+
 
 \bookmarksetup{startatroot}
 
@@ -2898,6 +2185,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 
 \section{サンプルサイズ設計}\label{ux30b5ux30f3ux30d7ux30ebux30b5ux30a4ux30baux8a2dux8a08}
 
+\section{References}\label{references-10}
+
+
 \bookmarksetup{startatroot}
 
 \chapter{線型モデルの展開}\label{ux7ddaux578bux30e2ux30c7ux30ebux306eux5c55ux958b}
@@ -2908,6 +2198,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 
 \section{階層線型モデル}\label{ux968eux5c64ux7ddaux578bux30e2ux30c7ux30eb}
 
+\section{References}\label{references-11}
+
+
 \bookmarksetup{startatroot}
 
 \chapter{多変量解析の入り口}\label{ux591aux5909ux91cfux89e3ux6790ux306eux5165ux308aux53e3}
@@ -2915,6 +2208,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 \section{因子分析}\label{ux56e0ux5b50ux5206ux6790}
 
 \section{構造方程式モデリング}\label{ux69cbux9020ux65b9ux7a0bux5f0fux30e2ux30c7ux30eaux30f3ux30b0}
+
+\section{References}\label{references-12}
+
 
 
 \printbibliography[title=引用文献]
