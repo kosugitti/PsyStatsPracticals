@@ -20,10 +20,45 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -256,7 +291,11 @@ div.csl-indent {
    
   <ul>
   <li><a href="#代入" id="toc-代入" class="nav-link active" data-scroll-target="#代入"><span class="header-section-number">5.1</span> 代入</a></li>
-  <li><a href="#反復" id="toc-反復" class="nav-link" data-scroll-target="#反復"><span class="header-section-number">5.2</span> 反復</a></li>
+  <li><a href="#反復" id="toc-反復" class="nav-link" data-scroll-target="#反復"><span class="header-section-number">5.2</span> 反復</a>
+  <ul class="collapse">
+  <li><a href="#for文" id="toc-for文" class="nav-link" data-scroll-target="#for文"><span class="header-section-number">5.2.1</span> for文</a></li>
+  <li><a href="#while文" id="toc-while文" class="nav-link" data-scroll-target="#while文"><span class="header-section-number">5.2.2</span> while文</a></li>
+  </ul></li>
   <li><a href="#条件分岐" id="toc-条件分岐" class="nav-link" data-scroll-target="#条件分岐"><span class="header-section-number">5.3</span> 条件分岐</a></li>
   <li><a href="#自作関数" id="toc-自作関数" class="nav-link" data-scroll-target="#自作関数"><span class="header-section-number">5.4</span> 自作関数</a></li>
   <li><a href="#さまざまな乱数" id="toc-さまざまな乱数" class="nav-link" data-scroll-target="#さまざまな乱数"><span class="header-section-number">5.5</span> さまざまな乱数</a></li>
@@ -287,11 +326,123 @@ div.csl-indent {
 </header>
 
 
+<p>ここではプログラミング言語としてのRについて解説する。 なお副読本として@kosugi2023 を挙げておく。また，プログラミングのより専門的な理解のために，<span class="citation" data-cites="Jared_P_Lander2018-12-28">ランダー，J.P. (<a href="chapter01.html#ref-Jared_P_Lander2018-12-28" role="doc-biblioref">[2017] 2018</a>)</span>, <span class="citation" data-cites="Ren_Kun2017-11-23">株式会社ホクソエム (<a href="chapter01.html#ref-Ren_Kun2017-11-23" role="doc-biblioref">[2016] 2017</a>)</span>, <span class="citation" data-cites="Hadley_Wickham2016-02-10">石田 et al. (<a href="chapter01.html#ref-Hadley_Wickham2016-02-10" role="doc-biblioref">[2015] 2016</a>)</span> なども参考にすると良い。</p>
+<p>プログラミング言語は，古くはCやJava，最近ではPythonやJuliaなどがよく用いられている。Rも統計パッケージというよりプログラミング言語として考えるのが適切かもしれない。Rは他のプログラミング言語に比べて，変数の型宣言を事前にしなくても良いことや，インデントなど書式についておおらかなところは，初心者にとって使いやすいところだろう。一方で，ベクトルの再利用のところで注意したように(<a href="chapter02.html#sec-vector" class="quarto-xref">Section&nbsp;<span>2.5.1</span></a>)，不足分を補うために先回りして補填されたり，この後解説する関数の作成時に明示的な指定がなければ環境変数を参照する点など，親切心が空回りするところがある。より厳格な他言語になれていると，こうした点はかえって不便に思えるところもあるかもしれない。総じて，R言語は初心者向けであるといえるだろう。</p>
+<p>さて，世にプログラミング言語は多くあれど<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>，その全てに精通する必要はないし，不可能である。それよりも，プログラミング言語一般に通底する基本的概念を知り，あとは各言語による「方言」がある，と考えた方が生産的である。その基本的概念を3つ挙げるとすれば，「代入」「反復」「条件分岐」になるだろう。</p>
 <section id="代入" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="代入"><span class="header-section-number">5.1</span> 代入</h2>
+<p>代入は，言い換えればオブジェクト(メモリ)に保管することを指す。これについては既に <a href="chapter02.html" class="quarto-xref"><span>Chapter 2</span></a> で触れた通りであり，ここでは言及しない。オブジェクトや変数の型，常に上書きされる性質に注意しておけば十分だろう。</p>
+<p>一点だけ追加で説明しておくと，次のような表現がなされることがある。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">=</span> a <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>ここではあえて，代入記号として<code>=</code>を使った。2行目に<code>a = a + 1</code> とあるが，これを見て数式のように解釈しようとすると混乱する。数学的には明らかにおかしな表現だが，これは上書きと代入というプログラミング言語の特徴を使ったもので，「(いま保持している)<code>a</code>の値に1を加えたものを，(新しく同じ名前のオブジェクト)<code>a</code>に代入する(=上書きする)」という意味である。この方法で，<code>a</code> をカウンタ変数として用いることがある。誤読の可能性を下げるため，この授業においては代入記号を<code>&lt;-</code>としている。</p>
+<p>このオブジェクトを上書きするという特徴は多くの言語に共通したものであり，間違いを避けるためには，オブジェクトを作る時に初期値を設定することが望ましい。先の例では，代入の直上で<code>a &lt;- 0</code>としており，オブジェクト<code>a</code> に<code>0</code> を初期値として与えている。この変数の初期化作業がないと，以前に使っていた値を引き継いでしまう可能性があるので，今から新しく使う変数を作りたいというときは，このように明示しておくといいだろう。</p>
+<p>なお，変数をメモリから明示的に削除する場合は，<code>remove</code>関数を使う。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>これを実行すると，RStudioのEnvironmentタブからオブジェクト<code>a</code>が消えたことがわかるだろう。 メモリの一斉除去は，同じくRStudioのEnvironmentタブにある箒マークをクリックするか，<code>remove(list=ls())</code>とすると良い<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
 </section>
 <section id="反復" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="反復"><span class="header-section-number">5.2</span> 反復</h2>
+<section id="for文" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="for文"><span class="header-section-number">5.2.1</span> for文</h3>
+<p>電子計算機の特徴は，電源等のハードウェア的問題がなければ疲労することなく計算を続けられるところにある。人間は反復によって疲労が溜まったり，集中力が欠如するなどして単純ミスを生成するが，電子計算機にそういったところはない。</p>
+<p>このように反復計算は電子計算機の中心的特徴であり，細々した計算作業を指示した期間反復させ続けることができる。反復の代表的なコマンドは<code>for</code>であり，forループなどと呼ばれる。forループはプログラミングの基本的な制御構造であり，R言語の<code>for</code>ループの基本的な構文は次のようになる：</p>
+<pre><code>for (value in sequence) {
+    # 実行するコード
+}</code></pre>
+<p>ここの<code>value</code>は各反復で<code>sequence</code>の次の要素を取る反復インデックス変数である。。<code>sequence</code>は一般にベクトルやリストなどの配列型のデータであり，「#実行するコード」はループ体内で実行される一連の命令になる。</p>
+<p>以下は<code>for</code>文の例である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"現在の値は"</span>, i, <span class="st">"です。</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>現在の値は 1 です。
+現在の値は 2 です。
+現在の値は 3 です。
+現在の値は 4 です。
+現在の値は 5 です。</code></pre>
+</div>
+</div>
+<p><code>for</code> 文は続く小括弧のなかである変数を宣言し(ここでは<code>i</code>)，それがどのように変化するか(ここでは<code>1:5</code>，すなわち1,2,3,4,5)を指定する。続く中括弧の中で，反復したい操作を記入する。今回は<code>cat</code> 文によるコンソールへの文字力の出力を行っている。ここでのコマンドは複数あってもよく，中括弧が閉じられるまで各行のコマンドが実行される。</p>
+<p>次に示すは，<code>sequence</code>にあるベクトルが指定されているので，反復インデックス変数が連続的に変化しない例である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">12</span>,<span class="dv">3</span>,<span class="sc">-</span><span class="dv">6</span>)){</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"現在の値は"</span>, i, <span class="st">"です。</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>現在の値は 2 です。
+現在の値は 4 です。
+現在の値は 12 です。
+現在の値は 3 です。
+現在の値は -6 です。</code></pre>
+</div>
+</div>
+<p>また，反復はネスト(入れ子)になることもできる。次の例を見てみよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2次元の行列を定義</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">nrow=</span><span class="dv">3</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 行ごとにループ</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(A)) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 列ごとにループ</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(A)) {</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">"要素 ["</span>, i, <span class="st">", "</span>, j, <span class="st">"]は "</span>, A[i, j], <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>要素 [ 1 ,  1 ]は  1 
+要素 [ 1 ,  2 ]は  4 
+要素 [ 1 ,  3 ]は  7 
+要素 [ 2 ,  1 ]は  2 
+要素 [ 2 ,  2 ]は  5 
+要素 [ 2 ,  3 ]は  8 
+要素 [ 3 ,  1 ]は  3 
+要素 [ 3 ,  2 ]は  6 
+要素 [ 3 ,  3 ]は  9 </code></pre>
+</div>
+</div>
+<p>ここで，反復インデックス変数が<code>i</code>と<code>j</code>というように異なる名称になっていることに注意しよう。例えば今回，ここで両者を<code>i</code>にしてしまうと，行変数なのか列変数なのかわからなくなってしまう。また少し専門的になるが，R言語は<code>for</code>文で宣言されるたびに，内部で反復インデックス変数を新しく生成している(異なるメモリを割り当てる)ためにエラーにならないが，他言語の場合は同じ名前のオブジェクトと判断されることが一般的であり，その際は値が終了値に到達せず計算が終わらないといったバグを引き起こす。反復に使う汎用的な変数名として<code>i,j,k</code>がよく用いられるため，自身のスクリプトの中でオブジェクト名として単純な一文字にすることは避けた方がいいだろう。</p>
+</section>
+<section id="while文" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="while文"><span class="header-section-number">5.2.2</span> while文</h3>
+<p>whileループはプログラミングの基本構造であり，特定の条件が真（True）である間，繰り返し一連の命令を実行する。「“while”（～する間）」という名前から直感的に理解できるだろう。</p>
+<p>R言語のwhileループの基本的な構文は次のようになる：</p>
+<pre><code>while (condition) {
+    # 実行するコード
+}</code></pre>
+<p>ここで，「condition」はループが終了するための条件である。「# 実行するコード」はループ体内で実行される一連の指示である。たとえば，1から10までの値を出力する<code>while</code>ループは以下のように書くことができる：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (i <span class="sc">&lt;=</span> <span class="dv">10</span>) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(i)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+[1] 6
+[1] 7
+[1] 8
+[1] 9
+[1] 10</code></pre>
+</div>
+</div>
+<p>このコードでは，「i」が10以下である限りループが続く。「print(i)」で「i」の値が印刷され，「i &lt;- i + 1」で「i」の値が1ずつ増加する。これにより，「i」の値が10を超えると条件が偽（False）となり，ループが終了する。</p>
+<p>whileループを使用する際の一般的な注意点は，無限ループ（終わらないループ）を避けることである。これは，conditionが常に真（True）である場合に発生する。そのような状況を避けるためには，ループ内部で何らかの形でconditionが最終的に偽（False）となるようにコードを記述することが必要である。</p>
+<p>また，R言語は他の多くのプログラミング言語と異なり，ベクトル化された計算を効率的に行う設計がされている。したがって，可能な限りforループやwhileループを使わずに，ベクトル化した表現を利用すれば計算速度を上げることができる。</p>
+</section>
 </section>
 <section id="条件分岐" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="条件分岐"><span class="header-section-number">5.3</span> 条件分岐</h2>
@@ -307,11 +458,29 @@ div.csl-indent {
 </section>
 <section id="references" class="level2" data-number="5.7">
 <h2 data-number="5.7" class="anchored" data-anchor-id="references"><span class="header-section-number">5.7</span> References</h2>
-<div id="refs" role="list" style="display: none">
-
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Language2016" class="csl-entry" role="listitem">
+シ. 2016. <em>計算機言語のまとめノート</em>. 暗黒通信団.
+</div>
+<div id="ref-Jared_P_Lander2018-12-28" class="csl-entry" role="listitem">
+ランダー，J.P. (2017) 2018. <em>みんなのr 第2版</em>. Translated by 高柳慎一, 津田真樹, 牧山幸史, 松村杏子, and 簑田高志. マイナビ出版.
+</div>
+<div id="ref-Ren_Kun2017-11-23" class="csl-entry" role="listitem">
+株式会社ホクソエム, trans. (2016) 2017. <em>Rプログラミング本格入門: 達人データサイエンティストへの道</em>. 単行本. 共立出版.
+</div>
+<div id="ref-Hadley_Wickham2016-02-10" class="csl-entry" role="listitem">
+石田基広, 市川太祐, 高柳慎一, and 福島真太朗, trans. (2015) 2016. <em>R言語徹底解説</em>. 共立出版.
+</div>
 </div>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p><span class="citation" data-cites="Language2016">シ (<a href="chapter01.html#ref-Language2016" role="doc-biblioref">2016</a>)</span> には117種もの計算機言語が紹介されている。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><code>ls()</code>関数はlist objectsの意味で，メモリにあるオブジェクトのリストを作る関数<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
