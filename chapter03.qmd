@@ -43,8 +43,12 @@ standardDev <- sqrt(variance) # 分散の正の平方根が標準偏差
 ```{r}
 dat <- c(10, 13, 15, 12, 14)
 standardDev <- dat %>%
-  {. - mean(.)} %>%
-  {.^2} %>%
+  {
+    . - mean(.)
+  } %>%
+  {
+    .^2
+  } %>%
   mean() %>%
   sqrt()
 ```
@@ -88,13 +92,19 @@ $$MAD = median(|x_1-median(x)|,\cdots,|x_n-median(x)|)$$
 # irisデータの確認
 iris %>% head()
 # 一部の変数を抜き出す
-iris %>% select(Sepal.Length, Species) %>% head()
+iris %>%
+  select(Sepal.Length, Species) %>%
+  head()
 ```
 逆に，一部の変数を除外したい場合はマイナスをつける。
 ```{r}
-iris %>% select(-Species) %>% head()
+iris %>%
+  select(-Species) %>%
+  head()
 # 複数変数の除外
-iris %>% select(-c(Petal.Length, Petal.Width)) %>% head()
+iris %>%
+  select(-c(Petal.Length, Petal.Width)) %>%
+  head()
 ```
 これだけでも便利だが，`select`関数は適用時に抜き出す条件を指定してやればよく，そのために便利な以下のような関数がある。
 
@@ -106,13 +116,21 @@ iris %>% select(-c(Petal.Length, Petal.Width)) %>% head()
 使用例を以下に挙げる。
 ```{r}
 # starts_withで特定の文字から始まる変数を抜き出す
-iris %>% select(starts_with("Petal")) %>% head()
+iris %>%
+  select(starts_with("Petal")) %>%
+  head()
 # ends_withで特定の文字で終わる変数を抜き出す
-iris %>% select(ends_with("Length")) %>% head()
+iris %>%
+  select(ends_with("Length")) %>%
+  head()
 # containsで部分一致する変数を取り出す
-iris %>% select(contains("etal")) %>% head()
+iris %>%
+  select(contains("etal")) %>%
+  head()
 # matchesで正規表現による選択をする
-iris %>% select(matches(".t.")) %>% head()
+iris %>%
+  select(matches(".t.")) %>%
+  head()
 ```
 
 ここで触れた**正規表現**とは，文字列を特定するためのパターンを指定する表記ルールであり，R言語に限らずプログラミング言語一般で用いられるものである。書誌検索などでも用いられることがあり，任意の文字列や先頭・末尾の語などを記号(メタ文字)を使って表現するものである。詳しくは正規表現で検索すると良い(たとえば[こちらのサイト](https://userweb.mnet.ne.jp/nakama/)などがわかりやすい。)
@@ -124,11 +142,17 @@ iris %>% select(matches(".t.")) %>% head()
 
 ```{r}
 # Sepal.Length変数が6以上のケースを抜き出す
-iris %>% filter(Sepal.Length > 6) %>% head()
+iris %>%
+  filter(Sepal.Length > 6) %>%
+  head()
 # 特定の種別だけ抜き出す
-iris %>% filter(Species == "versicolor") %>% head()
+iris %>%
+  filter(Species == "versicolor") %>%
+  head()
 # 複数指定の例
-iris %>% filter(Species != "versicolor", Sepal.Length > 6) %>% head()
+iris %>%
+  filter(Species != "versicolor", Sepal.Length > 6) %>%
+  head()
 ```
 
 ここで`==`とあるのは一致しているかどうかの判別をするための演算子である。`=`ひとつだと「オブジェクトへの代入」と同じになるので，判別条件の時には重ねて表記する。同様に，`!=`とあるのはnot equal，つまり不一致のとき真になる演算子である。
@@ -266,12 +290,14 @@ iris %>% group_by(Species)
 上のコードでは，一見したところ表示されたデータに違いがないように見えるが，出力時に`Species[3]`と表示されていることがわかる。ここで，Species変数の3水準で群分けされていることが示されている。これを踏まえて，`summarise`してみよう。
 
 ```{r}
-iris %>% 
-  group_by(Species) %>% 
-  summarise(n = n(),
-            Mean = mean(Sepal.Length),
-            Max = max(Sepal.Length),
-            IQR = IQR(Sepal.Length))
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    n = n(),
+    Mean = mean(Sepal.Length),
+    Max = max(Sepal.Length),
+    IQR = IQR(Sepal.Length)
+  )
 ```
 
 ここではケース数(`n`)，平均(`mean`)，最大値(`max`)，四分位範囲(`IQR`)[^3.3]を算出した。
@@ -281,34 +307,38 @@ iris %>%
 また，ここでは`Sepal.Length`についてのみ算出したが，他の数値型変数に対しても同様の計算がしたい場合は，`across`関数を使うことができる。
 
 ```{r}
-iris %>% 
-  group_by(Species) %>% 
-  summarise(across(c(Sepal.Length,Sepal.Width,Petal.Length),
-  ~mean(.x)))
+iris %>%
+  group_by(Species) %>%
+  summarise(across(
+    c(Sepal.Length, Sepal.Width, Petal.Length),
+    ~ mean(.x)
+  ))
 ```
 
 ここで，`~mean(.x)`の書き方について言及しておく。チルダ(tilda,`~`)で始まるこの式を，Rでは特にラムダ関数とかラムダ式と呼ぶ。これはこの場で使う即席関数の作り方である。別の方法として，正式に関数を作る関数`function`を使って次のように書くこともできる。
 ```{r}
 iris %>%
-    group_by(Species) %>%
-    summarise(across(
-        c(Sepal.Length, Sepal.Width, Petal.Length),
-        function(x) {
-            mean(x)
-        }
-    ))
+  group_by(Species) %>%
+  summarise(across(
+    c(Sepal.Length, Sepal.Width, Petal.Length),
+    function(x) {
+      mean(x)
+    }
+  ))
 ```
 
 ラムダ関数や自作関数の作り方については，後ほどあらためて触れるとして，ここでは複数の変数に関数をあてがう方法を確認して置いて欲しい。`across`関数で変数を選ぶ際は，`select`関数の時に紹介した`starts_with`なども利用できる。次に示す例は，複数の変数を選択し，かつ，複数の関数を適用する例である。複数の関数を適用するために，ラムダ関数をリストで与えることができる。
 
 ```{r}
-iris %>% 
-  group_by(Species)  %>% 
+iris %>%
+  group_by(Species) %>%
   summarise(across(starts_with("Sepal"),
-            .fns = list(M  = ~mean(.x),
-                        Q1 = ~quantile(.x,0.25),
-                        Q3 = ~quantile(.x,0.75))
-            ))
+    .fns = list(
+      M = ~ mean(.x),
+      Q1 = ~ quantile(.x, 0.25),
+      Q3 = ~ quantile(.x, 0.75)
+    )
+  ))
 ```
 
 ## データ整形課題
