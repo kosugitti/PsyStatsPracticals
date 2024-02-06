@@ -282,8 +282,8 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">References</span></span></a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -345,7 +345,7 @@ div.csl-indent {
 <p>このやり方は，統計解析の数値結果を表計算ソフトに，そこで作った図表を文書作成ソフトにコピー＆ペーストする，という転記作業が何度も発生する。ここで転記ミス・貼り付け間違いが生じると，当然ながら出来上がる文書は間違ったものになる。こうした転記ミスのことを「コピペ汚染」と呼ぶこともある。</p>
 <p>問題はこの環境をまたぐ作業にあるわけで，計算・作図・文書が一つの環境で済めばこうした問題が起こらない。これを解決するのがR markdonやQuartoという書式・ソフトウェアなのである。</p>
 <p>Rmarkdownの<code>markdown</code>とは書式の一種である。マークアップ言語と呼ばれる書き方の一種で，なかでもRとの連携に特化したのがRmarkdownである。マークアップ言語とは，言語の中に専門の記号を埋め込み，その書式に対応した読み込みアプリで，表示の際に書式を整える方式のことを指す。有名なマークアップ言語としては，数式に特化した LaTeX や，インターネットウェブサイトで用いられている HTML などがある。</p>
-<p>Rmarkdownはmarkdownの書式を踏襲しつつ，Rでの実行結果を文中に埋め込むコマンドを有している。Rのコマンドで計算したり図表を作成しつつ，その結果を埋め込む場所をマークアップ言語で指定する。最終的に文書を閲覧する場合は，マークアップ言語を出力ファイルに変換する(コンパイルする，ニットするという)必要があり，その時Rでの計算が実行される。コンパイルのたびに計算されるので，同じコードでも乱数を使ったコードを書いていたり，一部読み込みファイルを変更するだけで，出力される結果は変わる。しかしコピペ汚染のように，間違った値・図表が含まれるものではないので，研究の再現性にも一役買うことになる。再現可能な文書の作成について、詳しくは<span class="citation" data-cites="Takahashi201805">(<a href="chapter07.html#ref-Takahashi201805" role="doc-biblioref">高橋 2018</a>)</span>を参考にすると良い。</p>
+<p>Rmarkdownはmarkdownの書式を踏襲しつつ，Rでの実行結果を文中に埋め込むコマンドを有している。Rのコマンドで計算したり図表を作成しつつ，その結果を埋め込む場所をマークアップ言語で指定する。最終的に文書を閲覧する場合は，マークアップ言語を出力ファイルに変換する(コンパイルする，ニットするという)必要があり，その時Rでの計算が実行される。コンパイルのたびに計算されるので，同じコードでも乱数を使ったコードを書いていたり，一部読み込みファイルを変更するだけで，出力される結果は変わる。しかしコピペ汚染のように，間違った値・図表が含まれるものではないので，研究の再現性にも一役買うことになる。再現可能な文書の作成について、詳しくは <span class="citation" data-cites="Takahashi201805">高橋 (<a href="references.html#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span> を参考にすると良い。</p>
 <p>QuartoはRmarkdownをさらに拡張させたもので，RStudioを提供しているPosit社が今もっとも注力しているソフトのひとつである。RmarkdownはRとmarkdownの連携であったが，QuartoはRだけでなく，PythonやJuliaといった他の言語にも対応しているし，これら複数の計算言語の混在も許す。すなわち，一部はRで計算し，その結果をPythonで検算してJuliaで描画する，といったことを一枚のファイルで書き込むことも可能である。</p>
 <p>なおこの授業資料もQuartoで作成している。このようにQuartoはプレゼンテーション資料やウェブサイトも作成できるし，出力形式もウェブサイトだけでなくPDFやePUB(電子書籍の形式)にすることが可能である。なおこの授業の資料もウェブサイトと同時に<a href="心理学統計実習.PDF">PDF形式</a>と，<a href="心理学統計実習.epub">ePUB形式</a>で出力されている。Quartoについて専門の解説書はまだないが，インターネットに充実したドキュメントがあるので検索するといいだろう。まだ新しい技術なので，<a href="https://quarto.org/">公式</a>を第一に参照すると良い。</p>
 </section>
@@ -377,7 +377,7 @@ div.csl-indent {
 <p>おおよそ，何がどのように変換されているかの対応が推察できるだろう。 出力ファイルの冒頭には，YAMLで設定したタイトル，著者名，日付などが表示されているし，<code>#</code>の印がついていた一行は見出しとして強調されている。</p>
 <p>特に注目したいのが，元のファイルで3つのクォーテーションで囲まれた灰色の領域である。この領域のことを特に<strong>チャンク</strong>といい，ここに書かれたRスクリプトが変換時に実行され，結果として出力される。出力ファイルをみると，<code>summary(cars)</code> というチャンクで指定された命令文があり，その結果(carsというデータセットの要約)が出力されているのが見て取れる。繰り返しになるが，ポイントは原稿ファイルには計算を指示するスクリプトが書かれているだけで，出力結果を書いていないことにある。原稿は指示だけなのである。こうすることで，コピー＆ペーストのミスがなくなるし，同じRmd/Qmd原稿とデータを持っていれば，ことなるPC上でも同じ出力が得られる。環境を統合することで，ミスの防止と再現可能性に貢献しているのがわかるだろう。</p>
 <p>今回は<code>cars</code>というRがデフォルトでもっているサンプルデータの例なので，どの環境でも同じ結果が出力されている。しかしもちろん，個別のデータファイルであっても，同じファイルで同じ読み込み方，同じ加工をしていれば，環境が違っても追跡可能である。注意して欲しいのは，コンパイルするときは新しい環境から行われるという点ある。すなわち，<strong>原稿ファイルにないオブジェクトの利用はできない</strong>のである。これは再現性を担保するという意味では当然のことで，「事前に別途処理しておいたデータ」から分析を始められても，その事前処理が適切だったかどうかがチェックできないからである。Rmd/Qmdファイルと，CSVファイルなどの素データが共有されていれば再現できる，という利点を活かすため，データハンドリングを含めた前処理も全てチャンクに書き込み，新しい環境で最初からトレースできるようにする必要がある。不便に感じるところもあるかもしれないが，科学的営みとして重要な手続きであることを理解してもらいたい。<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<p>RStudiでは，ビジュアルモードやアウトライン表示，チャンク挿入ボタンやチャンクごとの実行・設定などRmd/Qmdファイルの編集に便利な機能も複数用意されているので，<span class="citation" data-cites="Takahashi201805">(<a href="chapter07.html#ref-Takahashi201805" role="doc-biblioref">高橋 2018</a>)</span> などを参考にいろいろ試してみるといいだろう。</p>
+<p>RStudiでは，ビジュアルモードやアウトライン表示，チャンク挿入ボタンやチャンクごとの実行・設定などRmd/Qmdファイルの編集に便利な機能も複数用意されているので， <span class="citation" data-cites="Takahashi201805">高橋 (<a href="references.html#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span> などを参考にいろいろ試してみるといいだろう。</p>
 </section>
 <section id="マークダウンの記法" class="level3" data-number="4.1.3">
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="マークダウンの記法"><span class="header-section-number">4.1.3</span> マークダウンの記法</h3>
@@ -427,7 +427,7 @@ div.csl-indent {
 <section id="プロットによる基本的な描画" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="プロットによる基本的な描画"><span class="header-section-number">4.2</span> プロットによる基本的な描画</h2>
 <p>再現可能な文書という観点から，図表もスクリプトによる記述で表現することは重要である。</p>
-<p><strong>データはまず可視化するもの</strong>と心がけよ。可視化は，数値の羅列あるいはまとめられた統計量では把握しきれない多くの情報を提供し，潜在的な関係性を直観的に見つけ出せる可能性がある。なので，取得したあらゆる<strong>データはまず可視化するもの</strong>，と思っておいて間違いはない。大事なことなので二度言いました。可視化の重要性については心理学の知見にも触れている<span class="citation" data-cites="Kieran2018">(<a href="chapter07.html#ref-Kieran2018" role="doc-biblioref">キーラン・ヒーリー [2018] 2021</a>)</span> も参考にしてほしい。</p>
+<p><strong>データはまず可視化するもの</strong>と心がけよ。可視化は，数値の羅列あるいはまとめられた統計量では把握しきれない多くの情報を提供し，潜在的な関係性を直観的に見つけ出せる可能性がある。なので，取得したあらゆる<strong>データはまず可視化するもの</strong>，と思っておいて間違いはない。大事なことなので二度言いました。可視化の重要性については心理学の知見にも触れている <span class="citation" data-cites="Kieran2018">キーラン・ヒーリー (<a href="references.html#ref-Kieran2018" role="doc-biblioref">[2018] 2021</a>)</span> も参考にしてほしい。</p>
 <p>さて，Rには基本的な作図環境も整っており，<code>plot</code>という関数に引数として，x軸，y軸に相当する変数を与えるだけで，簡単に散布図を書いてくれる。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris<span class="sc">$</span>Sepal.Length, iris<span class="sc">$</span>Sepal.Width,</span>
@@ -575,7 +575,7 @@ div.csl-indent {
 </section>
 <section id="描画tips" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="描画tips"><span class="header-section-number">4.5</span> 描画tips</h2>
-<p>最後に，いくつかの描画テクニックを述べておく。これらについては，必要な時に随時ウェブ上で検索したり，生成AIに尋ねることでも良いが，このような方法がある，という基礎知識を持っておくことも重要だろう。なお描画について詳しくは<span class="citation" data-cites="Kinosady2021">(<a href="chapter07.html#ref-Kinosady2021" role="doc-biblioref">松村 et al. 2021</a>)</span> の4章を参照すると良い。</p>
+<p>最後に，いくつかの描画テクニックを述べておく。これらについては，必要な時に随時ウェブ上で検索したり，生成AIに尋ねることでも良いが，このような方法がある，という基礎知識を持っておくことも重要だろう。なお描画について詳しくは <span class="citation" data-cites="Kinosady2021">松村 et al. (<a href="references.html#ref-Kinosady2021" role="doc-biblioref">2021</a>)</span> の4章を参照すると良い。</p>
 <section id="ggplotオブジェクトを並べる" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="ggplotオブジェクトを並べる"><span class="header-section-number">4.5.1</span> ggplotオブジェクトを並べる</h3>
 <p>複数のプロットを一枚のパネルに配置したい，ということがあるかもしれない。先ほどの<code>mtcars</code>データの例でいえば，<code>am</code>変数にオートマチック車かマニュアル車かの2水準があるが，このようなサブグループごとに図を分割したいという場合である。</p>
