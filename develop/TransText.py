@@ -9,8 +9,13 @@ import glob
 # ログの設定
 logging.basicConfig(filename='translation.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-openai.api_key = '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'
+# APIキーを含むファイルのパスを指定
+api_key_file = '../../../OpenAI_api_key.txt'
 
+# APIキーを読み込む
+with open(api_key_file, 'r') as file:
+    openai.api_key = file.read().strip()
+    
 # 読み込みフォルダと保存フォルダを指定
 input_folder = '../jp'
 output_folder = '../en'
