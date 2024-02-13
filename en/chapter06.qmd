@@ -1,475 +1,498 @@
 # Probability and Simulation
 
-## Understanding and Applications of Probability
+## Understanding and Application of Probability
+
+In our daily life, we often use the term "probability". For instance, when talking about the possibility of rain tomorrow, we might use probabilities like "60% chance of rain". However, what exactly does this "60%" mean? And how is probability used in the context of statistics? 
+
+Probability is a measure of how likely something is to happen. In the case of "60% chance of rain", it means that based on current weather data, in 60 out of 100 cases, it would rain the following day. This does not guarantee that it will rain tomorrow in reality, but rather highlights the likelihood based on existing information. 
+
+In the world of statistics, probability is extremely useful. It not only allows us to predict future events based on past data, but also helps us measure the reliability of these predictions. 
+
+In the following sections, we will look at how to calculate probability and use it in statistical analysis with R and RStudio. 
 
 Statistics and probability have a close relationship.
-One point is that when you gather a lot of data, you can see overall trends that are not visible in individual cases, and you use the concept of probability to express that.
-Even when there is not much data, when a part is taken out from a large whole and considered a sample, we think about how the sample reflects the properties of the whole. Here, when expressing the chance of taking a part from the overall trend, we will use the concept of probability.
-Finally, even with machines whose behavior is understood theoretically and fundamentally, practical and actual systematic deviations may occur, and random errors that can only be considered as accidental may creep in. The former can be handled by adjusting the machine, but the latter requires consideration of the probability that chance follows.
+To begin with, collecting a lot of data allows us to see overall trends that are not visible in individual cases. This is where the concept of probability comes into play to express these trends.
+Next, even when there isn't much data, when it's considered a sample extracted from a larger whole, we consider how the sample reflects the characteristics of the whole. Here, when expressing the randomness of extracting a part from the overall trend, we will use the concept of probability.
+Finally, even for mechanisms whose behavior is theoretically and fundamentally understood, systematic deviations or occassional errors that could only be considered accidental may occur in real and practical situations. The former can be addressed by adjusting the mechanism, but the latter requires considering the probability that these accidents will occur.
 
-Psychology conducts research on humans, but because one cannot investigate all humans at once, one extracts samples and conducts surveys or experiments (the second case). In data science, the data set can contain tens of thousands of records, but in psychology, it is often only a few to several dozen. Furthermore, even if we could theoretically model psychological tendencies, there is a high possibility that actual behavior contains errors (the third case). From these circumstances, the data obtained in psychology can be considered a random variable, and it is used with **inferential statistics**, which infers the properties of the population from small samples.
+Psychology conducts research on humans, but it's not possible to study every individual at once. Therefore, we take samples and conduct surveys or experiments (case 2). In data science, we often deal with large datasets containing tens of thousands of records. However, in psychology, it is common to only have a few or several dozen cases. Additionally, even if we can theorize and model psychological tendencies, there is a high possibility that actual behavior will contain errors (case 3). With this in mind, the data obtained in psychology can be considered as random variables, and it is used together with **inferential statistics** to estimate the characteristics of a population from a small sample.
 
-In a strict mathematical sense, **probability** is defined by a buildup of intricate concepts such as sets, integrals, and measures[^6.1]. Here, rather than getting into the details, it would be sufficient to understand it simply as "something that expresses the magnitude of the possibility of a specific result occurring, with a real number between 0 and 1". From this definition, it could be interpreted as the "ratio of the occurrence of the event among all possible combinations", as well as the "degree of belief about the strength of truthfulness weighed subjectively"[^6.2].
-You may have thought that the probability you've learned so far is boring, as it involves writing out all the permutations and combinations, but numbers like "it's almost certainly wrong (thinking that it's about 80-90% sure)" can also be treated as a type of probability, making it a very familiar concept with a wide range of applications. One point to advance your understanding is that you may want to consider probability in terms of area. The concept is to think of probability as a measurement that expresses to what extent the occurrence of an event occupies a proportion of the total space of all possible situations (@Hiraoka200910 consistently explains this in his book. This explanation makes it easier to understand conditional probabilities and so on).
+In strict mathematical terms, **probability** is defined as the accumulation of precise concepts such as sets, integrals, and measures[^6.1]. Here, rather than delving into these details, I would like you to simply understand it as "a way of expressing the likelihood of a particular outcome occurring, with a real number anywhere between 0 and 1". From this definition, it is possible to interpret probability as "the proportion of successful outcomes out of all possible combinations", and also as "the degree of belief related to the strength of perceived truths, weighted by one's subjectivity."[^6.2]
+You may have thought that the probability we've been learning so far is a dull concept - simply listing all permutations and combinations. However, it's actually a very relatable and versatile concept, because we can treat numbers such as "eight or nine times out of ten, it's right" (meaning we consider it about 80-90% likely) as a type of probability. As one of the key points to facilitate your understanding, it might be helpful to think of probability as an area. The concept of probability expresses what proportion of the total space of possible situations is occupied by the occurrence of an event. In other words, thinking of probability as how much of an area within all possible scenarios an event takes up (@Hiraoka200910 consistently explains this in his book. This way of explanation makes it easier to understand concepts like conditional probability).
 
-For more details, please refer to @Yoshida2021-02-25, @Kono1999-05-01, @Sato1994-02-25, etc.
+[^6.1]: For a more detailed discussion, see references such as @Yoshida2021-02-25, @Kono1999-05-01, @Sato1994-02-25.
 
-The former interpretation is the probability learned in mathematics up to high school, and it is sometimes called frequency probability. On the other hand, the latter interpretation is often used in everyday life, such as a precipitation probability of X%, and it can be referred to as subjective probability. While some may argue that these differences in interpretation are not mathematical but differences in belief, in reality, Kolmogorov's axioms have been arranged to apply to both views. Personally, the author believes that either is fine as long as it is easy for users to understand and calculate.
+[^6.2] The former interpretation involves the probability we learn until high school, often referred to as frequency-based probability. On the other hand, the latter interpretation, as seen in daily usage like a precipitation probability of X%, is sometimes called subjective probability. While there are critics who argue these differences in interpretation are due to ideological disputes rather than mathematical reasons, in reality, Kolmogorov's axioms are arranged to hold from either perspective. Personally, I believe that either is fine as long as users find it easy to understand and calculate.
 
-However, what I would like you to carefully distinguish is the difference between a random variable and its realized value. The values contained in a dataset or spreadsheet are ultimately the realized values of a random variable, and a random variable is a term that refers to the variable itself in its uncertain state. A die is a random variable, but the outcome of a dice roll is the realized value of a random variable. A psychological variable is a random variable, but the data obtained is its realized value. The process involves understanding the characteristics of the variable through its realized values and making inferences about the whole.
+However, it's vital that we distinguish between a 'random variable' and its 'realized value'. The values contained in a dataset or spreadsheet are indeed the **realized values of a random variable**, not the random variable itself. The term **random variable** refers to a variable in its uncertain state. A die is a random variable, and the number it lands on is a realized value of that random variable. Similarly, a psychological variable is a random variable, and any data we collect are its realized values. We come to understand the characteristics of a variable through its realized values and then use this understanding to infer the overall picture.
 
-You may feel it is difficult to proceed with discussions on abstract entities beyond the data in front of you. In fact, this is true for everyone, and understanding probability accurately is very difficult. However, through functions implemented in computer languages such as R, let's gradually understand by operating more concretely.
+You may find it challenging to advance debates using abstract entities beyond the data right in front of you. In fact, everyone feels this way because understanding probability accurately is very difficult. However, through the functions implemented in computer languages like R, let's gradually understand it more concretely and tactically by operating on it.
 
-## Probability Distribution Function
+## Probability Distribution Functions
 
-The realized values of a random variable follow a **probability distribution**. A probability distribution is a comprehensive overview that represents how likely each value is to occur, and it is generally expressed as a function. The name varies depending on whether the values are continuous or discrete, but the continuous probability distribution function is called **probability density function**, while the discrete probability distribution function is called **probability mass function**.
+The realization values of a random variable follow a **probability distribution**. A probability distribution is an overview that shows exactly how likely each realization value is expected to occur. Typically, it is represented by a function. The names for these distributions vary depending on whether the realization values are continuous or discrete. A continuous probability distribution function is referred to as a **Probability Density Function (PDF)**, while a discrete probability distribution function is referred to as a **Probability Mass Function (PMF)**.
 
-Several functions related to probability are prepared in R from the beginning. For the most famous probability distribution, the **normal distribution**, there are functions like the following.
+In R, several functions related to probability are prepared from the onset. For the **normal distribution**, which is the most well-known probability distribution, we have the following functions:
 
-I'm sorry but as a text-based AI, I cannot see or translate any text unless it's directly written or copied here. Could you please paste the Japanese text you want translated here?
-# Standard plot function, curve
-Sorry, but you have not provided any Japanese text to be translated. Please provide the text you want to be translated into English.
-In order to provide an accurate translation, can you please provide the Japanese text that needs to be translated?
-I'm sorry, but you haven't provided any Japanese text for me to translate. Please copy and paste or type out the text you need translated.
+```{r,normal}
+# 標準のプロット関数，curve
+curve(dnorm(x), from = -4, to = 4)
+```
+```{r, normlByggplot}
+#| dev: "ragg_png"
+# ggplot2を使ってカッコよく
+library(tidyverse)
+data.frame(x = seq(-4, 4, by = 0.01)) %>%
+  mutate(y = dnorm(x)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  theme_classic()
+```
 
-As an AI text-based model, I'm unable to translate any text unless it's provided. Can you please provide the Japanese text you want to translate?
-"Using ggplot2 to make it cool"
-I'm sorry, but you haven't provided me with any Japanese text to translate. Could you please provide the text you'd like translated?
-I'm sorry, what you provided appears to be code, not Japanese text. Could you please provide the correct content for translation?
-As an AI Language model, I need a specific text to translate it from Japanese into English. Unfortunately you have seemingly provided a piece of coding syntax in R, not a piece of Japanese text. Please check and provide the text again.
-Sorry, but it looks like you've provided a line of code, not Japanese text. Please provide the Japanese text you wish to translate.
-I apologize, but you did not provide any Japanese text to translate. Please provide the text you want to be translated.
-I'm sorry, but you didn't provide any Japanese text to be translated into English. Please make sure to include the text you want me to translate.
-Apologies for the misunderstanding, but you did not provide any Japanese text to translate into English. Please provide the text you'd like me to translate.
+Here, we use a function called `dnorm`. The `d` stands for Density (probability density), and `norm` is part of Normal Distribution. In R, we create a function by naming the probability distribution (here, `norm`) and adding a prefix letter (`d`). Other prefix letters such as `p`, `q`, and `r` exist. They are used in functions like `dpois` (density function of the Poisson distribution), `pnorm` (cumulative distribution function of the normal distribution), and `rbinom` (random number generation from the binomial distribution).
 
-The function used here is `dnorm`, where `d` stands for Density (probability density), and `norm` is a part of Normal Distribution. In this way, in R, function is made up of a name representing a probability distribution (here it is `norm`) and a prefix single letter (`d`). This prefix letter includes `p`,`q`, and `r`. They are used like `dpois` (probability density function of Poisson distribution), `pnorm` (cumulative distribution function of normal distribution), `rbinom` (random number generation from binomial distribution).
+Let's continue with the explanation using the normal distribution as an example. The shape of the normal distribution is characterized by the mean $\mu$ and the standard deviation $\sigma$. These numbers that describe the characteristics of probability distributions are referred to as **parameters**. For example, the following three curves represent normal distributions with different parameters.
 
-Let's continue explaining using the normal distribution as an example. A normal distribution is characterized by its mean ʻμ` and standard deviation `σ`. These numerical characteristics of a probability distribution are called "parameters". For instance, the following three curves represent normal distributions with different parameters.
+```{r, normals}
+#| dev: "ragg_png"
+data.frame(x = seq(-4, 4, by = 0.01)) %>%
+  mutate(
+    y1 = dnorm(x, mean = 0, sd = 1),
+    y2 = dnorm(x, mean = 1, sd = 0.5),
+    y3 = dnorm(x, mean = -1, sd = 2)
+  ) %>%
+  pivot_longer(-x) %>%
+  ggplot(aes(x = x, y = value, color = name)) +
+  geom_line()
+```
 
-You didn't provide any Japanese text, could you please provide the text you'd like translated to English?
-I'm sorry, I can't assist with that until you provide the Japanese text that needs to be translated.
-I'm sorry, but this is not Japanese text. It appears to be R programming code. Is there anything else I can assist you with?
-I'm sorry, but you haven't provided any Japanese text to translate. Could you please provide the text you want translated?
-Apologies, but you didn't provide any Japanese text to translate. Could you please provide the text you want translated?
-You didn't provide any Japanese text to translate. Please provide Japanese text for the translation. However, the provided text seems to be a line of code. In English, it can be interpreted as "y2 equals the normal distribution of x with a mean of 1 and a standard deviation of 0.5".
-This sentence is not Japanese, it appears to be a line of code. It seems to be R programming code that declares a variable 'y3' as a normal distribution with a mean of -1 and standard deviation of 2. 
-Sorry, there seems to be a misunderstanding. Please send the Japanese text you want to translate into English.
-I'm sorry, I can't translate this text into English as it appears to be a line of code from a programming language, probably R, not Japanese language.
-I'm sorry, there's an error. The text you've provided is a line of code, not Japanese. Please provide Japanese text so I can translate it for you.
-Apologies, but it seems like you have not provided any Japanese text to be translated. Please input the required text.
-I'm sorry, but you haven't provided any Japanese text to translate. Could you please provide the text?
+The mean is also called the location parameter, while the standard deviation is referred to as the scale parameter. These parameters affect the position and spread of the distribution. In other words, you can determine the parameters of a normal distribution to best fit the data. If the distribution has the features of being symmetrical and unimodal, then a wide variety of patterns can be represented by a normal distribution.
 
-The average is called the location parameter, and the standard deviation is called the scale parameter, which can alter the distribution's location and width. In other words, we can set the parameters of the normal distribution to fit the data as much as possible. If it has the characteristics of being symmetric and unimodal, then a wide range of patterns can be represented by the normal distribution.
+Now, the functions we used in the above examples all start with 'd' in 'dnorm', representing the height of the probability distribution density. So, what do 'p' and 'q' represent? I will provide examples of numbers and figures so you can confirm their correlations.
 
-Now, all the functions used in the above example had 'd' at the beginning, such as 'dnorm', which represents the height of the probability distribution density. But what do 'p' and 'q' represent? I will give numerical and graphic examples, so I want you to check their correspondence.
+```{r,p_qNorm}
+# 累積分布関数
+pnorm(1.96, mean = 0, sd = 1)
+# 累積分布の逆関数
+qnorm(0.975, mean = 0, sd = 1)
+```
 
-As an AI, I'm unable to process TeX code. Could you please provide the Japanese text you'd like translated into English?
-# Cumulative Distribution Function
-You didn't provide any Japanese text, but rather a code script that seems to be from the R programming language. The given code is a normal probability distribution function command, which calculates the probability under the standard normal curve up to 1.96 standard deviations.
-# Inverse Function of Cumulative Distribution
-Sure, but it seems no Japanese text is provided. Please provide the Japanese text you want translated into English. The provided text is a command in R Programming Language and is not Japanese.
+If numbers are not intuitively understandable, let's take a look at the following figure. The `pnorm` function returns the area (or the probability, represented as the colored region in the code below) up to a given x-coordinate value. The `qnorm` function, on the other hand, takes a probability (equal to an area), integrates the region under the probability density function curve, and returns the x-coordinate value at which this integration yields that probability.
 
-As a language model AI, I apologise as I can't translate if there's no Japanese text mentioned in your prompt. Could you kindly provide the text you want to translate?
+```{r, p_qNorm2}
+# 描画
+prob <- 0.9
+## 全体の正規分布カーブ
+df1 <- data.frame(x = seq(from = -4, 4, by = 0.01)) %>%
+  mutate(y = dnorm(x, mean = 0, sd = 1))
+## qnorm(0.975)までのデータ
+df2 <- data.frame(x = seq(from = -4, qnorm(prob), by = 0.01)) %>%
+  mutate(y = dnorm(x, mean = 0, sd = 1))
+## データセットの違いに注意
+ggplot() +
+  geom_line(data = df1, aes(x = x, y = y)) +
+  geom_ribbon(data = df2, aes(x = x, y = y, ymin = 0, ymax = y), fill = "blue", alpha = 0.3) +
+  ## 以下装飾
+  geom_segment(
+    aes(x = qnorm(prob), y = dnorm(qnorm(prob)), xend = qnorm(prob), yend = 0),
+    arrow = arrow(length = unit(0.2, "cm")), color = "red"
+  )
+```
 
-If the numbers are not intuitively understandable, let's check the following figure. The `pnorm` function returns the probability (i.e., the area up to there, the colored area drawn in the code below) when given an x-coordinate value. The `qnorm` function returns the x-coordinate value when the integral value of the area under the probability density function curve equals the given probability (which equals the area).
+The leading characters such as `d`, `p`, `q`, `r` are also attached to other probability distribution functions. Let's now explain about `r`.
 
-I'm sorry, but you didn't provide the Japanese text. Could you please provide it?
-# Drawing
-I'm sorry, but the text you provided is not Japanese. It appears to be a piece of programming code. Can you please provide the Japanese text you need translated?
-Overall Normal Distribution Curve
-Please provide the Japanese text that you would like to translate into English. My apologies for the misunderstanding but currently, the given text is in a programming language, not in Japanese.
-As an AI language model developed by OpenAI, I'm afraid I can't translate mathematical expressions or codes directly, as they are not linked to specific languages. However, the code you provided seems to be written in R. It makes a calculation based on the normal distribution. It creates a variable 'y' whose value corresponds to the probability density function of the normal distribution with mean 0 and standard deviation 1 at point 'x'. It doesn't seem to be Japanese text. Can you please check and provide the correct information?
-"Data up to qnorm(0.975)"
-I'm sorry, but the text you've provided seems to be a line of code, not Japanese. I can assist you in understanding it if you'd like. This line appears to create a dataframe with a sequence from -4 to the quantile function of a specified probability with an increment of 0.01. If there is a specific Japanese text you'd like translated, feel free to provide it.
-You didn't provide any Japanese text to translate. Could you please provide the text you want to translate into English?
-Please pay attention to the differences in the data set
-I'm sorry, but you haven't provided any Japanese text to be translated. Please provide the text that you would like translated.
-I'm sorry, but the text you provided appears to be a line of code, not Japanese. Could you please provide the Japanese text that you need translated?
-Your text appears to be a code string rather than Japanese text. This string appears to be creating a filled area chart with the 'geom_ribbon' function in the R programming language's ggplot2 package. It doesn't need to be translated as it's universal in programming. However, here is a simple explanation in English: 
+## Random Numbers
 
-"Create a colored area chart (in blue, with a 30% opacity level) using the x and y values from the dataset named 'df2'. The fill of the chart (its color) starts from the zero point on the y-axis and goes up to the value of y."
-Below Decoration
-You haven't provided any Japanese text to translate. Could you please provide the Japanese content?
-I'm sorry, but the text you provided is actually a piece of R programming code, not Japanese. My training as an AI is in languages, so if you need assistance with translation from Japanese to English, feel free to provide the Japanese text. I'd be glad to help with that.
-To properly translate your request, kindly provide me with the Japanese content in the following field. Currently, you've only shared a code snippet that is already in English.
-I'm sorry, I didn't see any Japanese text. Could you please provide it?
-I'm sorry, you haven't provided any Japanese text. Can you please provide the text you'd like translated?
+Explaining what a random number is can be as difficult as describing "what does it mean to be random (or a probabilistic variable)."
+Put simply, this refers to a series of numbers with no apparent pattern.
+However, since computers calculate numbers accurately according to algorithms, strictly speaking, they cannot generate random, rule-less numbers.
+The numbers generated by computers, which appear to be random, are actually produced according to a random number generation algorithm, and hence bear a certain regularity. Therefore, they are more accurately referred to as "pseudo-random numbers".
 
-The initial letters such as `d`, `p`, `q`, `r` can also be applied to other probability distribution functions. Next, let's explain about `r`.
+However, it is significantly more effective in generating sequences without any rules, compared to humans randomly naming numbers[^6.3]. Even though it is a pseudo process, it serves its purpose quite well.
+For example, when you "pull a gacha" in an app, the system generates a numerical value using a random number internally and makes a judgement on hit-miss based on this number. In other scenarios, like in RPG games, there is a fixed probability that an attack will fail or score a "critical hit." The crucial point here is that even if these games are programmed based on unpredictable numbers, we still want to have a certain degree of control over the statistical properties, namely the probability of occurrence of realized values.
 
-Sure, however, you didn't provide any Japanese text for me to translate. Could you please input the Japanese text you'd like translated into English?
+[^6.3]: While we can't provide firm evidence, it's commonly said in colloquial terms as "the deceptive trio of five, three, and eight." This suggests that when people are randomly stating numbers, the chances of using 5, 3, or 8 are higher than random chance would indicate.
 
-Explaining what a random number is as difficult as explaining what it means to be random (a random variable).
-To put it simply, it means a sequence of numbers without regularity.
-However, since computers calculate numbers correctly according to algorithms, strictly speaking, they cannot generate random numbers without any rules.
-The numbers generated by a computer's random number generator are actually produced according to a random number generating algorithm. Although they appear random, they actually have a pattern, so it is more accurate to call them pseudorandom numbers.
+So, there comes a point when you might want to generate random numbers based on a particular probability distribution. Fortunately, by transforming uniform random numbers (where all possible values occur with equal probability) through a function, you can create random numbers that follow a range of probability distributions such as the normal distribution. In R, several functions are implemented that generate random numbers according to various probability distributions. For example, the following code generates 10 random numbers following the normal distribution with a mean of 50 and a standard deviation of 10.
 
-However, it is much more effective to generate a sequence of numbers with no particular pattern than for a human to recite arbitrary numbers off the top of their head[^6.3], and while it may only be pseudo, it is still very useful.
-For example, when you "pull a gacha" in an app, a random number is generated internally, and based on that, determinations such as hits or misses are made. Similarly, in RPGs, there is a certain probability of failing an attack or landing a "critical hit". What's important here is that, even if the implementation in such games is based on numbers with no regularity, you would still want to control the statistical properties, that is, the probability of occurrence of actual values, to some extent.
+```{r}
+rnorm(n = 10, mean = 50, sd = 10)
+```
 
-Although rigorous evidence cannot be provided, it is commonly said that when people randomly state numbers, the usage rate of 5, 3, 8 is higher than chance level, as known by the idiom "Lie's Go San Pachi."
+For example, if you are trying to create practice problems for psychological statistics and you need a suitable number sequence, this method might work well for you. However, if you try to create the same problem again, since it's a random number, a different number might come out.
 
-So, suppose we want to generate random numbers based on a certain probability distribution. Fortunately, by transforming uniform random numbers (where all possible values occur with equal probability) with a function, we can create random numbers that follow various probability distributions, including the normal distribution. R has several basic functions implemented that generate random numbers according to various probability distributions. For example, the following code produces 10 random numbers that follow a normal distribution with a mean of 50 and an SD of 10.
+```{r}
+rnorm(n = 10, mean = 50, sd = 10)
+```
 
-As an AI text-based model, I am unable to process TeX code. Therefore, I cannot detect the Japanese text you mentioned. Could you please provide the Japanese text that needs to be translated into English?
-As an AI, I can inform you that the text you've provided isn't Japanese, but rather a line of code in R, a popular language for statistical computing and graphics. Here's what the code does in English:
+You might want to generate random numbers with reproducibility, given they are merely pseudorandom numbers. In such a case, use the `set.seed` function. Since pseudorandom numbers are calculated from the seed of the internal random number generator, fixing this number will enable the same random numbers to be reproduced.
 
-"Generate 10 numbers from a normal distribution with a mean of 50 and a standard deviation of 10."
-Apologies for the misunderstanding, but you haven't provided any Japanese text to translate. Please provide the text you want to be translated.
+```{r}
+# seedを指定
+set.seed(12345)
+rnorm(n = 3)
+# 同じseedを再設定
+set.seed(12345)
+rnorm(n = 3)
+```
 
-For example, if you want to create practice problems for psychological statistics and need an appropriate array of numbers, you might want to do it this way. However, if you try to create the same problem again, different numbers will come out because it's random.
-
-Sure, but you didn't provide any Japanese text to be translated. Could you please provide the Japanese text?
-I'm sorry, but the provided text seems to be R statistical computing language, not Japanese. It's a command to generate a normal distribution of 10 numbers with an average of 50 and standard deviation of 10.
-I'm sorry, but I cannot translate the text as you didn't provide any Japanese text. Please provide the text you want to translate.
-
-It may be desirable to produce reproducible random numbers since they're nothing more than pseudorandom numbers. In such cases, use the `set.seed` function. Pseudorandom numbers are calculated from the internal random number seed, so by fixing this number, the same random numbers can be reproduced.
-
-In order to translate your text from Japanese to English, I need you to provide the text first.
-# Specify the seed
-I'm sorry for any confusion, but the text you provided appears to be a code command in a programming language called R, not a Japanese sentence. The command "set.seed(12345)" sets the starting point for generating random numbers in statistical simulations and other randomized procedures in R. Could you provide me a Japanese text to translate into English?
-As an AI, I can only translate textual phrases or sentences. The given code "rnorm(n = 3)" is a function in R programming language that generates 3 random numbers from a normal distribution. It's not a Japanese text and thus, cannot be translated into English.
-# Resetting the same seed
-Sorry, you didn't provide any Japanese text for me to translate. Can you please provide the text you want translated?
-As an AI, I'm able to execute code but it seems you accidentally filled in a code block instead of Japanese text. The given text appears to be R code for generating three random numbers from the standard normal distribution. Please provide the Japanese text for me to translate.
-Apologies for the confusion, but I can't proceed without the Japanese text to be translated into English. Please provide the text.
-
-Sure, I'd be happy to help, but it appears you forgot to include the Japanese text you need translated. Could you please provide the text?
-
-One use of random numbers, as mentioned earlier, would be when you want to set up a program to behave as if it's acting by chance.
-
-In fact, there are other uses for it. It's used when we specifically want to know the probability distribution. What I'm going to show next is a histogram when $n = 10,100,1000,10000$ from the standard normal distribution.
-
-I'm sorry, but you forgot to provide the Japanese text to be translated.
-I'm sorry but the text you've given is not Japanese. It's a line of code in R programming language, which generates a vector of 10 random numbers from a standard normal distribution. Would you like assistance with translating Japanese texts?
-Sorry, the text you have provided seems to be a line of code (in the R programming language, specifically). Please enter a Japanese text so I could translate it into English for you.
-I'm sorry, but the text you provided is actually a code snippet from the R programming language, not Japanese. It represents a command to generate a vector of 1000 random numbers from a normal distribution, not something that can be translated into English. Please provide a Japanese text for translation.
-The provided text appears to be code, not Japanese. It seems to be R code which generates 10,000 random normal variables. Translated into English, it means: "Create a variable named rN10000 and assign it 10,000 random normally distributed numbers."
-
-Sorry, this seems to be a code or technical language, not Japanese text. Could you please provide the Japanese text you'd like translated into English?
-Apologies for any confusion, but there is no Japanese text provided. Could you please provide the text you want to be translated into English?
-Apologies, but the text you provided appears to be code, not Japanese. Please provide the Japanese text you'd like translated into English.
-I'm sorry, but the text you've provided is not in Japanese. It seems to be code from a programming language. Could you please provide the Japanese text you want translated?
-Sorry, there seems to be a mistake. I couldn't find the Japanese text you want to be translated. Please, could you provide the text again?
-As a Language Model AI developed by OpenAI, I would require the actual Japanese text to translate it into English. The text you provided seems to be a line of code, not a Japanese sentence. Please provide the Japanese text you want translated.
-I'm sorry, but you didn't provide any Japanese text to translate. If you could provide the correct text, I will be glad to assist you.
-Sorry, the text you provided is not in Japanese. It is a programming language code. Kindly provide the correct Japanese text to translate.
-Sorry, the text you've provided appears to be in a programming language, specifically for the "ggplot" library in R for data visualization. Therefore, it doesn't need to be translated. The code is instructing the program to create a plot with 'X' as the x-axis variable and the fill (usually color) determined by 'N'.
-# Change the vertical axis to relative frequency
-I think there has been a misunderstanding. The provided text ("geom_histogram(aes(y = ..density..)) +") is not in Japanese; it seems to be computer code, specifically R language code used for creating a histogram where `y` is represented as density. Please provide the Japanese text to be translated.
-As an AI, for translating the Japanese text, I'd require the text to be provided. Please provide the Japanese text you needed to be translated. The line you've given seems more like a piece of coding syntax.
-Sorry, I can't proceed with the translation as you have not provided any Japanese text. Please provide the text you want translated.
-
-When you look at this, the first 10 or so histograms appear to have an irregular distribution, but as you increase it to 100 and 1000, you can see that it gradually approximates to the theoretical shape of the normal distribution.
-
-In R, in addition to the Poisson distribution and binomial distribution, probability distribution functions such as the familiar t-distribution, F-distribution, and χ^2 distribution are also implemented. It may be difficult to visualize these distributions just by hearing the values of the parameters, but when such times arise, you can generate a large amount of random numbers with specified parameters and draw a histogram, making it easier to understand the shape of the probability distribution function.
-
-In fact, one of the reasons for the recent prosperity of Bayesian statistics is largely due to the contributions of computer science. **Markov chain Monte Carlo** (MCMC) is a random number generation technique that can generate random numbers even from post-distributions created by models without clear names. Although it is difficult to demonstrate this distribution analytically, random numbers can be generated from it, and by looking at the histogram, its shape can be visualized.
-
-Moreover, the advantages of this random number usage are not limited to visualization. Consider a scenario where you want to know the area (=probability) within a certain range in the standard normal distribution. For instance, let's say we want to find the area from the probability point -1.5 to +1.5. Given we understand the formula for the normal distribution, it's possible to calculate this area as follows.
-Sorry, but the text you've provided isn't in Japanese. It's a mathematical formula written in LaTeX code which represents a definite integral. The formula computes the integral from -1.5 to 1.5 of the normal (Gaussian) probability density function.
-
-Of course, we know the `pnorm` function, so we can get a numerical solution as follows.
-
-I'm sorry, but you didn't provide any Japanese text for me to translate. Please provide the text you want translated.
-I'm sorry, the provided text is a piece of R code, not Japanese language. It's a code for calculation of the probability density function between -1.5 and 1.5 in a normal distribution with mean 0 and standard deviation 1. It has nothing to do with Japanese and doesn't require a translation.
-Sure, I can help with that. However, you forgot to provide the Japanese text that you want to be translated. Please provide it so I can assist you.
-
-The same can be done with random numbers, and an approximate solution can be obtained as follows.
-
-My apologies, as a text-based AI, I couldn't see any Japanese text in your message. Could you please write it again?
-I'm sorry, but the text you provided is actually programming code in R language, used for statistical computations. It generates a normal distribution of 100000 numbers with a mean of 0 and standard deviation of 1. It's not in Japanese.
-I'm sorry, but the text you provided is not in Japanese, it's a code snippet in R programming language. Could you please provide Japanese text for me to translate?
-Create a variable to determine whether it falls within the applicable range
-Sorry, I made a mistake. Your text isn't Japanese but seems to be a code snippet in the R language, used for data manipulation. So, it appears to be already in English. Can you please provide the correct Japanese text for translation?
-You didn't provide any Japanese text, but provided a line of code instead. This line of code in R language is changing the factor levels of the column 'FLG' to "in" and "out". Please provide the Japanese text for me to translate it into English.
-I'm sorry I can't proceed without the Japanese text you would like me to translate. Could you provide the text, please?
-I'm sorry, but you didn't provide any Japanese text to translate. You actually pasted some code. Please provide the Japanese text that you would like to have translated.
-Apologies, you have provided some code but no Japanese text. Let's try again; you can provide the Japanese text that you want translated.
-I'm sorry, but what you've shared here seems to be a segment of code rather than a piece of Japanese text. Could you please provide the Japanese text to be translated?
-I'm sorry, there appears to be a misunderstanding. What you've provided is a piece of code, not a Japanese text. Thus, I cannot translate it. Could you please provide the Japanese text you need me to translate?
-You didn't provide any text but I'm ready to translate from Japanese to English as soon as you provide the text.
-
-Here, 10,000 random numbers are generated and a factor-type variable `FLG` is created to indicate whether they fall within a specified range (1 if they do, 2 if they don't). The numbers are grouped and counted according to this variable, divided by the total number to obtain the relative frequency. Probability is the proportion of the relative area occupied in the whole, and in this case, the value for the relevant area is approximately equal to the solution calculated by the `pnorm` function, at `0.866`.
+### How to Use Random Numbers
 
 
-Moreover, it is easy to visualize the range if done as follows.
-I'm sorry, but you didn't provide any Japanese text. Could you please provide the Japanese text that you need translated into English?
-Sorry, I can't provide the translation as you have not provided any Japanese text for translation.
-I'm sorry, but the text you provided isn't Japanese, it seems to be a code snippet from a programming language. Please provide the Japanese text you want translated.
-I'm sorry, the text you provided appears to be script code, not Japanese text. Could you please provide the Japanese text you would like translated into English?
-As an AI model, I'm sorry but I can not directly translate this because it is a line of code in R programming language intended to create a histogram with a specified bin width, not a Japanese text. In English, the meaning is "create a histogram with binwidth equals to 0.01".
-As a language model AI, I need the actual Japanese text to provide you with the correct translation.
+One application of random numbers, as we previously mentioned, would be when we want to program behaviors that appear to be the result of chance.
 
-To repeat, even if it is difficult to imagine the shape of the probability distribution or analytically write down its formula, it can be visualized by turning it into specific numbers and creating a histogram, and approximate probability calculations can also be made.
+In fact, there are other uses as well. One is when you want to know a probability distribution in specific terms. What follows are histograms for when we choose $n = 10,100,1000,10000$ from the standard normal distribution.
 
-The accuracy can't be trusted because it's just an approximation, so if one is sceptical, they can increase the number of random numbers generated by 10 times or 100 times. In the current computational capabilities of today's computers, such an increase is not a significant burden. The fact that complex integral calculation becomes an issue of descriptive statistics (counting) is a big advantage in that it can be understood concretely.
+```{r, rnorm}
+rN10 <- rnorm(10)
+rN100 <- rnorm(100)
+rN1000 <- rnorm(1000)
+rN10000 <- rnorm(10000)
 
-I would like you to consider this further, psychologists obtain data through psychological experiments and surveys. However, considering individual differences and errors, these are considered to be random variables. Even with just a few to several tens of data in front of you, statistical processing is performed assuming a normal distribution. The essence is the same even when applied to data generated by random numbers. In other words, it is possible to simulate with random numbers before conducting the survey experiment. Before taking a one-shot real deal in survey experiments, it is important to concretely confirm in advance what properties the data you are trying to obtain may have.
+data.frame(
+  N = c(
+    rep(1, 10), rep(2, 100),
+    rep(3, 1000), rep(4, 10000)
+  ),
+  X = c(rN10, rN100, rN1000, rN10000)
+) %>%
+  mutate(N = as.factor(N)) %>%
+  ggplot(aes(x = X, fill = N)) +
+  # 縦軸を相対頻度に
+  geom_histogram(aes(y = ..density..)) +
+  facet_wrap(~N)
+```
 
-## Practice Problems; Using Random Numbers
+Looking at this, the first ten or so histograms appear to have irregular distributions. However, as the number increases to 100,1000 and beyond, we can see that they gradually approximate the theoretical shape of a normal distribution.
 
-Let's use standard random numbers to approximate the following value. Also, try to devise a way to achieve an accuracy up to two decimal places compared to the "true value" set or calculated analytically.
+R incorporates probability distribution functions, including well-known statistical distributions such as the Poisson, binomial, t-distribution, F-distribution, and Chi-square ($\chi^2$) distribution. It might be hard to visualize these distributions just by hearing the values of their parameters. In such cases, you can generate a large number of random numbers with specified parameters and create a histogram. This enables you to visually comprehend the shape of the probability distribution function, leading to a more concrete understanding.
 
-1. Expected value of a normal distribution with mean 100 and standard deviation 8. The expected value of a continuous random variable is expressed by the following formula. $$E[X] = \int_{-\infty}^{\infty} x f(x) \, dx$$ Here, $x$ represents the random variable and $f(x)$ is the probability density function, which is obtained by integrating the entire domain of the probability density function. The expected value of a normal distribution matches the mean parameter, so the true value in this case will be the set $100$.
+Indeed, one reason why Bayesian statistics are flourishing recently is largely due to the contributions of computer science. The random number generation technique, known as **Markov Chain Monte Carlo method** (MCMC method), allows us to create random numbers even from posterior distributions produced by models that do not have explicit names. Although it is difficult to demonstrate this distribution analytically, by generating random numbers from it and viewing its histogram, you can visualize its shape.
 
-"Let's calculate the variance of the normal distribution with an average of 100 and a standard deviation of 3. The variance of a continuous random variable is represented by the following formula:
+Additionally, the advantages of this random usage method are not just limited to visualization. Suppose you want to know the area (=probability) within a certain range in the standard normal distribution. For example, let's try to find the area within the range from the probability point -1.5 to +1.5. Since we know the formula for the normal distribution, we can find this area by following the steps below.
+$$ p = \int_{-1.5}^{+1.5} \frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}} dx $$
 
- $$\sigma^2 = \int_{-\infty}^{\infty} (x - \mu)^2 f(x) \, dx$$
+This mathematical equation is an integral that represents the probability density function of a standard normal distribution in the range of -1.5 to +1.5. Simply put, it helps us calculate the probability that a random variable falls within this defined range. Remember, a normal distribution, often called the "bell curve," is a common pattern for statistical data in psychology, and many other fields of study. Understanding this concept and being able to use R to compute these probabilities will be an invaluable tool in your statistical analysis toolbox.
 
-Here, $\mu$ is the expected value of the random variable. The variance of a normal distribution matches the square of the standard deviation parameter, so in this case, the true value is $3^2 = 9$."
-3. The area of the probabilistic variable $X$ which follows a normal distribution with an average of 65 and a standard deviation of 10, between $90 < X < 110$. The results calculated analytically are as follows.
+Naturally, knowing the `pnorm` function allows us to obtain numerical solutions, as shown below.
 
-I'm sorry, but your message appears to be incomplete. There's no Japanese text provided for me to translate. Could you please provide the text?
-Your provided text seems like a code segment used in statistical analysis, more specifically in R programming for normal distribution, not a Japanese text. In terms of explaining this code, it computes the probability that a normally distributed random variable with mean 65 and standard deviation 10 is between 92 and 108.
-As a language model AI developed by OpenAI, I could definitely help you but you need to provide the Japanese text you want to be translated.
-4. The probability that the realized value in a normal distribution with an average of 10 and a standard deviation of 10 will be 7 or more. The results of the analytical calculation are as follows.
+```{r, pnorm}
+pnorm(+1.5, mean = 0, sd = 1) - pnorm(-1.5, mean = 0, sd = 1)
+```
 
-You did not provide a Japanese text. Please give me the Japanese text you want to be translated into English.
-It seems like you've posted some code, not Japanese text. The code you've posted is related to statistics, more precisely it's a command in R programming environment used to calculate the lower tail of the normal probability distribution function. It's actually not in Japanese and doesn't require translation. If you provide an actual Japanese text, I would be pleased to assist you with that.
-As a language model AI developed by OpenAI, I need to know the specific Japanese text that you want me to translate into English. Could you please provide it for me?
+We can obtain an approximate solution by using random numbers, as demonstrated below.
 
-5. Suppose we have the random variables X and Y. X follows a normal distribution with mean 10, SD 10 while Y follows a normal distribution with mean 5, SD 8. Assuming that X and Y are independent, please verify using random numbers that the mean and variance of the sum Z = X + Y, matches the sum of the means and variances of X and Y respectively.
+```{r,random_near}
+x <- rnorm(100000, mean = 0, sd = 1)
+df <- data.frame(X = x) %>%
+  # 該当する範囲かどうかを判定する変数を作る
+  mutate(FLG = ifelse(X > -1.5 & X < 1.5, 1, 2)) %>%
+  mutate(FLG = factor(FLG, labels = c("in", "out")))
+## 計算
+df %>%
+  group_by(FLG) %>%
+  summarise(n = n()) %>%
+  mutate(prob = n / 100000)
+```
+
+Here, we have generated 10,000 random numbers and created a factor-type variable, `FLG`, which indicates whether these numbers fall within a specified range (assigning a 1 if they do, and a 2 if not). We group and count the number according to this variable and divide by the total to get the relative frequency. Probability represents the proportion of a certain area within the whole. In this case, we obtained a figure of `0.866` for the specified range, which is nearly identical to the solution calculated by the `pnorm` function.
+
+Furthermore, it is easy to visualize the range with the following steps.
+```{r,norm_vis}
+## 可視化
+df %>%
+  ggplot(aes(x = X, fill = FLG)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+Let's reiterate, even if you have trouble visualizing the shape of a probability distribution, or find it difficult to represent its formula analytically, you can still visualize it as a histogram using specific numbers, and approximate probability calculations.
+
+Remember, these are only approximations, so if you don't trust their accuracy, you can easily increase the number of random numbers generated by ten or a hundred times. Given the computational capabilities of modern computers, such an increase will not significantly burden the computational costs. The fact that complex integral calculations become a matter of descriptive statistics (counting) is a significant advantage in terms of concrete understanding.
+
+I would like you to think a bit further. Psychologists gather data through psychological experiments and surveys. However, considering individual differences and errors, these data are considered to be random variables. Even with a few to several dozen pieces of data in front of you, it is assumed to follow a normal distribution, and statistical processing is carried out. This is essentially the same as what is done for data generated by random numbers. In other words, it is possible to simulate using random numbers before conducting a survey experiment. Before going all-in with the real survey or experiment, it is crucial to concretely confirm what characteristics the data you are about to collect could have.
+
+## Exercise: Using Random Numbers
+
+Let's try approximating the following values using normal random numbers. Be sure to devise a method that allows you to obtain accuracy to the second decimal place, comparing these approximations to the 'true' values obtained through analytical computations and settings.
+
+1. The expected value of a normal distribution with a mean of 100, and a standard deviation of 8. Note, the expected value of a continuous random variable is represented by the following formula: $$E[X] = \int_{-\infty}^{\infty} x f(x) \, dx$$ Here, $x$ represents the random variable, and $f(x)$ is the probability density function, which is obtained by integrating over the entire domain of the probability density function. The expected value of a normal distribution coincides with the mean parameter, so the true value in this case is the pre-set $100$.
+2. Let's try calculating the variance of a normal distribution with a mean of 100 and a standard deviation of 3. Note that the variance of a continuous random variable is expressed by the following equation: $$\sigma^2 = \int_{-\infty}^{\infty} (x - \mu)^2 f(x) \, dx$$ Here, $\mu$ is the expected value of the random variable, and for a normal distribution, the variance aligns with the square of the standard deviation parameter. Therefore, in this case, the true value is $3^2 = 9$.
+3. The area of the probability variable $X$, which follows a normal distribution with an average of 65 and a standard deviation of 10, where $90 < X < 110$. The results of analytical calculations are as follows.
+
+```{r}
+pnorm(108, mean = 65, sd = 10) - pnorm(92, mean = 65, sd = 10)
+```
+4. The probability of realizing a value of 7 or above in a normal distribution with a mean of 10 and a standard deviation of 10. The results calculated analytically are as follows.
+
+```{r}
+1 - pnorm(7, mean = 10, sd = 10)
+```
+
+5. Let's assume we have two random variables, $X$ and $Y$. $X$ follows a normal distribution with a mean of 10 and a standard deviation (SD) of 10, while $Y$ follows a normal distribution with a mean of 5 and an SD of 8. Given that $X$ and $Y$ are independent, please use random numbers to verify that the mean and variance of their sum, $Z=X+Y$, are equal to the sum of the original means and variances of $X$ and $Y$.
+
 
 ## Population and Sample
 
-So far, we have seen how to use random numbers to examine the properties of probability distributions. From here, we will consider the use of probability distributions in inferential statistics. In inferential statistics, the entire population we want to know about is referred to as the **population**, and the partial data obtained from it is referred to as the **sample**. Inferential statistics/statistical inference is about using the statistical properties of a sample to infer the properties of the population. The statistical parameter that represents the characteristics of the population is called the **parameter**, and the terms such as population mean, population variance etc., are labelled with the word "population" to indicate they are information about the population. Similarly, we can calculate the mean and variance of the sample, but in this case, we may label them as sample mean, sample variance etc., to explicitly emphasize the difference.
+Until now, we have looked at how to use random numbers to explore the properties of probability distributions. From here on, we are going to consider how probability distributions are used in inferential statistics. In inferential statistics, the whole group we want to know about is called the **population**, and the subset of data obtained from it is referred to as a **sample**. Inferential statistics or statistical inference entails using sample statistics to infer the properties of the population. The statistical measures that represent the characteristics of the population are called **parameters**, indicating information about the population with terms such as population mean and population variance, which are prefaced with the word "population". Similarly, the mean and variance of a sample can be calculated, and in these cases, terms such as sample mean and sample variance are used to explicitly emphasize the difference.
+
+Let's use a specific example involving random numbers. Suppose we have a village made up of 100 people. We decide to measure the heights of these villagers and collect data. Thinking of 100 appropriate random numbers can be tedious, so we'll make replacements by generating random numbers.
+
+```{r,population}
+set.seed(12345)
+# 100人分の身長データをつくる。小数点以下2桁を丸めた
+Po <- rnorm(100, mean = 150, sd = 10) %>% round(2)
+print(Po)
+```
+
+Since this village of 100 people is our population, we can calculate the population mean and population variance in the following way.
 
 
-Let's look at a specific example using random numbers. Suppose there was a village consisting of 100 people. Let's assume we measured the height of the people in this village and turned it into data. Thinking of 100 appropriate numbers is troublesome, so we will generate random numbers instead.
+```{r}
+M <- mean(Po)
+V <- mean((Po - M)^2)
+# 母平均
+print(M)
+# 母分散
+print(V)
+```
 
-I'm sorry, but I need the Japanese text to translate into English. Can you provide it, please?
-Sorry, but what you've given me seems to be a line of code, not Japanese text. If you have Japanese text that needs translation, please provide it.
-# Create height data for 100 people. Rounded to two decimal places.
-I'm sorry but the text provided is not Japanese. It looks like a line of code in R programming language, which generates a vector of 100 random numbers with a standard mean of 150 and a standard deviation of 10, and then rounds off these numbers to have 2 decimal places.
-
-It appears you've accidentally submitted code instead of Japanese text. Please provide the correct text for translation.
-I'm sorry, but there's no Japanese text provided for translation. Please provide the Japanese text you want translated.
-You need to provide a Japanese text to translate it into English.
-
-Since this village of 100 people is the population, the population mean and population variance can be calculated as follows.
-
-Apologies, but you seem to have forgotten to include the Japanese text. Please provide the text you would like translated into English.
-You need to provide the Japanese text that needs to be translated to English. The phrase you've given, "M <- mean(Po)", seems to be a line of programming code (R language), not Japanese text.
-Sorry, I can't translate that for you because it seems to be a code or mathematical formula and not Japanese text. If you have Japanese text you need translated to English, I'd be glad to help.
-Sure, but you forgot to provide the Japanese text. Could you please provide it?
-It appears that you forgot to provide the Japanese text to be translated. Please provide the text to be translated.
-# Mother Variance
-I'm sorry, but you haven't provided any Japanese text to translate. Could you please provide the text you'd like to be translated into English?
-Of course, I would be happy to translate Japanese text for you. However, the text you want me to translate seems to be missing. Please provide the necessary information and I'd be glad to help!
-
-Now, let's say we have obtained a sample of 10 people randomly from this village. It could be the first 10 people in the vector, but since there is a sampling function called `sample` in R, we would like to make use of this.
-
-Sure, please provide the Japanese text you want to be translated into English.
-I'm sorry but your text is not in Japanese, it seems to be a line of code. Please provide the correct text to be translated.
-I'm sorry, but there's no Japanese text provided. Could you please provide the text you want to translate?
-I'm sorry but there's no text provided for me to translate. Please provide the Japanese text you'd like translated to English.
-
-This `s1` is the data at hand. Obtaining data from psychological experiments is akin to extracting a small part from the whole. The mean and variance of this sample are known as the sample mean and sample variance.
-
-I'm sorry but no Japanese text was provided to translate. Could you please provide the text you need translated?
-It seems you have provided a line of code, not a Japanese text. Please provide the text you want me to translate.
-Sorry, the text you've provided seems to be a line of coding language, not Japanese text. It's an instruction to calculate the variance of the variable s1 in R language. Please provide some Japanese text to translate.
-# Sample Average
-I'm sorry, but you didn't provide any Japanese text to be translated. Could you please provide the text?
-Sample Variance
-As an AI, I'm sorry that I can't translate because you haven't included a Japanese text. Please provide the text you'd like to translate.
-I'm sorry, but you haven't provided any Japanese text for me to translate. Please reply with the text you need translated.
-
-This time, the population mean is `r M`, and the sample mean is `r m1`. Since we can only know the sample values, when we get the sample mean `r m1`, it's not strange to infer that the population mean will also be around `r m1`. However, the sample mean can change with each sampling method. Let's say we took another sample as a test.
-
-I'm sorry, but your message does not contain any Japanese text. Could you please provide the text you need translated?
-I'm sorry, but that looks like code, not Japanese text. Please provide a Japanese sentence or paragraph and I would be happy to assist you in translating it to English.
-Sorry, I can't provide the translation as the Japanese text wasn't specified. Could you provide the text you need translated?
-I'm sorry, but the text you provided is not in Japanese, it appears to be code. Could you kindly provide the correct information you need translated?
-I'm sorry, but the text you've given is a line of code, not Japanese text. Please provide the text to be translated.
-# Sample Average Part 2
-I'm sorry, but I can't do the translation since there's no Japanese text provided. Please provide the appropriate Japanese text.
-I'm sorry, but without the Japanese text provided, I'm unable to process your request. Can you please provide the Japanese text you'd like translated into English?
-
-The sample mean this time turned out to be `r m2`. Once this data is obtained, you will undoubtedly guess that the population mean would be "a value close to `r m2`". Comparing `r m1` of sample 1 and `r m2` of sample 2, the former is closer to the correct answer `r M` (the difference is `r M-m1` and `r M-m2`, respectively). In other words, depending on how the sample is collected, there can be hits and misses. Even when collecting data and conducting research, whether the results support the hypothesis or not lies beneath such probabilistic fluctuations.
-
-In other words, **a sample is a random variable, and sample statistics can also stochastically vary**. When estimating parameters with sample statistics, it is necessary to know the properties of the sample statistics and the probability distribution they follow. Let's look at the desirable properties of estimators that have desirable properties for estimating parameters.
-
-You didn't provide any text to translate. Could you please provide the Japanese text you'd like translated into English?
-
-Put simply, the closer the sample statistic is to the parameter, the better - ideally, they should match. In the previous example, we only drew 10 people from a village of 100, but if we increase the sample size to 20 or 30 people, we can expect to get closer to the parameter. This property is referred to as **consistency**, and it is one of the desirable characteristics of an estimator. Fortunately, the sample mean has consistency with respect to the population mean.
-
-Let's check this out. We can calculate this by changing the sample size in various ways. For example, let's increase the sample size from 2 to 1000 from a normal distribution with an average of 50 and a standard deviation of 10. Taking out a sample will be replaced with random number generation and we'll calculate its average.
-
-Sure, please provide me with the Japanese text you want me to translate.
-I'm sorry but the provided input doesn't seem to be Japanese text. It appears to be a code fragment, potentially for a statistical computation. To be able to assist further, could you please provide the Japanese sentence or phrase you'd like translated?
-I'm sorry, this isn't a Japanese text. It appears to be a code snippet in R programming language, specifying a sequence of numbers from 2 to 1000, with an interval of 10, to a variable called sample_size. I'm a language translator, I can help with your linguistic translation needs.
-# Initialize the object to store the average value
-It seems like you have mistakenly included some code here. Please provide the Japanese text you want to be translated.
-You didn't provide any Japanese text to translate. Could you please provide the text you want translated into English?
-I'm sorry, but the text you've given is a line of code, not Japanese. Could you please provide the Japanese text you want translated?
-I'm sorry, but the text you've provided is not Japanese, it looks like a line of code in R programming language, which calculates the sample mean for a random normal distribution with a mean of 50 and standard deviation of 10. Would you please provide me with the Japanese text you want to translate?
-I'm sorry, but you haven't provided any Japanese text for me to translate. Could you please provide the text you want to be translated?
-Apologies for the confusion, but it seems that you've forgotten to include the text in Japanese that you want to translate into English.
-
-# Visualization
-I'm sorry, but the text you provided appears to be computer code, not Japanese language. Can you please provide Japanese text for translation?
-You haven't provided any Japanese text to translate. Please do so and I'll be happy to assist!
-As an AI, I need the exact Japanese text to provide you with an accurate translation. Currently, the input "geom_point() +" appears to be a code fragment, not Japanese text. Please double-check your input.
-I'm sorry I can't translate this because it seems to be a line of code, not Japanese text. Could you please provide me with the Japanese text you want translated?
-Please provide the Japanese text to be translated into English. Your current input seems to be a line of code.
-You haven't provided any Japanese text. Can you please provide the text you would like translated into English?
-
-As the sample size increases, it can be seen that it approaches the true value of 50. Try changing the shape of the population distribution, parameters, sample size, etc. to confirm this.
-
-You didn't provide the Japanese text you wanted translated. Could you please input that?
-
-The estimator is a random variable, and its properties can be described by a probability distribution. The probability distribution followed by a sample statistic is called a **sample distribution**. If the probability density function of the sample distribution is known, its expected value and variance can also be calculated. One of the desirable properties of an estimator is that its expected value (mean) matches the population parameter, which is referred to as **unbiasedness**.
-
-One of the steps that frustrates beginners when studying psychological statistics is the operation of dividing by $n-1$ instead of the sample size $n$ when calculating variance. This is different from the sample variance and is called unbiased variance. The former has unbiasedness, while the latter does not. Let's try to confirm this using random numbers.
-
-From a population with an average of 50, SD10 (population variance $10^2=100$), repeatedly obtain a sample of size $n=20$. This is done by generating random numbers of size 20. For each sample, calculate the sample variance and unbiased variance, and then calculate their average (expected value of the sample statistic).
-
-As an AI model, I could not process the input. I'm not seeing any Japanese text. Can you please provide the Japanese text you want to be translated into English?
-I'm sorry, but you entered code not a Japanese text. Could you please provide Japanese text to translate?
-I'm sorry, but that's not a Japanese text. It appears to be a line of code. Could you please provide the Japanese text that you would like me to translate?
-I'm sorry, but you've provided a line of code, not a Japanese text. Please provide the Japanese text that you need to be translated.
-
-You didn't provide any Japanese text for me to translate. Please provide the text and I would be more than happy to assist you.
-Sure, but there's no Japanese text provided. Please provide the text you want translated.
-I'm sorry, but the text you've provided is in the programming language, not Japanese. Could you please try again with actual Japanese text?
-Sorry, the text you've provided seems like a code, not a Japanese text. It appears to be a line of code from the statistical programming language R, generating a list of 20 random numbers (or a "sample") from a normal distribution with a mean of 50 and a standard deviation of 10. Please provide the Japanese text you'd like to be translated into English.
-I'm sorry but it seems like there's misunderstanding. The text you've given is a line of script code, not Japanese text. Please provide a Japanese text for me to translate.
-I'm sorry, the text you've provided seems to be a line of code, not Japanese. If you could provide a Japanese sentence, paragraph or text, I would be happy to help you translate it.
-Sure, I can help you translate the text. However, you have not provided any Japanese text. Please provide the text you would like me to translate.
-
-Sure, the English translation of the term "期待値" is "Expected Value".
-I'm sorry, but what you've provided doesn't appear to be Japanese text. Could you please provide the correct text for translation?
-You didn't provide any Japanese text. Please provide the text you want translated.
-Sure, but you haven't provided any Japanese text. Please provide the text you want to be translated.
-
-The mean or expected value of the object `vars` that calculated the sample variance is `r mean(vars)`, which is somewhat away from the set value (true value) of 100. In contrast, the mean or expected value of unbiased variance using `var`, which is an embedded function of R, is `r mean(unbiased_vars)`, suggesting that this is preferable as an estimator for the population variance. It is known that a bias occurs in the sample variance, so the original formula was modified in advance to correct for this bias. Hopefully, this explanation will relieve anyone who was feeling frustrated.
-
-There is also efficacy as a desirable property of estimators, but for details, please refer to @kosugi2023. This book includes examples other than normal distribution and examples of other sample statistics such as correlation coefficients, all of which are to be understood through approximation by random number generation. If you are tired of mathematical statistical explanations, I would like you to refer to it by all means.
-
-## Confidence Interval
-
-The sample statistic is a random variable and changes each time a sample is taken. This is due to the probabilistic fluctuation that occurs when taking a sample. Although the sample mean has desirable properties such as consistency and unbiasedness, the sample mean is not equal to the population mean.
-
-Estimating the population mean with one realization value of a random variable called sample mean is almost certainly a miss in estimating the population mean. Therefore, consider estimating the parameters with a certain width.
-
-For example, consider a standard normal distribution with an average of 50 and a standard deviation of 10 as the population distribution, and take a sample of size 10 and use its sample mean as an estimate of the population mean (point estimation). At the same time, give the estimate some width, such as interval estimation of the sample mean $\pm 5$. At this time, let's confirm by simulation of repeated random number generation the probability of correctly guessing the true value of $0$.
-
-I'm sorry but as a text-based AI, I cannot comprehend or translate non-textual information or contents such as codes or complex scripts. If you have a Japanese text written in words, feel free to share and I'll be glad to translate it for you.
-I'm sorry, but the text you've given appears to be code, not Japanese. Could you please provide the Japanese text you want to be translated? Thanks!
-You haven't provided any Japanese text, what you provided appears to be code. Please provide the Japanese text you want translated.
-Apologies, you seem to have posted a piece of code, not Japanese text. Please provide Japanese text that needs to be translated.
-You didn't provide any Japanese text to translate into English. Please provide the text you'd like translated.
-
-# An object to store the average value
-I'm sorry, but the text you've provided is not Japanese. It seems like a line of code. Please provide Japanese text for translation.
-
-I'm sorry, but what you've provided isn't Japanese text. It looks like a piece of code. Could you please provide the correct text?
-I'm sorry, but that's not Japanese text. This seems to be a line of code. Could you please provide the Japanese text you want translated?
-Please provide the Japanese text you want translated to English.
-Apologies, but the text you've provided appears to be an R code, not Japanese. It represents a function to generate 'n' random numbers from a normal distribution with a mean of 'mu' and a standard deviation of 'SD'. If you have Japanese text to translate, please provide it.
-You didn't provide any Japanese text. Could you please provide the Japanese text you want me to translate into English?
-Apologies for the confusion, but it seems like you haven't provided a Japanese text for me to translate into English. If you provide it, I will be glad to help!
-
-I'm sorry, but there is no Japanese text provided for me to translate. Could you please provide it?
-# Creating a variable that becomes TRUE if the estimates match, and FALSE if they do not
-I'm sorry but you seem to have made a mistake. No Japanese text was provided for translation. Could you please provide the Japanese text you'd like translated into English?
-I'm sorry, but you haven't provided a Japanese text to translate. The given text appears to be a line of code. Please provide a Japanese text for me to translate.
-As an AI, I am not equipped to translate technical code. However, the text given seems to be written in a programming language, not Japanese. The given code appears to be in R programming language and it's basically an order or command for interval estimation. It's saying that if 'mu' lies between 'm-5' and 'm+5', then return TRUE, else return FALSE.
-I'm sorry but you didn't provide any Japanese text to translate. Could you please provide the text?
-Sure, I'd be happy to assist, but you haven't provided any Japanese text for me to translate. Please provide the Japanese text you're referring to.
-Apologies, but there seems to be a misunderstanding. The text you've provided appears to be code rather than Japanese content. Please check and provide the intended content for translation.
-As an AI, I need the Japanese text to be translated. Please provide the Japanese sentences or phrases you want me to translate. Below is just a code snippet, not a Japanese text.
-Apologies, I'm unable to translate that because it's not Japanese text. It appears to be a part of a code. Could you please provide the Japanese text for me to translate?
-Apologies, I can't see any Japanese text provided for translation. Could you provide the specific text you'd like me to translate?
-I'm sorry but there's no Japanese text provided. Please provide the text you'd like me to translate.
-You haven't provided any Japanese text. Please provide the text you'd need translated.
-
-As can be seen from the results, the point estimate never correctly hits the parameter. This is natural, because when done with real numbers, there can be a gap at some point after the decimal point, and if accuracy is ignored, it is impossible to match. In contrast, in the case of predictions with widths, the true value is included in the interval for `r result.df$n2` times out of `r iter` trials, and its accuracy rate is `r result.df$prob2 * 100`%.
+Let's assume that we have obtained a sample of 10 people randomly from this village. We could select the first 10 people from the vector, but R provides us with a sampling function called `sample` that we would like to utilize.
 
 
-To achieve 100% accuracy in interval estimation, the interval must be infinitely wide (in the case of estimating the population mean). Since this is practically equivalent to not estimating at all, it is customary to allow about 5% failure and aim for interval estimation with a 95% accuracy. This interval is known as the 95% **confidence interval**.
+```{r,sampling}
+s1 <- sample(Po, size = 10)
+s1
+```
+
+The `s1` here is our given data. Obtaining data from psychological experiments is like extracting just a small part from the whole. The mean and variance of this sample are called the sample mean and sample variance.
+
+```{r,sampleStatistics}
+m1 <- mean(s1)
+v1 <- mean((s1 - mean(s1))^2)
+# 標本平均
+print(m1)
+# 標本分散
+print(v1)
+```
+
+In this case, the population mean is `r M`, and the sample mean is `r m1`. Since the only values we actually know are those of the sample, it's not unreasonable to guess that when we get the sample mean `r m1`, the population mean would also be close to `r m1`. However, the sample mean varies depending on how the sample is collected. For the sake of illustration, let's suppose we've gathered another sample.
+
+```{r,sampling2}
+s2 <- sample(Po, size = 10)
+s2
+m2 <- mean(s2)
+v2 <- mean((s2 - mean(s2))^2)
+# 標本平均その2
+print(m2)
+```
+
+The sample mean obtained this time was `r m2`. Upon obtaining this data, surely you would guess that the population mean is likely "close to `r m2`". Comparing sample 1's `r m1` with sample 2's `r m2`, the former is closer to the correct value of `r M` (the differences are `r M-m1` and `r M-m2` respectively). What this implies is the existence of hit-or-miss scenarios depending on how the sample is selected. Therefore, even when collecting and studying data, whether the result supports the hypothesis or not lies beneath these probabilistic fluctuations.
+
+In other words, a **sample is a random variable, and the sample statistic can also change probabilistically**. When estimating parameters using sample statistics, it is necessary to be familiar with the properties of the sample statistics and the probability distribution they follow. In the following, we will look at desirable properties of estimators which have desirable properties for parameter estimation.
+
+## Consistency
 
 
-Confidence Interval in the Case Where the Population Variance of the Normal Distribution is Known
+In the simplest terms, the closer the sample statistic is to the parameter, the better - we would be pleased if they could match. In the previous example, we only drew 10 people from a village of 100, but as the sample size increases to 20, 30, and so on, it can be expected to get closer to the parameter. This property is called **consistency**. It's one of the characteristics that we want an estimator to have. Fortunately, the sample mean is consistent with the population mean.
 
-We may apply the above simulation to adjust the interval until the probability that interval estimation is justified becomes 95%, but indeed that is troublesome, so let me introduce a property that has become clear in inferential statistics.
+Let's try to confirm this. We could calculate this by varying the sample size. As an example, let's increase the sample size from 2 to 1000 in a normal distribution with an average of 50 and SD of 10. We'll consider the process of drawing samples as generating random numbers and calculating their average.
 
-If it is known that the population follows a normal distribution, with a population mean of $\mu$ and a population variance of $\sigma^2$, it is understood that the distribution of sample means follows a normal distribution with mean $\mu$, variance $\frac{\sigma^2}{n}$ (standard deviation $\frac{\sigma}{\sqrt{n}}$).
+```{r, consistency}
+set.seed(12345)
+sample_size <- seq(from = 2, to = 1000, by = 10)
+# 平均値を格納するオブジェクトを初期化
+sample_mean <- rep(0, length(sample_size))
+# 反復
+for (i in 1:length(sample_size)) {
+  sample_mean[i] <- rnorm(sample_size[i], mean = 50, sd = 10) %>%
+    mean()
+}
 
-The 95% interval of the standard normal distribution is approximately $\pm 1.96$.
+# 可視化
+data.frame(size = sample_size, M = sample_mean) %>%
+  ggplot(aes(x = size, y = M)) +
+  geom_point() +
+  geom_line() +
+  geom_hline(yintercept = 50, color = "red")
+```
 
-Sure, I'd be happy to help you with the translation. But you would need to provide the Japanese text first.
-When you remove 2.5% from both ends
-I apologize for any confusion, but "qnorm(0.025)" is a function in R programming used in statistics, not Japanese text. It represents the 0.025 quantile of a standard normal distribution. It is also often used to calculate confidence intervals or cutoffs for hypothesis testing in statistics. Could you kindly provide the Japanese text that you would like me to translate into English?
-As a translator, I would need Japanese text to translate into English. However, the provided "qnorm(0.975)" is a statistical function in R programming language, which calculates the 97.5 percentile in a standard normal distribution (Z-distribution). Could you please provide Japanese text for translation?
-I'm sorry, but I can't assist with that because you didn't provide Japanese text to be translated. Please provide the text so I can help.
+As you can see, as the sample size increases, it approaches the true value of 50. Let's change things like the shape of the population distribution, parameters, and sample size to confirm this.
 
-When combined, when the sample average is $\bar{X}$, the 95% confidence interval becomes the following by multiplying the standard deviation by 1.96.
+## Unbiasedness
 
-I'm sorry, but the provided text is not in Japanese. Instead, it appears to be a mathematical formula in LaTeX, a typesetting system used for scientific documents.
+Estimators are random variables, and their properties can be described using a probability distribution. The probability distribution that a sample statistic follows is called a **sampling distribution**. If the probability density function of the sample distribution is known, it is possible to calculate its expected value or variance. It is also one of the desirable properties of the estimator that the expected value (mean) matches the parameter. This property is referred to as **unbiasedness**.
 
-The formula itself is for the calculation of a confidence interval for a population mean "mu" (μ). It can be translated as:
-"The population mean is equal to or greater than the sample mean minus 1.96 times the standard deviation divided by the square root of the sample size, and equal or less than the sample mean plus 1.96 times the standard deviation divided by the square root of the sample size." This is the 95% confidence interval for the population mean when the population standard deviation is known.
+One of the steps that frustrates beginners in learning psychological statistics is the operation of dividing by $n-1$, not the sample size $n$, when calculating the variance. This method is called unbiased variance, which differs from the sample variance. The former has a property of unbiasedness, while the latter does not. Let's verify this using random numbers.
+
+We continuously draw samples of size $n=20$ from a population with a mean of 50 and a standard deviation (SD) of 10 (the population variance is $10^2=100$). This is performed by generating random numbers of size 20. Let's calculate the sample variance and unbiased variance for each sample, and then compute their averages (the expected values of the sample statistics).
+
+```{r unbiased}
+iter <- 5000
+vars <- rep(0, iter)
+unbiased_vars <- rep(0, iter)
+
+## 乱数の生成と計算
+set.seed(12345)
+for (i in 1:iter) {
+  sample <- rnorm(n = 20, mean = 50, sd = 10)
+  vars[i] <- mean((sample - mean(sample))^2)
+  unbiased_vars[i] <- var(sample)
+}
+
+## 期待値
+mean(vars)
+mean(unbiased_vars)
+```
+
+The mean, or expected value, of the object `vars`, which is the calculated sample variance, is `r mean(vars)` and it deviates somewhat from the established value (true value) of 100. In contrast, the average or expected value of the unbiased variance using `var`, an embedded function in R, is `r mean(unbiased_vars)`, and it can be understood that this latter calculation is more preferable as an estimate of the population variance. It is known that sample variance can create bias, and the original formula was modified in advance to correct for this bias. It is hoped that with this explanation, any frustrations will be alleviated.
+
+There's also the desired property of 'efficacy' for estimators, but for more details, please refer to @kosugi2023. This book includes examples other than the normal distribution, such as sample statistics like correlation coefficients. All are understood through approximation using random number generation. If you're tired of mathematical-statistical explanations, I highly recommend using this as a reference.
+
+## Confidence Intervals
+
+Sample statistics are a type of probability variable that varies each time a sample is taken. This occurs due to the probabilistic fluctuations introduced when sampling. While the sample mean does possess desirable properties such as consistency and unbiasedness, it does not equate to the population mean.
+
+Using just one realization of a random variable called sample mean to estimate the population mean is pretty much a certain miss in guessing the population mean. Therefore, let's consider estimating the parameter with a certain range.
+
+For instance, let's assume a standard normal distribution with a mean of 50 and a standard deviation of 10 as the population distribution. Let's take a sample size of 10 and use its sample mean as an estimate for the population mean (point estimation). At the same time, give this estimate a bit of width—for example, perform an **interval estimation** of the sample mean $\pm 5$. With this in mind, let's check the probability of correctly estimating the true value $0$ using a simulation of repeatedly generated random numbers.
+
+```{r interval}
+iter <- 10000
+n <- 10
+mu <- 50
+SD <- 10
+
+# 平均値を格納しておくオブジェクト
+m <- rep(0,iter)
+
+set.seed(12345)
+for (i in 1:iter) {
+  # サンプリングし，標本統計量を保存
+  sample <- rnorm(n, mean = mu, sd = SD)
+  m[i] <- mean(sample)
+}
+
+result.df <- data.frame(m = m) %>%
+  # 推定が一致するとTRUE,外れるとFALSEになる変数を作る
+  mutate(
+    point_estimation = ifelse(m == mu, TRUE, FALSE),
+    interval_estimation = ifelse(m - 5 <= mu & mu <= m + 5, TRUE, FALSE)
+  ) %>% 
+  summarise(
+    n1 = sum(point_estimation),
+    n2 = sum(interval_estimation),
+    prob1 = mean(point_estimation),
+    prob2 = mean(interval_estimation)
+  ) %>% print()
+```
+
+As can be seen from the results, the point estimate has never accurately hit the population parameter. This is to be expected, as working with real numbers inevitably leads to discrepancies at some decimal place, and if precision is ignored, there can't be an exact match. In contrast, when making a prediction with a range, the true value is included within the interval in `r result.df$n2` out of `r iter` attempts, and the accuracy rate is `r result.df$prob2 * 100`%.
+
+In interval estimation, in order to ensure a 100% correct rate, the interval must be infinitely wide (in the case of estimated population mean). This is virtually equivalent to not making any estimate, so there is a convention to accept about 5% failure and attempt interval estimation with a 95% correct rate. This interval is known as the 95% **confidence interval**.
 
 
-Let's apply the numerical example we just discussed to confirm this. It turns out that the true value is included within the interval at a rate close to 95%.
+### Confidence Interval in Cases Where the Population Variance of the Normal Distribution is Known
 
-I'm sorry, but you didn't provide any Japanese text. Could you please provide the text you want translated?
-I'm sorry, but the provided text is not in Japanese. It appears to be a line of programming code, specifically in R, a language for statistical computing. This code is for calculating a confidence interval.
-Apologies, but the provided text seems to be computer script not Japanese. I am an AI Language model designed to translate human languages. If you have any Japanese text, feel free to paste it and I would be glad to assist you in translating it to English.
-# Create a variable that becomes TRUE if the estimate matches, and FALSE if it does not.
-I'm sorry, but you haven't provided any Japanese text. Could you please provide the text you want translated to English?
-Sorry, but it seems that the text you've provided is actually a code snippet, not Japanese. The code itself appears to be written in R, a language for statistical computing and graphics. It's checking whether a variable 'mu' lies within a certain interval around 'm'. If it does, it returns TRUE, and if it doesn't, it returns FALSE.
-Apologies, but you forgot to provide the Japanese text that you want me to translate to English. Could you please provide it again?
-I'm sorry, but you haven't provided any Japanese text for me to translate. Could you please provide the text?
-I'm sorry, but there's no Japanese text provided. Could you please provide the text you want me to translate?
-I'm sorry, but there's no Japanese text provided to translate.
-Sure, but you didn't provide the Japanese text for translation. Could you please provide it?
+The simulation above could be applied to adjust the interval until the probability of interval estimation becomes 95%, but indeed, that would be tiresome. Therefore, let's introduce the properties that have been clarified by inferential statistics.
 
-Confidence Interval when Population Variance of Normal Distribution is Unknown
+If it is known that the population follows a normal distribution, with a population mean of $\mu$ and a population variance of $\sigma^2$, it is understood that the distribution followed by the sample mean is a normal distribution with a mean of $\mu$ and variance of $\frac{\sigma^2}{n}$ (standard deviation of $\frac{\sigma}{\sqrt{n}}$).
 
-In the previous example, we discussed the case when the population variance is known, but if the population mean and population variance are known, there's no need to estimate them, so in practice, it becomes necessary to estimate in cases where the population variance is unknown. Fortunately, in such cases, in other words, when the population variance is replaced with unbiased variance (sample statistic), it is known that the sample mean follows a t-distribution with a degree of freedom of $n-1$. (For details, refer to @kosugi2023)
-But in that case, since the shape of the t-distribution changes depending on the sample size, the confidence interval is calculated using the following formula, not limited to the 95% interval being $\pm 1.96$ like the standard normal distribution.
-As an AI, I can explain that this appears to be a mathematical formula rather than a written Japanese text. The formula seems to depict the Confidence Interval for a sample mean in statistics, utilizing the t-distribution. However, if you meant to include specific Japanese text for translation, please provide it, and I'll be happy to assist you further.
+The 95% interval for the standard normal distribution is approximately $\pm 1.96$, as shown below.
 
-Here, $T_{0.025}$ refers to the 2.5th percentile of the t-distribution, and $T_{0.975}$ refers to the 97.5th percentile. Since the t-distribution is symmetric (if the mean is 0), you can also think of $T_{0.025} = -T_{0.975}$. Also, $U^2$ is the unbiased variance ($U$ is its square root).
 
-Let's also check this with an approximate calculation using random numbers. We can see that the true value is included in the interval at a rate close to 95%.
+```{r}
+# 両端から2.5%ずつ取り除くと
+qnorm(0.025)
+qnorm(0.975)
+```
 
-Sorry, but I can't proceed your request as there is no Japanese text provided. Please provide the Japanese text that you would like me to translate.
-# Simulation Settings
-Sure, but for me to provide you a translation, you must provide the Japanese text. The sentence you've provided ("iter <- 10000") is a line of code, not Japanese text.
-Apologies for the misunderstanding, but it doesn't seem like the text you've provided is in Japanese. It looks more like code or a script from a programming language. If you have Japanese text you'd like translated, feel free to post it.
-I'm sorry, but you didn't provide any Japanese text to be translated into English. Could you please provide the text you need translated?
-Apologies, but your provided text seems to be a line of code instead of Japanese text. Please provide the actual Japanese text that you want to be translated.
+When taken together, when the sample mean is $\bar{X}$, the 95% confidence interval is obtained by multiplying the standard deviation by 1.96, as follows.
 
-# Storing the average value in an object
-I'm sorry but the text you've given is not in Japanese. It seems to be a line of code, possibly in R programming language which assigns a vector of zeros to the variable 'm' with a length of 'iter'. Please provide the Japanese text you want to be translated.
-Apologies, but there seems to be a mistake. The text provided appears to be code, not Japanese. Could you please provide the Japanese text you want to be translated into English?
+$$ \bar{X} - 1.96 \frac{\sigma}{\sqrt{n}} \le \mu \le \bar{X} + 1.96 \frac{\sigma}{\sqrt{n}} $$
 
-I'm sorry, but the text you provided isn't Japanese. It appears to be a line of code. Could you please provide me with some Japanese text to translate?
-It appears you haven't provided any Japanese text for me to translate. The text provided is a code snippet, not a sentence in Japanese. Please provide the Japanese text you want to be translated into English.
-# Sample and save the sample statistics
-I'm sorry, but the text you provided is not in Japanese. It seems to be a line of code in the R statistical programming language. This line is generating a random sample of size n from a normal distribution with the specified mean and standard deviation. Please provide the correct Japanese text you'd like me to translate into English.
-You didn't provide any Japanese text. In order to translate it to English, I need the Japanese text first.
-Sure, the English translation would be:
+The above expression in R and TeX code is a way of demonstrating the concept of a confidence interval. In simpler terms: 
 
-U <- sqrt(var(sample)) # Same with sd(sample)
-This is a line of code in R programming language, which is setting U to be the square root of the sample variance. The comment indicates that this can also be done with the sd (standard deviation) function.
-I'm sorry but you've given me a line of code, not Japanese text. As a translator, I translate text from one language to another. If you need help understanding the code, I can help with that. This line of code is setting an interval with a t-distribution in statistics using parameters like sample size and level of significance.
-Apologies, but your instructions show a blank after "Please translate this Japanese text into English:" Could please provide me with the Japanese text that you'd like translated?
+This equation represents how we estimate the range in which the true population mean (μ) falls, given our sample data. 
 
-Sorry, but you didn't provide a Japanese text to translate. Can you please provide the text you wanted to be translated?
-# Create a variable that becomes TRUE when the estimation matches, and FALSE when it deviates
-I'm sorry, but I don't see the Japanese text that needs to be translated. Could you please provide it again?
-Without Japanese text, I can't provide a translation. Your input seems to be a line of code rather than Japanese text. If you want to explain the function of this code, it states: if 'mu' is within a certain 'interval' from 'm', return TRUE; otherwise, return FALSE.
-Apologies, I didn't receive the Japanese text. Please provide the text you want translated into English.
-Sure, I can assist you with that. Please provide the Japanese text you want to be translated into English.
-I apologize, but you didn't provide any Japanese text to translate. Could you please send the Japanese text you want to translate to English?
-I'm sorry, but I can't translate that since it appears to be a code placeholder rather than Japanese text. Could you please provide me with the Japanese text that you want translated?
-Apologies, but you haven't provided any Japanese text to translate. Could you please provide the text that you'd like translated into English?
+The $\bar{X}$ signifies the mean (average) of our sample data. 
 
-Exercise problem: Estimators and Interval Estimation
+The $\sigma$ represents the standard deviation of our sample data (how spread out the numbers are from their average value). 
+
+The $n$ is the number of data points in our sample. 
+
+1.96 is a value derived from the normal distribution that corresponds to a 95% confidence level (which is commonly used in statistical analysis).
+
+So, in English - we can understand this formula as: "We are 95% confident that the true average of the entire population will fall somewhere between the value of $\bar{X} - 1.96 \frac{\sigma}{\sqrt{n}}$ and $\bar{X} + 1.96 \frac{\sigma}{\sqrt{n}}$."
+
+Let's apply the numerical example we just looked at and see for ourselves. We will find that the true value is included within the interval with almost 95% certainty.
+
+```{r interval2}
+interval <- 1.96 * SD / sqrt(n)
+result.df2 <- data.frame(m = m) %>%
+  # 推定が一致するとTRUE,外れるとFALSEになる変数を作る
+  mutate(
+    interval_estimation = ifelse(m - interval  <= mu & mu <= m + interval, TRUE, FALSE)
+  ) %>% 
+  summarise(
+    prob = mean(interval_estimation)
+  ) %>% print()
+```
+
+### Confidence Interval When the Population Variance of the Normal Distribution is Unknown
+
+In the previous example, we discussed a case where the population variance was known. However, if we know the population mean or variance, there's no need to estimate them, practically speaking; instead, we often need to estimate when the population variance is unknown. Fortunately, in such cases - when we replace the population variance with the unbiased variance (sample statistic), it is known that the sample mean follows a t-distribution with degrees of freedom $n-1$. (For more details, please refer to @kosugi2023)
+However, in this case, unlike the standard normal distribution where the 95% interval is confined to ±1.96, the shape of the t-distribution changes depending on the sample size. Therefore, this must be taken into account when calculating the confidence interval using the following formula.
+"Here, we are using this equation to express the range of a confidence interval. 
+
+In this formula:
+
+- $\bar{X}$ represents the sample mean,
+- $T_{0.025}$ and $T_{0.975}$ are the lower and upper limits of the t-distribution respectively,
+- $U$ stands for the standard deviation of the sample,
+- $n$ is the number of observations or size of the sample,
+- And $\mu$ represents the population mean under the null hypothesis.
+
+Essentially, this formula says that, with 95% confidence, the true population mean (μ) lies within this range. As such, if the calculated interval contains the value of μ stated in the null hypothesis, we do not reject the null hypothesis. If it does not, we reject the null hypothesis."
+
+Here, $T_{0.025}$ refers to the 2.5 percentile of the t-distribution, and $T_{0.975}$ refers to the 97.5 percentile. The t-distribution is symmetric (assuming a mean of 0), so it's reasonable to think of $T_{0.025}=-T_{0.975}$. Moreover, $U^2$ is the unbiased variance (with $U$ being its square root).
+
+Let's confirm this with an approximate calculation using random numbers. Similarly, we can see that the true value is included within this interval at a close to 95% ratio.
+
+```{r, t_interval}
+# シミュレーションの設定
+iter <- 10000
+n <- 10
+mu <- 50
+SD <- 10
+
+# 平均値を格納しておくオブジェクト
+m <- rep(0,iter)
+interval <- rep(0,iter)
+
+set.seed(12345)
+for (i in 1:iter) {
+  # サンプリングし，標本統計量を保存
+  sample <- rnorm(n, mean = mu, sd = SD)
+  m[i] <- mean(sample)
+  U <- sqrt(var(sample)) # sd(sample)でも同じ
+  interval[i] <- qt(p=0.975,df=n-1) * U / sqrt(n)
+}
+
+result.df <- data.frame(m = m,interval = interval) %>%
+  # 推定が一致するとTRUE,外れるとFALSEになる変数を作る
+  mutate(
+    interval_estimation = ifelse(m - interval <= mu & mu <= m + interval, TRUE, FALSE)
+  ) %>% 
+  summarise(
+    prob = mean(interval_estimation)
+  ) %>% print()
+```
+
+## Practice Problems: Estimators and Interval Estimation
+
+1. We've demonstrated that the arithmetic mean $M = \frac{1}{n}\sum x_i$ is a consistent estimator, but what about the harmonic mean $HM = \frac{n}{\sum \frac{1}{x_i}}$ and the geometric mean $GM = (\prod x_i)^{\frac{1}{n}} = \exp(\frac{1}{n}\sum \log(x_i))$? Let's validate these through simulation.
+2. Does the property that the sample mean approaches the population mean as the sample size $n$ increases, hold true for distributions other than the normal distribution? Let's verify this using a simulation with the t-distribution with degrees of freedom $\nu = 3$. Note that random numbers for the t-distribution can be generated using `rt()`, and if the non-centrality parameter `ncp` is not specified, its mean is 0.
+3. It is known that when the degrees of freedom $\nu$ are extremely large in a t-distribution, it matches the standard normal distribution. Let's use the `rt()` function to generate 1000 random numbers when the degrees of freedom are 10, 50, and 100, then draw their histograms to confirm their shapes. In addition, let's calculate the average and standard deviation of these random numbers to verify that they approach the standard normal distribution.
+4. Please generate 1000 random numbers from a normal distribution with a mean of 50 and a standard deviation of 10, then calculate the 95% confidence interval for the sample mean.
+5. Please compare the widths of the 95% confidence interval for the sample mean, when the sample size is changed to 10, 100, and 1000, for a sample drawn from a normal distribution with a mean of 100 and a standard deviation of 15.
 

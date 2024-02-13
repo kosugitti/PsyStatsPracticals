@@ -45,15 +45,13 @@ def Trans_gpt(prompt):
     while retry_counter < 10:
         try:
             messages = [
-                {"role": "system", "content": "You are a translator."},
-                {"role": "user", "content": "Never modify the TeX code, translate this Japanese text into English please:"},
-                {"role": "assistant", "content": prompt}
-            ]
+                {"role": "system", "content": "You are a translator specialized in academic texts for introductory level college students. Translate the following Japanese text into English, ensuring the translation is suitable for an introductory textbook on psychological statistics using R and RStudio. Maintain a clear, accessible, and engaging tone, appropriate for first-year college students."},
+                {"role": "user", "content": "Never modify the R chunk and TeX code, translate this Japanese text into English please:"},
+                {"role": "assistant", "content": prompt}            ]
             res = openai.ChatCompletion.create(
                 model='gpt-4',
                 messages = messages
             )
-            time.sleep(1) 
             retry_counter = 0  # リトライカウンターをリセットします
             return res.choices[0]['message']['content']+'\n'
         except openai.error.RateLimitError:
@@ -68,7 +66,6 @@ def Trans_gpt(prompt):
 
 start_time = time.time()
 
-
 for filename in target_files:
     logging.info(f"Processing {filename}...")
     with open(filename, "r", encoding="utf-8") as file:
@@ -78,30 +75,35 @@ for filename in target_files:
     base_filename_without_ext = os.path.splitext(base_filename)[0]
     new_base_filename = base_filename_without_ext + '.qmd'
     new_filename = os.path.join(output_folder, new_base_filename)
-    translation_md_filename = os.path.join(translation_md_folder, base_filename_without_ext + '_trans.md')  # 出力先フォルダを変更
-    
+    translation_md_filename = os.path.join(translation_md_folder, base_filename_without_ext + '_trans.md')
+
+    inside_chunk = False  # チャンクの状態を追跡するフラグを初期化
+
     with open(new_filename, 'w', encoding='utf-8') as new_file, open(translation_md_filename, 'w', encoding='utf-8') as md_file:
-        # Markdownファイルのヘッダーに表のヘッダーを追加
         md_file.write('| 原文 | 翻訳 |\n')
         md_file.write('|---|---|\n')
-        
-        for line in tqdm(lines, desc=f'Processing {filename}'):
-            if line.startswith("%"):
+
+        # tqdmを使ってファイル内の各行に対して進捗報告を行う
+        for line in tqdm(lines, desc=f"Translating {filename}"):
+            if line.strip().startswith('```{r'):
+                inside_chunk = True  # チャンクの開始を検出
+            elif line.strip() == '```':
+                inside_chunk = False  # チャンクの終了を検出
+
+            if inside_chunk or not line.strip() or line.strip().startswith('```'):
+                # チャンク内の行、空行、またはチャンクの開始/終了行はそのまま出力
                 new_file.write(line)
-                logging.info(f"Comment: {line}")
+                if line.strip() and not line.strip().startswith('```'):
+                    # 空行でなく、チャンクの開始/終了行でなければMarkdownにも出力
+                    md_file.write(f"| `{line.strip()}` | `{line.strip()}` |\n")
             else:
-                if line.strip():
-                    transed = Trans_gpt(line)
-                    new_file.write(transed)
-                    logging.info(f"Trans Line: {line}")
-                    logging.info(f"Transed Line: {transed}")
-                    # Markdownファイルに原文と翻訳を表形式で書き出す
-                    md_file.write(f"| `{line.strip()}` | `{transed.strip()}` |\n")
+                # チャンク外のテキストは翻訳
+                if line.strip():  # 空行でなければ翻訳
+                    translated_line = Trans_gpt(line)
+                    new_file.write(translated_line)
+                    md_file.write(f"| `{line.strip()}` | `{translated_line.strip()}` |\n")
                 else:
-                    new_file.write('\n')
-
-
-
+                    new_file.write('\n')  # 空行はそのまま追加
 
 elapsed_time = time.time() - start_time
 print("翻訳完了しました。")

@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -194,19 +228,19 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
+ <span class="menu-text">License</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preparation of the Environment</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Let’s Start with R/RStudio</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Basics of R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fundamentals of R</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -291,15 +325,23 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#for-statement" id="toc-for-statement" class="nav-link active" data-scroll-target="#for-statement"><span class="header-section-number">5.0.1</span> For Statement</a></li>
-  <li><a href="#loop-for-each-line" id="toc-loop-for-each-line" class="nav-link" data-scroll-target="#loop-for-each-line"><span class="header-section-number">6</span> Loop for each line</a>
+  <li><a href="#substitution" id="toc-substitution" class="nav-link active" data-scroll-target="#substitution"><span class="header-section-number">5.1</span> Substitution</a></li>
+  <li><a href="#iteration" id="toc-iteration" class="nav-link" data-scroll-target="#iteration"><span class="header-section-number">5.2</span> Iteration</a>
   <ul class="collapse">
-  <li><a href="#conditional-branching" id="toc-conditional-branching" class="nav-link" data-scroll-target="#conditional-branching"><span class="header-section-number">6.1</span> Conditional branching</a></li>
-  <li><a href="#practice-questions-on-repetition-and-conditional-branching" id="toc-practice-questions-on-repetition-and-conditional-branching" class="nav-link" data-scroll-target="#practice-questions-on-repetition-and-conditional-branching"><span class="header-section-number">6.2</span> Practice Questions on Repetition and Conditional Branching</a>
+  <li><a href="#loop-statement" id="toc-loop-statement" class="nav-link" data-scroll-target="#loop-statement"><span class="header-section-number">5.2.1</span> Loop Statement</a></li>
+  <li><a href="#the-while-loop" id="toc-the-while-loop" class="nav-link" data-scroll-target="#the-while-loop"><span class="header-section-number">5.2.2</span> The While Loop</a></li>
+  </ul></li>
+  <li><a href="#conditional-branching" id="toc-conditional-branching" class="nav-link" data-scroll-target="#conditional-branching"><span class="header-section-number">5.3</span> Conditional Branching</a>
   <ul class="collapse">
-  <li><a href="#how-to-create-basic-functions" id="toc-how-to-create-basic-functions" class="nav-link" data-scroll-target="#how-to-create-basic-functions"><span class="header-section-number">6.2.1</span> How to Create Basic Functions</a></li>
+  <li><a href="#basic-structure-of-if-statements" id="toc-basic-structure-of-if-statements" class="nav-link" data-scroll-target="#basic-structure-of-if-statements"><span class="header-section-number">5.3.1</span> Basic Structure of <code>if</code> Statements</a></li>
   </ul></li>
+  <li><a href="#practice-problems-on-iteration-and-conditional-branching" id="toc-practice-problems-on-iteration-and-conditional-branching" class="nav-link" data-scroll-target="#practice-problems-on-iteration-and-conditional-branching"><span class="header-section-number">5.4</span> Practice Problems on Iteration and Conditional Branching</a></li>
+  <li><a href="#creating-functions" id="toc-creating-functions" class="nav-link" data-scroll-target="#creating-functions"><span class="header-section-number">5.5</span> Creating Functions</a>
+  <ul class="collapse">
+  <li><a href="#how-to-create-basic-functions" id="toc-how-to-create-basic-functions" class="nav-link" data-scroll-target="#how-to-create-basic-functions"><span class="header-section-number">5.5.1</span> How to Create Basic Functions</a></li>
+  <li><a href="#multiple-return-values" id="toc-multiple-return-values" class="nav-link" data-scroll-target="#multiple-return-values"><span class="header-section-number">5.5.2</span> Multiple Return Values</a></li>
   </ul></li>
+  <li><a href="#practice-problems-on-functionalization" id="toc-practice-problems-on-functionalization" class="nav-link" data-scroll-target="#practice-problems-on-functionalization"><span class="header-section-number">5.6</span> Practice Problems on Functionalization</a></li>
   </ul>
 </nav>
     </div>
@@ -325,90 +367,298 @@ window.Quarto = {
 </header>
 
 
-<p>This article explains about R as a programming language. Additionally, I will mention <span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> as a supplementary reader. For a more specialized understanding of programming, it would be good to also refer to <span class="citation" data-cites="Jared_P_Lander2018-12-28">ランダー，J.P. (<a href="#ref-Jared_P_Lander2018-12-28" role="doc-biblioref">[2017] 2018</a>)</span>, <span class="citation" data-cites="Ren_Kun2017-11-23">株式会社ホクソエム (<a href="#ref-Ren_Kun2017-11-23" role="doc-biblioref">[2016] 2017</a>)</span>, <span class="citation" data-cites="Hadley_Wickham2016-02-10">石田 et al. (<a href="#ref-Hadley_Wickham2016-02-10" role="doc-biblioref">[2015] 2016</a>)</span> and others.</p>
-<p>Programming languages, such as the old ones like C and Java, and the recent ones like Python and Julia, are often used. It might be appropriate to think of R more as a programming language than a statistical package. Compared to other programming languages, R has some user-friendly features for beginners, such as not needing to declare variable types beforehand and being flexible about the formatting, such as indentation. On the other hand, as noted in the section on reusing vectors (<a href="#sec-vector" class="quarto-xref">Refer to Section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-vector</span></a>), there are times when the kindness goes astray, for example, when it fills in the shortfall in advance or refers to environment variables when creating functions if there is no explicit designation. If you are accustomed to more strict languages, these points may seem inconvenient. Overall, it can be said that the R language is beginner-friendly.</p>
-<p>There are many programming languages in the world[^5.1]. However, it’s not necessary to master all of them, and indeed it’s impossible. Instead, it’s more productive to understand the basic concepts that are common to all programming languages and then to consider that each language has its own ‘dialect’. If you were to name three of these fundamental concepts, they would probably be ‘assignment’, ‘iteration’, and ‘conditional branching’.</p>
-<p>Chapter 5.1 introduces 117 different computer languages.</p>
-<p>Certainly, but you haven’t provided any Japanese text to translate into English. Please provide the text you need to be translated.</p>
-<p>Substitution, in other words, refers to the act of storing in an object (memory). This has already been touched on in <a href="#sec-Rbase" class="quarto-xref"><span class="quarto-unresolved-ref">sec-Rbase</span></a>, so we won’t mention it here. Just pay attention to the type of objects and variables, and to their characteristic of being always overwritten.</p>
-<p>Just to add one more explanation, there may be expressions like the following.</p>
-<p>You haven’t provided any Japanese text. Please provide the text you want to translate. Sure, I can assist you. Please provide the Japanese text you want translated. Sure, I would be happy to do so, but you haven’t provided any Japanese text for me to translate. Can you please provide the text? I’m sorry, but your request doesn’t seem to contain a Japanese text to translate. Could you please provide the Japanese text you’d like me to translate into English? Sure, I would be happy to help but I am unable to see the Japanese text. Please provide it so I can assist you.</p>
-<p>Here, we deliberately use <code>=</code> as the substitution symbol. Looking at <code>a = a + 1</code> in the second line can cause confusion if interpreted like a mathematical formula. Although it’s obviously incorrect in mathematics, this is using the features of overwriting and substitution in the programming language. It means “add 1 to the value of <code>a</code> (that is currently being held), and substitute (overwrite) it into <code>a</code> (a new object with the same name)”. In this way, <code>a</code> is sometimes used as a counter variable. To reduce the possibility of misreading, in this class we are using <code>&lt;-</code> as the substitution symbol.</p>
-<p>The characteristic of overwriting this object is common to many languages, and to avoid mistakes, it is desirable to set initial values when creating objects. In the previous example, <code>a &lt;- 0</code> is set immediately before the assignment, giving the object <code>a</code> the initial value of <code>0</code>. If there is no initialization of this variable, there is a possibility that it might carry over the value that was used previously, so when you want to create a new variable to use from now on, it would be good to specify it in this way.</p>
-<p>By the way, when you want to explicitly delete a variable from memory, use the <code>remove</code> function.</p>
-<p>I’m sorry, I can’t assist with that because your instruction lacks a Japanese text that needs to be translated. Could you please provide the Japanese text? Sure, please provide the Japanese text you want to be translated. Sorry, I can’t proceed as you haven’t provided any Japanese text for translation. Could you please provide the text?</p>
-<p>When you run this, you’ll see that the object <code>a</code> has disappeared from the Environment tab in RStudio. The complete removal of memory can be done either by clicking on the broom icon in the Environment tab of RStudio, or by using <code>remove(list=ls())</code>[^5.2].</p>
-<p>The <code>ls()</code> function stands for list objects, and it’s a function that creates a list of objects in memory.</p>
-<p>I apologize, but there seems to be no Japanese text provided for me to translate. Could you please provide the Japanese text you want translated into English?</p>
-<section id="for-statement" class="level3" data-number="5.0.1">
-<h3 data-number="5.0.1" class="anchored" data-anchor-id="for-statement"><span class="header-section-number">5.0.1</span> For Statement</h3>
-<p>The characteristic feature of electronic computers is that they can continue to calculate without fatigue, as long as there are no hardware problems such as power supply. Humans accumulate fatigue through repetition, lack concentration, and create simple mistakes, but electronic computers don’t have such issues.</p>
-<p>Repetitive calculation is a central feature of computers, which can continue to carry out detailed calculations for a specified period of time. The representative command of repetition is <code>for</code>, which is also known as a for loop. The for loop is a basic control structure in programming, and the basic syntax of a <code>for</code> loop in R language is as follows:</p>
-<p>Sure, but I need the Japanese text to proceed with the translation. I’m sorry, but there’s no Japanese text provided. Could you please provide the Japanese text that you want to be translated into English? Certainly, the English translation for the Japanese text is:</p>
-<pre><code># Code to be executed</code></pre>
-<p>Apologies, but there seems to be no Japanese text provided for me to translate. Could you please provide the text? I’m sorry, but I can’t proceed your request as there is no Japanese text provided. Please provide the text you want to translate so I can assist you further.</p>
-<p>The <code>value</code> here is an iterative index variable that takes the next element of <code>sequence</code> in each iteration. The <code>sequence</code> is generally array-type data such as vectors or lists, and the “# Execution code” is a series of instructions executed within the loop body.</p>
-<p>The following is an example of a <code>for</code> statement.</p>
-<p>You didn’t provide any Japanese text for me to translate. Please provide the text you want translated. I’m sorry for the misunderstanding, but it seems you have pasted a programming command in Python and not a Japanese text. Please provide the Japanese text you want to translate. “Current value is”, i, “.” I’m sorry, but you didn’t provide the Japanese text you want me to translate into English. Could you please provide it? Apologies for the confusion, but there doesn’t seem to be any Japanese text provided for translation. Could you please provide the text you would like to be translated?</p>
-<p>The <code>for</code> statement declares a variable in the following parentheses (here <code>i</code>), and specifies how it changes (here <code>1:5</code>, that is, 1,2,3,4,5). In the following braces, write the operation you want to repeat. This time, we are outputting text to the console with the <code>cat</code> statement. There can be multiple commands here, and the commands on each line will be executed until the braces are closed.</p>
-<p>The following is an example where the vector in <code>sequence</code> is specified, and the iteration index variable does not change continuously.</p>
-<p>Apologies, but you provided a code instruction instead of a Japanese text. Please provide the Japanese text you want to be translated. I’m sorry, but you’ve provided a line of code, not Japanese text. Could you please provide the Japanese text you want translated into English? The English translation is: “The current value is”, i, “.” I’m sorry, but you haven’t provided any Japanese text to be translated. Could you please provide the text? You haven’t provided any Japanese text for me to translate. Please submit the text you’d like translated.</p>
-<p>Also, iterations can be nested. Let’s look at the next example.</p>
-<p>I’m sorry, but you haven’t provided any Japanese text to translate. Could you please do so? # Define a 2D matrix I apologize, but I didn’t receive a Japanese text. Please provide the Japanese text that you need to be translated to English.</p>
+<p>In this section, we will explain about R as a programming language. In addition, I’d recommend <span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> as a supplementary text. For a more specialized understanding of programming, you may find useful references in <span class="citation" data-cites="Jared_P_Lander2018-12-28">ランダー，J.P. (<a href="#ref-Jared_P_Lander2018-12-28" role="doc-biblioref">[2017] 2018</a>)</span>, <span class="citation" data-cites="Ren_Kun2017-11-23">株式会社ホクソエム (<a href="#ref-Ren_Kun2017-11-23" role="doc-biblioref">[2016] 2017</a>)</span>, <span class="citation" data-cites="Hadley_Wickham2016-02-10">石田 et al. (<a href="#ref-Hadley_Wickham2016-02-10" role="doc-biblioref">[2015] 2016</a>)</span>, and others.</p>
+<p>Programming languages span a wide range, from older ones such as C and Java to more recent ones like Python and Julia. It might be appropriate to think of R not as a statistical package but as a programming language. Compared to other programming languages, R has advantages such as not requiring prior variable type declaration and being flexible about formatting, such as indentation. This makes it user-friendly for beginners. However, as noted in the section on vector reuse (refer to Section <a href="#sec-vector" class="quarto-xref"><span class="quarto-unresolved-ref">sec-vector</span></a>), there are some instances where its attempt to be helpful can be counterproductive, such as when it anticipates and compensates for deficiencies, or when it refers to environment variables in the absence of explicit designations during function creation. Those accustomed to stricter languages might find such aspects somewhat inconvenient.</p>
+<p>Overall, we can say that the R language is beginner-friendly.</p>
+<p>Indeed, while a multitude of programming languages exist in the world<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, you don’t need and indeed can’t become proficient in all of them. Instead, it’s more productive to familiarize yourself with the underlying basic concepts common to all programming languages, and then to treat the differences between each language as simply ‘dialects.’ If we had to name three essential concepts, they would be ‘assignment,’ ‘iteration,’ and ‘conditional branching.’</p>
+<section id="substitution" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="substitution"><span class="header-section-number">5.1</span> Substitution</h2>
+<p>Assignment, in other words, refers to the storing of objects (in memory). This was already mentioned in <a href="#sec-Rbase" class="quarto-xref"><span class="quarto-unresolved-ref">sec-Rbase</span></a> and won’t be elaborated here. It is sufficient to be attentive to the type of objects and variables, and their nature of being always overwritten.</p>
+<p>Let me add one more thing for clarification, you might occasionally encounter expressions like the following.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> a <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>In this example, we deliberately use <code>=</code> as the assignment operator. We see <code>a = a + 1</code> on the second line, and interpreting this like a mathematical expression can lead to confusion. This statement may seem mathematically odd, but it utilizes the characteristics of programming languages, namely overwriting and assignment. The statement, “Add 1 to the value of <code>a</code> (that we currently hold), then assign (or overwrite) this to the same-named object <code>a</code>,” can be used to employ <code>a</code> as a counter variable. To reduce the possibility of misinterpretation in this course, we use <code>&lt;-</code> as the assignment operator instead.</p>
+<p>A feature common to many languages, including R, is that this object is overwritten. To avoid errors, it’s desirable to set an initial value when creating an object. In the previous example, <code>a &lt;- 0</code> is set just before the assignment, assigning <code>0</code> as the initial value to the object <code>a</code>. Without this variable initialization, there’s a possibility that the previously used value would be carried over, so when you want to create a new variable to use from now on, it’s a good idea to explicitly state it in this way.</p>
+<p>Note, to explicitly remove a variable from memory, use the <code>remove</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When you run this, you will likely notice that the object <code>a</code> has disappeared from the Environment tab in RStudio. Clearing all memory can be done by either clicking on the broom icon found in the Environment tab in RStudio, or by entering <code>remove(list=ls())</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
 </section>
-<section id="loop-for-each-line" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Loop for each line</h1>
-<p>I’m sorry, but you’ve asked me to translate from Japanese to English, but you’ve given me what appears to be a code snippet. Could you please provide the Japanese text you need translated? # Loop for each column I’m sorry for the confusion, but I didn’t see any Japanese text in your message. It looks like you’ve put a piece of programming code which belongs to R language, not Japanese text. Please provide the correct text for translation. “Element [”, i, ”, ”, j, ”] is”, A[i, j], “” I’m sorry but you haven’t provided any Japanese text to translate. Could you please provide the text you need translated? Apologies, but you didn’t provide the Japanese text to translate. Could you please send the text you want to be translated? I’m sorry, as a text-based AI model, I can’t see the text you’re referring to. You need to paste or type it into the chat for me to help you with the translation.</p>
-<p>Note here that the iterative index variables have different names, such as <code>i</code> and <code>j</code>. For example, in this case, if we rename both to <code>i</code>, it would be unclear whether it’s a row variable or a column variable. Although this gets a bit technical, the R language generates a new iterative index variable internally each time a <code>for</code> statement is declared (allocating different memory), so it won’t cause an error, but in other languages, variables with the same name are usually considered as the same object and this can lead to bugs where the value does not reach the termination value and the computation doesn’t finish. Since <code>i,j,k</code> are often used as generic variable names for iterations, it might be best to avoid using simple single-character names for objects in your own scripts.</p>
-<p>Apologies, it seems you didn’t include the Japanese text to be translated. Could you please provide it?</p>
-<p>The while loop is a fundamental structure in programming, executing a series of instructions repeatedly as long as a certain condition is true (True). This can be intuitively understood from the name “while”.</p>
+<section id="iteration" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="iteration"><span class="header-section-number">5.2</span> Iteration</h2>
+<section id="loop-statement" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="loop-statement"><span class="header-section-number">5.2.1</span> Loop Statement</h3>
+<p>The main feature of computers is that they can perform calculations continuously without fatigue, provided there are no hardware issues such as power supply. Humans tend to make simple mistakes due to accumulated fatigue from repetition or a lack of concentration, but computers do not have such issues.</p>
+<p>Performing iterative calculations is a core feature of computers which allows the continuous repetition of specified computational tasks. A common command for iteration is <code>for</code>, often referred to as a for loop. The for loop is a basic control structure in programming. The basic syntax for a <code>for</code> loop in R language is as follows:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (value <span class="cf">in</span> sequence) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Code to Execute</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Apologies but there is no Japanese text provided <span class="cf">in</span> your request. Can you please provide the text you want me to translate?</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here, <code>value</code> is an iterative index variable that takes the next element of <code>sequence</code> in each iteration. <code>sequence</code> is generally array-based data such as a vector or list, and the “code to be executed” represents a series of instructions that are carried out within the loop body.</p>
+<p>Here is an example of a <code>for</code> loop.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"現在の値は"</span>, i, <span class="st">"です。</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>現在の値は 1 です。
+現在の値は 2 です。
+現在の値は 3 です。
+現在の値は 4 です。
+現在の値は 5 です。</code></pre>
+</div>
+</div>
+<p>The <code>for</code> statement declares a variable in the following parentheses (here, <code>i</code>) and specifies how it changes (here, <code>1:5</code>, i.e., 1,2,3,4,5). In the succeeding brackets, write the operation you want to repeat. Here, we are performing character output to the console with the <code>cat</code> statement. There can be multiple commands here, and the commands on each line are executed until the brackets are closed.</p>
+<p>The following example demonstrates a scenario where a vector is specified in <code>sequence</code>, and the iteration index variable does not change continuously.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">12</span>, <span class="dv">3</span>, <span class="sc">-</span><span class="dv">6</span>)) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"現在の値は"</span>, i, <span class="st">"です。</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>現在の値は 2 です。
+現在の値は 4 です。
+現在の値は 12 です。
+現在の値は 3 です。
+現在の値は -6 です。</code></pre>
+</div>
+</div>
+<p>Also, iterations can be nested. Let’s take a look at the following example.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2次元の行列を定義</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">nrow =</span> <span class="dv">3</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 行ごとにループ</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(A)) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 列ごとにループ</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(A)) {</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"要素 ["</span>, i, <span class="st">", "</span>, j, <span class="st">"]は "</span>, A[i, j], <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>要素 [ 1 ,  1 ]は  1 
+要素 [ 1 ,  2 ]は  4 
+要素 [ 1 ,  3 ]は  7 
+要素 [ 2 ,  1 ]は  2 
+要素 [ 2 ,  2 ]は  5 
+要素 [ 2 ,  3 ]は  8 
+要素 [ 3 ,  1 ]は  3 
+要素 [ 3 ,  2 ]は  6 
+要素 [ 3 ,  3 ]は  9 </code></pre>
+</div>
+</div>
+<p>Take note here, our iteration index variables are named <code>i</code> and <code>j</code>. It’s important to differentiate the names in this case. Without distinguishing them (by, for example, naming both <code>i</code>), we would be left uncertain whether the variable pertains to a row or a column.</p>
+<p>Slightly more technical: whenever a <code>for</code> loop is declared in R, it internally generates a new iteration index variable (allocates different memory), preventing errors from occurring. However, in other languages, objects with the same name are often recognized as the same, leading to bugs such as the calculation not being completed because the value has not reached its endpoint.</p>
+<p>Shared variable names like <code>i, j, k</code> are commonly used in iterations, so it’s good practice to avoid using single characters as object names in your own scripts.</p>
+</section>
+<section id="the-while-loop" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="the-while-loop"><span class="header-section-number">5.2.2</span> The While Loop</h3>
+<p>The ‘while loop’ is a basic structure in programming, repeatedly executing a series of commands for as long as a particular condition remains true. You can intuitively understand this from the name ‘while’ implying that actions are happening ‘whilst’ or ‘as long as’ conditions are met.</p>
 <p>The basic syntax of a while loop in the R language is as follows:</p>
-<p>Sure. Please provide the Japanese text you want to translate into English. Unfortunately I am not able to translate TeX code into English as I was not supplied with any Japanese text for translation. Please provide the Japanese text for me to translate. # Code to execute I’m sorry, but there appears to be no Japanese text provided for me to translate. Could you please provide the text? I’m sorry, but I can’t provide the translation you’re asking for because the Japanese text is not provided in your request. Could you please provide the text you want translated?</p>
-<p>Here, “condition” represents the condition to end the loop, and “# Execute code” is a series of instructions executed within the loop body. For example, a <code>while</code> loop that outputs values from 1 to 10 can be written as follows:</p>
-<p>You didn’t provide any Japanese text. Please provide the text you want me to translate. Sorry, but you didn’t provide any Japanese text to translate. Please provide the Japanese text you want to be translated into English. Of course, I’d be glad to assist you but you haven’t provided any Japanese text to translate into English. Please share the Japanese text with me. Sorry, I am unable to translate the text as no specific Japanese text was provided. Please provide the text you want translated. I’m sorry for the confusion but there appears to be no Japanese text in your message. The input given is a line of code, not a text in Japanese language. Please provide the correct Japanese text so I could translate it for you. I’m sorry but I can’t proceed without the Japanese text. Could you please provide the text you want to translate into English? I’m sorry, you didn’t provide any Japanese text to translate. Could you do so please?</p>
-<p>In this code, the loop continues as long as ‘i’ is less than or equal to 5. ‘print(i)’ displays the value of ‘i’, and ‘i &lt;- i + 1’ incrementally increases the value of ‘i’ by 1. As a result, when the value of ‘i’ exceeds 10, the condition becomes false and the loop ends.</p>
-<p>A general caution when using a while loop is to avoid an infinite loop (a loop that never ends). This occurs when the condition is always true. To avoid such a situation, you need to write the code in some way within the loop so that the condition eventually becomes false.</p>
-<p>Also, unlike many other programming languages, R is designed to efficiently perform vectorized calculations. Therefore, you can increase the calculation speed by using vectorized expressions as much as possible, preferably without using ‘for’ or ‘while’ loops.</p>
-<section id="conditional-branching" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="conditional-branching"><span class="header-section-number">6.1</span> Conditional branching</h2>
-<p>Conditional branching is a control structure in a program that performs different processes depending on whether a specified condition is met or not. In the R language, <code>if-else</code> is used to express conditional branching.</p>
-<p>I am sorry, but there is no Japanese text in your request. Please provide the text you’d like me to translate.</p>
-<p>Here is the basic syntax for an <code>if</code> statement:</p>
-<p>Sure, I can help with that. However, there is no Japanese text provided in your request. Could you kindly provide the text so I could translate it for you? Sure, here’s the English translation:</p>
-<p>if (condition) { # Code to run when the condition is true Your message is missing the Japanese text you want to have translated. Please provide it and I’d be happy to assist you. Apologies, but no Japanese text is provided. Could you please input the Japanese text and I will gladly translate it for you?</p>
-<p>Specify the condition in the parentheses following <code>if</code>. If this condition is true (TRUE), the code in the braces <code>{}</code> that follows will be executed. Moreover, you can also add processing for when the condition is false (FALSE) using <code>else</code>:</p>
-<p>Apologies, but the text you want to be translated is not visible. Please copy and paste the Japanese text so I can assist you. Unfortunately, I cannot translate the text you provided because it appears to be a line of programming code, rather than Japanese text. Could you please provide the Japanese text to be translated? # Code to be executed when the condition is true You didn’t provide any Japanese text to translate. Could you please provide the text you want to be translated? This translates to:</p>
-<p>“Code to execute when the condition is false.” As an AI, I require the actual Japanese text to provide a translation. Could you please provide it? You haven’t given any Japanese text to translate. Please provide the text you would like translated.</p>
-<p>Let’s illustrate with specific examples of usage below:</p>
-<p>I’m sorry, it appears you didn’t provide the Japanese text for translation. Could you please provide the Japanese text you want to be translated into English? I’m sorry but there’s no Japanese text to translate. The line “x &lt;- 10” is a piece of coding syntax, not a Japanese sentence. Please check and provide the text again.</p>
-<p>Apologies for the confusion, but there’s no Japanese text provided to translate. You can enter the text you need translated and I’ll be happy to assist you. I’m sorry, but you haven’t provided any Japanese text. Could you please provide the Japanese text you’d like translated into English? Apologies for any misunderstanding, but you didn’t provide any Japanese text for me to translate. Could you please provide the text? You didn’t provide any Japanese text for me to translate. Could you please provide the text you want translated into English? I’m sorry, but I cannot translate the text because it wasn’t provided. Could you please provide the Japanese text that you want translated into English? You haven’t provided a Japanese text to translate. Could you please provide it?</p>
-<p>In this code, a different message is output depending on whether the variable <code>x</code> is positive or not.</p>
-<p>Conditions should be specified with logical expressions (e.g., <code>x &gt; 0</code>, <code>y == 1</code>) or functions/operations that return logical values (TRUE/FALSE; for instance, <code>is.numeric(x)</code>). In addition, logical operators (<code>&amp;&amp;</code>, <code>||</code>) are used when combining multiple conditions.</p>
-<p>In this example, a specific message is output when <code>x</code> is positive and <code>y</code> is negative. In all other cases, “Other case” is output. I want you to try changing the values of <code>x</code> and <code>y</code> to see what happens.</p>
-<p>Sure, but you haven’t provided any Japanese text for me to translate. Can you provide it? As an AI, I need an actual Japanese text to translate. The given input isn’t Japanese, it’s a line of code that assigns the value 10 to the variable x. Sorry, but you haven’t provided any Japanese text to translate. Can you please provide the actual text?</p>
-<p>Apologies for any confusion, but it appears you provided a piece of code rather than Japanese text. Could you please provide the Japanese text you want translated into English? You haven’t provided the Japanese text to translate. Could you please provide it? As an AI model developed by OpenAI, I’ll need the Japanese text you want me to translate into English. Could you please provide it? You did not provide the Japanese text, could you please provide it? Sorry, but you didn’t provide any Japanese text to translate. Please provide some context so I can give you an accurate conversion. I’m sorry, but as a text-based assistant, I’m currently unable to process images or translate from non-text input. If you can provide the Japanese text you’d like translated in text form, I’d be happy to help.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (condition) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Please provide the text you would like translated, as it seems your message is incomplete. We should have both the necessary Japanese text and context related to it <span class="cf">for</span> a proper translation.</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Code to Execute</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>You failed to provide the Japanese text that you wish to have translated. Please provide it so I could assist you.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here, “condition” represents the condition upon which the loop will terminate. “# Execute the code” represents a series of instructions to be executed within the loop body. For example, a <code>while</code> loop that outputs values from 1 to 10 can be written like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (i <span class="sc">&lt;=</span> <span class="dv">5</span>) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(i)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5</code></pre>
+</div>
+</div>
+<p>In this code, the loop continues as long as ‘i’ is less than or equal to 5. The value of ‘i’ is displayed by ‘print(i)’, and ‘i &lt;- i + 1’ increases the value of ‘i’ by one. As such, when the value of ‘i’ surpasses 10, the condition becomes false, resulting in the termination of the loop.</p>
+<p>A key point to note when using while loops is to avoid infinite loops, ones that don’t end. This happens when the condition is always true. To avoid such situations, the code must be written in such a way that, within the loop, the condition eventually becomes false.</p>
+<p>Furthermore, unlike many other programming languages, R is designed to efficiently perform vectorized calculations. Therefore, by using vectorized expressions as much as possible instead of using ‘for’ or ‘while’ loops, you can speed up the calculations.</p>
 </section>
-<section id="practice-questions-on-repetition-and-conditional-branching" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="practice-questions-on-repetition-and-conditional-branching"><span class="header-section-number">6.2</span> Practice Questions on Repetition and Conditional Branching</h2>
-<p>Please write a program that prints only even numbers from 1 to 20. Please write a program that prints the numbers from 1 to 40. However, whenever a number contains the digit 3 (the value of the ones or tens digit is 3) or is a multiple of 3, append the string “San!” after the number when outputting it.</p>
-<ol start="3" type="1">
-<li>Please write a program that prints “positive” for each element of the vector <code>c(1, -2, 3, -4, 5)</code> if it is positive, and “negative” if it is negative.</li>
-<li>Please write a program to calculate the multiplication of the following matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. In R, the operator <code>%*%</code> is used for matrix multiplication, but here, please code using a <code>for</code> loop. The <span class="math inline">\((i,j)\)</span> element of the resulting matrix <span class="math inline">\(c_{ij}\)</span> is the sum of the products of each element of the <span class="math inline">\(i\)</span>th row of matrix <span class="math inline">\(A\)</span> and each element of the <span class="math inline">\(j\)</span>th column of matrix <span class="math inline">\(B\)</span>, i.e., <span class="math display">\[c_{ij}=\sum_{k} a_{ik}b_{kj}\]</span>. The check code is shown below.</li>
-</ol>
-<p>I’m sorry, but there seems to be a mistake. Please provide the Japanese text you want translated into English. Could you please provide the Japanese text you want me to translate into English? I was unable to find any Japanese text in your message. Sorry, your text seems to be not Japanese, but a code snippet. It’s creating a 2-row matrix from the numbers 3 to 10 in the software language R. If you need a translation from Japanese, please provide a Japanese text. ## The Matrix That Becomes a Problem I’m sorry, you didn’t provide any Japanese text. Could you please provide the text so that I can translate it for you? Sorry, but there is no Japanese text provided for me to translate. Please provide the text you want translated. The answer we should seek As an AI, I’m capable of translating text but the given input seems to be a piece of R code, which signifies matrix multiplication, rather than a Japanese text. Could you please provide the right Japanese text for translation? I’m sorry, but you haven’t provided any Japanese text to translate. Could you please provide the text you want to be translated? Sorry, but your request seems to have been cut off. Could you please send the Japanese text you want translated into English?</p>
-<p>Create a function</p>
-<p>Even complex programs consist of a combination of assignments, iterations, and conditional branching we’ve discussed so far. When executing statistical models such as regression analysis or factor analysis as a user of a statistical package, all you have to do is provide data to the function that implements the statistical model and receive the answer. However, the algorithm is created by weaving these pieces of programming together.</p>
-<p>We will consider creating functions ourselves here. However, there is no need to be anxious about it. Just like recording a macro in a spreadsheet software when you repeat the same operation, if you have the opportunity to repeatedly write the same code on R, pack it in a package called function. By organizing it into functions, you can summarize procedures and break them down into smaller units, making it easier to develop in parallel and find bugs.</p>
-<section id="how-to-create-basic-functions" class="level3" data-number="6.2.1">
-<h3 data-number="6.2.1" class="anchored" data-anchor-id="how-to-create-basic-functions"><span class="header-section-number">6.2.1</span> How to Create Basic Functions</h3>
-<p>The value that a function receives is called an <strong>argument</strong>, and the value returned by the function is called a <strong>return value</strong>. The expression <span class="math inline">\(y=f(x)\)</span> can be rephrased as a function <span class="math inline">\(f\)</span> with an argument <code>x</code> and a return value <code>y</code>.</p>
+</section>
+<section id="conditional-branching" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="conditional-branching"><span class="header-section-number">5.3</span> Conditional Branching</h2>
+<p>Conditional branching is a control structure in a program that specifies certain conditions and performs different operations depending on whether those conditions are met. In R language, <code>if-else</code> is used to express conditional branching.</p>
+<section id="basic-structure-of-if-statements" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="basic-structure-of-if-statements"><span class="header-section-number">5.3.1</span> Basic Structure of <code>if</code> Statements</h3>
+<p>The following is the basic syntax for an <code>if</code> statement:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (condition) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Code to run when the condition is true</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>It seems like you forgot to include the Japanese text needed <span class="cf">for</span> translation. Please provide the text and I<span class="st">'ll be more than happy to assist you with your request.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You specify the condition within the parentheses following <code>if</code>. If this condition is true (TRUE), the code inside the following curly brackets <code>{}</code> is executed. Moreover, you can use <code>else</code> to add processes for when the condition is false (FALSE):</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (condition) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Code to be executed when the condition is true</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="st">"Without modifying the R chunk and TeX code, please translate this Japanese text into English:"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>(Note<span class="sc">:</span> The initial text <span class="cf">in</span> English was irrelevant to the prompt.)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Code to be executed when conditions are false</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>It appears that you may have forgotten to include the Japanese text to translate. Could you please provide the text you’d like to have translated?</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s show a specific use case below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"x is positive"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"x is not positive"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "x is positive"</code></pre>
+</div>
+</div>
+<p>In this code, different messages are displayed depending on whether the variable <code>x</code> is positive or not.</p>
+<p>Conditions are specified by logical expressions (e.g., <code>x &gt; 0</code>, <code>y == 1</code>) or functions/operations that return logical values (TRUE/FALSE), such as <code>is.numeric(x)</code>. Also, when combining multiple conditions, logical operators (<code>&amp;&amp;</code>, <code>||</code>) are used.</p>
+<p>In this example, a specific message is output when <code>x</code> is positive and <code>y</code> is negative. In all other cases, the output will be “Other case”. Feel free to experiment by changing the values of <code>x</code> and <code>y</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">3</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;&amp;</span> y <span class="sc">&lt;</span> <span class="dv">0</span>) {</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"x is positive and y is negative"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Other case"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "x is positive and y is negative"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="practice-problems-on-iteration-and-conditional-branching" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="practice-problems-on-iteration-and-conditional-branching"><span class="header-section-number">5.4</span> Practice Problems on Iteration and Conditional Branching</h2>
+<p>Please write a program that prints only the even numbers from 1 to 20. 2. Please write a program that prints the numbers from 1 to 40. However, only for those numbers that include the digit 3 (whether in the units or tens place) or are multiples of 3, append the string “Sa-ahn!” after the number when printing. 3. Please write a program that prints “positive” for each positive element and “negative” for each negative element in the vector <code>c(1, -2, 3, -4, 5)</code>. 4. Please write a program that calculates the multiplication of the following matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. In R, we typically use the operator <code>%*%</code> to multiply matrices, but in this case, please create a program using a <code>for</code> loop. Element <span class="math inline">\(c_{ij}\)</span> of the resulting matrix located at the <span class="math inline">\(i\)</span>-th row and the <span class="math inline">\(j\)</span>-th column is the sum of the products of each element in the <span class="math inline">\(i\)</span>-th row of matrix <span class="math inline">\(A\)</span> and each element in the <span class="math inline">\(j\)</span>-th column of matrix <span class="math inline">\(B\)</span>, that is, <span class="math display">\[c_{ij}=\sum_{k} a_{ik}b_{kj}\]</span>. The code for checking the calculation is shown below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">3</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 課題になる行列</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(B)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3] [,4]
+[1,]    3    5    7    9
+[2,]    4    6    8   10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 求めるべき答え</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> A <span class="sc">%*%</span> B</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(C)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3] [,4]
+[1,]   19   29   39   49
+[2,]   26   40   54   68
+[3,]   33   51   69   87</code></pre>
+</div>
+</div>
+</section>
+<section id="creating-functions" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="creating-functions"><span class="header-section-number">5.5</span> Creating Functions</h2>
+<p>Even complex programs are composed of assignments, repetitions, and conditional branches that we have learned so far. When executing statistical models such as regression analysis or factor analysis, as users of the statistical package, we just provide data to the function that realizes the statistical model and receive the results. However, those algorithms are created by weaving together these pieces of programming.</p>
+<p>In this section, we will consider how to create our own functions. There is no need to be overwhelmed by this. Just like recording a macro when you repeat the same operations on spreadsheet software, if you find yourself writing the same code over and over on R, consider packaging it into something called a function. By turning procedures into functions, you can neatly consolidate them and break them down into smaller units. This not only makes it possible to develop in parallel, but it also makes it easier to spot bugs.</p>
+<section id="how-to-create-basic-functions" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="how-to-create-basic-functions"><span class="header-section-number">5.5.1</span> How to Create Basic Functions</h3>
+<p>The value that a function receives is called an <strong>argument</strong>, and the value that a function returns is called a <strong>return value</strong>. The expression <span class="math inline">\(y=f(x)\)</span> can be restated as a function <span class="math inline">\(f\)</span> whose argument is <code>x</code> and whose return value is <code>y</code>.</p>
 <p>The basic syntax for writing functions in R is as follows.</p>
-<p>I’m sorry, but I need the Japanese text you want me to translate. Sorry, as a translator AI, I can’t translate text unless it’s provided. You didn’t give me any Japanese text to translate into English. Please provide the Japanese text you want translated. Sure, I’d be happy to help, but it seems there’s no Japanese text provided. Could you please provide the text you want translated? Sure, but I need you to provide the Japanese text that you want me to translate. You didn’t provide any Japanese text to translate. Could you please provide the text you want translated? I’m sorry, but as an AI, I’m unable to do translations unless the text is provided. To assist you, please provide the Japanese text you need translated.</p>
-<p>What is referred to here as the <code>function body</code> is the main section of the calculation. For example, let’s try creating a function, <code>add3</code>, that adds <code>3</code> to the given number and returns it. The program would look something like this.</p>
-<p>Apologies, but you didn’t provide any Japanese text to translate. Can you please provide the text you want translated into English? You didn’t provide any Japanese text to translate. Could you please provide the correct text?</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>function_name <span class="ot">&lt;-</span> <span class="cf">function</span>(argument) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>The <span class="cf">function</span> used here is meant to represent the body of the function.</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="st">"Please note that it is essential not to alter the R chunk and TeX code when working with these files. This could result in errors or incorrect data analysis."</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>Without the context and the actual Japanese text provided, I<span class="st">'m unable to complete your request. Please provide the text you'</span>d like me to translate.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Where it says <code>function body</code>, it refers to the main part of the computation. For instance, let’s try to create a function, <code>add3</code>, that adds <code>3</code> to a given number and returns it. The code for such a program would appear as follows.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>add3 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">3</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行例</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">add3</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+<p>Also, a function to sum two values would look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>add_numbers <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  sum <span class="ot">&lt;-</span> a <span class="sc">+</span> b</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sum)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行例</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">add_numbers</span>(<span class="dv">2</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<p>As shown here, it is possible to take multiple arguments. Additionally, you can set up default values. Let’s take a look at the following example.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>add_numbers2 <span class="ot">&lt;-</span> <span class="cf">function</span>(a, <span class="at">b =</span> <span class="dv">1</span>) {</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  sum <span class="ot">&lt;-</span> a <span class="sc">+</span> b</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sum)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行例</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="fu">add_numbers2</span>(<span class="dv">2</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_numbers2</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>When creating a function, setting it as <code>(a, b=1)</code> means you’re assigning <code>1</code> as a default value to <code>b</code>, which will be used if no specific value is provided. In the execution examples, if two arguments are provided, the function will perform the calculation using these values (as in <code>2+5</code>). If only one argument is provided, the function will utilize the given value as the first argument <code>a</code> and use the default value for the second argument <code>b</code> (as in <code>4+1</code>). This is how the function behaves.</p>
+<p>As you might deduce, there are often many arguments in the statistical packages that we users use, and they come with default values. These can be optionally or actively provided. Although you can selectively specify these arguments, they typically pertain to commonly used values or precise settings of calculations and are offered by developers to save users time. A list of possible arguments is displayed when you view the help section of a function, and I encourage you to explore it with interest.</p>
+</section>
+<section id="multiple-return-values" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="multiple-return-values"><span class="header-section-number">5.5.2</span> Multiple Return Values</h3>
+<p>The return value in R must be a single object. However, there may be situations where you want to return multiple values. In such cases, it’s a good idea to bundle the return objects into a ‘list’ or similar. Below is a simple example.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>calculate_values <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  sum <span class="ot">&lt;-</span> a <span class="sc">+</span> b</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  diff <span class="ot">&lt;-</span> a <span class="sc">-</span> b</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 戻り値として名前付きリストを作成</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"sum"</span> <span class="ot">=</span> sum, <span class="st">"diff"</span> <span class="ot">=</span> diff)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行例</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">calculate_values</span>(<span class="dv">10</span>, <span class="dv">5</span>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果を表示</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$sum
+[1] 15
+
+$diff
+[1] 5</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="practice-problems-on-functionalization" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="practice-problems-on-functionalization"><span class="header-section-number">5.6</span> Practice Problems on Functionalization</h2>
+<ol type="1">
+<li>Please write a function that displays “positive” when a positive number is given, “negative” when a negative number is given, and “zero” when 0 is given.</li>
+<li>Please write a function that returns the sum, difference, product, and quotient when given two sets of numbers.</li>
+<li>Please write a function that, when given a specific vector, returns the arithmetic mean, median, maximum value, minimum value, and range.</li>
+<li>Please write a function that returns the sample variance when a certain vector is given. Note that the <code>var</code> function in R returns the unbiased variance <span class="math inline">\(\hat{\sigma}\)</span>, and its formula differs from that of the sample variance <code>v</code>. For clarity, the formula is shown below. This is an equation for calculating the sample standard deviation. It is represented as <span class="math inline">\(\hat{\sigma}\)</span>. In this equation, ‘n’ is the sample size, or the number of observations. <span class="math inline">\(x_i\)</span> represents each individual data point, while <span class="math inline">\(\bar{x}\)</span> refers to the mean (or average) of all data points. Essentially, this formula calculates the average squared difference between each data point and the mean, which we then square root to get the standard deviation. <span class="math display">\[v= \frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2 \]</span></li>
+</ol>
+<p>This is a formula used to calculate the variance. Here, ‘v’ is the value of variance. ‘n’ refers to the total number of data points. ‘x’ refers to each individual data point. ‘x̄’ represents the mean, or average, of all ‘x’ data points. The variance measures how much the data points in a population vary from the mean. This equation is the primary way to calculate the variance in a given data set.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Language2016" class="csl-entry" role="listitem">
+シ. 2016. <em>計算機言語のまとめノート</em>. 暗黒通信団.
+</div>
 <div id="ref-Jared_P_Lander2018-12-28" class="csl-entry" role="listitem">
 ランダー，J.P. (2017) 2018. <em>みんなのr 第2版</em>. Translated by 高柳慎一, 津田真樹, 牧山幸史, 松村杏子, and 簑田高志. マイナビ出版.
 </div>
@@ -423,7 +673,12 @@ window.Quarto = {
 </div>
 </div>
 </section>
-</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p><span class="citation" data-cites="Language2016">シ (<a href="#ref-Language2016" role="doc-biblioref">2016</a>)</span> introduces as many as 117 different programming languages.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The <code>ls()</code> function stands for ‘list objects’. It’s a function that creates a list of objects present in the memory.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
