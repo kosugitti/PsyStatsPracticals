@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -445,6 +445,32 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<p>数値的にも確認しておこう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    0
+[2,]    0    1</code></pre>
+</div>
+</div>
+<p>つくられた乱数が無相関であることが確認できた。さてこれが母集団であったとして，ここからたとえば<code>n = 20</code>のサンプルをとったとする。この時の相関はどうなるだろうか。 Rで計算してみよう。<code>sample</code>関数をつかって抜き出す行を決めて，該当する行だけ<code>s1</code>オブジェクトに代入する。その上で相関係数を計算してみよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>selected_row <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>N,<span class="dv">20</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(selected_row)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  9647 80702 57543 93179 99032 82624 32672 53670 69698 42383 23801 69303
+[13]  9816 61803 69464 23107 76958 44447    10 27292</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> X[selected_row,]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(s1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]      [,2]
+[1,] 1.0000000 0.1431698
+[2,] 0.1431698 1.0000000</code></pre>
+</div>
+</div>
+<p>今回の相関係数は0.1431698となった。母集団の相関係数が0であっても，適当に抜き出した20点が相関係数を持ってしまう(0でない)ことはあり得ることなのである。</p>
 </section>
 <section id="標本相関係数の分布" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="標本相関係数の分布"><span class="header-section-number">7.3</span> 標本相関係数の分布</h2>
@@ -850,12 +876,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./chapter06.html" class="pagination-link  aria-label=" &lt;span="">
+      <a href="./chapter06.html" class="pagination-link" aria-label="確率とシミュレーション">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapter08.html" class="pagination-link" aria-label="<span class='chapter-number'>8</span>&nbsp; <span class='chapter-title'>平均値差の検定</span>">
+      <a href="./chapter08.html" class="pagination-link" aria-label="平均値差の検定">
         <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
