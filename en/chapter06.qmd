@@ -359,7 +359,7 @@ mu <- 50
 SD <- 10
 
 # 平均値を格納しておくオブジェクト
-m <- rep(0,iter)
+m <- rep(0, iter)
 
 set.seed(12345)
 for (i in 1:iter) {
@@ -373,13 +373,14 @@ result.df <- data.frame(m = m) %>%
   mutate(
     point_estimation = ifelse(m == mu, TRUE, FALSE),
     interval_estimation = ifelse(m - 5 <= mu & mu <= m + 5, TRUE, FALSE)
-  ) %>% 
+  ) %>%
   summarise(
     n1 = sum(point_estimation),
     n2 = sum(interval_estimation),
     prob1 = mean(point_estimation),
     prob2 = mean(interval_estimation)
-  ) %>% print()
+  ) %>%
+  print()
 ```
 
 As you can see from the results, the point estimate never correctly guesses the population parameter. This is to be expected, as there may be some deviation at some decimal point when dealing with real numbers, and it's impossible to match if we disregard precision. On the other hand, in the case of a prediction with a margin, the true value is included within that range `r result.df$n2` times out of `r iter` trials, and the accuracy rate is `r result.df$prob2 * 100`%.
@@ -428,11 +429,12 @@ interval <- 1.96 * SD / sqrt(n)
 result.df2 <- data.frame(m = m) %>%
   # 推定が一致するとTRUE,外れるとFALSEになる変数を作る
   mutate(
-    interval_estimation = ifelse(m - interval  <= mu & mu <= m + interval, TRUE, FALSE)
-  ) %>% 
+    interval_estimation = ifelse(m - interval <= mu & mu <= m + interval, TRUE, FALSE)
+  ) %>%
   summarise(
     prob = mean(interval_estimation)
-  ) %>% print()
+  ) %>%
+  print()
 ```
 
 ### Confidence Interval for Normal Population Distribution When Population Variance is Unknown
@@ -455,8 +457,8 @@ mu <- 50
 SD <- 10
 
 # 平均値を格納しておくオブジェクト
-m <- rep(0,iter)
-interval <- rep(0,iter)
+m <- rep(0, iter)
+interval <- rep(0, iter)
 
 set.seed(12345)
 for (i in 1:iter) {
@@ -464,17 +466,18 @@ for (i in 1:iter) {
   sample <- rnorm(n, mean = mu, sd = SD)
   m[i] <- mean(sample)
   U <- sqrt(var(sample)) # sd(sample)でも同じ
-  interval[i] <- qt(p=0.975,df=n-1) * U / sqrt(n)
+  interval[i] <- qt(p = 0.975, df = n - 1) * U / sqrt(n)
 }
 
-result.df <- data.frame(m = m,interval = interval) %>%
+result.df <- data.frame(m = m, interval = interval) %>%
   # 推定が一致するとTRUE,外れるとFALSEになる変数を作る
   mutate(
     interval_estimation = ifelse(m - interval <= mu & mu <= m + interval, TRUE, FALSE)
-  ) %>% 
+  ) %>%
   summarise(
     prob = mean(interval_estimation)
-  ) %>% print()
+  ) %>%
+  print()
 ```
 
 ## Practice Problems: Estimators and Interval Estimates

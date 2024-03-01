@@ -348,7 +348,7 @@ mu <- 50
 SD <- 10
 
 # 平均値を格納しておくオブジェクト
-m <- rep(0,iter)
+m <- rep(0, iter)
 
 set.seed(12345)
 for (i in 1:iter) {
@@ -362,13 +362,14 @@ result.df <- data.frame(m = m) %>%
   mutate(
     point_estimation = ifelse(m == mu, TRUE, FALSE),
     interval_estimation = ifelse(m - 5 <= mu & mu <= m + 5, TRUE, FALSE)
-  ) %>% 
+  ) %>%
   summarise(
     n1 = sum(point_estimation),
     n2 = sum(interval_estimation),
     prob1 = mean(point_estimation),
     prob2 = mean(interval_estimation)
-  ) %>% print()
+  ) %>%
+  print()
 ```
 
 結果からわかるように，点推定値は一度も正しく母数を当てていない。これは当然で，実数でやる以上小数点以下どこかでズレてしまうことがあるからで，精度を無視すると一致することはあり得ないのである。これに対して幅を持った予測の場合は，`r iter`回の試行のうち`r result.df$n2`回はその区間内に真値を含んでおり，その正答率は`r result.df$prob2 * 100`%である。
@@ -401,11 +402,12 @@ interval <- 1.96 * SD / sqrt(n)
 result.df2 <- data.frame(m = m) %>%
   # 推定が一致するとTRUE,外れるとFALSEになる変数を作る
   mutate(
-    interval_estimation = ifelse(m - interval  <= mu & mu <= m + interval, TRUE, FALSE)
-  ) %>% 
+    interval_estimation = ifelse(m - interval <= mu & mu <= m + interval, TRUE, FALSE)
+  ) %>%
   summarise(
     prob = mean(interval_estimation)
-  ) %>% print()
+  ) %>%
+  print()
 ```
 
 ### 正規母集団分布の母分散が不明な場合の信頼区間
@@ -426,8 +428,8 @@ mu <- 50
 SD <- 10
 
 # 平均値を格納しておくオブジェクト
-m <- rep(0,iter)
-interval <- rep(0,iter)
+m <- rep(0, iter)
+interval <- rep(0, iter)
 
 set.seed(12345)
 for (i in 1:iter) {
@@ -435,17 +437,18 @@ for (i in 1:iter) {
   sample <- rnorm(n, mean = mu, sd = SD)
   m[i] <- mean(sample)
   U <- sqrt(var(sample)) # sd(sample)でも同じ
-  interval[i] <- qt(p=0.975,df=n-1) * U / sqrt(n)
+  interval[i] <- qt(p = 0.975, df = n - 1) * U / sqrt(n)
 }
 
-result.df <- data.frame(m = m,interval = interval) %>%
+result.df <- data.frame(m = m, interval = interval) %>%
   # 推定が一致するとTRUE,外れるとFALSEになる変数を作る
   mutate(
     interval_estimation = ifelse(m - interval <= mu & mu <= m + interval, TRUE, FALSE)
-  ) %>% 
+  ) %>%
   summarise(
     prob = mean(interval_estimation)
-  ) %>% print()
+  ) %>%
+  print()
 ```
 
 ## 練習問題；推定量と区間推定
