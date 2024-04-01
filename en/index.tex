@@ -1717,10 +1717,10 @@ load it into R using the following code.
 
 \begin{verbatim}
 -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
-v dplyr     1.1.3     v readr     2.1.4
+v dplyr     1.1.4     v readr     2.1.5
 v forcats   1.0.0     v stringr   1.5.1
-v ggplot2   3.4.4     v tibble    3.2.1
-v lubridate 1.9.3     v tidyr     1.3.0
+v ggplot2   3.5.0     v tibble    3.2.1
+v lubridate 1.9.3     v tidyr     1.3.1
 v purrr     1.0.2     
 -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 x dplyr::filter() masks stats::filter()
@@ -4291,10 +4291,10 @@ distribution}, there are functions like the following.
 
 \begin{verbatim}
 -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
-v dplyr     1.1.3     v readr     2.1.4
+v dplyr     1.1.4     v readr     2.1.5
 v forcats   1.0.0     v stringr   1.5.1
-v ggplot2   3.4.4     v tibble    3.2.1
-v lubridate 1.9.3     v tidyr     1.3.0
+v ggplot2   3.5.0     v tibble    3.2.1
+v lubridate 1.9.3     v tidyr     1.3.1
 v purrr     1.0.2     
 -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 x dplyr::filter() masks stats::filter()
@@ -4465,8 +4465,8 @@ mean of 50 and a standard deviation of 10.
 \end{Shaded}
 
 \begin{verbatim}
- [1] 47.63839 45.67914 32.58024 71.08932 45.35782 51.26273 49.19769 56.38405
- [9] 51.11667 35.55815
+ [1] 50.58738 44.64962 62.63584 60.43415 51.01110 46.51786 61.15677 43.31179
+ [9] 47.83713 48.73720
 \end{verbatim}
 
 For example, if you are trying to create practice problems for
@@ -4481,8 +4481,8 @@ different set of numbers will emerge because it's randomized.
 \end{Shaded}
 
 \begin{verbatim}
- [1] 51.70066 55.70080 34.90826 61.77603 55.79436 64.50574 54.23746 67.02786
- [9] 74.59463 41.20263
+ [1] 61.97558 44.58751 47.87284 58.04097 37.26181 38.88387 49.39499 60.21195
+ [9] 57.92849 21.96371
 \end{verbatim}
 
 You might want to generate reproducible random numbers, since they're
@@ -5085,7 +5085,7 @@ probability of being able to correctly estimate the true value of \(0\).
 \NormalTok{SD }\OtherTok{\textless{}{-}} \DecValTok{10}
 
 \CommentTok{\# 平均値を格納しておくオブジェクト}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,iter)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, iter)}
 
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{iter) \{}
@@ -5099,13 +5099,14 @@ probability of being able to correctly estimate the true value of \(0\).
   \FunctionTok{mutate}\NormalTok{(}
     \AttributeTok{point\_estimation =} \FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{==}\NormalTok{ mu, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{),}
     \AttributeTok{interval\_estimation =} \FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{{-}} \DecValTok{5} \SpecialCharTok{\textless{}=}\NormalTok{ mu }\SpecialCharTok{\&}\NormalTok{ mu }\SpecialCharTok{\textless{}=}\NormalTok{ m }\SpecialCharTok{+} \DecValTok{5}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{)}
-\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{summarise}\NormalTok{(}
     \AttributeTok{n1 =} \FunctionTok{sum}\NormalTok{(point\_estimation),}
     \AttributeTok{n2 =} \FunctionTok{sum}\NormalTok{(interval\_estimation),}
     \AttributeTok{prob1 =} \FunctionTok{mean}\NormalTok{(point\_estimation),}
     \AttributeTok{prob2 =} \FunctionTok{mean}\NormalTok{(interval\_estimation)}
-\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{print}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{print}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5219,11 +5220,12 @@ within the interval.
 \NormalTok{result.df2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{m =}\NormalTok{ m) }\SpecialCharTok{\%\textgreater{}\%}
   \CommentTok{\# 推定が一致するとTRUE,外れるとFALSEになる変数を作る}
   \FunctionTok{mutate}\NormalTok{(}
-    \AttributeTok{interval\_estimation =} \FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{{-}}\NormalTok{ interval  }\SpecialCharTok{\textless{}=}\NormalTok{ mu }\SpecialCharTok{\&}\NormalTok{ mu }\SpecialCharTok{\textless{}=}\NormalTok{ m }\SpecialCharTok{+}\NormalTok{ interval, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{)}
-\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+    \AttributeTok{interval\_estimation =} \FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{{-}}\NormalTok{ interval }\SpecialCharTok{\textless{}=}\NormalTok{ mu }\SpecialCharTok{\&}\NormalTok{ mu }\SpecialCharTok{\textless{}=}\NormalTok{ m }\SpecialCharTok{+}\NormalTok{ interval, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{summarise}\NormalTok{(}
     \AttributeTok{prob =} \FunctionTok{mean}\NormalTok{(interval\_estimation)}
-\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{print}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{print}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5278,8 +5280,8 @@ the interval nearly 95\% of the time.
 \NormalTok{SD }\OtherTok{\textless{}{-}} \DecValTok{10}
 
 \CommentTok{\# 平均値を格納しておくオブジェクト}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,iter)}
-\NormalTok{interval }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,iter)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, iter)}
+\NormalTok{interval }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, iter)}
 
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{iter) \{}
@@ -5287,17 +5289,18 @@ the interval nearly 95\% of the time.
 \NormalTok{  sample }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(n, }\AttributeTok{mean =}\NormalTok{ mu, }\AttributeTok{sd =}\NormalTok{ SD)}
 \NormalTok{  m[i] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(sample)}
 \NormalTok{  U }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{var}\NormalTok{(sample)) }\CommentTok{\# sd(sample)でも同じ}
-\NormalTok{  interval[i] }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\AttributeTok{p=}\FloatTok{0.975}\NormalTok{,}\AttributeTok{df=}\NormalTok{n}\DecValTok{{-}1}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ U }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n)}
+\NormalTok{  interval[i] }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\AttributeTok{p =} \FloatTok{0.975}\NormalTok{, }\AttributeTok{df =}\NormalTok{ n }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ U }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n)}
 \NormalTok{\}}
 
-\NormalTok{result.df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{m =}\NormalTok{ m,}\AttributeTok{interval =}\NormalTok{ interval) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{result.df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{m =}\NormalTok{ m, }\AttributeTok{interval =}\NormalTok{ interval) }\SpecialCharTok{\%\textgreater{}\%}
   \CommentTok{\# 推定が一致するとTRUE,外れるとFALSEになる変数を作る}
   \FunctionTok{mutate}\NormalTok{(}
     \AttributeTok{interval\_estimation =} \FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{{-}}\NormalTok{ interval }\SpecialCharTok{\textless{}=}\NormalTok{ mu }\SpecialCharTok{\&}\NormalTok{ mu }\SpecialCharTok{\textless{}=}\NormalTok{ m }\SpecialCharTok{+}\NormalTok{ interval, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{)}
-\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{summarise}\NormalTok{(}
     \AttributeTok{prob =} \FunctionTok{mean}\NormalTok{(interval\_estimation)}
-\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{print}\NormalTok{()}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{print}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5638,10 +5641,10 @@ uncorrelated by using a scatter diagram.
 
 \begin{verbatim}
 -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
-v dplyr     1.1.3     v readr     2.1.4
+v dplyr     1.1.4     v readr     2.1.5
 v forcats   1.0.0     v stringr   1.5.1
-v ggplot2   3.4.4     v tibble    3.2.1
-v lubridate 1.9.3     v tidyr     1.3.0
+v ggplot2   3.5.0     v tibble    3.2.1
+v lubridate 1.9.3     v tidyr     1.3.1
 v purrr     1.0.2     
 -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 x dplyr::filter() masks stats::filter()

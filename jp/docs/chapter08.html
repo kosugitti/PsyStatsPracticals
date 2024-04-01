@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -343,10 +343,10 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ ggplot2   3.5.0     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 ✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
@@ -426,12 +426,13 @@ mean of x
 <li>検定統計量は，正規母集団から得られる標本平均が従う標本分布であり，母分散が未知の場合の区間推定に用いたT統計量になる。</li>
 <li>判断基準は心理学の慣例に沿って5%とする。</li>
 </ol>
-<p>これを検証するために，サンプルデータを乱数で生成しよう。 まず，各群のサンプルサイズを<code>n1,n2</code>とする。ここでは話を簡単にするため，サンプルサイズは両群ともに<code>10</code>とした。つぎに両群の母平均だが，群1の母平均を<span class="math inline">\(\mu_1\)</span>，群2の母平均を<span class="math inline">\(\mu_2 = \mu_1 + d\)</span>で表現した。この<code>d</code>は差分であり，これが<span class="math inline">\(d=0\)</span>であれば母平均が等しいこと，<span class="math inline">\(d \neq 0\)</span>であれば母平均が異なることになる。ここでの検定は，この差分<span class="math inline">\(d\)</span>が母平均0の母集団から得られたと判断して良いかどうか，という形で行われる。検定統計量<span class="math inline">\(T\)</span>は，次式で算出されるものである。</p>
-<p><span class="math display">\[ T = \frac{d - \mu_0}{\sqrt{U^2_p/\frac{n1n2}{n1+n2}}}\]</span></p>
-<p>ここで<span class="math inline">\(U^2_p\)</span>はプールされた不偏分散と呼ばれ，二群を合わせて計算された全体の母分散推定量である。各群の標本分散をそれぞれ<span class="math inline">\(S^2_1, S^2_2\)</span>とすると，</p>
+<p>これを検証するために，サンプルデータを乱数で生成しよう。 まず，各群のサンプルサイズを<code>n1,n2</code>とする。ここでは話を簡単にするため，サンプルサイズは両群ともに<code>10</code>とした。つぎに両群の母平均だが，群1の母平均を<span class="math inline">\(\mu_1\)</span>，群2の母平均を<span class="math inline">\(\mu_2 = \mu_1 + d\)</span>で表現した。この<code>d</code>は差分であり，これが<span class="math inline">\(d=0\)</span>であれば母平均が等しいこと，<span class="math inline">\(d \neq 0\)</span>であれば母平均が異なることになる。最後に両群の母SDを設定した。</p>
+<p>ここでの検定は，この差分<span class="math inline">\(d\)</span>が母平均0の母集団から得られたと判断して良いかどうか，という形で行われる。検定統計量<span class="math inline">\(T\)</span>は，次式で算出されるものである。</p>
+<p><span class="math display">\[ T = \frac{d - \mu_0}{\sqrt{U^2_p/\frac{n_1n_2}{n_1+n_2}}}\]</span></p>
+<p>ここで<span class="math inline">\(U^2_p\)</span>はプールされた不偏分散と呼ばれ，二群を合わせて計算された全体の母分散推定量である。各群の標本分散をそれぞれ<span class="math inline">\(S^2_1, S^2_2\)</span>とすると，次式で算出される。</p>
 <p><span class="math display">\[ U^2_p = \frac{n_1S^2_1+ n_2S^2_2}{n_1 + n_2 -2} \]</span></p>
-<p>最後に両群の母SDを設定した。</p>
-<p>その上で乱数でデータを生成し，その標本平均を確認した上で，<code>t.test</code>関数によって検定を行っている。</p>
+<p>これらの式はつまり，サンプルサイズの違いを考慮するため，一旦両群の標本分散に各サンプルサイズを掛け合わせ，プールした全体のサンプルサイズから各々<span class="math inline">\(-1\)</span>をすることで全体として不偏分散にしている。</p>
+<p>これを踏まえて，具体的な数字で見ていこう。 その上で乱数でデータを生成し，その標本平均を確認した上で，<code>t.test</code>関数によって検定を行っている。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
@@ -474,6 +475,8 @@ mean of x mean of y
  4.547297  4.836543 </code></pre>
 </div>
 </div>
+<p>今回の母平均は<span class="math inline">\(\mu_1 = 4, \mu_2 = 4+1\)</span>にしているが，標本平均は4.547と4.837であり，標本上では大きな差が見られなかった。結果として，t値は0.4992369であり，自由度18のもとでのp値は0.6236593である。5%水準を上回る値であるから，結論としては対立仮説を採択するには至らない，差があるとはいえない，である。</p>
+<p>今回の設定では母平均に差があるはず(<span class="math inline">\(4 \neq 4 + 1\)</span>)なのだから，これは誤った判断で，タイプ2エラーが生じているケースということになる。研究実践場面では，母平均やその差については知り得ないのだから，このような判断ミスが生じていたかどうかは分かり得ないことに留意せよ。</p>
 </section>
 <section id="二標本検定ウェルチの補正" class="level2" data-number="8.3">
 <h2 data-number="8.3" class="anchored" data-anchor-id="二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定（ウェルチの補正）</h2>
@@ -567,6 +570,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -601,7 +622,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');

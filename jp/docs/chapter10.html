@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -243,7 +243,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#統計的検定とqrps" id="toc-統計的検定とqrps" class="nav-link active" data-scroll-target="#統計的検定とqrps"><span class="header-section-number">10.1</span> 統計的検定とQRPs</a></li>
-  <li><a href="#タイプ２エラー確率のコントールとサンプルサイズ設計" id="toc-タイプ２エラー確率のコントールとサンプルサイズ設計" class="nav-link" data-scroll-target="#タイプ２エラー確率のコントールとサンプルサイズ設計"><span class="header-section-number">10.2</span> タイプ２エラー確率のコントールとサンプルサイズ設計</a></li>
+  <li><a href="#タイプ2エラー確率のコントールとサンプルサイズ設計" id="toc-タイプ2エラー確率のコントールとサンプルサイズ設計" class="nav-link" data-scroll-target="#タイプ2エラー確率のコントールとサンプルサイズ設計"><span class="header-section-number">10.2</span> タイプ2エラー確率のコントールとサンプルサイズ設計</a></li>
   <li><a href="#サンプルサイズ設計の実践" id="toc-サンプルサイズ設計の実践" class="nav-link" data-scroll-target="#サンプルサイズ設計の実践"><span class="header-section-number">10.3</span> サンプルサイズ設計の実践</a>
   <ul class="collapse">
   <li><a href="#一標本t検定" id="toc-一標本t検定" class="nav-link" data-scroll-target="#一標本t検定"><span class="header-section-number">10.3.1</span> 一標本t検定</a></li>
@@ -278,8 +278,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="統計的検定とqrps" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="統計的検定とqrps"><span class="header-section-number">10.1</span> 統計的検定とQRPs</h2>
 </section>
-<section id="タイプ２エラー確率のコントールとサンプルサイズ設計" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="タイプ２エラー確率のコントールとサンプルサイズ設計"><span class="header-section-number">10.2</span> タイプ２エラー確率のコントールとサンプルサイズ設計</h2>
+<section id="タイプ2エラー確率のコントールとサンプルサイズ設計" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="タイプ2エラー確率のコントールとサンプルサイズ設計"><span class="header-section-number">10.2</span> タイプ2エラー確率のコントールとサンプルサイズ設計</h2>
 </section>
 <section id="サンプルサイズ設計の実践" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="サンプルサイズ設計の実践"><span class="header-section-number">10.3</span> サンプルサイズ設計の実践</h2>
@@ -376,6 +376,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -410,7 +428,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -686,12 +708,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./chapter09.html" class="pagination-link  aria-label=" &lt;span="">
+      <a href="./chapter09.html" class="pagination-link" aria-label="多群の平均値差の検定">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapter11.html" class="pagination-link" aria-label="<span class='chapter-number'>11</span>&nbsp; <span class='chapter-title'>回帰分析</span>">
+      <a href="./chapter11.html" class="pagination-link" aria-label="回帰分析">
         <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">回帰分析</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
