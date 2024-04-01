@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -361,7 +361,7 @@ div.csl-indent {
 <p>このペインのレイアウトは，メニューのTools &gt; Global Options… &gt; Pane Layoutから変更することもできる。基本的に4分割であることに変わりはないが，自分が利用しやすい位置にレイアウトを変更するとよい。</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./../common/images/01_PaneLayout.png" class="img-fluid figure-img"></p>
+<p><img src="../common/images/01_PaneLayout.png" class="img-fluid figure-img"></p>
 <figcaption>レイアウト変更画面。このほかにも背景色などを変えることもできる</figcaption>
 </figure>
 </div>
@@ -568,6 +568,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -602,7 +620,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -878,12 +900,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link  aria-label=" はじめに"="">
+      <a href="./index.html" class="pagination-link" aria-label="はじめに">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">はじめに</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapter02.html" class="pagination-link" aria-label="<span class='chapter-number'>2</span>&nbsp; <span class='chapter-title'>Rの基礎</span>">
+      <a href="./chapter02.html" class="pagination-link" aria-label="Rの基礎">
         <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
