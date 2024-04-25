@@ -17,4 +17,8 @@ echo '英語版レンダリングします'
 quarto render
 cd ..
 
+today=$(LANG="ja_JP.UTF-8" date)
+git add --all
+git commit -m "$today"
+git push
 
