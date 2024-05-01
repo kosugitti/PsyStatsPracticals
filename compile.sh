@@ -1,10 +1,11 @@
 #!/usr/bin/bash
-
 # 翻訳
 echo $(date)
 cd develop
 echo '翻訳します'
+source myenv/bin/activate
 python3 TransText.py
+deactivate
 cd ..
 # Quarto
 cd jp
