@@ -307,7 +307,7 @@ window.Quarto = {
   <ul>
   <li><a href="#一標本検定" id="toc-一標本検定" class="nav-link active" data-scroll-target="#一標本検定"><span class="header-section-number">8.1</span> 一標本検定</a></li>
   <li><a href="#二標本検定" id="toc-二標本検定" class="nav-link" data-scroll-target="#二標本検定"><span class="header-section-number">8.2</span> 二標本検定</a></li>
-  <li><a href="#二標本検定ウェルチの補正" id="toc-二標本検定ウェルチの補正" class="nav-link" data-scroll-target="#二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定（ウェルチの補正）</a></li>
+  <li><a href="#二標本検定ウェルチの補正" id="toc-二標本検定ウェルチの補正" class="nav-link" data-scroll-target="#二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定(ウェルチの補正)</a></li>
   <li><a href="#対応のある二標本検定" id="toc-対応のある二標本検定" class="nav-link" data-scroll-target="#対応のある二標本検定"><span class="header-section-number">8.4</span> 対応のある二標本検定</a></li>
   <li><a href="#レポートを書くような課題" id="toc-レポートを書くような課題" class="nav-link" data-scroll-target="#レポートを書くような課題"><span class="header-section-number">8.5</span> レポートを書くような課題</a></li>
   </ul>
@@ -437,9 +437,9 @@ mean of x
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> mu1 <span class="sc">+</span> d</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> mu1 <span class="sc">+</span> (sigma <span class="sc">*</span> d)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, <span class="at">mean =</span> mu1, <span class="at">sd =</span> sigma)</span>
@@ -476,10 +476,77 @@ mean of x mean of y
 </div>
 </div>
 <p>今回の母平均は<span class="math inline">\(\mu_1 = 4, \mu_2 = 4+1\)</span>にしているが，標本平均は4.547と4.837であり，標本上では大きな差が見られなかった。結果として，t値は0.4992369であり，自由度18のもとでのp値は0.6236593である。5%水準を上回る値であるから，結論としては対立仮説を採択するには至らない，差があるとはいえない，である。</p>
-<p>今回の設定では母平均に差があるはず(<span class="math inline">\(4 \neq 4 + 1\)</span>)なのだから，これは誤った判断で，タイプ2エラーが生じているケースということになる。研究実践場面では，母平均やその差については知り得ないのだから，このような判断ミスが生じていたかどうかは分かり得ないことに留意せよ。</p>
+<p>今回の設定では母平均に差があるはず(<span class="math inline">\(4 \neq 4 + 1\)</span>)なのだから，これは誤った判断で，タイプ2エラーが生じているケースということになる。研究実践場面では，母平均やその差については知り得ないのだから，このような判断ミスが生じていたかどうかは分かり得ないことに留意しよう。</p>
+<p>なお，ここではわかりやすく2群であることを示すために<code>X1</code>,<code>X2</code>と2つのオブジェクトを用意したが，実践的にはデータフレームの中で群わけを示す変数があり，<code>formula</code>の形で次のように書くことが多いだろう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,n1),<span class="fu">rep</span>(<span class="dv">2</span>,n2)), <span class="at">value =</span> <span class="fu">c</span>(X1,X2)) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">as.factor</span>(group))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  value by group
+t = -0.49924, df = 18, p-value = 0.6237
+alternative hypothesis: true difference in means between group 1 and group 2 is not equal to 0
+95 percent confidence interval:
+ -1.506473  0.927980
+sample estimates:
+mean in group 1 mean in group 2 
+       4.547297        4.836543 </code></pre>
+</div>
+</div>
 </section>
 <section id="二標本検定ウェルチの補正" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定（ウェルチの補正）</h2>
+<h2 data-number="8.3" class="anchored" data-anchor-id="二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定(ウェルチの補正)</h2>
+<p>先ほどのt.test関数には，<code>var.equal = TRUE</code>というオプションが追加されていた。これは2群の分散が等しいと仮定した場合の検定になる。t検定は歴史的にこちらが先に登場しているが，2群の分散が等しいかどうかはいきなり前提できるものでもない。等分散性の検定は，Levene検定を行うのが一般的であり，R においては，<code>car</code>パッケージや<code>lawstat</code> パッケージが対応する関数を持っている。ここでは<code>car</code>パッケージの <code>leveneTest</code>関数を用いる例を示す。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 要求されたパッケージ carData をロード中です </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ 次のパッケージを付け加えます: 'car' </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 以下のオブジェクトは 'package:dplyr' からマスクされています:
+
+    recode</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 以下のオブジェクトは 'package:purrr' からマスクされています:
+
+    some</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">center =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = mean)
+      Df F value Pr(&gt;F)
+group  1  2.9405 0.1035
+      18               </code></pre>
+</div>
+</div>
+<p>この結果を見ると，p値から明らかなように，2群の分散が等しいという帰無仮説が棄却<strong>できなかった</strong>ので，等しいと考えてt検定に進むことができる。もしこれが棄却されてしまったら，2群の分散が等しいという帰無仮説が成り立たないのだから，等分散性の仮定を外す必要がある。実行は簡単で，<code>var.equal</code>を<code>FALSE</code>にすれば良い。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  value by group
+t = -0.49924, df = 13.421, p-value = 0.6257
+alternative hypothesis: true difference in means between group 1 and group 2 is not equal to 0
+95 percent confidence interval:
+ -1.5369389  0.9584459
+sample estimates:
+mean in group 1 mean in group 2 
+       4.547297        4.836543 </code></pre>
+</div>
+</div>
+<p>よく見ると，タイトルがWelch Two Sample t-testに変わっている。Welchの補正が入ったt検定という意味である。また自由度が実数()になっているが，このようにt分布の自由度を調整することで等分散性の仮定から逸脱した場合の補正となる。もちろん報告する際は「<span class="math inline">\(t(\)</span> 13.421 <span class="math inline">\()=\)</span> -0.499, <span class="math inline">\(p=\)</span> 0.626」のように書くことになるから，自由度が実数であれば補正済みであると考えられるだろう。</p>
+<p>しかし，分散が等しいという仮定は，等しくない場合の特殊系であるから，最初からWelchの補正がはいった検定だけで十分である。このような考え方から，Rにおける<code>t.test</code> 関数のデフォルトでは<code>var.equal = FALSE</code>となっており，特段の指定をしなければ等分散性の仮定をしない。こちらの方が検定を重ねることがないので，より望ましい。</p>
 </section>
 <section id="対応のある二標本検定" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="対応のある二標本検定"><span class="header-section-number">8.4</span> 対応のある二標本検定</h2>
