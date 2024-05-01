@@ -1,9 +1,9 @@
 #!/usr/bin/bash
+source myenv/bin/activate
 # 翻訳
 echo $(date)
 cd develop
 echo '翻訳します'
-source myenv/bin/activate
 python3 TransText.py
 deactivate
 cd ..
