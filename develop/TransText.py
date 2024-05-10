@@ -1,9 +1,6 @@
 import os
 import re
 import openai
-from openai import OpenAI
-
-client = OpenAI(api_key=file.read().strip())
 import logging
 import time
 from tqdm import tqdm
@@ -17,7 +14,8 @@ api_key_file = '../../../OpenAI_api_key.txt'
 
 # APIキーを読み込む
 with open(api_key_file, 'r') as file:
-
+    openai.api_key = file.read().strip()
+    
 # 読み込みフォルダと保存フォルダを指定
 input_folder = '../jp'
 output_folder = '../en'
@@ -50,10 +48,12 @@ def Trans_gpt(prompt):
                 {"role": "system", "content": "You are a translator specialized in academic texts for introductory level college students. Translate the following Japanese text into English, ensuring the translation is suitable for an introductory textbook on psychological statistics using R and RStudio. Maintain a clear, accessible, and engaging tone, appropriate for first-year college students."},
                 {"role": "user", "content": "Never modify the R chunk and TeX code, translate this Japanese text into English please:"},
                 {"role": "assistant", "content": prompt}            ]
-            res = client.chat.completions.create(model='gpt-4',
-            messages = messages)
+            res = openai.chat.completions.create(
+                model='gpt-4',
+                messages = messages
+            )
             retry_counter = 0  # リトライカウンターをリセットします
-            return res.choices[0].message.content+'\n'
+            return res.choices[0].message.content +'\n'
         except openai.RateLimitError:
             print(f"Rate limit exceeded. Retrying in {5 ** retry_counter} seconds.")
             time.sleep(2 ** retry_counter)  # Exponential backoff
