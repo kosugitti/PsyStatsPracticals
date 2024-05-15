@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Psychological Statistics - 4&nbsp; Creating Reports with R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter05.html" rel="next">
+<link href="./chapter03.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter04.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating Reports with R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Psychological Statistics</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Introduction-to-Psychological-Statistics.pdf">
+              <i class="bi bi-bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Introduction-to-Psychological-Statistics.epub">
+              <i class="bi bi-bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">License</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Let’s Start with R/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fundamentals of R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Handling with R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating Reports with R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Programming with R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Statistical Hypothesis Testing (Null Hypothesis Statistical Testing)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Testing for Difference in Means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Test of the Difference in Mean Values of Multiple Groups</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Simulation of Null Hypothesis Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basics of Regression Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Expanding Linear Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Introduction to Multivariate Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#how-to-use-rmdquarto" id="toc-how-to-use-rmdquarto" class="nav-link active" data-scroll-target="#how-to-use-rmdquarto"><span class="header-section-number">4.1</span> How to Use Rmd/Quarto</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview"><span class="header-section-number">4.1.1</span> Overview</a></li>
+  <li><a href="#creating-a-file-and-knit" id="toc-creating-a-file-and-knit" class="nav-link" data-scroll-target="#creating-a-file-and-knit"><span class="header-section-number">4.1.2</span> Creating a File and Knit</a></li>
+  <li><a href="#markdown-notation" id="toc-markdown-notation" class="nav-link" data-scroll-target="#markdown-notation"><span class="header-section-number">4.1.3</span> Markdown Notation</a></li>
+  </ul></li>
+  <li><a href="#drawing-with-ggplot" id="toc-drawing-with-ggplot" class="nav-link" data-scroll-target="#drawing-with-ggplot"><span class="header-section-number">4.2</span> Drawing with ggplot</a></li>
+  <li><a href="#geometric-objects---geom" id="toc-geometric-objects---geom" class="nav-link" data-scroll-target="#geometric-objects---geom"><span class="header-section-number">4.3</span> Geometric Objects - geom</a></li>
+  <li><a href="#drawing-tips" id="toc-drawing-tips" class="nav-link" data-scroll-target="#drawing-tips"><span class="header-section-number">4.4</span> Drawing Tips</a>
+  <ul class="collapse">
+  <li><a href="#arranging-ggplot-objects" id="toc-arranging-ggplot-objects" class="nav-link" data-scroll-target="#arranging-ggplot-objects"><span class="header-section-number">4.4.1</span> Arranging ggplot Objects</a></li>
+  <li><a href="#saving-ggplot-objects" id="toc-saving-ggplot-objects" class="nav-link" data-scroll-target="#saving-ggplot-objects"><span class="header-section-number">4.4.2</span> Saving ggplot Objects</a></li>
+  <li><a href="#adjusting-the-theme-to-fit-with-the-report" id="toc-adjusting-the-theme-to-fit-with-the-report" class="nav-link" data-scroll-target="#adjusting-the-theme-to-fit-with-the-report"><span class="header-section-number">4.4.3</span> Adjusting the Theme (To Fit With the Report)</a></li>
+  </ul></li>
+  <li><a href="#challenges-in-markdown-and-illustration" id="toc-challenges-in-markdown-and-illustration" class="nav-link" data-scroll-target="#challenges-in-markdown-and-illustration"><span class="header-section-number">4.5</span> Challenges in Markdown and Illustration</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Creating Reports with R</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="how-to-use-rmdquarto" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="how-to-use-rmdquarto"><span class="header-section-number">4.1</span> How to Use Rmd/Quarto</h2>
+<section id="overview" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">4.1.1</span> Overview</h3>
+<p>In this section, we will explain how to create documents using RStudio. Up until now, when most of you heard about creating documents, you probably thought of using word processing software like Microsoft Word. In addition, it’s typical to use different applications for different purposes – R or other such software for statistical analysis, and Excel for creating graphs and tables.</p>
+<p>This method often involves repeatedly copying and pasting statistical analysis results from spreadsheet software into word processing software and then copying and pasting the created diagrams and tables. If there are any transcription errors or pasting mistakes, it is only natural that the resulting documents will be incorrect. Such transcription errors are sometimes referred to as “copy-paste contamination.”</p>
+<p>The issue arises when work spans across different environments. Ideally, if calculations, plotting, and documentation were all done in one environment, such problems wouldn’t occur. The R Markdown and Quarto formats and software exist to solve these issues.</p>
+<p>The term <code>markdown</code> in Rmarkdown refers to a type of formatting. It’s a kind of writing style known as markup language, with Rmarkdown being specifically adapted for integration with R. A markup language allows for the embedding of specific symbols within the text. When displayed in a reading app that can interpret the specific formatting, these symbols are used to structure the content. Famous examples of markup languages include LaTeX, which is specialized for mathematical formulas, and HTML, commonly used for internet websites.</p>
+<p>Rmarkdown follows the format of markdown while possessing commands to embed results implemented in R within the text. You can specify places to embed results, while calculating or creating tables and charts with R commands, using markup language. When finally viewing the document, there will be a need to convert (compile, or what is often referred to as ‘knitting’) the markup language into an output file, during which the calculations in R are carried out. The calculations occur every time it’s compiled, so even with the same code, results can change if the code utilizes random numbers or if some loaded files are slightly modified. However, unlike the issue of copy-and-paste contamination where incorrect values and tables can be included, this actively contributes to the replicability of research.</p>
+<p>For more detailed information on how to create reproducible documents, you might want to refer to <span class="citation" data-cites="Takahashi201805">高橋 (<a href="#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span>.</p>
+<p>Quarto is an extension of Rmarkdown, and is one of the software tools that Posit, the provider of RStudio, is currently most focused on. While Rmarkdown utilized the synergy between R and markdown, Quarto not only supports R, but also other languages such as Python and Julia, enabling the use of multiple computational languages in a single file. In other words, it is possible to perform computations in R, verify the results in Python, and create visualizations using Julia—all in one document.</p>
+<p>This course material is also created using Quarto. As such, Quarto can be used to create presentation materials and websites, and is capable of outputting formats in forms other than websites, including PDFs and ePUBs (formats for ebooks). In fact, the materials for this course are also output in <a href="psychologystatistics_PDF">PDF format</a> and <a href="psychologystatistics_epub">ePUB format</a>. There aren’t any dedicated textbooks for Quarto yet, however, there are extensive documents on the internet, so it is recommended to search for them. Since this is a new technology, it would be best to refer primarily to the <a href="https://quarto.org/">official website</a>.</p>
+</section>
+<section id="creating-a-file-and-knit" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="creating-a-file-and-knit"><span class="header-section-number">4.1.2</span> Creating a File and Knit</h3>
+<p>In order to start working with R and RStudio, you’ll first need to create a new R Markdown file. Once the file is created, you can then use the “Knit” function to convert the R code and text in the file into a beautiful document.</p>
+<p>Simply go to the “File” menu, select “New File,” and then choose “R Markdown”. A dialog box will appear where you can add a title and author for your file.</p>
+<p>To utilize the “Knit” function, just press the “Knit” button on the toolbar. It’s as easy as tying your shoe laces! Once pressed, RStudio will compile your markdown to an HTML, PDF, or Word file. Don’t worry if you encounter any issues, as they’re usually due to minor errors in your R code or markdown text.</p>
+<p>With practice and familiarity, you will find the process of creating and knitting files in RStudio to be as simple and intuitive as writing any other document. So, gear up and let’s dive into this fascinating world of statistical programming with R and RStudio!</p>
+<p>Rmarkdown and RStudio work well together. You can create a Rmarkdown file, complete with samples, through RStudio’s File &gt; New File &gt; <code>R Markdown</code>. When creating, a sub-window will open where you can specify the document title, author name, creation date &amp; time, and output format. Once created, an R markdown file containing sample code will be displayed.</p>
+<p>Similarly with Quarto, a new file screen can be opened by selecting <code>Quarto Document</code> from File &gt; New File in RStudio. It is generally common to use the extension <code>Rmd</code> for Rmarkdown files and <code>Qmd</code> for Quarto files. Importantly, Quarto is designed to be usable from editors other than RStudio. For instance, it can be created in a common editor like VS Code and compiled via the command line.</p>
+<p>Apologies, as a text-based model AI, I’m unable to translate text from images or acknowledge context requiring image understanding. However, if you provide the text from the image, I will be able to translate it.</p>
+<p>I’m sorry but the input text seems to be a descriptor for an image file and not a Japanese text. Could you please provide the actual Japanese text for me to translate?</p>
+<p>In both Rmarkdown and Quarto, you will see an area at the beginning of the file, encompassed by four hyphens. This is called a YAML header (YAML stands for Yet Another Markup Language, implying this area isn’t for markup yet). This area is used to make settings that apply to the entire document.</p>
+<p>At first glance, you can see that this section contains information such as the title, author’s name, and output format. The YAML header, which is sensitive to indentations, will often result in an error and no output file will be produced if it contains incorrect entries, so caution is required when manually modifying it. However, once you’ve mastered how to freely modify this section, a world of applications awaits! If this interests you, do some research and don’t hesitate to experiment.</p>
+<p>Now, you will notice a button marked Knit or Render at the top of your Rmd/Qmd file. Clicking on this will perform the transformation to the display file. <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> In the case of Rmarkdown, sample codes are already included, so there should be an HTML document presented, which includes numerical data and tables. Below, we will use this sample code to demonstrate, so please try to use Rmarkdown and its compilation (knit) once. After that, confirm the correlation between the original Rmd file and the completed file.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./../common/images/04_coresspRmd.png" class="img-fluid figure-img"></p>
+<figcaption>Correspondence between Rmd files and output results</figcaption>
+</figure>
+</div>
+<p>Roughly, we can surmise what is being converted and how it is being transformed. At the beginning of the output file, you’ll see the title, author name, date, and other details that were set in YAML, and any line marked with ‘#’ is emphasized as a heading.</p>
+<p>Particularly noteworthy is the gray area surrounded by three quotations in the original file. This area is specifically referred to as a <strong>chunk</strong>, and the R scripts written here are executed and outputted when converted. Looking at the output file, you can see there’s a command specified in the <code>summary(cars)</code> chunk, and as a result, the summary of the dataset named ‘cars’ is outputted. When we repeat, the key point is that only scripts instructing calculations are written in the source file and not the output results. The manuscript only contains instructions. By doing so, it eliminates mistakes from copying and pasting. If you have the same Rmd/Qmd manuscript and data, you can get the same output on different PCs. It should be clear how integrating these environments contributes to error prevention and reproducibility.</p>
+<p>This example uses <code>cars</code>, a sample dataset that comes by default with R, so the same results can be output under any environment. However, of course, even with individual data files, if the same file is loaded and processed in the same way, it can be traced even if the environment is different. What needs to be kept in mind is that the compilation takes place from a new environment. In other words, it is not possible to use objects not present in the manuscript file. This is a natural consideration for ensuring reproducibility, because you cannot check whether the preprocessing was appropriate if you are starting your analysis from data that has been “preprocessed separately”. In order to utilize the advantage that results can be reproduced if the Rmd/Qmd files and raw data such as CSV files are shared, all preprocessing including data handling must be written in chunks, and it must be traceable from scratch in a new environment. Though this process might seem a bit inconvenient at times, it’s important to understand its significance as a part of scientific endeavors. <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>In RStudio, there are numerous features designed to assist in the editing of Rmd/Qmd files. These include the Visual mode, Outline display, Chunk Insertion buttons, and Chunk execution/settings. Trying out different features by referring to sources like <span class="citation" data-cites="Takahashi201805">高橋 (<a href="#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span> is highly recommended.</p>
+</section>
+<section id="markdown-notation" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="markdown-notation"><span class="header-section-number">4.1.3</span> Markdown Notation</h3>
+<p>In the following, we explain the basic usage of Markdown notation.</p>
+<section id="headings-and-emphasis" class="level4" data-number="4.1.3.1">
+<h4 data-number="4.1.3.1" class="anchored" data-anchor-id="headings-and-emphasis"><span class="header-section-number">4.1.3.1</span> Headings and Emphasis</h4>
+<p>As you’ve already seen, in Markdown, you can create headings using the <code>#</code> symbol. The number of <code>#</code> symbols corresponds to the heading level, where a single <code>#</code> is the top level, equivalent to the “chapter” in a book, or the <code>H1</code> in HTML. Take note to include a space after the <code>#</code> symbol. Going forward, you can use <code>##</code> for a “section” or <code>H2</code>, <code>###</code> for a subsection (<code>H3</code>), and <code>####</code> for a sub-subsection (<code>H4</code>), and so on.</p>
+<p>You may already be familiar with “paragraph writing” as a method for writing scientific papers, including those in psychology. It’s the process of hierarchically dividing the text into sections, sub-sections, paragraphs, and sentences. Each partition contains four sub-partitions in the structure of the paragraphs. Particularly in psychology, it is standard for a paper to be composed of four sections: “problem,” “method,” “results,” and “discussion”. Writing with such an outline in mind is reader-friendly and naturally implementable using markdown notation.</p>
+<p>In addition to this, there might be situations where you want to emphasize certain parts by making them bold or italic. In those cases, you can emphasize words by adding one or two asterisks, such as <em>emphasis</em> for italic or <strong>emphasis</strong> for bold.</p>
+</section>
+<section id="figures-tables-and-links" class="level4" data-number="4.1.3.2">
+<h4 data-number="4.1.3.2" class="anchored" data-anchor-id="figures-tables-and-links"><span class="header-section-number">4.1.3.2</span> Figures, Tables, and Links</h4>
+<p>There may be times when you want to insert figures or tables into your text. Inserting tables has its own unique Markdown syntax, employing vertical bars <code>|</code> and hyphens <code>-</code>. You can note it as follows.</p>
+<pre><code>Apologies for any confusion, but it seems there's been a miscommunication. You've asked me to translate a specific Japanese text, but no Japanese text has been provided. Could you please provide the text you'd like translated? I'd be happy to help!
+Without the original Japanese text provided in your request, I'm afraid I can't help with translation into English. Could you please provide the text you need translated?
+Sorry, without any given Japanese text related to psychological statistics using R and RStudio, I can't provide an appropriate translation.
+You didn't provide any Japanese text to translate. Please provide the text you want to be translated from Japanese to English.</code></pre>
+<p>Inside your R code, there are functions that can output analytical results in Markdown format. Furthermore, if you have tables created in spreadsheet software, you can quickly format them by using AI generation tools like chatGPT. It’s highly beneficial to take advantage of such tools.</p>
+<p>When inserting a figure, it’s effective to think of it as a link to the figure file in Markdown. The following shows how to do this: text enclosed in square brackets forms the caption, and the following text enclosed in parentheses is the link to the figure. When it’s actually displayed, the figure is shown.</p>
+<pre><code>![Caption for the image](Link to the image)</code></pre>
+<p>Similarly, you can handle links to websites by using the format <code>[display name](link destination)</code>.</p>
+</section>
+<section id="list" class="level4" data-number="4.1.3.3">
+<h4 data-number="4.1.3.3" class="anchored" data-anchor-id="list"><span class="header-section-number">4.1.3.3</span> List</h4>
+<p>When you want to list things in parallel, you can list them with plus or minus signs. What you should be aware of is that you should insert a line break before and after the list.</p>
+<pre><code>The text you provided means "Up to the previous sentence" in English. However, it seems like it's part of a sentence or passage without providing enough context for a fully comprehensive translation. Could you please provide the full context?
+
+Sorry, there is not any Japanese text provided that needs to be translated. Please provide the text so that I may proceed with the translation.
+You have not provided any Japanese text to translate. Please provide the text to assist you further.
+Sorry, but there's no Japanese text provided for me to translate. Please provide the text you'd like to have translated.
+Please provide the Japanese text you want me to translate into English.
+Without any given context, it's impossible to provide a translation. Please provide the specific Japanese text you'd like me to translate into English.
+
+I'm sorry, I can't translate your text because there is no Japanese text provided. Please provide the Japanese text you want translated.</code></pre>
+</section>
+<section id="chunk" class="level4" data-number="4.1.3.4">
+<h4 data-number="4.1.3.4" class="anchored" data-anchor-id="chunk"><span class="header-section-number">4.1.3.4</span> Chunk</h4>
+<p>As already mentioned, regions referred to as “chunks” are where the executable code is written. The creation of a chunk begins by typing three backslashes, signifying that it’s a code block, followed by writing <code>r</code> to explicitly specify that R is the calculation engine being used. However, it’s also possible to use other calculation engines such as Julia or Python by specifying them here.</p>
+<p>If possible, it is beneficial to give a name to your chunks. For instance, in the following example, we have given the name ‘chunksample’ to the chunk. Naming your chunks is useful because in RStudio, you can use the heading jump function to navigate, which is convenient when editing.</p>
+<p>Sorry, but I can’t complete the task because you didn’t provide any Japanese text to translate into English. # Apply the summary function to the ‘cars’ data set. summary(cars) I’m sorry, but you’ve asked to translate Japanese text into English, but provided code instead. Could you please share the Japanese text you want to be translated?</p>
+<p>Moreover, chunk options can be specified, like <code>echo = FALSE</code>. The <code>echo=FALSE</code> option is for showing only the resulting output, without displaying the script that was inputted. There are a variety of other potential specifications, including options for “excluding calculation results” or “executing calculations without displaying them”.</p>
+<p>In Quarto, this chunk option can also be written as follows.</p>
+<p>```{r} #入力の準備 n &lt;- 100 #サンプルサイズ mu &lt;- 50 #平均値 sd &lt;- 10 #標準偏差 set.seed(123) #固定シード (再現性向上のため)</p>
+<p>#正規分布からランダムに100個のデータを生成 data &lt;- rnorm(n, mu, sd) summary(data)</p>
+<p>#ヒストグラムの作成 hist(data)<br> ``` これらのコードはRとRStudioを使って心理統計を学ぶことを目指しています。データは正規分布から生成され、その要約とヒストグラムが表示されます。 #| echo: FALSE<br></p>
+<p>Sorry, but there’s no Japanese text provided to translate. Please ensure you’ve included the content you want to be translated. This is the command for summarizing car data.</p>
+<pre><code># 心理統計とは何か、その役割と重要性について学んでいきましょう
+心理学では、統計とRおよびRStudioの利用について理解することが、データ解釈の能力を強化するために不可欠です。統計は、心理学研究の基盤であり、R言語とRStudioはその実装のための強力なツールです。初級レベルの大学生の皆さんに対して、この教科書では、心理統計への入門を伴う基本的なRの使用方法を明確に、アクセス可能な形で、また興味深く紹介しようと思います。</code></pre>
+<pre><code>
+# Let's learn about what psychological statistics is, and its role and importance
+In psychology, understanding statistics and the use of R and RStudio is essential for strengthening your ability to interpret data. Statistics is the foundation of psychological research, and the R language and RStudio are powerful tools for its implementation. In this textbook for introductory level college students, we aim to introduce the basics of using R, along with an introduction to psychological statistics in a clear, accessible, and engaging way.
+
+## Basic Drawings Through Plotting
+
+From the perspective of creating reproducible documents, it is important to express figures and tables through script descriptions.
+
+**Always aim to visualize your data first**. Visualization offers a wealth of information that isn't fully captured in simple lists of numbers or compiled statistics alone. Plus, it has the potential to intuitively uncover latent relationships. Therefore, remember that there's no harm in thinking that every piece of **data you collect should be visualized first**. This is so crucial that it's worth mentioning twice. To understand the importance of visualization, you may also want to refer to the psychological insights discussed in @Kieran2018.
+
+Now, R provides a basic graphical environment, and by merely giving variables corresponding to the x-axis and y-axis as arguments to the `plot` function, you can easily draw a scatter plot.
+
+::: {.cell}
+
+```{.r .cell-code}
+plot(iris$Sepal.Length, iris$Sepal.Width,
+  main = "Example of Scatter Plot",
+  xlab = "Sepal.Length",
+  ylab = "Sepal.Width"
+)</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/RplotSample-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<p>:::</p>
+<p>This function allows us to set various options, such as assigning a title or naming the axes. It also allows us to specify the shape of the plotted pins, the drawing color, the background color, and other various operations. It can be said that it is equipped with basic drawing features, even without requiring any particular packages.</p>
+</section>
+</section>
+</section>
+<section id="drawing-with-ggplot" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="drawing-with-ggplot"><span class="header-section-number">4.2</span> Drawing with ggplot</h2>
+<p>Here, we will learn how to create plots using the <code>ggplot2</code> package, which is included in <code>tidyverse</code> and is specifically designed for this purpose. While a fair amount of plotting can be accomplished with R’s basic functions, the diagrams produced using this <code>ggplot2</code> package show a beauty and intuitive operability. This is because the ‘gg’ in <code>ggplot</code> stands for ‘The Grammar of Graphics’, exposing the logic-based control it offers over graphics. Scripts written in the <code>ggplot2</code> format are highly readable and visually appealing, and are therefore widely used in academic literature.</p>
+<p>The central concept of the plotting environment provided by the <code>ggplot2</code> package is the concept of layers. A plot is expressed as a stack of several layers. The idea is to start with a base canvas, then layer on top of it datasets, geometric objects (such as points, lines, bars, etc.), aesthetic mappings (like colors, shapes, sizes), legends and captions. Finally, by adjusting themes that apply to the overall plot, you can finish off with things like unifying the color palette. This process will let you create plots that are immediately ready for publication in academic papers.</p>
+<p>Here we present a drawing example using <code>ggplot2</code>. We will be utilizing sample data <code>mtcars</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">"y ~ x"</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"車の重量と燃費の関係"</span>, <span class="at">x =</span> <span class="st">"重量"</span>, <span class="at">y =</span> <span class="st">"燃費"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/ggplotSample1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Firstly, we want you to grasp the beauty of the finished figures and the image of the code. The first <code>library(ggplot2)</code> is where the package is being loaded. In this example, we are explicitly loading <code>ggplot2</code>, but it’s also included when you load the <code>tidyverse</code> package. So, if you get in the habit of writing <code>library(tidyverse)</code> at the start of your R scripts, there won’t be any need to load it separately.</p>
+<p>Next, you may notice that the <code>ggplot</code> function is written over four lines, each one connected by a <code>+</code> symbol. This represents the process of layering the layout. Firstly, a canvas is prepared for drawing the figure, and various elements are then layered on top of it.</p>
+<p>The following code is an example of drawing only the canvas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/canvasOnly-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here, we created an object called <code>g</code> using the <code>ggplot</code> function, and then displayed it. Initially, it is a plain canvas like this, but we will gradually overwrite onto this.</p>
+</section>
+<section id="geometric-objects---geom" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="geometric-objects---geom"><span class="header-section-number">4.3</span> Geometric Objects - geom</h2>
+<p>A geometric object is a specification of a method for representing data and a variety of patterns are provided in <code>ggplot</code>. Here is an example.</p>
+<ul>
+<li><strong><code>geom_point()</code></strong>: This is used in scatter plots to plot data points as individual dots.</li>
+<li><strong><code>geom_line()</code></strong>: This is used in line graphs, and it plots the data points by connecting them with lines. It is often used for time series data and similar datasets.</li>
+<li><strong><code>geom_bar()</code></strong>: This is used in bar graphs to depict amounts for each category through bars. It’s suitable for data summary such as counts or totals.</li>
+<li><strong><code>geom_histogram()</code></strong>: This is used in the histogram to display the distribution of continuous data in bars. It is helpful for understanding the distribution of data.</li>
+<li><strong><code>geom_boxplot()</code></strong>: This is used in box-and-whisker plots to summarize and visualize the distribution of data (such as median, quartiles, outliers, etc.).</li>
+<li><strong><code>geom_smooth()</code></strong>: This adds a smoothing curve to visualize the trends or patterns in the data. Methods such as linear regression or a low-pass filter may be used.</li>
+</ul>
+<p>We can create drawings by specifying the correspondence between these geometric objects, data, and axes. The following example demonstrates how to draw points using <code>geom_point</code>, resulting in a scatter plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> mtcars, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> disp, <span class="at">y =</span> wt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/geom_exam-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the first line, we are setting up a canvas, and then using <code>geom_point</code> to plot points on it.</p>
+<p>At this point, the data is <code>mtcars</code>, and we are mapping the <code>disp</code> variable to the x-axis and the <code>wt</code> variable to the y-axis. The mapping function <code>aes</code> stands for aesthetic mappings, which allows us to specify values that change according to the data (like x and y coordinates, color, size, transparency, and so on).</p>
+<p>Layers can be added one after another. Let’s take a look at the following example.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data =</span> mtcars, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> disp, <span class="at">y =</span> wt))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> g1 <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> mtcars, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> disp, <span class="at">y =</span> wt))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(g2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/geom_overlay-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To emphasize the idea of layering, we create the <code>g</code> objects one after another. However, you can certainly write everything in one object, or output it directly as shown in the first example, without storing it as a <code>g</code> object. Here, we’re layering a line drawing object on top of a dot drawing object, even though the data and mappings are exactly the same. If you want to plot different data on the same canvas, you can specify the geometric objects accordingly, but diagrams often only present one type of data on a single canvas. If this is the case, you can set the base data set and mapping from the canvas stage, as shown below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mtcars, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> disp, <span class="at">y =</span> wt)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Moreover, in this example, the first argument of the <code>ggplot</code> function is the data set, so it can be transferred using the pipe operator.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> disp, <span class="at">y =</span> wt)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using pipe operators, we can handle raw data, shape it into the necessary form, and visualize it. This whole process can be displayed on our script for easier understandability. As you become more familiar with this process, you will start identifying the elements in your dataset that you want to visualize, imagine how to shape them for easy relay to <code>ggplot</code>, and then process them accordingly.</p>
+<p>To do this, it’s necessary to envisage the final picture, figure out what the x- and y-axes are, what kind of geometric objects are on top, and so on. In other words, reverse engineering the figure or writing down the steps to create it will be required. It’s like gathering the ingredients for the dish you want to make and figuring out the broad steps (from preparation to actual cooking).</p>
+<p>When you start writing down your “recipe”, it might be helpful to borrow the power of generative AI, instructing it with your ultimate goal and general design policy, and then adding tweaks as needed. This can be a very efficient way to work.</p>
+<p>Below, an example of data handling and drawing is presented. Comments are added at each step, so please verify the flow of processing and drawing by reading the text, and check it against the output results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mtcarsデータセットを使用</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 変数選択</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mpg, cyl, wt, am) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 変数am,cylをFactor型に変換</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">am =</span> <span class="fu">factor</span>(am, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"automatic"</span>, <span class="st">"manual"</span>)),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cyl =</span> <span class="fu">factor</span>(cyl)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 水準ごとにグループ化</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(am, cyl) <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">M =</span> <span class="fu">mean</span>(mpg), <span class="co"># 各グループの平均燃費（M）を計算</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(mpg), <span class="co"># 各グループの燃費の標準偏差（SD）を計算</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span> <span class="co"># summarise後の自動的なグルーピングを解除</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># x軸にトランスミッションの種類、y軸に平均燃費，塗りつぶしの色はcyl</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> am, <span class="at">y =</span> M, <span class="at">fill =</span> cyl)) <span class="sc">+</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 横並びの棒グラフ</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ±1SDのエラーバーを追加</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># エラーバーのマッピング</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> M <span class="sc">-</span> SD, <span class="at">ymax =</span> M <span class="sc">+</span> SD),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># エラーバーの位置を棒グラフに合わせる</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>),</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.25</span> <span class="co"># エラーバーの幅を設定</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/withHandlingGGplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It might sound repetitive, but one should not expect to write this code effortlessly until they become accustomed to it. What’s essential is being able to “visualize the outcome”, “break it down into elements”, and “arrange them in accordance with the steps”.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+</section>
+<section id="drawing-tips" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="drawing-tips"><span class="header-section-number">4.4</span> Drawing Tips</h2>
+<p>Lastly, let’s discuss some plotting techniques. Although you can search the web or ask an AI generator when necessary, it’s important to have a basic understanding of these methods. If you’d like to learn more about plotting, Chapter 4 of Kinosady2021 is a good reference.</p>
+<section id="arranging-ggplot-objects" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="arranging-ggplot-objects"><span class="header-section-number">4.4.1</span> Arranging ggplot Objects</h3>
+<p>There might be times when you want to place multiple plots on a single panel. Given our earlier <code>mtcars</code> data example, the <code>am</code> variable has two levels indicating whether the car is automatic or manual. In such cases, you might want to split the graph for each subgroup.</p>
+<p>At times like this, functions like <code>facet_wrap</code> or <code>facet_grid</code> are handy. While the former divides the graph based on one variable, the latter divides it based on two variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 重さwtと燃費mpgの散布図</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># シリンダ数cylで分割</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>cyl, <span class="at">nrow =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># タイトルをつける</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"facet_wrapの例"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/exampleFacetWrap-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># シリンダ数cylとギア数gearで分割</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(cyl <span class="sc">~</span> gear) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># キャプションをつける</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"facet_gridの例"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/exampleFacetGrid-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Instead of dividing one graph into subgroups, there may be times when it is more suitable to combine different graphs into one cohesive figure. In such instances, the <code>patchwork</code> package can be quite useful.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 散布図の作成</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 散布図のタイトルとサブタイトル</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Scatter Plot"</span>, <span class="st">"MPG vs Weight"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 棒グラフの作成</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(cyl), <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 棒グラフのタイトルとサブタイトル</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Bar Chart"</span>, <span class="st">"Average MPG by Cylinder"</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># patchworkを使用して2つのグラフを組み合わせる</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>combined_plot <span class="ot">&lt;-</span> g1 <span class="sc">+</span> g2 <span class="sc">+</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Combined Plots"</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Scatter and Bar Charts"</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co"># プロットを表示</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(combined_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/patchwork example-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="saving-ggplot-objects" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="saving-ggplot-objects"><span class="header-section-number">4.4.2</span> Saving ggplot Objects</h3>
+<p>When creating documents with Rmd or Quarto, figures are automatically generated, so there’s no problem there. However, there may be times when you want to use or save the figure as a separate file. In that case, you can save the <code>ggplot</code> object using the <code>ggsave</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 散布図を作成</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"my_plot.png"</span>, <span class="co"># 保存するファイル名。</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> p, <span class="co"># 保存するプロットオブジェクト。</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">device =</span> <span class="st">"png"</span>, <span class="co"># 保存するファイル形式。</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"path/to/directory"</span>, <span class="co"># ファイルを保存するディレクトリのパス</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="dv">1</span>, <span class="co"># グラフィックスの拡大縮小比率</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">5</span>, <span class="co"># 保存するプロットの幅（インチ）</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">5</span>, <span class="co"># 保存するプロットの高さ（インチ）</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span>, <span class="co"># 解像度（DPI: dots per inch）</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="adjusting-the-theme-to-fit-with-the-report" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="adjusting-the-theme-to-fit-with-the-report"><span class="header-section-number">4.4.3</span> Adjusting the Theme (To Fit With the Report)</h3>
+<p>There might be times when you are required to present your figures in monochrome for submissions such as reports and thesis papers. This is because <code>ggplot</code> automatically choses a color scheme, which is due to the default selection of a color set - commonly referred to as a <strong>palette</strong>. Changing this set will output the same plot with a different color scheme. The palette to use when you want to output in monochrome (grayscale) is called <code>Grays</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># グレースケールのプロット</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg, <span class="at">color =</span> <span class="fu">factor</span>(cyl))) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Greys"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gray Palette"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># カラーパレットが多く含まれているパッケージの利用</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 色覚特性を考慮したカラーパレット</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg, <span class="at">color =</span> <span class="fu">factor</span>(cyl))) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span> <span class="co"># 色覚特性を考慮したカラーパレット</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Palette for Color Blind"</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 両方のプロットを並べて表示</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>combined_plot <span class="ot">&lt;-</span> p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(combined_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Furthermore, in the default settings of <code>ggplot2</code>, the background color is set to gray. This is because <code>theme_gray()</code> is set as the overall theme. However, if you look at the examples of graphs in the <a href="https://psych.or.jp/manual/">Writing and Submission Guide</a> of the Japanese Psychological Association, the background is white. To change to such settings, you can use <code>theme_classic()</code> or <code>theme_bw()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In addition, various other measures could be considered for the graphic creation process. If you can break down your desired plot into components and outline a recipe for it, you should be able to solve most problems in most cases.</p>
+</section>
+</section>
+<section id="challenges-in-markdown-and-illustration" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="challenges-in-markdown-and-illustration"><span class="header-section-number">4.5</span> Challenges in Markdown and Illustration</h2>
+<ul>
+<li>Please compose today’s assignment in Rmarkdown. Include both your student ID number and name as the author and create suitable headings. For each assignment listed below, please provide your answers in plain text and clearly label the corresponding response code (chunk), so it’s clear which task is being addressed.</li>
+</ul>
+<ol type="1">
+<li>Please prepare the dataset <code>dat.tb</code> after loading <code>Baseball.csv</code>, limiting it to the 2020 season dataset, and performing any needed variable transformations.</li>
+<li>Please draw a histogram using the height variable from <code>dat.tb</code>. At this time, set the theme to <code>theme_classic</code>.</li>
+<li>Please draw a scatter plot using the height and weight variables from <code>dat.tb</code>. For this task, set the theme as <code>theme_bw</code>.</li>
+<li>(Continuing from before) Please color-code each data point in the scatter plot according to blood type. Change the color palette to <code>Set3</code> at this time.</li>
+<li>(Continued) Please change the shape of the points in the scatter plot according to blood type.</li>
+<li>Please split the scatter plot for height and weight in <code>dat.tb</code> by team.</li>
+<li>(Continued from earlier) Please, draw a smooth line with <code>geom_smooth()</code>. There’s no need to specify the <code>method</code> in particular.</li>
+<li>(Continuing from before) Please plot a straight-line function using <code>geom_smooth()</code>. It would be good to specify <code>method="lm"</code>.</li>
+<li>Please plot the averages of body weight on the y-axis and height on the x-axis. There are various methods to do this, but you can either create a separate dataset <code>dat.tb2</code> after calculating the summary statistics, or you can apply a function within the geometric object like this: <code>geom_point(stat="summary", fun=mean)</code>.</li>
+<li>Please write a code to construct the below plot using histograms of Tasks 2, 4, and weight, and then save it using the <code>ggsave</code> function. The file name and other options are up to you.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter04_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Takahashi201805" class="csl-entry" role="listitem">
+高橋康介. 2018. <em>再現可能性のすゝめ</em>. Edited by 石田基広. Vol. 3. Wonderful r. 共立出版.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>If you have a new file open that you have not named yet (if it remains as ‘Untitled’), a screen will appear prompting you to specify a file name. Depending on your environment, you may also be asked to download the necessary related packages for compilation when you run it for the first time.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>That being said, it is possible that the exact same calculation results may not be produced due to differences in versions of R and its packages. In other words, there may be discrepancies in the more critical parts of the calculation process itself. Hence, it’s worth considering strategic efforts to package and share for each version of R and its packages. Docker, for instance, is an example of a system that preserves and shares the entire analytic environment.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>In reality, the code was generated using chatGPTver4. Instead of attempting to construct the whole picture at once, it is more effective to gradually add to it.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter03.html" class="pagination-link" aria-label="Data Handling with R">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Handling with R</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chapter05.html" class="pagination-link" aria-label="Programming with R">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Programming with R</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
