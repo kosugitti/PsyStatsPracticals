@@ -1,0 +1,372 @@
+[
+  {
+    "objectID": "chapter06.html",
+    "href": "chapter06.html",
+    "title": "6  確率とシミュレーション",
+    "section": "",
+    "text": "6.1 確率の考え方と使い所\n統計と確率は密接な関係がある。 まずデータをたくさん集めると，個々のケースでは見られない全体的な傾向が見られるようになり，それを表現するのに確率の考え方を使う，というのがひとつ。 次にデータがそれほどたくさんなくとも，大きな全体の中から一部を取り出した標本Sampleと考えられるとき，標本は全体の性質をどのように反映しているかを考えることになる。ここで全体の傾向から一部を取り出した偶然性を表現するときに確率の考え方を使うことになる。 最後に，理論的・原理的に挙動がわかっている機械のようなものでも，現実的・実践的には系統だったズレが生じたり，偶然としか考えられない誤差が紛れ込むことがある。前者は機械の調整で対応できるが，後者は偶然が従う確率を考える必要がある。\n心理学は人間を対象に研究を行うが，あらゆる人間を一度に調べるわけにはいかないので，サンプルを取り出して調査したり実験したりする(第2のケース)。データサイエンスでは何万レコードというおおきなデータセットになるが，心理学の場合は数件から数十件しかないことも多い。また，心理学的傾向を理論立ててモデル化できたとしても，実際の行動には誤差が含まれている可能性が高い(第3のケース)。このことから，心理学で得られるデータは確率変数として考えられ，小標本から母集団の性質を推測する推測統計と共に利用される。\n厳密に数学的な意味での確率は，集合，積分，測度といった緻密な概念の積み重ねから定義される1。ここではその詳細に分け入らず，単に「特定の結果が生じる可能性について，0から1の間の実数でその大小を表現したもの」とだけ理解しておいて欲しい。この定義からは，「全ての可能な組み合わせのうち当該事象の成立する割合」という解釈も成り立つし，「主観的に重みづけた真実味の強さに関する信念の度合い」という解釈も成り立つ。2 これまで学んできた確率は順列・組み合わせを全て書き出す退屈なもの，と思っていたかもしれないが，「十中八九まちがいないね(80-90%ほど確からしいと考えている)」という数字も確率の一種として扱えるので，非常に身近で適用範囲の広い概念である。理解を進めるポイントの1つとして，確率を面積として考えると良いかもしれない。ありうる状況の全体の空間に対して，事象の成立する程度がどの程度の面積がどの程度の割合であるかを表現したのが確率という量である，と考えるのである( 平岡 and 堀 (2009) は書籍の中で一貫して面積で説明している。この説明だと，条件付き確率などの理解がしやすい。)。\nただし注意して区別しておいて欲しいのが，確率変数とその実現値の違いである。データセットやスプレッドシートに含まれる値は，あくまでも確率変数の実現値というのであって，確率変数はその不確実な状態を有した変数そのものを指す言葉である。サイコロは確率変数だが，サイコロの出目は確率変数の実現値である。心理変数は確率変数だが，手に入れたデータはその実現値である。実現値を通じて変数の特徴を知り，全体を推測するという流れである。\n目の前のデータを超えて，抽象的な実体で議論を進めることが難しく感じられるかもしれない。実は誰しもそうなのであって，確率の正確な理解は非常に難易度が高い。しかしRなど計算機言語に実装されている関数を通じて，より具体的に，操作しながら理解することで徐々に理解していこう。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#確率分布の関数",
+    "href": "chapter06.html#確率分布の関数",
+    "title": "6  確率とシミュレーション",
+    "section": "6.2 確率分布の関数",
+    "text": "6.2 確率分布の関数\n確率変数の実現値は，確率分布に従う。確率分布とは，その実現値がどの程度生じやすいかを全て表した総覧であり，一般的に関数で表現される。実現値が連続的か離散的かによって名称が異なるが，連続的な確率分布関数は確率密度関数(Probability Density Function)，離散的な確率分布関数は確率質量関数(Probability Mass Function)という。\nRには最初から確率に関する関数がいくつか準備されている。最も有名な確率分布である正規分布について，次のような関数がある。\n\n# 標準のプロット関数，curve\ncurve(dnorm(x), from = -4, to = 4)\n\n\n\n\n\n\n\n\n\n# ggplot2を使ってカッコよく\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\ndata.frame(x = seq(-4, 4, by = 0.01)) %&gt;%\n  mutate(y = dnorm(x)) %&gt;%\n  ggplot(aes(x = x, y = y)) +\n  geom_line() +\n  theme_classic()\n\n\n\n\n\n\n\n\nここでdnormという関数を使っているが，dはDensity(確率密度)の頭文字であり，normはNormal Distribution(正規分布)の一部である。このように，Rでは確率分布の名前を表す名称(ここではnorm)と，それに接頭文字ひとつ(d)で関数を構成する。この接頭文字は他にp,q,rがあり，dpois(ポアソン分布poisson distributionの確率密度関数)，pnorm(正規分布normal distributionの累積分布関数),rbinom(二項分布binomial distributionからの乱数生成)のように使う。\nここでは正規分布を例に説明を続けよう。正規分布は平均\\(\\mu\\)と標準偏差\\(\\sigma\\)でその形状が特徴づけられる。これらの確率分布の特徴を表す数字のことを母数 parameterという。たとえば，次の3つの曲線はパラメータが異なる正規分布である。\n\ndata.frame(x = seq(-4, 4, by = 0.01)) %&gt;%\n  mutate(\n    y1 = dnorm(x, mean = 0, sd = 1),\n    y2 = dnorm(x, mean = 1, sd = 0.5),\n    y3 = dnorm(x, mean = -1, sd = 2)\n  ) %&gt;%\n  pivot_longer(-x) %&gt;%\n  ggplot(aes(x = x, y = value, color = name)) +\n  geom_line()\n\n\n\n\n\n\n\n\n平均は位置母数，標準偏差はスケール母数とも呼ばれ，分布の位置と幅を変えていることがわかる。言い換えると，データになるべく当てはまるように正規分布の母数を定めることもできるわけで，左右対称で単峰の分布という特徴があれば，正規分布でかなり様々なパターンを表せる。\nさて，上の例で用いた関数はいずれもdを頭に持つdnormであり，確率分布の密度の高さを表現していた。ではpやqが表すのは何であろうか。数値と図の例を示すので，その対応関係を確認してもらいたい。\n\n# 累積分布関数\npnorm(1.96, mean = 0, sd = 1)\n\n[1] 0.9750021\n\n# 累積分布の逆関数\nqnorm(0.975, mean = 0, sd = 1)\n\n[1] 1.959964\n\n\n数値で直感的にわかりにくい場合，次の図を見て確認しよう。pnorm関数はx座標の値を与えると，そこまでの面積(以下のコードで描かれる色付きの領域)すなわち確率を返す。qnorm関数は確率(=面積)を与えると，確率密度関数のカーブの下領域を積分してその値になるときのx座標の値を返す。\n\n# 描画\nprob &lt;- 0.9\n## 全体の正規分布カーブ\ndf1 &lt;- data.frame(x = seq(from = -4, 4, by = 0.01)) %&gt;%\n  mutate(y = dnorm(x, mean = 0, sd = 1))\n## qnorm(0.975)までのデータ\ndf2 &lt;- data.frame(x = seq(from = -4, qnorm(prob), by = 0.01)) %&gt;%\n  mutate(y = dnorm(x, mean = 0, sd = 1))\n## データセットの違いに注意\nggplot() +\n  geom_line(data = df1, aes(x = x, y = y)) +\n  geom_ribbon(data = df2, aes(x = x, y = y, ymin = 0, ymax = y), fill = \"blue\", alpha = 0.3) +\n  ## 以下装飾\n  geom_segment(\n    aes(x = qnorm(prob), y = dnorm(qnorm(prob)), xend = qnorm(prob), yend = 0),\n    arrow = arrow(length = unit(0.2, \"cm\")), color = \"red\"\n  )\n\n\n\n\n\n\n\n\nd,p,q,rといった頭の文字は，他の確率分布関数にも付く。では次にrについて説明しよう。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#乱数",
+    "href": "chapter06.html#乱数",
+    "title": "6  確率とシミュレーション",
+    "section": "6.3 乱数",
+    "text": "6.3 乱数\n乱数とは何であるかを説明するのは，「ランダムである(確率変数である)とは如何なることか」を説明するのと同じように難しい。 カンタンに説明するなら，規則性のない数列という意味である。 しかし計算機はアルゴリズムに沿って正しく数値を計算するものだから，ランダムに，規則性がない数字を示すということは厳密にはあり得ない。 計算機が出す乱数は，乱数生成アルゴリズムに沿って出される数字であり，ランダムに見えて実は規則性があるので，疑似乱数というのが正しい。\nとはいえ，人間が適当な数字を思いつきで誦じていく3よりは，よほど規則性がない数列を出すので，疑似的とはいえ十分に役に立つ。 たとえばアプリなどで「ガチャ」を引くというのは，内部で乱数によって数値を出し，それに基づいてあたり・ハズレ等の判定をしている。他にも，RPGなどで攻撃する時に一定の確率で失敗するとか，一定の確率で「会心の一撃」を出すというのも同様である。ここで大事なのは，そうしたゲームへの実装において規則性のない数字に基づくプログラムにしたとしても，その統計的な性質，すなわち実現値の出現確率はある程度制御したいのである。\nそこで，ある確率分布に基づく乱数を生成したい，ということになる。幸いにして，一様乱数(全ての実現値が等しい確率で生じる)を関数で変換することで，正規分布ほか様々な確率分布に従う乱数を作ることができる。Rにはその基本関数として幾つかの確率分布に従う乱数が実装されている。たとえば次のコードは，平均50，SD10の正規分布に従う乱数を10個出現させるものである。\n\nrnorm(n = 10, mean = 50, sd = 10)\n\n [1] 45.73432 44.59643 56.61568 56.73014 50.34092 49.30145 45.83842 40.88988\n [9] 47.08457 52.86301\n\n\nたとえば諸君が心理統計の練習問題を作ろうとして，適当な数列が欲しければこのようにすれば良いかもしれない。しかし，同じ問題をもう一度作ろうとすると，乱数なのでまた違う数字が出てしまう。\n\nrnorm(n = 10, mean = 50, sd = 10)\n\n [1] 54.08902 40.72370 59.19875 70.30249 58.54884 36.97392 39.37709 55.88229\n [9] 59.34821 59.59984\n\n\n疑似乱数に過ぎないのだから，再現性のある乱数を生じさせたいと思うかもしれない。そのような場合は，set.seed関数を使う。疑似乱数は内部の乱数生成の種(seed)から計算して作られているため，その数字を固定してやると同じ乱数が再現できる。\n\n# seedを指定\nset.seed(12345)\nrnorm(n = 3)\n\n[1]  0.5855288  0.7094660 -0.1093033\n\n# 同じseedを再設定\nset.seed(12345)\nrnorm(n = 3)\n\n[1]  0.5855288  0.7094660 -0.1093033\n\n\n\n6.3.1 乱数のつかいかた\n乱数の使い方のひとつは，先に述べたように，プログラムが偶然による振る舞いをしているように仕掛けたいとき，ということだろう。\n実は他にも使い道がある。それは確率分布を具体的に知りたいときである。次に示すのは，標準正規分布から\\(n = 10,100,1000,10000\\)とした時のヒストグラムである。\n\nrN10 &lt;- rnorm(10)\nrN100 &lt;- rnorm(100)\nrN1000 &lt;- rnorm(1000)\nrN10000 &lt;- rnorm(10000)\n\ndata.frame(\n  N = c(\n    rep(1, 10), rep(2, 100),\n    rep(3, 1000), rep(4, 10000)\n  ),\n  X = c(rN10, rN100, rN1000, rN10000)\n) %&gt;%\n  mutate(N = as.factor(N)) %&gt;%\n  ggplot(aes(x = X, fill = N)) +\n  # 縦軸を相対頻度に\n  geom_histogram(aes(y = ..density..)) +\n  facet_wrap(~N)\n\nWarning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.\nℹ Please use `after_stat(density)` instead.\n\n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.\n\n\n\n\n\n\n\n\n\nこれを見ると，最初の10個程度のヒストグラムは不規則な分布に見えるが，100,1000と増えるに従って徐々に正規分布の理論的形状に近似していくところがみて取れる。\nRにはポアソン分布や二項分布などに加え，統計に馴染みの深いt分布やF分布，\\(\\chi^2\\)分布などの確率分布関数も実装されている。これらの分布はパラメタの値を聞いてもイメージしにくいところがあるかもしれないが，そのような時はパラメタを指定した上で乱数を大量に生成し，そのヒストグラムを描けば確率分布関数の形が眼に見えてくるため，より具体的に理解できるだろう。\n実際，ベイズ統計学が昨今隆盛している一つの理由は，計算機科学の貢献によるところが大きい。マルコフ連鎖モンテカルロ法(MCMC法)と呼ばれる乱数発生技術は，明確な名前を持たないモデルによって作られる事後分布からでも，乱数を生成できる技術である。この分布は解析的に示すことは困難であるが，そこから乱数を生成し，そのヒストグラムを見ることで，形状を可視化できるのである。\nまた，この乱数利用法の利点は可視化だけではない。標準正規分布において，ある範囲の面積(=確率)が知りたいとする。たとえば，確率点-1.5から+1.5までの範囲の面積を求めたいとしよう。正規分布の数式はわかっているので，次のようにすればその面積は求められる。 \\[ p = \\int_{-1.5}^{+1.5} \\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}} dx \\]\nもちろん我々はpnorm関数を知っているので，次のようにして数値解を得ることができる。\n\npnorm(+1.5, mean = 0, sd = 1) - pnorm(-1.5, mean = 0, sd = 1)\n\n[1] 0.8663856\n\n\n同様のことは乱数を使って，次のように近似解を得ることができる。\n\nx &lt;- rnorm(100000, mean = 0, sd = 1)\ndf &lt;- data.frame(X = x) %&gt;%\n  # 該当する範囲かどうかを判定する変数を作る\n  mutate(FLG = ifelse(X &gt; -1.5 & X &lt; 1.5, 1, 2)) %&gt;%\n  mutate(FLG = factor(FLG, labels = c(\"in\", \"out\")))\n## 計算\ndf %&gt;%\n  group_by(FLG) %&gt;%\n  summarise(n = n()) %&gt;%\n  mutate(prob = n / 100000)\n\n# A tibble: 2 × 3\n  FLG       n  prob\n  &lt;fct&gt; &lt;int&gt; &lt;dbl&gt;\n1 in    86642 0.866\n2 out   13358 0.134\n\n\nここでは乱数を10,000個生成し，指定の範囲内に入るかどうか(入れば1,入らなければ2)を示すfactor型変数FLGを作った。この変数ごとに群分けして数を数え，総数で割ることで相対度数にする。確率は全体の中に占める相対的な面積の割合であり，今回当該領域の値が0.866とpnorm関数で算出した解とほぼ同等の値変えられている。\nなお，次のようにすれば範囲の可視化も容易い。\n\n## 可視化\ndf %&gt;%\n  ggplot(aes(x = X, fill = FLG)) +\n  geom_histogram(binwidth = 0.01)\n\n\n\n\n\n\n\n\n繰り返すが，確率分布の形がイメージできなかったり，解析的にその式を書き表すことが困難であった場合でも，具体的な数値にすることでヒストグラムで可視化でき，また近似的に確率計算ができている。\nあくまでも近似に過ぎないのでその精度が信用できない，というひとは生成する乱数の数を10倍，100倍にすれば良い。昨今の計算機の計算能力において，その程度の増加はさほど計算料の負担にならない。複雑な積分計算が記述統計量(数え上げ)の問題になる点で，具体的に理解できるという利点は大きい。\nさらに思いを馳せてほしいのだが，心理学者は心理学実験や調査によって，データを得る。しかしそれらは個人差や誤差を考え，確率変数だとされている。目の前の数件から数十件のデータであっても，正規分布に従うと仮定して統計的処理をおこなう。これは「乱数によって生成したデータ」に対して行うとしても本質的には同じである。すなわち，調査実験を行う前に，乱数によってシミュレーションしておくことができるのである。調査実験の本番一発勝負をする前に，自分の取ろうとしているデータがどのような性質を持ちうるかを具体的に確かめておくことは重要な試みであろう。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#練習問題乱数を用いて",
+    "href": "chapter06.html#練習問題乱数を用いて",
+    "title": "6  確率とシミュレーション",
+    "section": "6.4 練習問題；乱数を用いて",
+    "text": "6.4 練習問題；乱数を用いて\n正規乱数を用いて，次の値を近似計算してみよう。なお設定や解析的に算出した「真の値」と少数以下2位までの精度が得られるように工夫しよう。\n\n平均100,標準偏差8の正規分布の期待値。なお連続確率変数の期待値は次の式で表されます。\\[E[X] = \\int_{-\\infty}^{\\infty} x f(x) \\, dx\\] ここで\\(x\\)は確率変数を表し，\\(f(x)\\)は確率密度関数であり，確率密度関数の全定義域を積分することで得られます。正規分布の期待値は，平均パラメータに一致しますので，今回の真値は設定した\\(100\\)になります。\n平均100,標準偏差3の正規分布の分散を計算してみよう。なお連続確率変数の分散は次の式で表されます。\\[\\sigma^2 = \\int_{-\\infty}^{\\infty} (x - \\mu)^2 f(x) \\, dx\\] ここで\\(\\mu\\)は確率変数の期待値であり，正規分布の分散は，標準偏差パラメータの二乗に一致しますので，今回の真値は\\(3^2 = 9\\)です。\n平均65，標準偏差10の正規分布に従う確率変数\\(X\\)の，\\(90 &lt; X &lt; 110\\)の面積。解析的に計算した結果は次の通りです。\n\n\npnorm(110, mean = 65, sd = 10) - pnorm(90, mean = 65, sd = 10)\n\n[1] 0.006206268\n\n\n\n平均10，標準偏差10の正規分布において，実現値が7以上になる確率。解析的に計算した結果は次の通りです。\n\n\n1 - pnorm(7, mean = 10, sd = 10)\n\n[1] 0.6179114\n\n\n\n確率変数\\(X,Y\\)があります。\\(X\\)は平均10,SD10の正規分布，\\(Y\\)は平均5，SD8の正規分布に従うものとします。ここで，\\(X\\)と\\(Y\\)が独立であるとしたとき，和\\(Z=X+Y\\)の平均と分散が，もとの\\(X,Y\\)の平均の和，分散の和になっていることを，乱数を使って確認してください。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#母集団と標本",
+    "href": "chapter06.html#母集団と標本",
+    "title": "6  確率とシミュレーション",
+    "section": "6.5 母集団と標本",
+    "text": "6.5 母集団と標本\nここまで確率分布の性質を見るために乱数を利用する方法を見てきた。ここからは，推測統計学における確率分布の利用を考える。推測統計では，知りたい集団全体のことを母集団population，そこから得られた一部のデータを標本sampleと呼ぶのであった。標本の統計量を使って，母集団の性質を推論するのが推測統計/統計的推測である。母集団の特徴を表す統計量は母数parameterと呼ばれ，母平均，母分散など「母」の字をつけて母集団の情報であることを示す。同様に，標本の平均や分散も計算できるが，この時は標本平均，標本分散など「標本」をつけて明示的に違いを強調することもある。\n乱数を使って具体的な例で見てみよう。ここに100人から構成される村があったとする。この村の人々の身長を測ってデータにしたとしよう。100個の適当な数字を考えるのは面倒なので，乱数で生成してこれに代える。\n\nset.seed(12345)\n# 100人分の身長データをつくる。小数点以下2桁を丸めた\nPo &lt;- rnorm(100, mean = 150, sd = 10) %&gt;% round(2)\nprint(Po)\n\n  [1] 155.86 157.09 148.91 145.47 156.06 131.82 156.30 147.24 147.16 140.81\n [11] 148.84 168.17 153.71 155.20 142.49 158.17 141.14 146.68 161.21 152.99\n [21] 157.80 164.56 143.56 134.47 134.02 168.05 145.18 156.20 156.12 148.38\n [31] 158.12 171.97 170.49 166.32 152.54 154.91 146.76 133.38 167.68 150.26\n [41] 161.29 126.20 139.40 159.37 158.54 164.61 135.87 155.67 155.83 136.93\n [51] 144.60 169.48 150.54 153.52 143.29 152.78 156.91 158.24 171.45 126.53\n [61] 151.50 136.57 155.53 165.90 144.13 131.68 158.88 165.93 155.17 137.04\n [71] 150.55 142.15 139.51 173.31 164.03 159.43 158.26 141.88 154.76 160.21\n [81] 156.45 160.43 146.96 174.77 159.71 168.67 156.72 146.92 155.37 158.25\n [91] 140.36 141.45 168.87 146.08 140.19 156.87 144.95 171.58 144.00 143.05\n\n\nこの100人の村が母集団なので，母平均や母分散は次のようにして計算できる。\n\nM &lt;- mean(Po)\nV &lt;- mean((Po - M)^2)\n# 母平均\nprint(M)\n\n[1] 152.4521\n\n# 母分散\nprint(V)\n\n[1] 123.0206\n\n\nさて，この村からランダムに10人の標本を得たとしよう。ベクトルの前から10人でも良いが，Rにはサンプリングをする関数sampleがあるのでこれを活用する。\n\ns1 &lt;- sample(Po, size = 10)\ns1\n\n [1] 164.61 155.86 136.93 143.29 160.43 168.87 151.50 155.17 153.71 135.87\n\n\nこのs1が手元のデータである。心理学の実験でデータを得る，というのはこのように全体に対してごく一部だけ取り出したものになる。このサンプルの平均や分散は標本平均，標本分散である。\n\nm1 &lt;- mean(s1)\nv1 &lt;- mean((s1 - mean(s1))^2)\n# 標本平均\nprint(m1)\n\n[1] 152.624\n\n# 標本分散\nprint(v1)\n\n[1] 110.2049\n\n\n今回，母平均は152.4521で標本平均は152.624である。実際に知りうる値は標本の値だけなので，標本平均152.624を得たら，母平均も152.624に近い値だろうな，と推測するのはおかしなことではないだろう。しかし標本平均は，標本の取り方によって毎回変わるものである。試しにもう一つ，標本をとったとしよう。\n\ns2 &lt;- sample(Po, size = 10)\ns2\n\n [1] 154.76 135.87 143.05 171.45 136.57 170.49 156.87 158.25 155.17 155.20\n\nm2 &lt;- mean(s2)\nv2 &lt;- mean((s2 - mean(s2))^2)\n# 標本平均その2\nprint(m2)\n\n[1] 153.768\n\n\n今回の標本平均は153.768になった。このデータが得られたら，諸君は母平均が「153.768に近い値だろうな」と推測するに違いない。標本1の152.624と標本2の153.768を比べると，前者の方が正解152.4521に近い(その差はそれぞれ-0.1719と-1.3159である)。つまり，標本の取り方によっては当たり外れがあるということである。データをとって研究していても，仮説を支持する結果なのかそうでないのかは，こうした確率的揺らぎの下にある。\nつまり，標本は確率変数であり，標本統計量も確率的に変わりうるものである。標本統計量でもって母数を推定するときは，標本統計量の性質や標本統計量が従う確率分布を知っておく必要がある。以下では母数の推定に望ましい性質を持つ推定量の望ましい性質をみていこう。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#一致性",
+    "href": "chapter06.html#一致性",
+    "title": "6  確率とシミュレーション",
+    "section": "6.6 一致性",
+    "text": "6.6 一致性\n最も単純には，標本統計量が母数に近ければ近いほど，できれば一致してくれれば喜ばしい。先ほどの例では100人の村から10人しか取り出さなかったが，もし20人，30人とサンプルサイズが大きくなると母数に近づいていくことが予想できる。この性質のことを一致性consistencyといい，推定量が持っていてほしい性質のひとつである。幸い，標本平均は母平均に対して一致性を持っている。\nこのことを確認してみよう。サンプルサイズを様々に変えて計算してみれば良い。例として，平均50,SD10の正規分布からサンプルサイズを2から1000まで増やしていくことにしよう。サンプルを取り出すことを，乱数生成に置き換えてその平均を計算していくこととする。\n\nset.seed(12345)\nsample_size &lt;- seq(from = 2, to = 1000, by = 10)\n# 平均値を格納するオブジェクトを初期化\nsample_mean &lt;- rep(0, length(sample_size))\n# 反復\nfor (i in 1:length(sample_size)) {\n  sample_mean[i] &lt;- rnorm(sample_size[i], mean = 50, sd = 10) %&gt;%\n    mean()\n}\n\n# 可視化\ndata.frame(size = sample_size, M = sample_mean) %&gt;%\n  ggplot(aes(x = size, y = M)) +\n  geom_point() +\n  geom_line() +\n  geom_hline(yintercept = 50, color = \"red\")\n\n\n\n\n\n\n\n\nこのようにサンプルサイズが増えていくにつれて，真値の50に近づいていくことが見て取れる。母集団分布の形状やパラメータ，サンプルサイズなどを変えて確認してみよう。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#不偏性",
+    "href": "chapter06.html#不偏性",
+    "title": "6  確率とシミュレーション",
+    "section": "6.7 不偏性",
+    "text": "6.7 不偏性\n推定量は確率変数であり，確率分布でその性質を記述することができる。標本統計量の従う確率分布のことを標本分布と呼ぶが，標本分布の確率密度関数がわかっているなら，その期待値や分散も計算できるだろう。推定量の期待値(平均)が母数に一致することも，推定量の望ましい性質の一つであり，この性質のことを不偏性unbiasednessという。\n心理統計を学ぶ時に初学者を苛立たせるステップの一つとして，分散の計算の時にサンプルサイズ\\(n\\)ではなく\\(n-1\\)で割る，という操作がある。これは不偏分散といって標本分散とは違うのだが，前者が不偏性を持っているのに対し，後者がそうでないからである。これを乱数を使って確認してみよう。\n平均50，SD10(母分散\\(10^2=100\\))の母集団から，サンプルサイズ\\(n=20\\)の標本を繰り返し得る。これはサイズ20の乱数生成で行う。各標本に対して標本分散と不偏分散を計算し，その平均(標本統計量の期待値)を計算してみよう。\n\niter &lt;- 5000\nvars &lt;- rep(0, iter)\nunbiased_vars &lt;- rep(0, iter)\n\n## 乱数の生成と計算\nset.seed(12345)\nfor (i in 1:iter) {\n  sample &lt;- rnorm(n = 20, mean = 50, sd = 10)\n  vars[i] &lt;- mean((sample - mean(sample))^2)\n  unbiased_vars[i] &lt;- var(sample)\n}\n\n## 期待値\nmean(vars)\n\n[1] 95.08531\n\nmean(unbiased_vars)\n\n[1] 100.0898\n\n\n標本分散を計算したオブジェクトvarsの平均すなわち期待値は95.0853144であり，設定した値(真値)の100からは幾分はなれている。これに対して，Rの埋め込み関数であるvarをつかった不偏分散の平均すなわち期待値は100.0898047であり，母分散の推定量としてはこちらの方が好ましいことがわかる。このように標本分散にはバイアスが生じることがわかっているので，あらかじめバイアスを補正するために元の計算式を修正していたのである。この説明で，苛立ちを感じていた人の溜飲が下がればよいのだが。\n他にも推定量の望ましい性質として有効性efficacyがあるが，詳細は 小杉, 紀ノ定, and 清水 (2023) を参照してほしい。この本には正規分布以外の例や，相関係数など他の標本統計量の例なども載っているが，いずれも乱数生成による近似で理解を進めるものである。諸君も数理統計的な説明に疲れたなら，ぜひ参考にしてもらいたい。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#信頼区間",
+    "href": "chapter06.html#信頼区間",
+    "title": "6  確率とシミュレーション",
+    "section": "6.8 信頼区間",
+    "text": "6.8 信頼区間\n標本統計量は確率変数であり，標本を取るたびに変わる。標本を取るときに入る確率的ゆらぎによるからで，標本平均は一致性，不偏性という望ましい性質を持ってはいるが，標本平均\\(=\\)母平均とはならない。\n標本平均という確率変数の実現値一点でもって，母平均を推測することは，母平均を推測する上ではほぼ確実に外れるギャンブルである。そこで母数に対してある幅でもって推定することを考えよう。\nたとえば平均50，標準偏差10の標準正規分布を母集団分布とし，サンプルサイズ10の標本をとり，その標本平均を母平均の推定値としよう(点推定)。同時に，その推定値に少し幅を持たせ，たとえば標本平均\\(\\pm 5\\)の区間推定をしたとする。この時，真値\\(0\\)を正しく推測できる確率を，反復乱数生成のシミュレーションで確かめてみよう。\n\niter &lt;- 10000\nn &lt;- 10\nmu &lt;- 50\nSD &lt;- 10\n\n# 平均値を格納しておくオブジェクト\nm &lt;- rep(0, iter)\n\nset.seed(12345)\nfor (i in 1:iter) {\n  # サンプリングし，標本統計量を保存\n  sample &lt;- rnorm(n, mean = mu, sd = SD)\n  m[i] &lt;- mean(sample)\n}\n\nresult.df &lt;- data.frame(m = m) %&gt;%\n  # 推定が一致するとTRUE,外れるとFALSEになる変数を作る\n  mutate(\n    point_estimation = ifelse(m == mu, TRUE, FALSE),\n    interval_estimation = ifelse(m - 5 &lt;= mu & mu &lt;= m + 5, TRUE, FALSE)\n  ) %&gt;%\n  summarise(\n    n1 = sum(point_estimation),\n    n2 = sum(interval_estimation),\n    prob1 = mean(point_estimation),\n    prob2 = mean(interval_estimation)\n  ) %&gt;%\n  print()\n\n  n1   n2 prob1 prob2\n1  0 8880     0 0.888\n\n\n結果からわかるように，点推定値は一度も正しく母数を当てていない。これは当然で，実数でやる以上小数点以下どこかでズレてしまうことがあるからで，精度を無視すると一致することはあり得ないのである。これに対して幅を持った予測の場合は，10^{4}回の試行のうち8880回はその区間内に真値を含んでおり，その正答率は88.8%である。\n区間推定において正答率を100%にするためには，その区間を無限に広げなければならない(母平均の推定の場合)。これは実質的に何も推定していないことに等しいので，5%程度の失敗を認めよう，95% の正答率で区間推定しようというのが習わしになっている。この区間のことを95%の信頼区間confidence intervalという。\n\n6.8.1 正規母集団分布の母分散が明らかな場合の信頼区間\n上のシミュレーションを応用して，区間推定が正当する確率が95%になるまで区間を調整して行ってもよいが，さすがにそれは面倒なので，推測統計学によって明らかになっている性質を紹介しよう。\n母集団が正規分布に従い，その母平均が\\(\\mu\\)，母分散が\\(\\sigma^2\\)であることがわかっている場合，標本平均の従う分布は平均\\(\\mu\\), 分散\\(\\frac{\\sigma^2}{n}\\)(標準偏差\\(\\frac{\\sigma}{\\sqrt{n}})\\)の正規分布であることがわかっている。\n標準正規分布の95%区間は，次の通り約\\(\\pm 1.96\\)である。\n\n# 両端から2.5%ずつ取り除くと\nqnorm(0.025)\n\n[1] -1.959964\n\nqnorm(0.975)\n\n[1] 1.959964\n\n\nこれらを合わせると，標本平均が\\(\\bar{X}\\)であったとき，95%信頼区間は標準偏差を1.96倍して，次のようになる。\n\\[ \\bar{X} - 1.96 \\frac{\\sigma}{\\sqrt{n}} \\le \\mu \\le \\bar{X} + 1.96 \\frac{\\sigma}{\\sqrt{n}} \\]\n先ほどの数値例を応用して，これを確かめてみよう。95％ちかい割合で，区間内に真値が含んでいることがわかる。\n\ninterval &lt;- 1.96 * SD / sqrt(n)\nresult.df2 &lt;- data.frame(m = m) %&gt;%\n  # 推定が一致するとTRUE,外れるとFALSEになる変数を作る\n  mutate(\n    interval_estimation = ifelse(m - interval &lt;= mu & mu &lt;= m + interval, TRUE, FALSE)\n  ) %&gt;%\n  summarise(\n    prob = mean(interval_estimation)\n  ) %&gt;%\n  print()\n\n    prob\n1 0.9498\n\n\n\n\n6.8.2 正規母集団分布の母分散が不明な場合の信頼区間\n先ほどの例では母分散がわかっている場合の例であったが，母平均や母分散がわかっていれば推測する必要はないわけで，実践的には母分散がわからない場合の推定が必要になってくる。幸いにしてそのような場合，すなわち母分散を不偏分散(標本統計量)で置き換えた場合は，標本平均が自由度\\(n-1\\)のt分布に従うことがわかっている。(詳細は 小杉, 紀ノ定, and 清水 (2023) を参照) ただその場合，標準正規分布のように95%区間が\\(\\pm 1.96\\)に限らず，サンプルサイズに応じてt分布の形が変わるから，それを考慮して以下の式で信頼区間を算出する。 \\[ \\bar{X} + T_{0.025}\\frac{U}{\\sqrt{n}} \\le \\mu \\le \\bar{X} + T_{0.975}\\frac{U}{\\sqrt{n}} \\]\nここで\\(T_{0.025}\\)はt分布の2.5パーセンタイル，\\(T_{0.975}\\)は97.5パーセンタイルを指す。t分布は(平均が0であれば)左右対称なので，\\(T_{0.025}=-T_{0.975}\\)と考えても良い。また\\(U^2\\)は不偏分散である(\\(U\\)はその平方根)。\nこれも乱数による近似計算で確認しておこう。同じく95％ちかい割合で，区間内に真値が含んでいることがわかる。\n\n# シミュレーションの設定\niter &lt;- 10000\nn &lt;- 10\nmu &lt;- 50\nSD &lt;- 10\n\n# 平均値を格納しておくオブジェクト\nm &lt;- rep(0, iter)\ninterval &lt;- rep(0, iter)\n\nset.seed(12345)\nfor (i in 1:iter) {\n  # サンプリングし，標本統計量を保存\n  sample &lt;- rnorm(n, mean = mu, sd = SD)\n  m[i] &lt;- mean(sample)\n  U &lt;- sqrt(var(sample)) # sd(sample)でも同じ\n  interval[i] &lt;- qt(p = 0.975, df = n - 1) * U / sqrt(n)\n}\n\nresult.df &lt;- data.frame(m = m, interval = interval) %&gt;%\n  # 推定が一致するとTRUE,外れるとFALSEになる変数を作る\n  mutate(\n    interval_estimation = ifelse(m - interval &lt;= mu & mu &lt;= m + interval, TRUE, FALSE)\n  ) %&gt;%\n  summarise(\n    prob = mean(interval_estimation)\n  ) %&gt;%\n  print()\n\n    prob\n1 0.9482",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#練習問題推定量と区間推定",
+    "href": "chapter06.html#練習問題推定量と区間推定",
+    "title": "6  確率とシミュレーション",
+    "section": "6.9 練習問題；推定量と区間推定",
+    "text": "6.9 練習問題；推定量と区間推定\n\n算術平均\\(M = \\frac{1}{n}\\sum x_i\\)が一致推定量であることが示されましたが，調和平均\\(HM = \\frac{n}{\\sum \\frac{1}{x_i}}\\)や幾何平均\\(GM = (\\prod x_i)^{\\frac{1}{n}} = \\exp(\\frac{1}{n}\\sum \\log(x_i)))\\)はどうでしょうか。シミュレーションで確かめてみましょう。\nサンプルサイズ\\(n\\)が大きくなるほど，標本平均が母平均に近づくという性質は正規分布以外でも成立するでしょうか。自由度\\(\\nu = 3\\)のt分布を使って，シミュレーションで確認してみましょう。なおt分布の乱数はrt()で生成でき，非心度パラメータncpを指定しなければその平均は0です。\nt分布の自由度\\(\\nu\\)が極めて大きい時は，標準正規分布に一致することがわかっています。rt()関数を使って自由度が10,50,100のときの乱数を1000個生成し，ヒストグラムを書いてその形状を確認しましょう。また乱数の平均と標本標準偏差を計算し，標準正規分布に近づくことを確認しましょう。\n平均が50，標準偏差が10の正規分布から1000個の乱数を生成し，その標本平均の95%信頼区間を計算してください。\n平均が100，標準偏差が15の正規分布から抽出された標本について，標本サイズを10，100，1000と変えたときの標本平均の95%信頼区間の幅を比較してください。\n\n\n\n\n\n佐藤坦. 1994. はじめての確率論: 測度から確率へ. 共立出版.\n\n\n吉田伸生. 2021. 確率の基礎から統計へ. 新装版. 日本評論社.\n\n\n小杉考司, 紀ノ定保礼, and 清水裕士. 2023. 数値シミュレーションで読み解く統計のしくみ〜Rでためしてわかる心理統計. 技術評論社.\n\n\n平岡和幸, and 堀玄. 2009. プログラミングのための確率統計. オーム社. http://amazon.co.jp/o/ASIN/4274067750/.\n\n\n河野敬雄. 1999. 確率概論. 京都大学学術出版会.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter06.html#footnotes",
+    "href": "chapter06.html#footnotes",
+    "title": "6  確率とシミュレーション",
+    "section": "",
+    "text": "詳しくは 吉田 (2021) , 河野 (1999), 佐藤 (1994) などを参照のこと。↩︎\n前者の解釈は高校までの数学で学ぶ確率であり，頻度主義的確率と呼ばれることがある。一方後者の解釈は，降水確率X%のように日常でも使うものであり，主観確率と呼ばれることがある。こうした解釈の違いを，主義主張の対立であって数学的ではない，と批判する向きもあるが，実際コルモゴロフの公理はどちらの立場でも成立するように整えられており，筆者個人的にはユーザが理解しやすく計算できればどちらでも良いと考えている。↩︎\n厳密なエビデンスは示せないが，俗に「嘘のゴサンパチ」というように人間が適当に数字を述べると5,3,8が使われる率がチャンスレベルより高いと言われている。↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter08.html",
+    "href": "chapter08.html",
+    "title": "8  平均値差の検定",
+    "section": "",
+    "text": "8.1 一標本検定\nまず配置標本検定の例から始める。母平均がわかっている，あるいは理論的に仮定される特定の値に対して，標本平均が統計的に有意に異なっていると言って良いかどうかの判断をするときに用いる。 たとえば7件法のデータを取ったときに，ある項目の平均が中点4より有意に離れていると言って良いかどうか，といった判定をするときに用いる。かりに，サンプルサイズ10で7件法のデータが得られたとしよう。ここでは平均4,SD1の正規乱数を10件生成することで表現する。実際にはこの値を，人に対する尺度カテゴリへの反応として得ているはずである。\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.0     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nset.seed(17)\nn &lt;- 10\nmu &lt;- 4\nX &lt;- rnorm(n, mean = mu, sd = 1)\nprint(X)\n\n [1] 2.984991 3.920363 3.767013 3.182732 4.772091 3.834388 4.972874 5.716534\n [9] 4.255237 4.366581\n今回，標本平均は4.177であり，これより極端な値が\\(\\mu = 4\\)の母集団から得られるかどうかを検定する。帰無仮説検定の手順にそって進めていくと，以下のようになる。\nこのあと，検定統計量の計算と判定である。これをRはt.test関数で一気に処理できる。\nresult &lt;- t.test(X, mu = mu)\nprint(result)\n\n\n    One Sample t-test\n\ndata:  X\nt = 0.6776, df = 9, p-value = 0.5151\nalternative hypothesis: true mean is not equal to 4\n95 percent confidence interval:\n 3.585430 4.769131\nsample estimates:\nmean of x \n 4.177281\n結果として，今回の検定統計量の実現値は0.678であり，自由度9のt分布からこれ以上の値が出てくる確率は，0.515であることがわかる。これは5%水準と見比べてより大きいので，レアケースではないと判断できる。つまり，母平均4の正規母集団から，4.177の標本平均が得られることはそれほど珍しいものではなく，統計的に有意に異なっていると判断するには及ばない，ということである。\nレポートなどに記載するときは，これら実現値やp値を踏まえて「\\(t(9)=0.66776,p=0.5151 ,n.s.\\)」などとする。ここでn.s.はnot significantの略である。\nさてこの例では，母平均4の正規乱数を生成し，その平均が4と異なるとはいえない，と結論づけた。これは一見，当たり前のことのようであり，無意味な行為におもえるかもしれない。しかし次の例を見てみよう。\nn &lt;- 3\nmu &lt;- 4\nX &lt;- rnorm(n, mean = mu, sd = 1)\nmean(X) %&gt;%\n  round(3) %&gt;%\n  print()\n\n[1] 5.04\n\nresult &lt;- t.test(X, mu = mu)\nprint(result)\n\n\n    One Sample t-test\n\ndata:  X\nt = 5.1723, df = 2, p-value = 0.03541\nalternative hypothesis: true mean is not equal to 4\n95 percent confidence interval:\n 4.174825 5.904710\nsample estimates:\nmean of x \n 5.039768\nここではサンプルサイズ\\(n=3\\)であり，標本平均が5.04であった。このときt値は5%臨界値を上回っており，「母平均4のところから得られる値にしては極端」であるから，統計的に有意に異なる，と判断することになる。乱数生成時は平均を確かに4に設定したが，母平均から取り出したごく一部が，そこから大きく離れてしまうことはあり得るのである。",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter08.html#一標本検定",
+    "href": "chapter08.html#一標本検定",
+    "title": "8  平均値差の検定",
+    "section": "",
+    "text": "帰無仮説は母平均が理論的な値(ここでは尺度の中点4)であること，すなわち\\(\\mu =4\\)であり，対立仮説は\\(\\mu \\neq 4\\) である。\n検定統計量は，正規母集団から得られる標本平均が従う標本分布であり，母分散が未知の場合の区間推定に用いたT統計量になる。\n判断基準は心理学の慣例に沿って5%とする。",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter08.html#二標本検定",
+    "href": "chapter08.html#二標本検定",
+    "title": "8  平均値差の検定",
+    "section": "8.2 二標本検定",
+    "text": "8.2 二標本検定\n続いて二標本の検定について考えよう。実験群と統制群のように，無作為割り当てをすることで平均因果効果をみる際に行われるのが，この検定である。帰無仮説は「群間差はない」であり，対立仮説はその否定である。また，正規母集団からの標本を仮定するので，検定統計量はここでもt分布に従う値になる。帰無仮説検定の手順に沿って，改めて確認しておこう。\n\n帰無仮説は「二群の母平均に差がない」である。二群の母平均をそれぞれ\\(\\mu_1,\\mu_2\\)とすると，帰無仮説は\\(\\mu_1 = \\mu_2\\)，あるいは\\(\\mu_1 - \\mu_2 = 0\\)と表される。対立仮説は\\(\\mu_1 \\neq \\mu_2\\)あるいは\\(\\mu_1-\\mu_2 \\neq 0\\)である。\n検定統計量は，正規母集団から得られる標本平均が従う標本分布であり，母分散が未知の場合の区間推定に用いたT統計量になる。\n判断基準は心理学の慣例に沿って5%とする。\n\nこれを検証するために，サンプルデータを乱数で生成しよう。 まず，各群のサンプルサイズをn1,n2とする。ここでは話を簡単にするため，サンプルサイズは両群ともに10とした。つぎに両群の母平均だが，群1の母平均を\\(\\mu_1\\)，群2の母平均を\\(\\mu_2 = \\mu_1 + d\\)で表現した。このdは差分であり，これが\\(d=0\\)であれば母平均が等しいこと，\\(d \\neq 0\\)であれば母平均が異なることになる。最後に両群の母SDを設定した。\nここでの検定は，この差分\\(d\\)が母平均0の母集団から得られたと判断して良いかどうか，という形で行われる。検定統計量\\(T\\)は，次式で算出されるものである。\n\\[ T = \\frac{d - \\mu_0}{\\sqrt{U^2_p/\\frac{n_1n_2}{n_1+n_2}}}\\]\nここで\\(U^2_p\\)はプールされた不偏分散と呼ばれ，二群を合わせて計算された全体の母分散推定量である。各群の標本分散をそれぞれ\\(S^2_1, S^2_2\\)とすると，次式で算出される。\n\\[ U^2_p = \\frac{n_1S^2_1+ n_2S^2_2}{n_1 + n_2 -2} \\]\nこれらの式はつまり，サンプルサイズの違いを考慮するため，一旦両群の標本分散に各サンプルサイズを掛け合わせ，プールした全体のサンプルサイズから各々\\(-1\\)をすることで全体として不偏分散にしている。\nこれを踏まえて，具体的な数字で見ていこう。 その上で乱数でデータを生成し，その標本平均を確認した上で，t.test関数によって検定を行っている。\n\nn1 &lt;- 10\nn2 &lt;- 10\nmu1 &lt;- 4\nsigma &lt;- 1\nd &lt;- 1\nmu2 &lt;- mu1 + (sigma * d)\n\nset.seed(42)\nX1 &lt;- rnorm(n1, mean = mu1, sd = sigma)\nX2 &lt;- rnorm(n2, mean = mu2, sd = sigma)\n\nX1 %&gt;%\n  mean() %&gt;%\n  round(3) %&gt;%\n  print()\n\n[1] 4.547\n\nX2 %&gt;%\n  mean() %&gt;%\n  round(3) %&gt;%\n  print()\n\n[1] 4.837\n\nresult &lt;- t.test(X1, X2, var.equal = TRUE)\nprint(result)\n\n\n    Two Sample t-test\n\ndata:  X1 and X2\nt = -0.49924, df = 18, p-value = 0.6237\nalternative hypothesis: true difference in means is not equal to 0\n95 percent confidence interval:\n -1.506473  0.927980\nsample estimates:\nmean of x mean of y \n 4.547297  4.836543 \n\n\n今回の母平均は\\(\\mu_1 = 4, \\mu_2 = 4+1\\)にしているが，標本平均は4.547と4.837であり，標本上では大きな差が見られなかった。結果として，t値は0.4992369であり，自由度18のもとでのp値は0.6236593である。5%水準を上回る値であるから，結論としては対立仮説を採択するには至らない，差があるとはいえない，である。\n今回の設定では母平均に差があるはず(\\(4 \\neq 4 + 1\\))なのだから，これは誤った判断で，タイプ2エラーが生じているケースということになる。研究実践場面では，母平均やその差については知り得ないのだから，このような判断ミスが生じていたかどうかは分かり得ないことに留意しよう。\nなお，ここではわかりやすく2群であることを示すためにX1,X2と2つのオブジェクトを用意したが，実践的にはデータフレームの中で群わけを示す変数があり，formulaの形で次のように書くことが多いだろう。\n\ndataSet &lt;- data.frame(group = c(rep(1,n1),rep(2,n2)), value = c(X1,X2)) %&gt;% \n    mutate(group = as.factor(group))\nt.test(value ~ group, data = dataSet, var.equal = TRUE)\n\n\n    Two Sample t-test\n\ndata:  value by group\nt = -0.49924, df = 18, p-value = 0.6237\nalternative hypothesis: true difference in means between group 1 and group 2 is not equal to 0\n95 percent confidence interval:\n -1.506473  0.927980\nsample estimates:\nmean in group 1 mean in group 2 \n       4.547297        4.836543",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter08.html#二標本検定ウェルチの補正",
+    "href": "chapter08.html#二標本検定ウェルチの補正",
+    "title": "8  平均値差の検定",
+    "section": "8.3 二標本検定(ウェルチの補正)",
+    "text": "8.3 二標本検定(ウェルチの補正)\n先ほどのt.test関数には，var.equal = TRUEというオプションが追加されていた。これは2群の分散が等しいと仮定した場合の検定になる。t検定は歴史的にこちらが先に登場しているが，2群の分散が等しいかどうかはいきなり前提できるものでもない。等分散性の検定は，Levene検定を行うのが一般的であり，R においては，carパッケージやlawstat パッケージが対応する関数を持っている。ここではcarパッケージの leveneTest関数を用いる例を示す。\n\nlibrary(car)\n\n 要求されたパッケージ carData をロード中です \n\n\n\n 次のパッケージを付け加えます: 'car' \n\n\n 以下のオブジェクトは 'package:dplyr' からマスクされています:\n\n    recode\n\n\n 以下のオブジェクトは 'package:purrr' からマスクされています:\n\n    some\n\nleveneTest(value ~ group, data = dataSet, center = mean)\n\nLevene's Test for Homogeneity of Variance (center = mean)\n      Df F value Pr(&gt;F)\ngroup  1  2.9405 0.1035\n      18               \n\n\nこの結果を見ると，p値から明らかなように，2群の分散が等しいという帰無仮説が棄却できなかったので，等しいと考えてt検定に進むことができる。もしこれが棄却されてしまったら，2群の分散が等しいという帰無仮説が成り立たないのだから，等分散性の仮定を外す必要がある。実行は簡単で，var.equalをFALSEにすれば良い。\n\nresult2 &lt;- t.test(value ~ group, data = dataSet, var.equal = FALSE)\nprint(result2)\n\n\n    Welch Two Sample t-test\n\ndata:  value by group\nt = -0.49924, df = 13.421, p-value = 0.6257\nalternative hypothesis: true difference in means between group 1 and group 2 is not equal to 0\n95 percent confidence interval:\n -1.5369389  0.9584459\nsample estimates:\nmean in group 1 mean in group 2 \n       4.547297        4.836543 \n\n\nよく見ると，タイトルがWelch Two Sample t-testに変わっている。Welchの補正が入ったt検定という意味である。また自由度が実数()になっているが，このようにt分布の自由度を調整することで等分散性の仮定から逸脱した場合の補正となる。もちろん報告する際は「\\(t(\\) 13.421 \\()=\\) -0.499, \\(p=\\) 0.626」のように書くことになるから，自由度が実数であれば補正済みであると考えられるだろう。\nしかし，分散が等しいという仮定は，等しくない場合の特殊系であるから，最初からWelchの補正がはいった検定だけで十分である。このような考え方から，Rにおけるt.test 関数のデフォルトではvar.equal = FALSEとなっており，特段の指定をしなければ等分散性の仮定をしない。こちらの方が検定を重ねることがないので，より望ましい。",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter08.html#対応のある二標本検定",
+    "href": "chapter08.html#対応のある二標本検定",
+    "title": "8  平均値差の検定",
+    "section": "8.4 対応のある二標本検定",
+    "text": "8.4 対応のある二標本検定",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter08.html#レポートを書くような課題",
+    "href": "chapter08.html#レポートを書くような課題",
+    "title": "8  平均値差の検定",
+    "section": "8.5 レポートを書くような課題",
+    "text": "8.5 レポートを書くような課題",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter09.html",
+    "href": "chapter09.html",
+    "title": "9  多群の平均値差の検定",
+    "section": "",
+    "text": "9.1 分散分析の基礎",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>多群の平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter09.html#検定の多重性",
+    "href": "chapter09.html#検定の多重性",
+    "title": "9  多群の平均値差の検定",
+    "section": "9.2 検定の多重性",
+    "text": "9.2 検定の多重性",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>多群の平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter09.html#anova君を使う",
+    "href": "chapter09.html#anova君を使う",
+    "title": "9  多群の平均値差の検定",
+    "section": "9.3 ANOVA君を使う",
+    "text": "9.3 ANOVA君を使う",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>多群の平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter09.html#betweenデザイン",
+    "href": "chapter09.html#betweenデザイン",
+    "title": "9  多群の平均値差の検定",
+    "section": "9.4 Betweenデザイン",
+    "text": "9.4 Betweenデザイン",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>多群の平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter09.html#withinデザイン",
+    "href": "chapter09.html#withinデザイン",
+    "title": "9  多群の平均値差の検定",
+    "section": "9.5 Withinデザイン",
+    "text": "9.5 Withinデザイン",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>多群の平均値差の検定</span>"
+    ]
+  },
+  {
+    "objectID": "chapter10.html",
+    "href": "chapter10.html",
+    "title": "10  帰無仮説検定のシミュレーション",
+    "section": "",
+    "text": "10.1 統計的検定とQRPs",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>帰無仮説検定のシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter10.html#タイプ2エラー確率のコントールとサンプルサイズ設計",
+    "href": "chapter10.html#タイプ2エラー確率のコントールとサンプルサイズ設計",
+    "title": "10  帰無仮説検定のシミュレーション",
+    "section": "10.2 タイプ2エラー確率のコントールとサンプルサイズ設計",
+    "text": "10.2 タイプ2エラー確率のコントールとサンプルサイズ設計",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>帰無仮説検定のシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter10.html#サンプルサイズ設計の実践",
+    "href": "chapter10.html#サンプルサイズ設計の実践",
+    "title": "10  帰無仮説検定のシミュレーション",
+    "section": "10.3 サンプルサイズ設計の実践",
+    "text": "10.3 サンプルサイズ設計の実践\n\n10.3.1 一標本t検定\n\n\n10.3.2 二標本t検定\n\n\n10.3.3 相関係数のサンプルサイズ設計",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>帰無仮説検定のシミュレーション</span>"
+    ]
+  },
+  {
+    "objectID": "chapter11.html",
+    "href": "chapter11.html",
+    "title": "11  回帰分析",
+    "section": "",
+    "text": "11.1 回帰分析の基礎",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "chapter11.html#重回帰分析の場合",
+    "href": "chapter11.html#重回帰分析の場合",
+    "title": "11  回帰分析",
+    "section": "11.2 重回帰分析の場合",
+    "text": "11.2 重回帰分析の場合",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "chapter11.html#回帰分析のいくつかの特徴",
+    "href": "chapter11.html#回帰分析のいくつかの特徴",
+    "title": "11  回帰分析",
+    "section": "11.3 回帰分析のいくつかの特徴",
+    "text": "11.3 回帰分析のいくつかの特徴",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "chapter11.html#シミュレーションとパラメタリカバリ",
+    "href": "chapter11.html#シミュレーションとパラメタリカバリ",
+    "title": "11  回帰分析",
+    "section": "11.4 シミュレーションとパラメタリカバリ",
+    "text": "11.4 シミュレーションとパラメタリカバリ",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "chapter11.html#係数の標準誤差",
+    "href": "chapter11.html#係数の標準誤差",
+    "title": "11  回帰分析",
+    "section": "11.5 係数の標準誤差",
+    "text": "11.5 係数の標準誤差",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "chapter11.html#係数の検定",
+    "href": "chapter11.html#係数の検定",
+    "title": "11  回帰分析",
+    "section": "11.6 係数の検定",
+    "text": "11.6 係数の検定",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "chapter11.html#サンプルサイズ設計",
+    "href": "chapter11.html#サンプルサイズ設計",
+    "title": "11  回帰分析",
+    "section": "11.7 サンプルサイズ設計",
+    "text": "11.7 サンプルサイズ設計",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "chapter12.html",
+    "href": "chapter12.html",
+    "title": "12  線型モデルの展開",
+    "section": "",
+    "text": "12.1 一般線型モデル",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>線型モデルの展開</span>"
+    ]
+  },
+  {
+    "objectID": "chapter12.html#一般化線型モデル",
+    "href": "chapter12.html#一般化線型モデル",
+    "title": "12  線型モデルの展開",
+    "section": "12.2 一般化線型モデル",
+    "text": "12.2 一般化線型モデル",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>線型モデルの展開</span>"
+    ]
+  },
+  {
+    "objectID": "chapter12.html#階層線型モデル",
+    "href": "chapter12.html#階層線型モデル",
+    "title": "12  線型モデルの展開",
+    "section": "12.3 階層線型モデル",
+    "text": "12.3 階層線型モデル",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>線型モデルの展開</span>"
+    ]
+  },
+  {
+    "objectID": "chapter13.html",
+    "href": "chapter13.html",
+    "title": "13  多変量解析の入り口",
+    "section": "",
+    "text": "13.1 因子分析",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>多変量解析の入り口</span>"
+    ]
+  },
+  {
+    "objectID": "chapter13.html#構造方程式モデリング",
+    "href": "chapter13.html#構造方程式モデリング",
+    "title": "13  多変量解析の入り口",
+    "section": "13.2 構造方程式モデリング",
+    "text": "13.2 構造方程式モデリング",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>多変量解析の入り口</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Bernaards, Coen A., and Robert I. Jennrich. 2005. “Gradient\nProjection Algorithms and Software for Arbitrary Rotation Criteria in\nFactor Analysis.” Educational and Psychological\nMeasurement 65: 676–96. https://doi.org/10.1177/0013164404272507.\n\n\nGabry, Jonah, Rok Češnovar, and Andrew Johnson. 2023. Cmdstanr: R\nInterface to ’CmdStan’.\n\n\nHadley, Wickham. 2014. “Tidy Data.” Journal of\nStatistical Software 59: 1–23. https://doi.org/10.18637/jss.v059.i10.\n\n\nRevelle, William. 2021. Psych: Procedures for Psychological,\nPsychometric, and Personality Research. Evanston, Illinois:\nNorthwestern University. https://CRAN.R-project.org/package=psych.\n\n\nRosseel, Yves. 2012. “lavaan: An\nR Package for Structural Equation Modeling.”\nJournal of Statistical Software 48 (2): 1–36. https://doi.org/10.18637/jss.v048.i02.\n\n\nStevens, Stanley Smith. 1946. “On the Theory of Scales of\nMeasurement.” Science 103 (2684): 677–80.\n\n\nWickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy\nD’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.\n“Welcome to the tidyverse.”\nJournal of Open Source Software 4 (43): 1686. https://doi.org/10.21105/joss.01686.\n\n\nZeileis, Achim. 2005. “CRAN Task Views.” R\nNews 5 (1): 39–40. https://CRAN.R-project.org/doc/Rnews/.\n\n\nキーラン・ヒーリー. (2018) 2021.\nデータ分析のためのデータ可視化入門. Translated by 瓜生真也,\n江口哲史, and 三村喬生. 講談社.\n\n\nシ. 2016. 計算機言語のまとめノート. 暗黒通信団.\n\n\nランダー，J.P. (2017) 2018. みんなのr 第2版. Translated by\n高柳慎一, 津田真樹, 牧山幸史, 松村杏子, and 簑田高志. マイナビ出版.\n\n\n佐藤坦. 1994. はじめての確率論: 測度から確率へ. 共立出版.\n\n\n吉田伸生. 2021. 確率の基礎から統計へ. 新装版. 日本評論社.\n\n\n小杉考司, 紀ノ定保礼, and 清水裕士. 2023.\n数値シミュレーションで読み解く統計のしくみ〜Rでためしてわかる心理統計.\n技術評論社.\n\n\n平岡和幸, and 堀玄. 2009. プログラミングのための確率統計.\nオーム社. http://amazon.co.jp/o/ASIN/4274067750/.\n\n\n松村優哉, 湯谷啓明, 紀ノ定保礼, and 前田和寛. 2021. 改訂2版\nRユーザのためのRStudio[実践]入門:\nTidyverseによるモダンな分析フローの世界. 技術評論社.\n\n\n株式会社ホクソエム, trans. (2016) 2017. Rプログラミング本格入門:\n達人データサイエンティストへの道. 単行本. 共立出版.\n\n\n池田功毅, and 平石界. 2016.\n“心理学における再現可能性危機：問題の構造と解決策.”\n心理学評論 59 (1): 3–14. https://doi.org/10.24602/sjpr.59.1_3.\n\n\n河野敬雄. 1999. 確率概論. 京都大学学術出版会.\n\n\n石田基広, 市川太祐, 高柳慎一, and 福島真太朗, trans. (2015) 2016.\nR言語徹底解説. 共立出版.\n\n\n総務省. 2020.\n“統計表における機械判別可能なデータ作成に関する表記方法.”\n統計企画会議申し合わせ. https://www.soumu.go.jp/main_content/000723697.pdf.\n\n\n高橋康介. 2018. 再現可能性のすゝめ. Edited by 石田基広. Vol. 3.\nWonderful r. 共立出版.",
+    "crumbs": [
+      "References"
+    ]
+  }
+]
