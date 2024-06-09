@@ -126,9 +126,69 @@ leveneTest(value ~ group, data = dataSet, center = mean)
 result2 <- t.test(value ~ group, data = dataSet, var.equal = FALSE)
 print(result2)
 ```
-よく見ると，タイトルがWelch Two Sample t-testに変わっている。Welchの補正が入ったt検定という意味である。また自由度が実数(`r result2$paramter`)になっているが，このようにt分布の自由度を調整することで等分散性の仮定から逸脱した場合の補正となる。もちろん報告する際は「$t($ `r round(result2$parameter,3)` $)=$ `r round(result2$statistic,3)`, $p=$ `r round(result2$p.value,3) `」のように書くことになるから，自由度が実数であれば補正済みであると考えられるだろう。
+よく見ると，タイトルがWelch Two Sample t-testに変わっている。Welchの補正が入ったt検定という意味である。また自由度が実数(`r round(result2$parameter,3)`)になっているが，このようにt分布の自由度を調整することで等分散性の仮定から逸脱した場合の補正となる。もちろん報告する際は「$t($ `r round(result2$parameter,3)` $)=$ `r round(result2$statistic,3)`, $p=$ `r round(result2$p.value,3) `」のように書くことになるから，自由度が実数であれば補正済みであると考えられるだろう。
 
-しかし，分散が等しいという仮定は，等しくない場合の特殊系であるから，最初からWelchの補正がはいった検定だけで十分である。このような考え方から，Rにおける`t.test` 関数のデフォルトでは`var.equal = FALSE`となっており，特段の指定をしなければ等分散性の仮定をしない。こちらの方が検定を重ねることがないので，より望ましい。
+しかし，分散が等しいという仮定は，等しくない場合の特殊な場合であるから，最初からWelchの補正がはいった検定だけで十分である。このような考え方から，Rにおける`t.test` 関数のデフォルトでは`var.equal = FALSE`となっており，特段の指定をしなければ等分散性の仮定をしない。こちらの方が検定を重ねることがないので，より望ましい。
+
+### 効果量の算出
+
+今回の例は，仮想データとして$\mu_1 = 4,\mu_2 = mu_1 + \sigma d$であり，明らかに$\mu_1 \neq \mu_2$なのだが，有意差を検出するには至らなかった。統計的な有意差はあくまでも「統計的な」観点からのものであり，我々が現実に検証したいのは本当に差があるかどうか，いわば「実質的な差」があるかどうかであるのだから，統計的な有意差を得ることを目的にするのははっきりと不適切な目標設定であると言えるだろう[^8.1]。
+
+[^8.1]: たとえば物理学などのシーンでは，測定の精度が高く，単一の物理世界を対象にした検証を行うのだから，予測が真であるか偽であるかを確率的に考えるような必要はない。そのような世界における検証--あえて理論的な正しさが明確な世界，と表現するが--であれば，統計的な差があるかどうかの情報はあくまでも理論を支持するおまけ情報にすぎない。いわば統計的検定の結果を報告するのは，論文を書くためのレトリックである。翻って，人間を対象にした小サンプルの科学である心理学は，統計的な判断に頼らざるを得ないという側面はあるだろう。しかしだからと言って，実質的な差が本質的であることを忘れてしまっては本末転倒である。
+
+ところで，統計的に差があるとはっきり言えるのはどのような時だろうか。これは次の4つのデータの分布を見てもらうとわかりやすい。
+
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+library(tidyverse)
+library(ggplot2)
+library(gridExtra)
+dL <- 2
+dS <- 0.2
+sL <- 2
+sS <- 0.2
+
+g1 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+    stat_function(fun = dnorm,args=list(mean=dL,sd=sS),color="red") +
+    stat_function(fun = dnorm,args=list(mean=-dL,sd=sS),color="blue") +
+    xlab("")+ylab("")+theme(axis.text.y=element_blank())
+g2 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+    stat_function(fun = dnorm,args=list(mean=dS,sd=sS),color="red") +
+    stat_function(fun = dnorm,args=list(mean=-dS,sd=sS),color="blue") +
+    xlab("")+ylab("")+theme(axis.text.y=element_blank())
+g3 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+    stat_function(fun = dnorm,args=list(mean=dL,sd=sL),color="red") +
+    stat_function(fun = dnorm,args=list(mean=-dL,sd=sL),color="blue") +
+    xlab("")+ylab("")+theme(axis.text.y=element_blank())
+g4 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+    stat_function(fun = dnorm,args=list(mean=dS,sd=sL),color="red") +
+    stat_function(fun = dnorm,args=list(mean=-dS,sd=sL),color="blue") +
+    xlab("")+ylab("")+theme(axis.text.y=element_blank())
+g <- grid.arrange(g1,g2,g3,g4)
+```
+
+左列は平均差が大きいデータ，右列は小さいデータである。
+上段は分散が小さいデータ，下段は大きいデータである。
+この4つそれぞれのシーンにおいて，「差がある」と判断しやすいのはどれかを考えてみるとよい。当然，左上のシーンが最も明確に差があると言えるであろう。なぜなら，両群が明確に分かれており，群間の重複がないからである。左下は同じ平均値差であっても，群内の広がりが大きいから群間の重複がみられるため，「差がある」という判断を受けても各群の中には該当しないケースがちらほらみられることだろう。右上パネルのようなケースでは，重複は少ないが差が小さいため，「差がある」と判断できるかどうかが微妙である。右下に至っては，差も小さく分布の重複も大きいから，「差がある」と判断しても該当しないケースが多くなる。たとえば「男性は女性よりも力が強い(体力・筋力に差がある)」というデータがあったとしても，「女性より非力な男性」もかなり多く存在するだろう。そういう反例が多くみられるような場合，統計的に差があるという結果が示されたとしても，受け入れられないのではないだろうか。
+
+ここから明らかなように，差の判断には平均値差だけでなく分散も関わってくる。そこで平均値差を標準偏差で割った，**標準化された差**が重要になってくるのであり，これが**効果量**と呼ばれるものである[^8.2]。
+
+[^8.2]: 統計的な有意差よりも効果量，効果量よりも実質的な差のほうが意味のある差であることを忘れてはならない。詳しくは @Toyoda2009 を参照。
+
+今回2群の差のデータを作る時に，$\sigma d$ としたが，平均値差の効果量esは，
+$$ es = \frac{\mu_1 - \mu_2}{\sigma} $$
+
+で表現されるから，$d$が効果量を表していたのである。もちろん我々は母平均，母SDなどを知り得ないのでこれもデータから推定する他ない。幸いRには`effsize`パッケージなど，効果量を算出するものが用意されている。
+
+```{r}
+library(effsize)
+cohen.d(value ~ group, data = dataSet)
+cohen.d(value ~ group, data = dataSet, hedges.correction =TRUE)
+```
+
+平均値差の検定の後は，ここに示したCohenのdやHedgesのgといった効果量を添えて報告することが一般的である。
 
 ## 対応のある二標本検定
 

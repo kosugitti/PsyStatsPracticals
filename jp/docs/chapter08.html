@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -307,7 +327,10 @@ window.Quarto = {
   <ul>
   <li><a href="#一標本検定" id="toc-一標本検定" class="nav-link active" data-scroll-target="#一標本検定"><span class="header-section-number">8.1</span> 一標本検定</a></li>
   <li><a href="#二標本検定" id="toc-二標本検定" class="nav-link" data-scroll-target="#二標本検定"><span class="header-section-number">8.2</span> 二標本検定</a></li>
-  <li><a href="#二標本検定ウェルチの補正" id="toc-二標本検定ウェルチの補正" class="nav-link" data-scroll-target="#二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定(ウェルチの補正)</a></li>
+  <li><a href="#二標本検定ウェルチの補正" id="toc-二標本検定ウェルチの補正" class="nav-link" data-scroll-target="#二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定(ウェルチの補正)</a>
+  <ul class="collapse">
+  <li><a href="#効果量の算出" id="toc-効果量の算出" class="nav-link" data-scroll-target="#効果量の算出"><span class="header-section-number">8.3.1</span> 効果量の算出</a></li>
+  </ul></li>
   <li><a href="#対応のある二標本検定" id="toc-対応のある二標本検定" class="nav-link" data-scroll-target="#対応のある二標本検定"><span class="header-section-number">8.4</span> 対応のある二標本検定</a></li>
   <li><a href="#レポートを書くような課題" id="toc-レポートを書くような課題" class="nav-link" data-scroll-target="#レポートを書くような課題"><span class="header-section-number">8.5</span> レポートを書くような課題</a></li>
   </ul>
@@ -545,8 +568,50 @@ mean in group 1 mean in group 2
        4.547297        4.836543 </code></pre>
 </div>
 </div>
-<p>よく見ると，タイトルがWelch Two Sample t-testに変わっている。Welchの補正が入ったt検定という意味である。また自由度が実数()になっているが，このようにt分布の自由度を調整することで等分散性の仮定から逸脱した場合の補正となる。もちろん報告する際は「<span class="math inline">\(t(\)</span> 13.421 <span class="math inline">\()=\)</span> -0.499, <span class="math inline">\(p=\)</span> 0.626」のように書くことになるから，自由度が実数であれば補正済みであると考えられるだろう。</p>
-<p>しかし，分散が等しいという仮定は，等しくない場合の特殊系であるから，最初からWelchの補正がはいった検定だけで十分である。このような考え方から，Rにおける<code>t.test</code> 関数のデフォルトでは<code>var.equal = FALSE</code>となっており，特段の指定をしなければ等分散性の仮定をしない。こちらの方が検定を重ねることがないので，より望ましい。</p>
+<p>よく見ると，タイトルがWelch Two Sample t-testに変わっている。Welchの補正が入ったt検定という意味である。また自由度が実数(13.421)になっているが，このようにt分布の自由度を調整することで等分散性の仮定から逸脱した場合の補正となる。もちろん報告する際は「<span class="math inline">\(t(\)</span> 13.421 <span class="math inline">\()=\)</span> -0.499, <span class="math inline">\(p=\)</span> 0.626」のように書くことになるから，自由度が実数であれば補正済みであると考えられるだろう。</p>
+<p>しかし，分散が等しいという仮定は，等しくない場合の特殊な場合であるから，最初からWelchの補正がはいった検定だけで十分である。このような考え方から，Rにおける<code>t.test</code> 関数のデフォルトでは<code>var.equal = FALSE</code>となっており，特段の指定をしなければ等分散性の仮定をしない。こちらの方が検定を重ねることがないので，より望ましい。</p>
+<section id="効果量の算出" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="効果量の算出"><span class="header-section-number">8.3.1</span> 効果量の算出</h3>
+<p>今回の例は，仮想データとして<span class="math inline">\(\mu_1 = 4,\mu_2 = mu_1 + \sigma d\)</span>であり，明らかに<span class="math inline">\(\mu_1 \neq \mu_2\)</span>なのだが，有意差を検出するには至らなかった。統計的な有意差はあくまでも「統計的な」観点からのものであり，我々が現実に検証したいのは本当に差があるかどうか，いわば「実質的な差」があるかどうかであるのだから，統計的な有意差を得ることを目的にするのははっきりと不適切な目標設定であると言えるだろう<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。</p>
+<p>ところで，統計的に差があるとはっきり言えるのはどのような時だろうか。これは次の4つのデータの分布を見てもらうとわかりやすい。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter08_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>左列は平均差が大きいデータ，右列は小さいデータである。 上段は分散が小さいデータ，下段は大きいデータである。 この4つそれぞれのシーンにおいて，「差がある」と判断しやすいのはどれかを考えてみるとよい。当然，左上のシーンが最も明確に差があると言えるであろう。なぜなら，両群が明確に分かれており，群間の重複がないからである。左下は同じ平均値差であっても，群内の広がりが大きいから群間の重複がみられるため，「差がある」という判断を受けても各群の中には該当しないケースがちらほらみられることだろう。右上パネルのようなケースでは，重複は少ないが差が小さいため，「差がある」と判断できるかどうかが微妙である。右下に至っては，差も小さく分布の重複も大きいから，「差がある」と判断しても該当しないケースが多くなる。たとえば「男性は女性よりも力が強い(体力・筋力に差がある)」というデータがあったとしても，「女性より非力な男性」もかなり多く存在するだろう。そういう反例が多くみられるような場合，統計的に差があるという結果が示されたとしても，受け入れられないのではないだろうか。</p>
+<p>ここから明らかなように，差の判断には平均値差だけでなく分散も関わってくる。そこで平均値差を標準偏差で割った，<strong>標準化された差</strong>が重要になってくるのであり，これが<strong>効果量</strong>と呼ばれるものである<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
+<p>今回2群の差のデータを作る時に，<span class="math inline">\(\sigma d\)</span> としたが，平均値差の効果量esは， <span class="math display">\[ es = \frac{\mu_1 - \mu_2}{\sigma} \]</span></p>
+<p>で表現されるから，<span class="math inline">\(d\)</span>が効果量を表していたのである。もちろん我々は母平均，母SDなどを知り得ないのでこれもデータから推定する他ない。幸いRには<code>effsize</code>パッケージなど，効果量を算出するものが用意されている。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effsize)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Cohen's d
+
+d estimate: -0.2232655 (small)
+95 percent confidence interval:
+    lower     upper 
+-1.165749  0.719218 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">hedges.correction =</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Hedges's g
+
+g estimate: -0.2138318 (small)
+95 percent confidence interval:
+     lower      upper 
+-1.1162608  0.6885973 </code></pre>
+</div>
+</div>
+<p>平均値差の検定の後は，ここに示したCohenのdやHedgesのgといった効果量を添えて報告することが一般的である。</p>
+</section>
 </section>
 <section id="対応のある二標本検定" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="対応のある二標本検定"><span class="header-section-number">8.4</span> 対応のある二標本検定</h2>
@@ -555,6 +620,18 @@ mean in group 1 mean in group 2
 <h2 data-number="8.5" class="anchored" data-anchor-id="レポートを書くような課題"><span class="header-section-number">8.5</span> レポートを書くような課題</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Toyoda2009" class="csl-entry" role="listitem">
+豊田秀樹. 2009. <em>検定力分析入門: Rで学ぶ最新データ解析ー</em>. 東京図書.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>たとえば物理学などのシーンでは，測定の精度が高く，単一の物理世界を対象にした検証を行うのだから，予測が真であるか偽であるかを確率的に考えるような必要はない。そのような世界における検証–あえて理論的な正しさが明確な世界，と表現するが–であれば，統計的な差があるかどうかの情報はあくまでも理論を支持するおまけ情報にすぎない。いわば統計的検定の結果を報告するのは，論文を書くためのレトリックである。翻って，人間を対象にした小サンプルの科学である心理学は，統計的な判断に頼らざるを得ないという側面はあるだろう。しかしだからと言って，実質的な差が本質的であることを忘れてしまっては本末転倒である。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>統計的な有意差よりも効果量，効果量よりも実質的な差のほうが意味のある差であることを忘れてはならない。詳しくは <span class="citation" data-cites="Toyoda2009">豊田 (<a href="references.html#ref-Toyoda2009" role="doc-biblioref">2009</a>)</span> を参照。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
