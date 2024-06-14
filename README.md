@@ -2,4 +2,4 @@
 
 心理学統計実習
 
-<a href="ja/index.html">日本語</a>|English>
+<a href="docs/ja/index.html">日本語</a>|<a href="docs/en/index.html">English</a>
