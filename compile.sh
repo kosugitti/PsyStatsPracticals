@@ -1,6 +1,8 @@
 #!/usr/bin/bash
 source myenv/bin/activate
 
+cp -rf ./docs ./docs_old
+rm -rf ./docs
 # Quarto
 cd jp
 echo '日本語版レンダリングします'
