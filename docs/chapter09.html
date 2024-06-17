@@ -307,7 +307,10 @@ window.Quarto = {
   <ul>
   <li><a href="#分散分析の基礎" id="toc-分散分析の基礎" class="nav-link active" data-scroll-target="#分散分析の基礎"><span class="header-section-number">9.1</span> 分散分析の基礎</a></li>
   <li><a href="#分散分析のステップ" id="toc-分散分析のステップ" class="nav-link" data-scroll-target="#分散分析のステップ"><span class="header-section-number">9.2</span> 分散分析のステップ</a></li>
-  <li><a href="#anova君を使う" id="toc-anova君を使う" class="nav-link" data-scroll-target="#anova君を使う"><span class="header-section-number">9.3</span> ANOVA君を使う</a></li>
+  <li><a href="#anova君を使う" id="toc-anova君を使う" class="nav-link" data-scroll-target="#anova君を使う"><span class="header-section-number">9.3</span> ANOVA君を使う</a>
+  <ul class="collapse">
+  <li><a href="#anova君の入力とデータ" id="toc-anova君の入力とデータ" class="nav-link" data-scroll-target="#anova君の入力とデータ"><span class="header-section-number">9.3.1</span> ANOVA君の入力とデータ</a></li>
+  </ul></li>
   <li><a href="#betweenデザイン" id="toc-betweenデザイン" class="nav-link" data-scroll-target="#betweenデザイン"><span class="header-section-number">9.4</span> Betweenデザイン</a></li>
   <li><a href="#withinデザイン" id="toc-withinデザイン" class="nav-link" data-scroll-target="#withinデザイン"><span class="header-section-number">9.5</span> Withinデザイン</a></li>
   </ul>
@@ -360,10 +363,129 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://riseki.cloudfree.jp/?plugin=attach&amp;refer=ANOVA%E5%90%9B&amp;openfile=anovakun_489.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>読み込みが終わるとEnvironタブにanovakun関数が含まれていることを確認しよう。</p>
+<section id="anova君の入力とデータ" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="anova君の入力とデータ"><span class="header-section-number">9.3.1</span> ANOVA君の入力とデータ</h3>
+<p>ANOVA君は伝統的にワイド型データから読み込むようになっている。すなわち，一行に1オブザベーション入っている形式である。Between計画の場合は，データの前に水準数を表すインデックスと最終的な従属変数の形に整形したデータが必要である。Within計画の場合は1行に1Obs.なのだから，反復した水準の数だけ右にデータを入れていく形に整形する。</p>
+<p>しかし<a href="chapter03.html#sec-Long_and_Wide" class="quarto-xref">Chapter&nbsp;<span>3.7</span></a> で述べたように，昨今は計算機にとって優しい型，ロング型での入力もおおく，ANOVA君もversion 4.4.0からロング型での入力も許すようになった。その場合はオプション<code>long=TRUE</code> とロング型であることを明記する必要がある。</p>
+<p>ANOVA君を使う時は，関数<code>anovakun</code>に，データ，要因計画の型，各要因の水準の順で入力する。ここで要因計画の型とは，文字列でBetween/Withinの違いを明示することになる。被験者のラベルを表す小文字の<code>s</code>を挟んで，左側に間(Between)要因，右側に内(Within)要因を入れる。例えば一要因Between計画の場合は<code>"As"</code>，二要因Within計画の場合は<code>"sAB"</code>，間1内2の混合計画であれば<code>"AsBC"</code>のようにする。</p>
+<p>続いて入力する水準数は，要因の数だけ必要である。ただし，ロング型で入力した場合は自動的に水準数が計算されるので入力の必要がない。</p>
+<p>このテキストでは，データの持ち替えについてすでに触れているので，色々扱いやすいロング型に整形して利用していくものとする。</p>
+</section>
 </section>
 <section id="betweenデザイン" class="level2" data-number="9.4">
 <h2 data-number="9.4" class="anchored" data-anchor-id="betweenデザイン"><span class="header-section-number">9.4</span> Betweenデザイン</h2>
-<p>べとwうーいん</p>
+<p>もっとも単純な一要因3水準，Between計画の例から始めよう。仮想データの生成を行うことで，分散分析のメカニズムと共に見ていくことにする。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>n3 <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 母平均，効果量，母SD</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 群平均</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> mu <span class="sc">-</span>(delta <span class="sc">*</span> sigma)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> mu</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>mu3 <span class="ot">&lt;-</span> mu <span class="sc">+</span> (delta <span class="sc">*</span> sigma)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># データセット</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu1, sigma)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu2, sigma)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>X3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n3, mu3, sigma)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 組み上げる</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span>(n1<span class="sc">+</span>n2<span class="sc">+</span>n3),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],<span class="fu">c</span>(n1,n2,n3))),</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(X1,X2,X3)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="do">## データの確認</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ID group     value
+1   1     A  5.318573
+2   2     A  6.309468
+3   3     A 11.676125
+4   4     A  7.211525
+5   5     A  7.387863
+6   6     B 15.145195
+7   7     B 11.382749
+8   8     B  6.204816
+9   9     B  7.939441
+10 10     C 11.663014
+11 11     C 16.672245
+12 12     C 14.079441
+13 13     C 14.202314
+14 14     C 13.332048
+15 15     C 11.332477</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### 実行</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"As"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[ As-Type Design ]
+
+This output was generated by anovakun 4.8.9 under R version 4.4.1.
+It was executed on Mon Jun 17 14:27:08 2024.
+
+ 
+&lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;
+
+------------------------------
+ group   n     Mean    S.D. 
+------------------------------
+     A   5   7.5807  2.4331 
+     B   4  10.1681  3.9548 
+     C   6  13.5469  1.9483 
+------------------------------
+
+
+&lt;&lt; ANOVA TABLE &gt;&gt;
+
+== This data is UNBALANCED!! ==
+== Type III SS is applied. ==
+
+-------------------------------------------------------
+ Source        SS  df       MS  F-ratio  p-value     
+-------------------------------------------------------
+  group   98.3840   2  49.1920   6.5897   0.0117 *   
+  Error   89.5804  12   7.4650                       
+-------------------------------------------------------
+  Total  187.9644  14  13.4260                       
+           +p &lt; .10, *p &lt; .05, **p &lt; .01, ***p &lt; .001
+
+
+&lt;&lt; POST ANALYSES &gt;&gt;
+
+&lt; MULTIPLE COMPARISON for "group" &gt;
+
+== Shaffer's Modified Sequentially Rejective Bonferroni Procedure ==
+== The factor &lt; group &gt; is analysed as independent means. == 
+== Alpha level is 0.05. == 
+ 
+------------------------------
+ group   n     Mean    S.D. 
+------------------------------
+     A   5   7.5807  2.4331 
+     B   4  10.1681  3.9548 
+     C   6  13.5469  1.9483 
+------------------------------
+
+-------------------------------------------------------
+ Pair     Diff  t-value  df       p   adj.p          
+-------------------------------------------------------
+  A-C  -5.9662   3.6062  12  0.0036  0.0108  A &lt; C * 
+  B-C  -3.3789   1.9159  12  0.0795  0.0795  B = C   
+  A-B  -2.5873   1.4117  12  0.1834  0.1834  A = B   
+-------------------------------------------------------
+
+
+output is over --------------------///</code></pre>
+</div>
+</div>
+<p>出力結果は大きく分けて記述統計<code>&lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;</code>と，分散分析表<code>&lt;&lt; ANOVA TABLE &gt;&gt;</code>，下位検定<code>&lt;&lt; POST ANALYSES &gt;&gt;</code>に分けられる。記述統計はデータが正しく読み込めているかどうかのチェックに使おう。</p>
+<p>一番のメインは分散分析表であり，平方和sum of squaresを自由度dfで割った，1自由度あたりのデータの散らばりを，群間と群内(誤差)との比で検証しているのが見て取れる。群間平方和が<span class="math inline">\(98.38\)</span>，群内平方和が<span class="math inline">\(89.58\)</span>であり，それぞれ自由度<span class="math inline">\(2\)</span>(<span class="math inline">\(3\)</span>水準<span class="math inline">\(-1\)</span>)と<span class="math inline">\(12\)</span>(<span class="math inline">\(\sum_{j=1}^3 n_j-1\)</span>)から生じているので，平均平方Mean Squaresがそれぞれ<span class="math inline">\(49.19\)</span>と<span class="math inline">\(7.47\)</span>である。この比が<span class="math inline">\(6.5897\)</span>で，自由度<span class="math inline">\(F(2,12)\)</span>のF分布においてこの値以上の極端な数字が出る確率が5%を下回っている(実に<span class="math inline">\(p=0.0117\)</span>である)ため，統計的に有意であると判断できる。 分散分析表のTotalのところで，全体のSSが群間SS+群内SSに一致していること，自由度も全体df=群間df+群内dfになっていることを確認しておこう。</p>
 </section>
 <section id="withinデザイン" class="level2" data-number="9.5">
 <h2 data-number="9.5" class="anchored" data-anchor-id="withinデザイン"><span class="header-section-number">9.5</span> Withinデザイン</h2>
