@@ -5,7 +5,7 @@ source myenv/bin/activate
 cd jp
 echo '日本語版レンダリングします'
 quarto render
-
+mv jp/docs docs/jp/docs
 
 today=$(LANG="ja_JP.UTF-8" date)
 git add --all
