@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>心理学統計実習 - 2&nbsp; Rの基礎</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter03.html" rel="next">
+<link href="./chapter01.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter02.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">心理学統計実習</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.pdf">
+              <i class="bi bi-bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.epub">
+              <i class="bi bi-bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめようR/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Rによるレポートの作成</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Rでプログラミング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">帰無仮説検定のシミュレーション</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">回帰分析</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#rで計算" id="toc-rで計算" class="nav-link active" data-scroll-target="#rで計算"><span class="header-section-number">2.1</span> Rで計算</a></li>
+  <li><a href="#オブジェクト" id="toc-オブジェクト" class="nav-link" data-scroll-target="#オブジェクト"><span class="header-section-number">2.2</span> オブジェクト</a></li>
+  <li><a href="#関数" id="toc-関数" class="nav-link" data-scroll-target="#関数"><span class="header-section-number">2.3</span> 関数</a></li>
+  <li><a href="#変数の種類" id="toc-変数の種類" class="nav-link" data-scroll-target="#変数の種類"><span class="header-section-number">2.4</span> 変数の種類</a></li>
+  <li><a href="#オブジェクトの型" id="toc-オブジェクトの型" class="nav-link" data-scroll-target="#オブジェクトの型"><span class="header-section-number">2.5</span> オブジェクトの型</a>
+  <ul class="collapse">
+  <li><a href="#sec-vector" id="toc-sec-vector" class="nav-link" data-scroll-target="#sec-vector"><span class="header-section-number">2.5.1</span> ベクトル</a></li>
+  <li><a href="#行列" id="toc-行列" class="nav-link" data-scroll-target="#行列"><span class="header-section-number">2.5.2</span> 行列</a></li>
+  <li><a href="#リスト型" id="toc-リスト型" class="nav-link" data-scroll-target="#リスト型"><span class="header-section-number">2.5.3</span> リスト型</a></li>
+  <li><a href="#データフレーム型" id="toc-データフレーム型" class="nav-link" data-scroll-target="#データフレーム型"><span class="header-section-number">2.5.4</span> データフレーム型</a></li>
+  </ul></li>
+  <li><a href="#外部ファイルの読み込み" id="toc-外部ファイルの読み込み" class="nav-link" data-scroll-target="#外部ファイルの読み込み"><span class="header-section-number">2.6</span> 外部ファイルの読み込み</a></li>
+  <li><a href="#おまけスクリプトの清書" id="toc-おまけスクリプトの清書" class="nav-link" data-scroll-target="#おまけスクリプトの清書"><span class="header-section-number">2.7</span> おまけ；スクリプトの清書</a></li>
+  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">2.8</span> 課題</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-Rbase" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>ここから実際にR/RStudioをつかった演習に入る。前回すでに言及したように，この講義ようのプロジェクトを準備し，RStudioはプロジェクトが開かれた状態であることを前提に話を進める。</p>
+<section id="rで計算" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="rで計算"><span class="header-section-number">2.1</span> Rで計算</h2>
+<p>まずはRを使った計算である。Rスクリプトファイルを開き，最初の行に次の4行を入力してみよう。 各行を実行(Runボタン，あるいはctrl+enter)し，コンソールの結果を確認しよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">-</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="sc">*</span> <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="sc">/</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>それぞれ加減乗除の計算結果が正しく出ていることを確認してほしい。なお，出力のところに<code>[1]</code>とあるのは，Rがベクトルを演算の基本としているからで，回答ベクトルの第1要素を返していることを意味する。</p>
+<p>四則演算の他に，次のような演算も可能である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 整数の割り算</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dv">8</span> <span class="sc">%/%</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 余り</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> <span class="sc">%%</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 冪乗</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+<p>ここで，<code>#</code>から始まる行は<strong>コメントアウト</strong>されたものとして，実際にコンソールに送られても計算されないことに注意しよう。スクリプトが単純なものである場合はコメントをつける必要はないが，複雑な計算になったり，他者と共有するときは「今どのような演算をしているか」を逐一解説するようにすると便利である。</p>
+<p>実践上のテクニックとして，複数行を一括でコメントアウトしたり，アンコメント(コメントアウトを解除する)したりすることがある。スクリプトを複数行選択した上で，Codeメニューから<code>Comment/Uncomment Lines</code>を押すとコメント/アンコメントを切り替えられるので試してみよう。また，ショートカットキーも確認し，キーからコメント/アンコメントができるように慣れておくと良い(Ctrl+↑+C/Cmd+↑+C)。</p>
+<p>One more tips.コメントではなく，大きな段落的な区切り(セクション区切り)が欲しいこともあるかもしれない。Codeメニューの一番上に「Insert Section」があるのでこれを選んでみよう。ショートカットキーから入力しても良い(Ctrl+↑+R/Cmd+↑+R)。セクション名を入力するボックスに適当な命名をすると，スクリプトにセクションが挿入される。次に示すのがセクションの例である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 計算 --------------------------------------------------------------</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>これはもちろん実行に影響を与えないが，ソースが長くなった場合はこのセクション単位で移動したり(スクリプトペインの左下)，アウトラインを確認したり(スクリプトペインの右上にある横三本線)できるので，活用して欲しい。</p>
+</section>
+<section id="オブジェクト" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="オブジェクト"><span class="header-section-number">2.2</span> オブジェクト</h2>
+<p>Rでは変数，関数などあらゆるものを<strong>オブジェクト</strong>としてあつかう。オブジェクトには任意の名前をつけることができる(数字から始まる名前は不可)。 オブジェクトを作り，そこにある値を<strong>代入</strong>する例は次の通りである。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>a <span class="sc">+</span> b <span class="co"># 1 + 2におなじ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>A <span class="sc">+</span> b <span class="co"># 3 + 2におなじ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>ここでは数字をオブジェクトに保管し，オブジェクトを使って計算をしている。大文字と小文字が区別されてるため，計算結果が異なることに注意。</p>
+<p>代入に使った記号<code>&lt;-</code>は「小なり」と「ハイフン」であるが，左矢印のイメージである。次のように，<code>=</code>や<code>-&gt;</code>を使うこともできる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> <span class="ot">-&gt;</span> A</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>ここで，二行目に<code>7 -&gt; A</code>を行った。先ほど<code>A &lt;- 3</code>としたが，その後に<code>A</code>には7を代入し直したので，値は上書きされる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>A <span class="sc">+</span> b <span class="co"># 7 + 2におなじ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+</div>
+<p>このように，オブジェクトに代入を重ねると，警告などなしに上書きされることに注意して欲しい。似たようなオブジェクト名を使い回していると，本来意図していたものと違う値・状態を保管していることになりかねないからである。</p>
+<p>ちなみに，オブジェクトの中身を確認するためには，そのままオブジェクト名を入力すれば良い。より丁寧には，<code>print</code>関数を使う。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<p>あるいは，RStudioのEnvironmentタブをみると，現在Rが保持しているオブジェクトが確認でき，単一の値の場合はValueセクションにオブジェクト名と値を見ることができる。</p>
+<p>注意点として，オブジェクト名として，次の名前は使うことができない。＞ break, else, for, if, in, next, function, repeat, return, while, TRUE, FALSE.</p>
+<p>これらはRで特別な意味を持つ<strong>予約語</strong>と呼ぶ。特に<code>TRUE</code>と<code>FALSE</code>は真・偽を表すもので，大文字の<code>T</code>,<code>F</code>でも代用できるため，この一文字だけをオブジェクト名にするのは避けた方が良い。</p>
+</section>
+<section id="関数" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="関数"><span class="header-section-number">2.3</span> 関数</h2>
+<p>関数は一般に<span class="math inline">\(y=f(x)\)</span>と表されるが，要するに<span class="math inline">\(x\)</span>を与えると<span class="math inline">\(y\)</span>に形が変わる作用のことを指す。 プログラミング言語では一般に，<span class="math inline">\(x\)</span>を<strong>引数(ひきすう,argument)</strong>，<span class="math inline">\(y\)</span>を<strong>戻り値(もどりち,value)</strong>という。以下，関数の使用例を挙げる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(<span class="st">"sqrt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>最初の例は平方根square rootを取る関数<code>sqrt</code>であり，引数として数字を与えるとその平方根が返される。第二の例は関数の説明を表示させる関数<code>help</code>であり，これを実行するとヘルプペインに関数の説明が表示される。</p>
+</section>
+<section id="変数の種類" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="変数の種類"><span class="header-section-number">2.4</span> 変数の種類</h2>
+<p>先ほどの<code>help</code>関数に与えた引数<code>"sqrt"</code>は文字列である。文字列であることを明示するためにダブルクォーテーション(<code>"</code>)で囲っている(シングルクォーテーションで囲っても良い)。このように，Rが扱う変数は数字だけではない。変数の種類は数値型(numeric)，文字型(character)，論理値(logical)の3種類がある。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>obj1 <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>obj2 <span class="ot">&lt;-</span> <span class="st">"Hello"</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>obj3 <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>数値型は整数(integer)，実数(double)を含み<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>，そのほか，複素数型(complex)，欠損値を表す<code>NA</code>，非数値を表す<code>NaN</code>(Not a Number)，無限大を表す<code>Inf</code>などがある。</p>
+<p>文字型はすでに説明した通りで，対になるクォーテーションが必要であることに注意してほしい。終わりを表すクォーテーションがなければ，Rは続く数字や文字も含めた「語」として処理する。この場合，enterキーを押しても文字入力が閉じられていないため，コンソールには「+」の表示が出る(この記号は前の行から入力が続いており，プロンプト状態ではないことを表している)。</p>
+<p>また，文字型は当然のことながら四則演算の対象にならない。ただし，論理型の<code>TRUE/FALSE</code>はそれぞれ1,0に対応しているため，計算結果が表示される。次のコードを実行してこのことを確認しよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>obj1 <span class="sc">+</span> obj2</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>obj1 <span class="sc">+</span> obj3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="オブジェクトの型" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="オブジェクトの型"><span class="header-section-number">2.5</span> オブジェクトの型</h2>
+<p>ここまでみてきたように，数値や文字など(まとめて<strong>リテラル</strong>という)にも種類があるが，これをストックしておくものは全て<strong>オブジェクト</strong>である。オブジェクトとは変数のこと，と理解しても良いが，関数もオブジェクトに含まれる。</p>
+<section id="sec-vector" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="sec-vector"><span class="header-section-number">2.5.1</span> ベクトル</h3>
+<p>Rのオブジェクトは単一の値しか持たないものではない。むしろ，複数の要素をセットで持つことができるのが特徴である。次に示すのは，<strong>ベクトル</strong>オブジェクトの例である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>vec1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>vec2 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>vec3 <span class="ot">&lt;-</span> <span class="dv">7</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>vec4 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">1</span>, <span class="at">to =</span> <span class="dv">7</span>, <span class="at">by =</span> <span class="dv">2</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>vec5 <span class="ot">&lt;-</span> <span class="fu">c</span>(vec2, vec3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>それぞれのオブジェクトの中身を確認しよう。 最初の<code>c()</code>は結合combine関数である。また，コロン(<code>:</code>)は連続する数値を与える。 <code>seq</code>関数は複数の引数を取るが，初期値，終了値，その間隔を指定した連続的なベクトルを生成する関数である。</p>
+<p>ベクトルの計算は要素ごとに行われる。次のコードを実行し，どのように振る舞うか確認しよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>vec1 <span class="sc">+</span> vec2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 6 8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>vec3 <span class="sc">*</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14 12 10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>vec1 <span class="sc">+</span> vec5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  3  6  8  9 10 10</code></pre>
+</div>
+</div>
+<p>最後の計算でエラーが出なかったことに注目しよう。たとえば<code>vec1 + vec4</code>はエラーになるが，ここでは計算結果が示されている(=エラーにはなっていない)。数学的には，長さの違うベクトルは計算が定義されていないのだが，<code>vec1</code>の長さは3，<code>vec5</code>の長さは6であった。<strong>Rはベクトルを再利用する</strong>ので，長いベクトルが短いベクトルの定数倍になるときは反復して利用される。すなわち，ここでは <span class="math display">\[ (2,4,5,2,4,5) + (1,2,3,7,6,5) = (3,6,8,9,10,10)\]</span> の計算がなされた。このRの仕様については，意図せぬ挙動にならぬよう注意しよう。</p>
+<p>ベクトルの要素にアクセスするときは大括弧(<code>[ ]</code>)を利用する。 特に第二・第三行目のコードの使い方を確認しておこう。大括弧の中は，要素番号でも良いし，真/偽の判断でも良いのである。この真偽判断による指定の方法は，条件節(<code>if</code>文)をつかって要素を指定できるため，有用である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>vec1[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>vec2[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>vec2[<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 3</code></pre>
+</div>
+</div>
+<p>ここまで，ベクトルの要素は数値で説明してきたが，文字列などもベクトルとして利用できる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>words1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Hello!"</span>, <span class="st">"Mr."</span>, <span class="st">"Monkey"</span>, <span class="st">"Magic"</span>, <span class="st">"Orchestra"</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>words1[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Monkey"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>words2 <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>words2[<span class="dv">8</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "H"</code></pre>
+</div>
+</div>
+<p>ここで<code>LETTERS</code>はアルファベット26文字が含まれている予約語ベクトルである。</p>
+<p>ベクトルを引数に取る関数も多い。たとえば記述統計量である，平均，分散，標準偏差，合計などは，次のようにして計算する。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">18</span>, <span class="dv">23</span>, <span class="dv">35</span>, <span class="dv">22</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat) <span class="co"># 平均</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(dat) <span class="co"># 分散</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 71.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(dat) <span class="co"># 標準偏差</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8.455767</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(dat) <span class="co"># 合計</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 110</code></pre>
+</div>
+</div>
+<p>他にも最大値<code>max</code>や最小値<code>min</code>，中央値<code>median</code>などの関数が利用可能である。</p>
+</section>
+<section id="行列" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="行列"><span class="header-section-number">2.5.2</span> 行列</h3>
+<p>数学では線形代数でベクトルを扱うが，同時にベクトルが複数並んだ二次元の行列も扱うだろう。 Rでも行列のように配置したオブジェクトを利用できる。</p>
+<p>次のコードで作られる行列<span class="math inline">\(A\)</span>,<span class="math inline">\(B\)</span>がどのようなものか確認しよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>行列を作る関数<code>matrix</code>は，引数として要素，列数(<code>ncol</code>)，行数(<code>nrow</code>)，要素配列を行ごとにするかどうかの指定(<code>byrow</code>)をとる。ここでは要素を<code>1:6</code>としており，1から6までの連続する整数をあたえている。<code>ncol</code>で2列であることを明示しているので，<code>nrow</code>で行数を指定してやる必要はない。<code>byrow</code>の有無でどのように数字が変わっているかは表示させれば一目瞭然であろう。</p>
+<p>与える要素が行数<span class="math inline">\(\times\)</span>列数に一致しておらず，ベクトルの再利用も不可能な場合はエラーが返ってくる。</p>
+<p>また，ベクトルの要素指定のように，行列も大括弧を使って要素を指定することができる。行，列の順に指定し，行だけ，列だけの指定も可能である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">2</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">1</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>A[, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4 5 6</code></pre>
+</div>
+</div>
+</section>
+<section id="リスト型" class="level3" data-number="2.5.3">
+<h3 data-number="2.5.3" class="anchored" data-anchor-id="リスト型"><span class="header-section-number">2.5.3</span> リスト型</h3>
+<p>行列はサイズの等しいベクトルのセットであるが，サイズの異なる要素をまとめて一つのオブジェクトとして保管しておきたいときはリスト型をつかう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>Obj1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">ncol =</span> <span class="dv">2</span>), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>このオブジェクトの第一要素(<code>[[1]]</code>)はベクトル，第二要素は行列，第三要素は要素1つのベクトル(スカラー)である。オブジェクトの要素の要素(ex.第二要素の行列の2行3列目の要素)にどのようにアクセスすれば良いか，考えてみよう。</p>
+<p>このリストは要素へのアクセスの際に<code>[[1]]</code>など数字が必要だが，要素に名前をつけることで利便性が増す。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>Obj2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">vec1 =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mat1 =</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">nrow =</span> <span class="dv">5</span>),</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">char1 =</span> <span class="st">"YMO"</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>この名前付きリストの要素にアクセスするときは，<code>$</code>記号を用いることができる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>Obj2<span class="sc">$</span>vec1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4 5</code></pre>
+</div>
+</div>
+<p>これを踏まえて，名前付きリストの要素の要素にアクセスするにはどうすれば良いか，考えてみよう。</p>
+<p>リスト型はこのように，要素のサイズ・長さを問わないため，いろいろなものを保管しておくことができる。統計関数の結果はリスト型で得られることが多く，そのような場合，リストの要素も長くなりがちである。リストがどのような構造を持っているかを見るために，<code>str</code>関数が利用できる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Obj2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 3
+ $ vec1 : int [1:5] 1 2 3 4 5
+ $ mat1 : int [1:5, 1:2] 1 2 3 4 5 6 7 8 9 10
+ $ char1: chr "YMO"</code></pre>
+</div>
+</div>
+<p><code>str</code>関数の返す結果と同じものが，RStudioのEnvironmentタブからオブジェクトを見ることでも得られる。 また，リストの要素としてリストを持つ，すなわち階層的になることもある。そのような場合，必要としている要素にどのようにアクセスすれば良いか，確認しておこう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>Obj3 <span class="ot">&lt;-</span> <span class="fu">list</span>(Obj1, <span class="at">Second =</span> Obj2)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Obj3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $       :List of 3
+  ..$ : int [1:4] 1 2 3 4
+  ..$ : int [1:3, 1:2] 1 2 3 4 5 6
+  ..$ : num 3
+ $ Second:List of 3
+  ..$ vec1 : int [1:5] 1 2 3 4 5
+  ..$ mat1 : int [1:5, 1:2] 1 2 3 4 5 6 7 8 9 10
+  ..$ char1: chr "YMO"</code></pre>
+</div>
+</div>
+</section>
+<section id="データフレーム型" class="level3" data-number="2.5.4">
+<h3 data-number="2.5.4" class="anchored" data-anchor-id="データフレーム型"><span class="header-section-number">2.5.4</span> データフレーム型</h3>
+<p>リスト型は要素のサイズを問わないことはすでに述べた。しかしデータ解析を行うときは得てして，2次元スプレッドシートのような形式である。すなわち一行に1オブザベーション，各列は変数を表すといった具合である。このように矩形かつ，列に変数名を持たせることができる特殊なリスト型を<strong>データフレーム型</strong>という。以下はそのようなオブジェクトの例である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">"Ishino"</span>, <span class="st">"Pierre"</span>, <span class="st">"Marin"</span>),</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">origin =</span> <span class="fu">c</span>(<span class="st">"Shizuoka"</span>, <span class="st">"Shizuoka"</span>, <span class="st">"Hokkaido"</span>),</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="fu">c</span>(<span class="dv">170</span>, <span class="dv">180</span>, <span class="dv">160</span>),</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">salary =</span> <span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">20</span>, <span class="dv">800</span>)</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 内容を表示させる</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    name   origin height salary
+1 Ishino Shizuoka    170   1000
+2 Pierre Shizuoka    180     20
+3  Marin Hokkaido    160    800</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 構造を確認する</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   3 obs. of  4 variables:
+ $ name  : chr  "Ishino" "Pierre" "Marin"
+ $ origin: chr  "Shizuoka" "Shizuoka" "Hokkaido"
+ $ height: num  170 180 160
+ $ salary: num  1000 20 800</code></pre>
+</div>
+</div>
+<p>ところで，心理統計の初歩としてStevensの尺度水準<span class="citation" data-cites="stevens1946">(<a href="references.html#ref-stevens1946" role="doc-biblioref">Stevens 1946</a>)</span>について学んだことと思う。そこでは数値が，その値に許される演算のレベルをもとに，名義，順序，間隔，比率尺度水準という4つの段階に分類される。間隔・比率尺度水準の数値は数学的な計算を施しても良いが，順序尺度水準や名義尺度水準の数字はそのような計算が許されない(ex.2番目に好きな人と3番目に好きな人が一緒になっても，1番好きな人に敵わない。)</p>
+<p>Rには，こうした尺度水準に対応した数値型がある。間隔・比率尺度水準は計算可能なので<code>numeric</code>型でよいが，名義尺度水準は<code>factor</code>型(要因型，因子型とも呼ばれる)，順序尺度水準は<code>ordered.factor</code>型と呼ばれるものである。</p>
+<p>factor型の変数の例を挙げる。すでに文字型として入っているものをfactor型として扱うよう変換するためには，<code>as.factor</code>関数が利用できる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>origin <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>origin)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>origin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] Shizuoka Shizuoka Hokkaido
+Levels: Hokkaido Shizuoka</code></pre>
+</div>
+</div>
+<p>要素を表示させて見ると明らかなように，値としては<code>Shizuoka</code>,<code>Shizuoka</code>,<code>Hokkaido</code>の3つあるが，レベル(水準)は<code>Shizuoka</code>,<code>Hokkaido</code>の2つである。このようにfactor型にしておくと，カテゴリとして使えて便利である。</p>
+<p>次に示すのは順序つきfactor型変数の例である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 順序付き要因型の例</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>ratings <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"低い"</span>, <span class="st">"高い"</span>, <span class="st">"中程度"</span>, <span class="st">"高い"</span>, <span class="st">"低い"</span>),</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"低い"</span>, <span class="st">"中程度"</span>, <span class="st">"高い"</span>),</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="cn">TRUE</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ratingsの内容と型を確認</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ratings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 低い   高い   中程度 高い   低い  
+Levels: 低い &lt; 中程度 &lt; 高い</code></pre>
+</div>
+</div>
+<p>集計の際などはfactor型と違わないため，使用例は少ないかもしれない。しかしRは統計モデルを適用する時に，尺度水準に対応した振る舞いをするものがあるので，データの尺度水準を丁寧に設定しておくのも良いだろう。</p>
+<p>データフレームの要素へのアクセスは，基本的に変数名を介してのものになるだろう。たとえば先ほどのおオブジェクト<code>df</code> の数値変数に統計処理をしたい場合は，次のようにすると良い。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 170</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(df<span class="sc">$</span>salary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1820</code></pre>
+</div>
+</div>
+<p>また，データフレームオブジェクトを一括で要約する関数もある。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     name                origin      height        salary      
+ Length:3           Hokkaido:1   Min.   :160   Min.   :  20.0  
+ Class :character   Shizuoka:2   1st Qu.:165   1st Qu.: 410.0  
+ Mode  :character                Median :170   Median : 800.0  
+                                 Mean   :170   Mean   : 606.7  
+                                 3rd Qu.:175   3rd Qu.: 900.0  
+                                 Max.   :180   Max.   :1000.0  </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="外部ファイルの読み込み" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="外部ファイルの読み込み"><span class="header-section-number">2.6</span> 外部ファイルの読み込み</h2>
+<p>解析の実際では，データセットを手入力することはなく，データベースから取り出してくるか，別ファイルから読み込むことが一般的であろう。</p>
+<p>統計パッケージの多くは独自のファイル形式を持っており，Rにはそれぞれに対応した読み込み関数も用意されているが，ここでは最もプレーンな形でのデータであるCSV形式からの読み込み例を示す。</p>
+<p>提供されたサンプルデータ，<code>Baseball.csv</code>を読み込むことを考える。なおこのデータはUTF-8形式で保存されている<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。これを読み込むには，Rがデフォルトで持っている関数<code>read.csv</code>が使える。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Baseball.csv"</span>)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Year       Name team salary bloodType height weight UniformNum position
+1 2011年度 永川　勝浩 Carp  12000       O型    188     97         20     投手
+2 2011年度 前田　健太 Carp  12000       A型    182     73         18     投手
+3 2011年度 栗原　健太 Carp  12000       O型    183     95          5   内野手
+4 2011年度 東出　輝裕 Carp  10000       A型    171     73          2   内野手
+5 2011年度   シュルツ Carp   9000      不明    201    100         70     投手
+6 2011年度   大竹　寛 Carp   8000       B型    183     90         17     投手
+  Games AtBats Hit HR Win Lose Save Hold
+1    19     NA  NA NA   1    2    0    0
+2    31     NA  NA NA  10   12    0    0
+3   144    536 157 17  NA   NA   NA   NA
+4   137    543 151  0  NA   NA   NA   NA
+5    19     NA  NA NA   0    0    0    9
+6     6     NA  NA NA   1    1    0    0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   7944 obs. of  17 variables:
+ $ Year      : chr  "2011年度" "2011年度" "2011年度" "2011年度" ...
+ $ Name      : chr  "永川　勝浩" "前田　健太" "栗原　健太" "東出　輝裕" ...
+ $ team      : chr  "Carp" "Carp" "Carp" "Carp" ...
+ $ salary    : int  12000 12000 12000 10000 9000 8000 8000 7500 7000 6600 ...
+ $ bloodType : chr  "O型" "A型" "O型" "A型" ...
+ $ height    : int  188 182 183 171 201 183 177 173 176 188 ...
+ $ weight    : int  97 73 95 73 100 90 82 73 80 97 ...
+ $ UniformNum: int  20 18 5 2 70 17 31 6 1 43 ...
+ $ position  : chr  "投手" "投手" "内野手" "内野手" ...
+ $ Games     : int  19 31 144 137 19 6 110 52 52 40 ...
+ $ AtBats    : int  NA NA 536 543 NA NA 299 192 44 149 ...
+ $ Hit       : int  NA NA 157 151 NA NA 60 41 11 35 ...
+ $ HR        : int  NA NA 17 0 NA NA 4 2 0 1 ...
+ $ Win       : int  1 10 NA NA 0 1 NA NA NA NA ...
+ $ Lose      : int  2 12 NA NA 0 1 NA NA NA NA ...
+ $ Save      : int  0 0 NA NA 0 0 NA NA NA NA ...
+ $ Hold      : int  0 0 NA NA 9 0 NA NA NA NA ...</code></pre>
+</div>
+</div>
+<p>ここで<code>head</code>関数はデータフレームなどオブジェクトの冒頭部分(デフォルトでは6行分)を表示させるものである。また，<code>str</code>関数の結果から明らかなように，読み込んだファイルが自動的にデータフレーム型になっている。</p>
+<p>ちなみに，サンプルデータにおいて欠損値に該当する箇所には<code>NA</code>の文字が入っていた。<code>read.csv</code>関数では，欠損値はデフォルトで文字列”NA”としている。しかし，実際は別の文字(ex.ピリオド)や，特定の値(ex.9999)の場合もあるだろう。その際は，オプション<code>na.strings</code>で「欠損値として扱う値」を指示すれば良い。</p>
+</section>
+<section id="おまけスクリプトの清書" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="おまけスクリプトの清書"><span class="header-section-number">2.7</span> おまけ；スクリプトの清書</h2>
+<p>さて，ここまでスクリプトを書いてきたことで，そこそこ長いスクリプトファイルができたことと思う。 スクリプトの記述については，もちろん「動けばいい」という考え方もあるが，美しくかけていたほうがなお良いだろう。「美しい」をどのように定義するかは異論あるだろうが，一般に「コード規約」と呼ばれる清書方法がある。ここでは細部まで言及しないが，RStudioのCodeメニューからReformat Codeを実行してみよう。スクリプトファイルが綺麗に整ったように見えないだろうか?</p>
+<p>美しいコードはデバッグにも役立つ。時折Reformatすることを心がけよう。</p>
+</section>
+<section id="課題" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="課題"><span class="header-section-number">2.8</span> 課題</h2>
+<ul>
+<li><p>Rを起動し，新しいスクリプトファイルを作成してください。そのファイル内で，2つの整数を宣言し，足し算を行い，結果をコンソールに表示してください。</p></li>
+<li><p>スクリプトに次の計算を書き，実行してください。</p>
+<ul>
+<li><span class="math inline">\(\frac{5}{6} + \frac{1}{3}\)</span></li>
+<li><span class="math inline">\(9.6 \div 4\)</span></li>
+<li><span class="math inline">\(2.3 + \frac{1}{2}\)</span></li>
+<li><span class="math inline">\(3\times (2.2 + \frac{4}{5})\)</span></li>
+<li><span class="math inline">\((-2)^4\)</span></li>
+<li><span class="math inline">\(2\sqrt{2} \times \sqrt{3}\)</span></li>
+<li><span class="math inline">\(2\log_e 25\)</span></li>
+</ul></li>
+<li><p>Rのスクリプトファイル内で，ベクトルを作成してください。ベクトルには1から10までの整数を格納してください。その後，ベクトルの要素の合計と平均を計算してください。ベクトルを合計する関数は<code>sum</code>，平均は<code>mean</code>です。</p></li>
+<li><p>次の表をリスト型オブジェクト<code>Tbl</code>にしてください。</p></li>
+</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: right;">Pop</th>
+<th style="text-align: right;">Area</th>
+<th style="text-align: right;">Density</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Tokyo</td>
+<td style="text-align: right;">1,403</td>
+<td style="text-align: right;">2,194</td>
+<td style="text-align: right;">6,397</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beijing</td>
+<td style="text-align: right;">2,170</td>
+<td style="text-align: right;">16,410</td>
+<td style="text-align: right;">1,323</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Seoul</td>
+<td style="text-align: right;">949</td>
+<td style="text-align: right;">605</td>
+<td style="text-align: right;">15,688</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>先ほど作った<code>Tbl</code>オブジェクトの，東京(Tokyo)の面積(Area)の値を表示させてください(リスト要素へのアクセス)</p></li>
+<li><p><code>Tbl</code>オブジェクトの人口(Pop)変数の平均を計算してください。</p></li>
+<li><p><code>Tbl</code>オブジェクトをデータフレーム型オブジェクト<code>df2</code>に変換してください。新たに作り直しても良いですし，<code>as.data.frame</code>関数を使っても良い。</p></li>
+<li><p>Rのスクリプトを使用して，<code>Baseball2022.csv</code> ファイルを読み込み，データフレーム<code>dat</code>に格納してください。ただし，このファイルの欠損値は<span class="math inline">\(999\)</span>という数値になっています。</p></li>
+<li><p>読み込んだ<code>dat</code>の冒頭の10行を表示してみてください。</p></li>
+<li><p>読み込んだ<code>dat</code>に<code>summary</code>関数を適用してください。</p></li>
+<li><p>このデータセットの変数<code>team</code>は名義尺度水準です。Factor型にしてください。他にもFactor型にすべき変数が2つありますので，それらも同様に型を変換してください。</p></li>
+<li><p>このデータセットの変数の中で，数値データに対して平均，分散，標準偏差，最大値，最小値，中央値を それぞれ算出してください。</p></li>
+<li><p>課題を記述したスクリプトファイルに対して，Reformatなどで整形してください。</p></li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-stevens1946" class="csl-entry" role="listitem">
+Stevens, Stanley Smith. 1946. <span>“On the Theory of Scales of Measurement.”</span> <em>Science</em> 103 (2684): 677–80.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>実数はreal numberじゃないのか，という指摘もあろうかとおもう。ここでは電子計算機上の数値の分類である，倍精度浮動小数点数(double-precision floating-point number)の意味である。倍精度とは単精度の倍を意味しており，単精度は32ビットを，倍精度は64ビットを単位として一つの数字を表す仕組みのことである。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>UTF-8というのは文字コードの一種で，0と1からなる機械のデータを人間語に翻訳するためのコードであり，世界的にもっとも一般的な文字コードである。しかしWindowsOSはいまだにデフォルトでShift-JISというローカルな文字コードにしているため，このファイルを一度Windows機のExcelなどで開くと文字化けし，以下の手続が正常に作用しなくなることがよくある。本講義で使う場合は，ダウンロード後にExcelなどで開くことなく，直接Rから読み込むようにされたし。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter01.html" class="pagination-link" aria-label="はじめようR/RStudio">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめようR/RStudio</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chapter03.html" class="pagination-link" aria-label="Rによるデータハンドリング">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -5,13 +5,13 @@ source myenv/bin/activate
 cd jp
 echo '日本語版レンダリングします'
 quarto render
-cp -r jp/docs/* docs/jp/
-mv jp/docs docs/jp/docs
+cd ..
+cp -r jp/docs/* ../docs/jp/
 
 echo '<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="refresh" content="0; url=/docs/jp/index.html">
+  <meta http-equiv="refresh" content="0; url=../index.html">
   <title>Redirecting...</title>
 </head>
 <body>
