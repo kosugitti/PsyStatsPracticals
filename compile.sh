@@ -6,7 +6,9 @@ cd jp
 echo '日本語版レンダリングします'
 quarto render
 cd ..
-mv -f jp/docs/ docs/jp
+shopt -s dotglob
+mv jp/docs/* docs/jp/
+shopt -u dotglob
 
 echo '<!DOCTYPE html>
 <html lang="en">
