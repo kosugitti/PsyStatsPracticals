@@ -641,7 +641,7 @@ cor
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  cor_i <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(s_i[, <span class="dv">1</span>], s_i[, <span class="dv">2</span>])</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  judges <span class="ot">&lt;-</span> <span class="fu">c</span>(judges, cor_i<span class="sc">$</span>p.value)</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p =</span> samples) <span class="sc">%&gt;%</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p =</span> judges) <span class="sc">%&gt;%</span></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FLG =</span> <span class="fu">ifelse</span>(p <span class="sc">&lt;=</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sig =</span> <span class="fu">sum</span>(FLG <span class="sc">==</span> <span class="dv">1</span>),</span>
@@ -651,10 +651,10 @@ cor
 <span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   sig non.sig type2error
-1 5790    4210      0.421</code></pre>
+1 6442    3558     0.3558</code></pre>
 </div>
 </div>
-<p>今回は母相関が0.5であり，帰無仮説は棄却されて然るべきなのだが，有意でないと判断された割合が42.1%あったことになる。心理学の研究などでは，この確率<span class="math inline">\(\beta\)</span>が0.2未満，逆にいうと検出が0.8以上あることが望ましいとされているので，今回のこの事例では十分な件出力がなかった，と言えるだろう。</p>
+<p>今回は母相関が0.5であり，帰無仮説は棄却されて然るべきなのだが，有意でないと判断された割合が35.58%あったことになる。心理学の研究などでは，この確率<span class="math inline">\(\beta\)</span>が0.2未満，逆にいうと検出が0.8以上あることが望ましいとされているので，今回のこの事例では十分な件出力がなかった，と言えるだろう。</p>
 <p>もちろん実際には，母相関がどれぐらいなのかわからない。<span class="math inline">\(0.3\)</span>なのかもしれないし，<span class="math inline">\(-0.5\)</span>であるかもしれない。つまりタイプ2エラーは研究者が制御できるところではなく，せいぜい大きな相関が見込めそうな変数について標本を取ろうと心がけるだけである。</p>
 <p>タイプ1,2エラーの確率は，サンプルサイズや効果量(ここでは母相関の大きさ)の関数である。サンプルサイズは研究者が決定することができるので，効果を見積もり，制御したいエラー確率の基準を決めて，合理的にサンプルサイズを決めるべきである。</p>
 </section>
