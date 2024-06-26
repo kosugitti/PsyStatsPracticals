@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>心理学統計実習 - 10&nbsp; 帰無仮説検定のシミュレーション</title>
+<title>心理学統計実習 - 10&nbsp; 疑わしき研究実践とサンプルサイズ設計</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -69,6 +123,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -81,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter10.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">帰無仮説検定のシミュレーション</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter10.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -205,7 +288,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter10.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">帰無仮説検定のシミュレーション</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -254,13 +337,17 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#統計的検定とqrps" id="toc-統計的検定とqrps" class="nav-link active" data-scroll-target="#統計的検定とqrps"><span class="header-section-number">10.1</span> 統計的検定とQRPs</a></li>
-  <li><a href="#タイプ2エラー確率のコントールとサンプルサイズ設計" id="toc-タイプ2エラー確率のコントールとサンプルサイズ設計" class="nav-link" data-scroll-target="#タイプ2エラー確率のコントールとサンプルサイズ設計"><span class="header-section-number">10.2</span> タイプ2エラー確率のコントールとサンプルサイズ設計</a></li>
-  <li><a href="#サンプルサイズ設計の実践" id="toc-サンプルサイズ設計の実践" class="nav-link" data-scroll-target="#サンプルサイズ設計の実践"><span class="header-section-number">10.3</span> サンプルサイズ設計の実践</a>
+  <li><a href="#疑わしき研究実践-questionable-research-practicies" id="toc-疑わしき研究実践-questionable-research-practicies" class="nav-link active" data-scroll-target="#疑わしき研究実践-questionable-research-practicies"><span class="header-section-number">10.1</span> 疑わしき研究実践 Questionable Research Practicies</a>
   <ul class="collapse">
-  <li><a href="#一標本t検定" id="toc-一標本t検定" class="nav-link" data-scroll-target="#一標本t検定"><span class="header-section-number">10.3.1</span> 一標本t検定</a></li>
-  <li><a href="#二標本t検定" id="toc-二標本t検定" class="nav-link" data-scroll-target="#二標本t検定"><span class="header-section-number">10.3.2</span> 二標本t検定</a></li>
-  <li><a href="#相関係数のサンプルサイズ設計" id="toc-相関係数のサンプルサイズ設計" class="nav-link" data-scroll-target="#相関係数のサンプルサイズ設計"><span class="header-section-number">10.3.3</span> 相関係数のサンプルサイズ設計</a></li>
+  <li><a href="#検定の繰り返し" id="toc-検定の繰り返し" class="nav-link" data-scroll-target="#検定の繰り返し"><span class="header-section-number">10.1.1</span> 検定の繰り返し</a></li>
+  <li><a href="#ボンフェロー二の方法" id="toc-ボンフェロー二の方法" class="nav-link" data-scroll-target="#ボンフェロー二の方法"><span class="header-section-number">10.1.2</span> ボンフェロー二の方法</a></li>
+  <li><a href="#n増し問題" id="toc-n増し問題" class="nav-link" data-scroll-target="#n増し問題"><span class="header-section-number">10.1.3</span> N増し問題</a></li>
+  <li><a href="#サンプルサイズを事前に決めないことの問題" id="toc-サンプルサイズを事前に決めないことの問題" class="nav-link" data-scroll-target="#サンプルサイズを事前に決めないことの問題"><span class="header-section-number">10.1.4</span> サンプルサイズを事前に決めないことの問題</a></li>
+  </ul></li>
+  <li><a href="#サンプルサイズ設計" id="toc-サンプルサイズ設計" class="nav-link" data-scroll-target="#サンプルサイズ設計"><span class="header-section-number">10.2</span> サンプルサイズ設計</a>
+  <ul class="collapse">
+  <li><a href="#二標本t検定" id="toc-二標本t検定" class="nav-link" data-scroll-target="#二標本t検定"><span class="header-section-number">10.2.1</span> 二標本t検定</a></li>
+  <li><a href="#相関係数のサンプルサイズ設計" id="toc-相関係数のサンプルサイズ設計" class="nav-link" data-scroll-target="#相関係数のサンプルサイズ設計"><span class="header-section-number">10.2.2</span> 相関係数のサンプルサイズ設計</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -270,7 +357,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">帰無仮説検定のシミュレーション</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></h1>
 </div>
 
 
@@ -287,25 +374,223 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="統計的検定とqrps" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="統計的検定とqrps"><span class="header-section-number">10.1</span> 統計的検定とQRPs</h2>
+<p>ここまでシミュレーションを通じて仮想データを生成し，帰無仮説検定のステップをリバースエンジニアリングしながら検定を「モデル」の観点から確認してきた。</p>
+<p>シミュレーションは仮想世界を作ることであり，いかようにもデータを作ることができるのだから，たとえば実践的にタブーとされていることを仮想的に検証してみることができる。このアプローチで，QRPsが具体的にどのように問題になるのかを体験してみよう。</p>
+<section id="疑わしき研究実践-questionable-research-practicies" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="疑わしき研究実践-questionable-research-practicies"><span class="header-section-number">10.1</span> 疑わしき研究実践 Questionable Research Practicies</h2>
+<section id="検定の繰り返し" class="level3" data-number="10.1.1">
+<h3 data-number="10.1.1" class="anchored" data-anchor-id="検定の繰り返し"><span class="header-section-number">10.1.1</span> 検定の繰り返し</h3>
+<p>帰無仮説検定は確率を伴った判断なので，「差がないのにあると判断してしまった(タイプ1エラー)」とか，「差があるのに検出できなかった(タイプ2エラー)」といった問題が生じうる。すでに述べたように，タイプ2エラーの方は本質的に知り得ないので(差がどの程度あるか，事前にわかっていることがない)，せめてタイプ1エラーは制御することを目指すことになる。</p>
+<p>こうした検定は合理的に行われるべきもので，なんとか有意に「したい」といった研究者のお気持ちとは独立しているはずである。しかし(もしかすると)意図せぬところで，この制御に失敗してしまっている可能性がある。</p>
+<p>ひとつは検定の繰り返しに関する問題である。たとえば分散分析において，「主効果が出てから下位検定で各ペアの検証をするんだから，最初から各ペアのt検定を繰り返せばいいじゃないか」と考える人がいるかもしれない。これで本当に問題ないのか，シミュレーションで確認してみよう。</p>
+<p>以下のコードは，有意差のないデータセットを作り，1.分散分析を行なって有意になるかどうか，2.各ペアについて繰り返しt検定を行い，どこかに有意差が検出されるかどうか，を比較している。分散分析はANOVA君ではなく，R固有の<code>aov</code>関数を用いた<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。また，「どこかに有意差が検出される」を<code>if</code>文を使って書いているところを，注意深く確認しておいてほしい。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># 分析結果をtidyに整形するパッケージ。ない場合はinstallしておこう</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># 有意水準を0.05に設定</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> n3 <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 各グループのサンプルサイズを10に設定</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 平均値を10に設定</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span>  <span class="co"># 標準偏差を2に設定</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> mu2 <span class="ot">&lt;-</span> mu3 <span class="ot">&lt;-</span> mu  <span class="co"># 各グループの平均値を同じに設定</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)  <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>anova.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># ANOVA検出結果の保存用ベクトルを初期化</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>ttest.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># t検定検出結果の保存用ベクトルを初期化</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {  <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu, sigma)  <span class="co"># グループ1のデータを生成</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu, sigma)  <span class="co"># グループ2のデータを生成</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  X3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n3, mu, sigma)  <span class="co"># グループ3のデータを生成</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(  <span class="co"># データフレームを作成</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n1), <span class="fu">rep</span>(<span class="dv">2</span>, n2), <span class="fu">rep</span>(<span class="dv">3</span>, n3)),  <span class="co"># グループ番号を追加</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(X1, X2, X3)  <span class="co"># データを追加</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  result.anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dat) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()  <span class="co"># ANOVAを実行し結果を整形</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  anova.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(result.anova<span class="sc">$</span>p.value[<span class="dv">1</span>] <span class="sc">&lt;</span> alpha, <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># 有意差があるかを判定して保存</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># t検定を繰り返す</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  ttest12 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2)<span class="sc">$</span>p.value  <span class="co"># グループ1と2のt検定</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  ttest13 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X3)<span class="sc">$</span>p.value  <span class="co"># グループ1と3のt検定</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  ttest23 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X2, X3)<span class="sc">$</span>p.value  <span class="co"># グループ2と3のt検定</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  ttest.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ttest12 <span class="sc">&lt;</span> alpha <span class="sc">|</span> ttest13 <span class="sc">&lt;</span> alpha <span class="sc">|</span> ttest23 <span class="sc">&lt;</span> alpha, <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># いずれかのt検定で有意差があれば保存</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>ttest.detect <span class="sc">%&gt;%</span> <span class="fu">mean</span>()  <span class="co"># t検定で有意差が検出された割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.109</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>anova.detect <span class="sc">%&gt;%</span> <span class="fu">mean</span>()  <span class="co"># ANOVAで有意差が検出された割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.04</code></pre>
+</div>
+</div>
+<p>結果を見ると，t検定で有意差が検出された確率が0.109であり，設定した<span class="math inline">\(\alpha\)</span>水準を大きく上回っていることがわかる。有意でないところに有意差を見出しているのだから，これはタイプ1エラーのインフレである。分散分析で検出された結果は0.04であり，正しく<span class="math inline">\(\alpha\)</span>水準がコントロールできている。</p>
+<p>検定を繰り返すことの問題は，確率的判断にある。5%の水準でタイプ1エラーが起こるということは，95%の確率で正しく判断できるということだが，2回検定を繰り返すとその精度は<span class="math inline">\((1-0,05)^2=0.9025\)</span>であり，3回検定を繰り返すと<span class="math inline">\((1-0.05)^3=0.857375\)</span>と，どんどん小さくなっていってしまう。検定はタイプ1エラーのハンドリングが目的であったことを忘れてはならない。</p>
 </section>
-<section id="タイプ2エラー確率のコントールとサンプルサイズ設計" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="タイプ2エラー確率のコントールとサンプルサイズ設計"><span class="header-section-number">10.2</span> タイプ2エラー確率のコントールとサンプルサイズ設計</h2>
+<section id="ボンフェロー二の方法" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="ボンフェロー二の方法"><span class="header-section-number">10.1.2</span> ボンフェロー二の方法</h3>
+<p>一つの論文のなかに複数の研究(Study1, Study2,…)があり，それぞれで検定による確率的判断を行っているとしよう。それぞれ別のデータセットに対する検定であっても，一つの露文の中で確率的判断が繰り返されていることに違いはない。このような場合は，どのようにして有意水準をコントロールすれば良いのだろうか。</p>
+<p>最も単純明快な方法のひとつは，分散分析の下位検定でもみられたBonferroniの補正である。すなわち，検定の回数で有意水準を割ることで，検定を厳しくするのである。5%水準の検定を5回繰り返すのなら，<span class="math inline">\(0.05/5=0.01\)</span>とすることで全体的なタイプ1エラー率を抑制するのである。これが正しく機能するかどうか，シミュレーションで確認してみよう。</p>
+<p>反復してデータを生成することになるので，仮想データ生成関数を別途事前に準備しておこう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># シミュレーション用の関数を定義</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>studyMake <span class="ot">&lt;-</span> <span class="cf">function</span>(n, mu, sigma, delta) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu, sigma)  <span class="co"># グループ1のデータを生成</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma)  <span class="co"># グループ2のデータを生成（平均値が異なる）</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(  <span class="co"># データフレームを作成</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> n),  <span class="co"># グループ番号を追加</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(X1, X2)  <span class="co"># データを追加</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2)<span class="sc">$</span>p.value  <span class="co"># グループ間のt検定を実行</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)  <span class="co"># p値を返す</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>この関数は，引数としてサンプルサイズ<code>n</code>，平均値<code>mu</code>，標準偏差<code>sigma</code>，効果量<code>delta</code>をとり，2群のt検定の結果である<span class="math inline">\(p\)</span>値を返す関数である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用例；t検定の結果のp値が戻ってくる</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">studyMake</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">delta =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9444895</code></pre>
+</div>
+</div>
+<p>これ一回で1分析するので，これを複数回行って一つの研究とし，一つの論文のなかで<code>num_studies</code>回の研究を行ったとしよう。今回は<code>num_studies = 3</code>としている。Rの<code>replicate</code>関数で研究回数繰り返した<span class="math inline">\(p\)</span>値ベクトルを得て，どこかに差が検出されるかどうかをチェックする。「どこかに」を表現するために<code>any</code>関数を使って判定する。判定する有意水準として，<span class="math inline">\(\alpha\)</span>と補正をかけた<span class="math inline">\(\alpha_{adj}\)</span>の2つを用意した。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)  <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># 有意水準を0.05に設定</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>num_studies <span class="ot">&lt;-</span> <span class="dv">3</span>  <span class="co"># 研究の数を3に設定</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>alpha_adjust <span class="ot">&lt;-</span> alpha <span class="sc">/</span> num_studies  <span class="co"># 多重検定補正後の有意水準を計算</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>FLG.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># 検出結果を保存するベクトルを初期化</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>FLG.detect.adj <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># 補正後の検出結果を保存するベクトルを初期化</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {  <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  p_values <span class="ot">&lt;-</span> <span class="fu">replicate</span>(num_studies, <span class="fu">studyMake</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">delta =</span> <span class="dv">0</span>))  <span class="co"># 各研究のp値を生成</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  FLG.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">any</span>(p_values <span class="sc">&lt;</span> alpha), <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># 補正前の有意差検出を判定して保存</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  FLG.detect.adj[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">any</span>(p_values <span class="sc">&lt;</span> alpha_adjust), <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># 補正後の有意差検出を判定して保存</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>FLG.detect <span class="sc">%&gt;%</span> mean  <span class="co"># 補正前の有意差検出率を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.145</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>FLG.detect.adj <span class="sc">%&gt;%</span> mean  <span class="co"># 補正後の有意差検出率を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.049</code></pre>
+</div>
+</div>
+<p>結果を見ると，<span class="math inline">\(\alpha\)</span>水準のまま検定を行うと，論文全体でのタイプ1エラー率が0.145と5%を上回っており，3つの研究のどこかで間違った判断をしていることがわかる。補正すると0.049と正しく制御されている。</p>
+<p>一連の研究をまとめた一つの論文に，複数の研究が含まれていることは少なくない。各検定結果をまとめて総合考察とすることも一般的である。総合考察は各分析結果から全体的な結論を導くのだが，その要素のどこかに間違いがあると，全体の論立てが崩れてしまうことにもなりかねない。いわば腐った支柱が紛れ込んでいる土台の上に家屋を建てるようなもので，研究の積み重ねを目的とする科学活動の一環である以上，正しく制御されていることは重要である。</p>
 </section>
-<section id="サンプルサイズ設計の実践" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="サンプルサイズ設計の実践"><span class="header-section-number">10.3</span> サンプルサイズ設計の実践</h2>
-<section id="一標本t検定" class="level3" data-number="10.3.1">
-<h3 data-number="10.3.1" class="anchored" data-anchor-id="一標本t検定"><span class="header-section-number">10.3.1</span> 一標本t検定</h3>
+<section id="n増し問題" class="level3" data-number="10.1.3">
+<h3 data-number="10.1.3" class="anchored" data-anchor-id="n増し問題"><span class="header-section-number">10.1.3</span> N増し問題</h3>
+<p>人間を対象にした研究を行って，データを一生懸命取る。その結果，効果があると見られた操作/介入から統計的な有意差が検出されなければ，「悔しい」という心情になることは理解できる。もう少し実験を工夫すれば，もう少しデータが違えばよかったのでは，と思うかもしれない。ではもう少し<em>頑張って</em>データを増やしてみればどうだろうか。</p>
+<p>実はこの考え方はQRPsのひとつである。検定は真偽判定をする競技のようなものなので，ゲームの途中でプレイヤーの人数が変わるのはよろしくない。このことをシミュレーションで確認してみよう。</p>
+<p>以下のコードは，t検定のデータを最初<code>n1=n2=10</code>で作成して行っている。タイプ1エラーの検証をするので，効果量は<span class="math inline">\(0\)</span>である。ここでt検定を行い，もしその<span class="math inline">\(p\)</span>値が<span class="math inline">\(\alpha\)</span>よりも大きかったら，つまり有意であると判断されなかったら，同じ方法でデータを1件追加する。そしてまたt検定を行う。このサンプルの追加は，効果量<span class="math inline">\(0\)</span>なので，偶然のお許しが出るまでいつまで経っても終わることがないため，上限を100にしてある。上限に達したら流石に諦めてもらうとして，さてそうしたQRPsな努力の結果，<span class="math inline">\(\alpha\)</span>水準はどれぐらいに保たれているだろうか。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># 有意水準を0.05に設定</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter)  <span class="co"># p値を保存するベクトルを初期化</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>add.vec <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter) <span class="co"># 増やした人数を保存するベクトルを初期化</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 各グループのサンプルサイズを10に設定</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 平均値を10に設定</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span>  <span class="co"># 標準偏差を2に設定</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">0</span>  <span class="co"># 平均の差を0に設定</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="do">## シミュレーション本体</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {  <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 最初のデータを生成</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    Y1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu, sigma)  <span class="co"># グループ1のデータを生成</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    Y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma)  <span class="co"># グループ2のデータを生成</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Y1, Y2)<span class="sc">$</span>p.value  <span class="co"># t検定を実行しp値を保存</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># データを追加する</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    count <span class="ot">&lt;-</span> <span class="dv">0</span>  <span class="co"># 追加したデータの数をカウント</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="do">## p値が5%を下回るか、データが100になるまでデータを増やし続ける</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (p[i] <span class="sc">&gt;=</span> alpha <span class="sc">&amp;&amp;</span> count <span class="sc">&lt;</span> <span class="dv">100</span>) {  <span class="co"># 条件を満たすまでループを繰り返す</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 有意でなかった場合、変数ごとに1つずつデータを追加</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        Y1_add <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, mu, sigma)  <span class="co"># グループ1に新しいデータを1つ追加</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        Y2_add <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma)  <span class="co"># グループ2に新しいデータを1つ追加</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        Y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(Y1, Y1_add)  <span class="co"># グループ1のデータを更新</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        Y2 <span class="ot">&lt;-</span> <span class="fu">c</span>(Y2, Y2_add)  <span class="co"># グループ2のデータを更新</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        p[i] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Y1, Y2)<span class="sc">$</span>p.value  <span class="co"># 新しいデータでt検定を再度実行しp値を更新</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span>  <span class="co"># データを追加した回数をカウント</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    add.vec[i] <span class="ot">&lt;-</span> count</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 結果</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(p <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">|&gt;</span> <span class="fu">mean</span>()  <span class="co"># p値が5%未満の割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.306</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter10_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(add.vec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter10_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>結果をみると，0.4065238とかなり逸脱して，誤った結論に辿り着いていることがわかる。努力の結果得られた有意差は，偶然の賜物でもあり，誤った研究実践による幻想にすぎない。加えたデータのヒストグラムからわかるように，悲しいかな，75%もの割合で上限100まで達してしまう。百害あって一利なしとはこのことである。</p>
 </section>
-<section id="二標本t検定" class="level3" data-number="10.3.2">
-<h3 data-number="10.3.2" class="anchored" data-anchor-id="二標本t検定"><span class="header-section-number">10.3.2</span> 二標本t検定</h3>
+<section id="サンプルサイズを事前に決めないことの問題" class="level3" data-number="10.1.4">
+<h3 data-number="10.1.4" class="anchored" data-anchor-id="サンプルサイズを事前に決めないことの問題"><span class="header-section-number">10.1.4</span> サンプルサイズを事前に決めないことの問題</h3>
+<p>サンプルサイズを事前に決めずに検定する，という状況を別の角度から見てみよう。<span class="citation" data-cites="Maeda2017">クルシュケ (<a href="references.html#ref-Maeda2017" role="doc-biblioref">[2014] 2017</a>)</span> は</p>
 </section>
-<section id="相関係数のサンプルサイズ設計" class="level3" data-number="10.3.3">
-<h3 data-number="10.3.3" class="anchored" data-anchor-id="相関係数のサンプルサイズ設計"><span class="header-section-number">10.3.3</span> 相関係数のサンプルサイズ設計</h3>
+</section>
+<section id="サンプルサイズ設計" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="サンプルサイズ設計"><span class="header-section-number">10.2</span> サンプルサイズ設計</h2>
+<section id="二標本t検定" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="二標本t検定"><span class="header-section-number">10.2.1</span> 二標本t検定</h3>
+</section>
+<section id="相関係数のサンプルサイズ設計" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="相関係数のサンプルサイズ設計"><span class="header-section-number">10.2.2</span> 相関係数のサンプルサイズ設計</h3>
+<!-- 
+
+6.2.2 データを一生懸命とって何が悪い；徐々に n を増やしていくと何が起こる？
+
+・効果量，アルファ，ベータを一定にしつつ，n を徐々に増やしていって有意になったらやめるということを 10000 回繰り返す；全体でアルファは保たれているか
+・効果量やベータを小，中，大に変えて同じシミュレーションをする。より問題が大きいのはどういう時か。
 
 
+6.2.3 停止規則が違うとはどういうこと?
+
+・犬 4 匹本の「24 回中 7 回成功する検定」のシミュレーション
+
+6.3 サンプルサイズを設計しよう
+ -->
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Maeda2017" class="csl-entry" role="listitem">
+クルシュケJ. K. (2014) 2017. <em>ベイズ統計モデリング: R, JAGS, Stanによるチュートリアル 原著第2版</em>. Translated by 前田和寛 and 小杉考司. 共立出版.
+</div>
+</div>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>ANOVA君は結果をコンソールに直接出力し，戻り値を持たない。ここでは結果の<span class="math inline">\(p\)</span>値が必要だったので，このようにした。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
