@@ -549,11 +549,62 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>結果をみると，0.4065238とかなり逸脱して，誤った結論に辿り着いていることがわかる。努力の結果得られた有意差は，偶然の賜物でもあり，誤った研究実践による幻想にすぎない。加えたデータのヒストグラムからわかるように，悲しいかな，75%もの割合で上限100まで達してしまう。百害あって一利なしとはこのことである。</p>
+<p>結果をみると，0.306とかなり逸脱して，誤った結論に辿り着いていることがわかる。努力の結果得られた有意差は，偶然の賜物でもあり，誤った研究実践による幻想にすぎない。加えたデータのヒストグラムからわかるように，悲しいかな，75%もの割合で上限100まで達してしまう。百害あって一利なしとはこのことである。</p>
 </section>
 <section id="サンプルサイズを事前に決めないことの問題" class="level3" data-number="10.1.4">
 <h3 data-number="10.1.4" class="anchored" data-anchor-id="サンプルサイズを事前に決めないことの問題"><span class="header-section-number">10.1.4</span> サンプルサイズを事前に決めないことの問題</h3>
-<p>サンプルサイズを事前に決めずに検定する，という状況を別の角度から見てみよう。<span class="citation" data-cites="Maeda2017">クルシュケ (<a href="references.html#ref-Maeda2017" role="doc-biblioref">[2014] 2017</a>)</span> は</p>
+<p>サンプルサイズを事前に決めずに検定する，という状況を別の角度から見てみよう。 <span class="citation" data-cites="Maeda2017">クルシュケ (<a href="references.html#ref-Maeda2017" role="doc-biblioref">[2014] 2017</a>)</span> は「コインフリップを24回して，うち7回表が出た」というシーンを例に挙げて説明している。7/24は半分を下回っているから，やや裏が出やすいコインであるように思える。帰無仮説として，このコインは公平である(表と裏が出る確率が半々である)，というのを検証したいとする。</p>
+<p>この24回中7回成功，という話の背後に「24施行する」ということを決めていたかどうか(サンプルサイズを事前に決めていたか)ということを考えてみよう。</p>
+<p>まずは正直に，最初から24回コインフリップすることを決めていたとする。コインフリップはベルヌーイ試行<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> であり，それを繰り返すので二項分布に従うと考えられる。そこで，二項検定として次のように計算できるだろう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">24</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 7回表が出る確率</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pbinom</span>(<span class="dv">7</span>, N, <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.06391466</code></pre>
+</div>
+</div>
+<p>二項分布のp値を出すには<code>pbinom</code>を使いった。また帰無仮説として，このコインフリップは公平であると考えているのだから，<span class="math inline">\(\theta=0.5\)</span>が帰無仮説の状態である。この<span class="math inline">\(\theta=0.5\)</span>とした時に，<span class="math inline">\(N=24,k=7\)</span>という結果になる確率を計算し，かつ両側検定(公平でない，が対立仮説なので裏が7回でもよい)であることを考えて確率を2倍した。p値は0.0639147であるから，5%水準では有意であると判定できない。これぐらいの確率はあるということだ。</p>
+<p>しかしここで第二の状況を考えてみよう。24回コインフリップすることを決めていたのではなくて，7回成功するまでコインフリップを続けたところ，結果的に24回で終わったということだった，とするのである。このようなシーンの確率分布は負の二項分布と呼ばれ，<code>pnbinom</code>で次のように計算できる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 24回以上必要な確率</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnbinom</span>(k, <span class="dv">24</span>, <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.003326893</code></pre>
+</div>
+</div>
+<p>この結果から，<span class="math inline">\(\theta=0.5\)</span>の時に7回表がでるまでに24施行も必要とする確率は，0.0033269だから，5%水準で有意である。つまり，滅多にこんなことが起きないので，<span class="math inline">\(\theta=0.5\)</span>という帰無仮説が疑わしいことになる。ここではシーンが異なるとp値が違っている，ということに注意してほしい。</p>
+<p>さらに第3のシーンを考えよう。これは「何回やるかは決めてないけど，まあ5分ぐらいかな」と試行にかける時間だけ決めていたという状況である。結果的に24回になったけど，もしかすると23回だったかもしれないし，25回や20回，30回だったかもしれない。これをシミュレーションするために，「24がピークになるような頻度の分布」をポアソン分布を使って生成する[^10:3]。</p>
+<p>[^10:3] ポアソン分布は正の整数を実現値に取る分布で，カウント変数の確率分布として用いられる。パラメータは<span class="math inline">\(\lambda\)</span>だけであり，期待値と分散が<span class="math inline">\(\lambda\)</span>に一致する，非常にシンプルな分布である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="co"># 発生させる乱数の数</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 24回がピークに来るトライアル回数</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>trial <span class="ot">&lt;-</span> <span class="fu">rpois</span>(iter, <span class="dv">24</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(trial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter10_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>この各トライアルにおいて，二項分布で成功した回数を計算し，トライアル回数で割ることによって，表が出る確率のシミュレーションができる。その時の割合は，<span class="math inline">\(7/24\)</span>よりもレアな現象だろうか?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  result[i] <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">1</span>, trial[i], <span class="fl">0.5</span>) <span class="sc">/</span> trial[i]</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 7/24よりも小さい確率で起こった?</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(result[result <span class="sc">&lt;</span> (<span class="dv">7</span> <span class="sc">/</span> <span class="dv">24</span>)]) <span class="sc">/</span> iter</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02262</code></pre>
+</div>
+</div>
+<p>これを見ると，両側検定にしても0.04524なので，ギリギリ有意になるかどうか，というところだろうか。</p>
+<p>さて判断にこまった。「24回やる」と決めていたのであれば<span class="math inline">\(\theta=0.5\)</span>は棄却されないし，「7回成功するまで」と決めていたのであれば</p>
 </section>
 </section>
 <section id="サンプルサイズ設計" class="level2" data-number="10.2">
@@ -590,6 +641,7 @@ window.Quarto = {
 <hr>
 <ol>
 <li id="fn1"><p>ANOVA君は結果をコンソールに直接出力し，戻り値を持たない。ここでは結果の<span class="math inline">\(p\)</span>値が必要だったので，このようにした。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>表(1)が出るか，裏(0)が出るか，という2値の結果変数だけを持つ施行のことで，この確率変数がベルヌーイ分布にし違う。ベルヌーイ分布は，表が出る確率<span class="math inline">\(\theta\)</span>をパラメータに持つ。<span class="math inline">\(P(X=k) = \theta^k(1-\theta)^{1-k},\text{ただし}k=\{0,1\}\)</span>という確率変数である。1/0というのが生死，男女，成功失敗などさまざまなメタファに適用できるので応用範囲が広い。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
