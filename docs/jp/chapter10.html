@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.4.557">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -123,7 +123,7 @@ div.csl-indent {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -346,8 +346,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#サンプルサイズ設計" id="toc-サンプルサイズ設計" class="nav-link" data-scroll-target="#サンプルサイズ設計"><span class="header-section-number">10.2</span> サンプルサイズ設計</a>
   <ul class="collapse">
-  <li><a href="#二標本t検定" id="toc-二標本t検定" class="nav-link" data-scroll-target="#二標本t検定"><span class="header-section-number">10.2.1</span> 二標本t検定</a></li>
-  <li><a href="#相関係数のサンプルサイズ設計" id="toc-相関係数のサンプルサイズ設計" class="nav-link" data-scroll-target="#相関係数のサンプルサイズ設計"><span class="header-section-number">10.2.2</span> 相関係数のサンプルサイズ設計</a></li>
+  <li><a href="#対応のないt検定" id="toc-対応のないt検定" class="nav-link" data-scroll-target="#対応のないt検定"><span class="header-section-number">10.2.1</span> 対応のないt検定</a></li>
+  <li><a href="#シミュレーションによるサンプルサイズ設計" id="toc-シミュレーションによるサンプルサイズ設計" class="nav-link" data-scroll-target="#シミュレーションによるサンプルサイズ設計"><span class="header-section-number">10.2.2</span> シミュレーションによるサンプルサイズ設計</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -604,35 +604,150 @@ window.Quarto = {
 </div>
 </div>
 <p>これを見ると，両側検定にしても0.04524なので，ギリギリ有意になるかどうか，というところだろうか。</p>
-<p>さて判断にこまった。「24回やる」と決めていたのであれば<span class="math inline">\(\theta=0.5\)</span>は棄却されないし，「7回成功するまで」と決めていたのであれば</p>
+<p>さて判断にこまった。「24回やる」と決めていたのであれば<span class="math inline">\(\theta=0.5\)</span>は棄却されないし，「7回成功するまで」と決めていたのであれば<span class="math inline">\(\theta=0.5\)</span>は棄却される。「5分間」と決めていても棄却されるが，そもそもこうした実験者の意図によって判断が揺らいで良いものだろうか?というのが <span class="citation" data-cites="Maeda2017">クルシュケ (<a href="references.html#ref-Maeda2017" role="doc-biblioref">[2014] 2017</a>)</span> の指摘する疑問点である。</p>
+<p>問題は，「24回中7回成功」という事実に，二項分布，負の二項分布，あるいは組み合わさった分布のような，確率分布の情報が含まれていないことにある。この確率分布はデータが既知で母数が未知だから尤度関数であり，データ生成メカニズムであるとも言えるだろう。想定するメカニズムが明示されない検定は，ともすれば事後的に「実は負の二項分布を想定していたんですよ，へへ」ということも可能になってしまう。こうした点からも，研究者の自由度をなるべく少なくする研究計画の<strong>事前登録</strong>制度が必要であることがわかる。</p>
 </section>
 </section>
 <section id="サンプルサイズ設計" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="サンプルサイズ設計"><span class="header-section-number">10.2</span> サンプルサイズ設計</h2>
-<section id="二標本t検定" class="level3" data-number="10.2.1">
-<h3 data-number="10.2.1" class="anchored" data-anchor-id="二標本t検定"><span class="header-section-number">10.2.1</span> 二標本t検定</h3>
+<p>どのようにデータを取り，どのように分析・検定し，どのような基準で判断するかを事前に決めることに加え，事前にサンプルサイズを見積もっておく必要があるだろう。サンプルはとにかく多ければ多いほど良いか，というとそうではなく，過剰にサンプルを集めることは研究コストの増大であり，回答者の負担増でしかない。またサンプルサイズが大きくなると有意差を検出しやすくなるが，必要なのは有意差ではなく実質的に効果を見積もることであり，有意差が見つかれば良いというものではないことに注意が必要である。もちろん上で見てきたように，有意差が検出できるかどうかを指標にしてサンプルサイズを変動させてしまうのは，明らかに誤った研究実践である。</p>
+<p>事前にサンプルサイズを決定するのに必要なのは，これまでのリバースエンジニアリングの演習例からもわかるように，効果量の見積もりである。<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> これをどのように定めるかについては，先行研究を考えるとか，研究領域で「これぐらい差がないと意味がないよね」とコンセンサスが取れている程度で決めることになる。<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<section id="対応のないt検定" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="対応のないt検定"><span class="header-section-number">10.2.1</span> 対応のないt検定</h3>
+<p>サンプルサイズの設計には，これまで使ってきた検定統計量に<strong>非心度</strong>non-centrality parameterというパラメータを加えて考える必要がある。</p>
+<p>具体的に，対応のないt検定を例にサンプルサイズ設計の方法を見てみよう。t検定は言葉の通り，t分布を用いて帰無仮説の元での検定統計量の実現値が問題になるのであった。帰無仮説は<span class="math inline">\(\mu_0 = \mu_1-\mu_2 = 0\)</span>であり，検定統計量は次式で表されるのであった。</p>
+<p><span class="math display">\[ T = \frac{d - \mu_0}{\sqrt{U^2_p/\frac{n_1n_2}{n_1+n_2}}}\]</span></p>
+<p>この分子において，<span class="math inline">\(d - \mu_0 = (\bar{X}_1 - \bar{X}_2) - (\mu_1 - \mu_2)\)</span>の第二項を,<span class="math inline">\(\mu_1-\mu_2 = 0\)</span>と仮定するから，<span class="math inline">\(0\)</span>が中心の標準化されたt分布が用いられたのである。帰無仮説はこのように理論的に特定できる比較点をもとに置かれているのであって，帰無仮説下ではない現実の世界では，検定統計量は母平均の差<span class="math inline">\(\mu_1 - \mu_2\)</span>に応じた分布から生じている。このように中心がずれているt分布のことを<strong>非心分布</strong>といい，ズレの程度が非心度パラメータである。t検定における非心度<span class="math inline">\(\lambda\)</span>は，以下の式で表される。</p>
+<p><span class="math display">\[ \lambda = \frac{(\mu_1-\mu2) - \mu_0}{\sigma\sqrt{n}} \]</span></p>
+<p>この非心度の分だけ，非心t分布はt分布からズレていることになる。Rでは<code>dt</code>関数に<code>ncp</code>パラメータがあり，デフォルトでは<code>ncp=0</code>になっていた。これを変えて描画してみよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データの準備</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 自由度を指定</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplotでプロット</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dt, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> df, <span class="at">ncp =</span> <span class="dv">0</span>), <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"ncp=0"</span>)) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dt, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> df, <span class="at">ncp =</span> <span class="dv">3</span>), <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"ncp=3"</span>)) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"非心t分布"</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"x"</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"密度"</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"ncp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter10_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>ncp=0</code>の時は，中心が<code>0</code>にある帰無仮説の世界であり，これを使ってタイプ1エラー，つまり<span class="math inline">\(\alpha\)</span>が算出されたのであった。<code>ncp</code>を効果量で表現すれば，母平均の差がゼロでない時の分布が描けるのだから，タイプ2エラー，つまり<span class="math inline">\(\beta\)</span>が計算できる。</p>
+<p>自由度<code>df = 10</code>，非心度<code>ncp = 3</code>の例で考えてみよう。 タイプ1エラーになるのは，自由度<code>10</code>のt分布で上2.5%の臨界値以上の実現値が得られた時である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df=</span><span class="dv">10</span>, <span class="at">ncp=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.228139</code></pre>
+</div>
+</div>
+<p>このとき，実際は<code>ncp = 3</code>ほどずれていたのだから，タイプ2エラーが生じる確率は次のとおりである。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df=</span><span class="dv">10</span>, <span class="at">ncp=</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">pt</span>(<span class="at">df=</span><span class="dv">10</span>, <span class="at">ncp=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2285998</code></pre>
+</div>
+</div>
+<p>当然，<code>ncp = 0</code>から離れるほどタイプ2エラーは生じにくくなる。非心度は母効果量<span class="math inline">\(\delta = \frac{(\mu_1 - \mu_2)-\mu_0}{\delta}\)</span>を使って，<span class="math inline">\(\lambda = \delta \sqrt{n}\)</span>で表すことができる。</p>
+<p>これを使って，t検定のサンプルサイズを設計してみよう。話を簡単にするために，サンプルサイズは2群で等しいものとする。</p>
+<p>検定統計量の式を思い出して，<span class="math inline">\(\sqrt{n}\)</span>にあたるところは2群のサンプルサイズから計算される，プールされた標本サイズから得られることに注意しよう<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">1000</span>){</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> n <span class="sc">+</span> n <span class="sc">-</span> <span class="dv">2</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> delta <span class="sc">*</span> (<span class="fu">sqrt</span>((n<span class="sc">*</span>n)<span class="sc">/</span>(n<span class="sc">+</span>n)))</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  cv <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> df) <span class="co"># Type1errorの臨界値</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  er <span class="ot">&lt;-</span> <span class="fu">pt</span>(cv, <span class="at">df =</span> df, <span class="at">ncp =</span> lambda) <span class="co"># Type2errorの確率</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(er <span class="sc">&lt;=</span> beta){<span class="cf">break</span>}</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 64</code></pre>
+</div>
+</div>
+<p>ここでは，サンプルサイズを10から徐々に増やしていき，1000までの間で目標とする<span class="math inline">\(\beta\)</span>まで抑えられたところで，カウントしていく<code>for</code>ループを<code>break</code>で脱出する，というかたちで組んでいる。結果的に，各群64名，合計128名のサンプルがあれば，目標が達成できることがわかる。サンプルサイズが2群で異なる場合など，詳細は@kosugi2023 に詳しい。</p>
 </section>
-<section id="相関係数のサンプルサイズ設計" class="level3" data-number="10.2.2">
-<h3 data-number="10.2.2" class="anchored" data-anchor-id="相関係数のサンプルサイズ設計"><span class="header-section-number">10.2.2</span> 相関係数のサンプルサイズ設計</h3>
-<!-- 
+<section id="シミュレーションによるサンプルサイズ設計" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="シミュレーションによるサンプルサイズ設計"><span class="header-section-number">10.2.2</span> シミュレーションによるサンプルサイズ設計</h3>
+<p>非心F分布を使えば分散分析でもサンプルサイズができるし，そのほかの検定についても同様に非心分布を活用すると良い。しかし，非心分布の理解や非心度の計算など，ケースバイケースで学ぶべきことは多い。</p>
+<p>そこで，電子計算機の演算力をたのみに，データ生成のシミュレーションを通じて設計していくことを考えてみよう。サンプルサイズや効果量を定めれば，仮想データを作ることができるし，それ対して検定をかけることもできる。仮想データの生成と検定を反復し，タイプ2エラーがどの程度生じるかを相対度数で近似することもできるだろう。であれば，その近似をサンプルサイズを徐々に変えることで繰り返してサンプルサイズを定めることもできる。</p>
+<p>以下は，母相関が<span class="math inline">\(\rho = 0.5\)</span>とした時に，検出力が80%になるために必要なサンプルサイズを求めるシミュレーションコードである。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+次のパッケージを付け加えます: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>以下のオブジェクトは 'package:dplyr' からマスクされています:
 
-6.2.2 データを一生懸命とって何が悪い；徐々に n を増やしていくと何が起こる？
-
-・効果量，アルファ，ベータを一定にしつつ，n を徐々に増やしていって有意になったらやめるということを 10000 回繰り返す；全体でアルファは保たれているか
-・効果量やベータを小，中，大に変えて同じシミュレーションをする。より問題が大きいのはどういう時か。
-
-
-6.2.3 停止規則が違うとはどういうこと?
-
-・犬 4 匹本の「24 回中 7 回成功する検定」のシミュレーション
-
-6.3 サンプルサイズを設計しよう
- -->
+    select</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,<span class="at">ncol=</span><span class="dv">2</span>,<span class="at">nrow=</span><span class="dv">2</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> sd<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> sd <span class="sc">*</span> sd <span class="sc">*</span> rho</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>,<span class="at">to =</span> <span class="dv">1000</span>, <span class="at">by =</span> <span class="dv">1</span>)){</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  FLG <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter){</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), Sigma)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    cor_test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(X[,<span class="dv">1</span>],X[,<span class="dv">2</span>])</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    FLG[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( cor_test<span class="sc">$</span>p.value <span class="sc">&gt;</span> alpha , <span class="dv">1</span> , <span class="dv">0</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  t2error <span class="ot">&lt;-</span> <span class="fu">mean</span>(FLG)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"n="</span>,n,<span class="st">"のとき，betaは"</span>, t2error,<span class="st">"です。"</span>))</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(t2error <span class="sc">&lt;=</span> beta){<span class="cf">break</span>}</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "n= 10 のとき，betaは 0.681 です。"
+[1] "n= 11 のとき，betaは 0.639 です。"
+[1] "n= 12 のとき，betaは 0.612 です。"
+[1] "n= 13 のとき，betaは 0.566 です。"
+[1] "n= 14 のとき，betaは 0.563 です。"
+[1] "n= 15 のとき，betaは 0.471 です。"
+[1] "n= 16 のとき，betaは 0.462 です。"
+[1] "n= 17 のとき，betaは 0.419 です。"
+[1] "n= 18 のとき，betaは 0.402 です。"
+[1] "n= 19 のとき，betaは 0.385 です。"
+[1] "n= 20 のとき，betaは 0.353 です。"
+[1] "n= 21 のとき，betaは 0.344 です。"
+[1] "n= 22 のとき，betaは 0.312 です。"
+[1] "n= 23 のとき，betaは 0.285 です。"
+[1] "n= 24 のとき，betaは 0.256 です。"
+[1] "n= 25 のとき，betaは 0.265 です。"
+[1] "n= 26 のとき，betaは 0.21 です。"
+[1] "n= 27 のとき，betaは 0.227 です。"
+[1] "n= 28 のとき，betaは 0.176 です。"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 28</code></pre>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-Maeda2017" class="csl-entry" role="listitem">
 クルシュケJ. K. (2014) 2017. <em>ベイズ統計モデリング: R, JAGS, Stanによるチュートリアル 原著第2版</em>. Translated by 前田和寛 and 小杉考司. 共立出版.
+</div>
+<div id="ref-kosugi2023" class="csl-entry" role="listitem">
+小杉考司, 紀ノ定保礼, and 清水裕士. 2023. <em>数値シミュレーションで読み解く統計のしくみ〜Rでためしてわかる心理統計</em>. 技術評論社.
 </div>
 </div>
 </section>
@@ -642,6 +757,9 @@ window.Quarto = {
 <ol>
 <li id="fn1"><p>ANOVA君は結果をコンソールに直接出力し，戻り値を持たない。ここでは結果の<span class="math inline">\(p\)</span>値が必要だったので，このようにした。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>表(1)が出るか，裏(0)が出るか，という2値の結果変数だけを持つ施行のことで，この確率変数がベルヌーイ分布にし違う。ベルヌーイ分布は，表が出る確率<span class="math inline">\(\theta\)</span>をパラメータに持つ。<span class="math inline">\(P(X=k) = \theta^k(1-\theta)^{1-k},\text{ただし}k=\{0,1\}\)</span>という確率変数である。1/0というのが生死，男女，成功失敗などさまざまなメタファに適用できるので応用範囲が広い。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>もちろん基準となる有意水準<span class="math inline">\(\alpha\)</span>，検出力<span class="math inline">\(1-\beta\)</span>も定める必要があるが，慣例的に<span class="math inline">\(\alpha = 0.05\)</span>であり，<span class="math inline">\(1-\beta =0.8\)</span>ぐらいが必要とされている。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>この「最低限検出したい効果」のことをSmallest Effect Size of Interest, SESOIと呼ぶ。<span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> も参照。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>t統計量の実現値の式にある分母，<span class="math inline">\(\sqrt{U_p^2/\frac{n_1n_2}{n_1+n_2}}\)</span>に見られる，プールされた不偏分散を割るための標本サイズであり，2群の母分散が等しいと仮定して計算するなら，<span class="math inline">\(\sigma^2(\frac{1}{n_1} + \frac{1}{n_2}) = \sigma^2(\frac{n_1+n_2}{n_1n_2}) = \sigma^2 / \frac{n_1n_2}{n_1 + n_2}\)</span>から得られる。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
