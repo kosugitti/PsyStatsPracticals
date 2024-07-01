@@ -265,10 +265,98 @@ df <- data.frame(p = judges) %>%
 
 タイプ1,2エラーの確率は，サンプルサイズや効果量(ここでは母相関の大きさ)の関数である。サンプルサイズは研究者が決定することができるので，効果を見積もり，制御したいエラー確率の基準を決めて，合理的にサンプルサイズを決めるべきである。
 
-## 課題；無相関検定の例
+## 課題
 
 1. 母相関が0の母集団から，サンプルサイズ10の標本を取り出して標本相関を見た時の標本分布を，乱数のヒストグラムで近似してみましょう。
 2. 同じく，サンプルサイズ50の標本を取り出して標本相関を見た時の標本分布を，乱数のヒストグラムで近似してみましょう。サンプルサイズが20や10の時と比べてどういう違いがあるでしょうか。
 3. サンプルサイズ50の標本相関が$r=-0.3$のとき，統計的に有意と言えるでしょうか。`cor.test` をつかって検定し，検定結果と判断結果を記述してください。
 4. 標本相関が$r=-0.3$だとします。サンプルサイズが10,20,50,1000のとき，統計的に有意と言えるでしょうか。`cor.test`を使って検定し，検定結果を一覧にしてみましょう。ここから何がわかるでしょうか。
 5. 母相関が$\rho = -0.3$だったとします。サンプルサイズ20のとき，どの程度の検出力があると見込めるでしょうか。シミュレーションで近似してください。
+
+```{r}
+#| echo: FALSE
+#| eval: FALSE
+#| include: FALSE
+
+library(tidyverse)
+
+
+# 課題1.シミュレーションの設定
+set.seed(123)
+n_sim <- 1000
+sample_size <- 10
+rho <- 0
+
+# シミュレーションの実行
+sample_correlations <- replicate(n_sim, {
+  x <- rnorm(sample_size)
+  y <- rnorm(sample_size)
+  cor(x, y)
+})
+
+# ヒストグラムのプロット
+hist(sample_correlations, breaks = 30, main = "Histogram of Sample Correlations (n = 10)", xlab = "Sample Correlation")
+
+# 課題2
+sample_size <- 50
+
+# シミュレーションの実行
+sample_correlations <- replicate(n_sim, {
+  x <- rnorm(sample_size)
+  y <- rnorm(sample_size)
+  cor(x, y)
+})
+
+# ヒストグラムのプロット
+hist(sample_correlations, breaks = 30, main = "Histogram of Sample Correlations (n = 50)", xlab = "Sample Correlation")
+
+# 課題3
+sample_size <- 50
+x <- rnorm(sample_size)
+y <- -0.3 * x + sqrt(1 - 0.3^2) * rnorm(sample_size)
+
+# 相関の計算と検定
+cor_test_result <- cor.test(x, y)
+
+# 検定結果の表示
+cor_test_result
+
+# 課題4
+sample_sizes <- c(10, 20, 50, 1000)
+r <- -0.3
+
+# 検定結果の保存
+results <- lapply(sample_sizes, function(n) {
+  x <- rnorm(n)
+  y <- r * x + sqrt(1 - r^2) * rnorm(n)
+  cor.test(x, y)
+})
+
+# 検定結果の表示
+results_summary <- sapply(results, function(result) {
+  c(p_value = result$p.value, estimate = result$estimate)
+})
+
+results_summary
+
+# 課題5
+set.seed(123)
+n_sim <- 1000
+sample_size <- 20
+rho <- -0.3
+alpha <- 0.05
+
+# シミュレーションの実行
+power_simulation <- replicate(n_sim, {
+  x <- rnorm(sample_size)
+  y <- rho * x + sqrt(1 - rho^2) * rnorm(sample_size)
+  test_result <- cor.test(x, y)
+  test_result$p.value < alpha
+})
+
+# 検出力の計算
+power <- mean(power_simulation)
+
+# 検出力の表示
+power
+```

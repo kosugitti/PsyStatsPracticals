@@ -105,8 +105,8 @@ print(result)
 なお，ここではわかりやすく2群であることを示すために`X1`,`X2`と2つのオブジェクトを用意したが，実践的にはデータフレームの中で群わけを示す変数があり，`formula`の形で次のように書くことが多いだろう。
 
 ```{r}
-dataSet <- data.frame(group = c(rep(1,n1),rep(2,n2)), value = c(X1,X2)) %>% 
-    mutate(group = as.factor(group))
+dataSet <- data.frame(group = c(rep(1, n1), rep(2, n2)), value = c(X1, X2)) %>%
+  mutate(group = as.factor(group))
 t.test(value ~ group, data = dataSet, var.equal = TRUE)
 ```
 
@@ -152,22 +152,30 @@ sL <- 2
 sS <- 0.2
 
 g1 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
-    stat_function(fun = dnorm,args=list(mean=dL,sd=sS),color="red") +
-    stat_function(fun = dnorm,args=list(mean=-dL,sd=sS),color="blue") +
-    xlab("")+ylab("")+theme(axis.text.y=element_blank())
+  stat_function(fun = dnorm, args = list(mean = dL, sd = sS), color = "red") +
+  stat_function(fun = dnorm, args = list(mean = -dL, sd = sS), color = "blue") +
+  xlab("") +
+  ylab("") +
+  theme(axis.text.y = element_blank())
 g2 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
-    stat_function(fun = dnorm,args=list(mean=dS,sd=sS),color="red") +
-    stat_function(fun = dnorm,args=list(mean=-dS,sd=sS),color="blue") +
-    xlab("")+ylab("")+theme(axis.text.y=element_blank())
+  stat_function(fun = dnorm, args = list(mean = dS, sd = sS), color = "red") +
+  stat_function(fun = dnorm, args = list(mean = -dS, sd = sS), color = "blue") +
+  xlab("") +
+  ylab("") +
+  theme(axis.text.y = element_blank())
 g3 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
-    stat_function(fun = dnorm,args=list(mean=dL,sd=sL),color="red") +
-    stat_function(fun = dnorm,args=list(mean=-dL,sd=sL),color="blue") +
-    xlab("")+ylab("")+theme(axis.text.y=element_blank())
+  stat_function(fun = dnorm, args = list(mean = dL, sd = sL), color = "red") +
+  stat_function(fun = dnorm, args = list(mean = -dL, sd = sL), color = "blue") +
+  xlab("") +
+  ylab("") +
+  theme(axis.text.y = element_blank())
 g4 <- ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
-    stat_function(fun = dnorm,args=list(mean=dS,sd=sL),color="red") +
-    stat_function(fun = dnorm,args=list(mean=-dS,sd=sL),color="blue") +
-    xlab("")+ylab("")+theme(axis.text.y=element_blank())
-g <- grid.arrange(g1,g2,g3,g4)
+  stat_function(fun = dnorm, args = list(mean = dS, sd = sL), color = "red") +
+  stat_function(fun = dnorm, args = list(mean = -dS, sd = sL), color = "blue") +
+  xlab("") +
+  ylab("") +
+  theme(axis.text.y = element_blank())
+g <- grid.arrange(g1, g2, g3, g4)
 ```
 
 左列は平均差が大きいデータ，右列は小さいデータである。
@@ -186,7 +194,7 @@ $$ es = \frac{\mu_1 - \mu_2}{\sigma} $$
 ```{r}
 library(effsize)
 cohen.d(value ~ group, data = dataSet)
-cohen.d(value ~ group, data = dataSet, hedges.correction =TRUE)
+cohen.d(value ~ group, data = dataSet, hedges.correction = TRUE)
 ```
 
 平均値差の検定の後は，ここに示したCohenのdやHedgesのgといった効果量を添えて報告することが一般的である。
@@ -210,8 +218,8 @@ mu1 <- 4
 sigma <- 1
 d <- 1
 X1 <- rnorm(n, mu1, sigma)
-X2 <- X1 + sigma*d + rnorm(n, 0,sigma)
-t.test(X1,X2,paired = TRUE)
+X2 <- X1 + sigma * d + rnorm(n, 0, sigma)
+t.test(X1, X2, paired = TRUE)
 ```
 
 すなわち，第一の群が$\mu_1$を平均にばらついた実現値として得られ，第二の群はその実現値に一定の効果$\sigma *d$が加わり，その測定にさらに誤差がつく形である。この方法は具体的なデータ生成プロセスをそのまま模したような形でデータを作っているが，測定誤差を二重に計上している点が気になるかもしれない。
@@ -229,23 +237,23 @@ $$\mathbf{\Sigma} = \begin{pmatrix} \sigma_1^2 & \sigma_{12}\\ \sigma_{21} & \si
 
 ```{r}
 #| message: FALSE
-library(MASS)  # 多次正規乱数を生成するのに必要
+library(MASS) # 多次正規乱数を生成するのに必要
 n <- 10
 mu1 <- 4
 sigma <- 1
 d <- 1
 mu <- c(mu1, mu1 + sigma * d)
 rho <- 0.4
-SIG <- matrix(c(sigma^2, rho*sigma*sigma, rho*sigma*sigma, sigma^2),ncol=2,nrow=2)
+SIG <- matrix(c(sigma^2, rho * sigma * sigma, rho * sigma * sigma, sigma^2), ncol = 2, nrow = 2)
 X <- mvrnorm(n, mu, SIG)
-t.test(X[,1], X[,2], paired = TRUE)
+t.test(X[, 1], X[, 2], paired = TRUE)
 ```
 
 効果量については，対応のないt検定の場合と同じで良い。
 
 ```{r}
-cohen.d(X[,1],X[,2])
-cohen.d(X[,1],X[,2], hedges.correction =TRUE)
+cohen.d(X[, 1], X[, 2])
+cohen.d(X[, 1], X[, 2], hedges.correction = TRUE)
 ```
 
 ### 検定の方向性
@@ -258,7 +266,7 @@ cohen.d(X[,1],X[,2], hedges.correction =TRUE)
 
 ただし，両裾から片裾にかわるということは，検定統計量が超えるかどうかの判断をする**臨界値**が小さくなることでもある。必然的に，片裾(片側検定)のほうが緩やかな基準で検定をしていることにもなる。デフォルトで普段から厳しく検定しているから大丈夫だろう，というのも一つの考え方だが，やはり本来の研究仮説に適した帰無仮説の設定をするべきだろう。
 
-## 課題；t検定を用いたレポート
+## 課題
 
 1. 平均が50、標準偏差が10の正規分布からランダムに選んだ30個のサンプルを用意し，このサンプルの平均が母集団の平均と異なるかどうかを検定してください。検定結果を，心理学のフォーマット(心理学会編「論文執筆投稿の手引き」)に準拠した書き方で，結果を記述してください。
 2. 以下のデータセットを使用して，2つの独立した群の平均に差があるかどうかをt検定してください。検定結果を，心理学のフォーマット(心理学会編「論文執筆投稿の手引き」)に準拠した書き方で，結果を記述してください。
@@ -269,3 +277,102 @@ $$ group2 = \{57, 60, 62, 77, 75 \} $$
 
 4.  自由度が10, 20, 30のt分布のグラフを，標準正規分布のグラフとともに描画してください。自由度が増えるとt分布がどのように変化するでしょうか。
 5. 自由度が15のt分布において、有意水準5%の片側検定と両側検定の臨界値(検定の判断基準となる理論値)を求めてください。
+
+```{r}
+#| echo: FALSE
+#| eval: FALSE
+#| include: FALSE
+
+library(tidyverse)
+
+# 課題1
+set.seed(123)
+sample_data <- rnorm(30, mean = 50, sd = 10)
+
+# t検定の実行
+t_test_result <- t.test(sample_data, mu = 50)
+
+# 検定結果の表示
+t_test_result
+
+# 結果の記述
+# t(29) = t値, p = p値
+cat("t(", t_test_result$parameter, ") = ", t_test_result$statistic, ", p = ", t_test_result$p.value, sep = "")
+
+# 平均が50、標準偏差が10の正規分布からランダムに選んだ30個のサンプルの平均が母集団の平均50と
+# 異なるかを検定した結果、有意な差は見られなかった（t(29) = -0.195, p = 0.847）。
+
+# 課題2
+group1 <- c(45, 50, 55, 60, 65)
+group2 <- c(57, 60, 62, 77, 75)
+
+# t検定の実行
+t_test_result <- t.test(group1, group2, var.equal = TRUE)
+
+# 検定結果の表示
+t_test_result
+
+# 結果の記述
+# t(df) = t値, p = p値
+cat("t(", t_test_result$parameter, ") = ", t_test_result$statistic, ", p = ", t_test_result$p.value, sep = "")
+
+# 2つの独立した群の平均に差があるかを検定した結果、有意な差が見られた（t(8) = -2.838, p = 0.022）。
+
+# 課題3
+library(MASS)
+
+# 多次元正規分布からデータ生成
+set.seed(123)
+n <- 20
+mu <- c(12, 15)
+Sigma <- matrix(c(4, 2.8, 2.8, 4), ncol = 2)
+data <- mvrnorm(n, mu = mu, Sigma = Sigma)
+
+# 対応のあるt検定の実行
+t_test_result <- t.test(data[,1], data[,2], paired = TRUE)
+
+# 検定結果の表示
+t_test_result
+
+# 結果の記述
+# t(df) = t値, p = p値
+cat("t(", t_test_result$parameter, ") = ", t_test_result$statistic, ", p = ", t_test_result$p.value, sep = "")
+
+# 対応のあるt検定を行った結果、有意な差が見られた（t(19) = -9.256, p < 0.001）。
+
+# 課題4
+# データの作成
+x <- seq(-4, 4, length = 1000)
+df_values <- c(10, 20, 30)
+norm_density <- dnorm(x)
+
+# データフレームの作成
+df <- data.frame(x = x, norm = norm_density)
+for (df_val in df_values) {
+  df[paste("t_df", df_val, sep = "_")] <- dt(x, df = df_val)
+}
+
+# データの整形
+df_long <- gather(df, key = "distribution", value = "density", -x)
+
+# グラフの描画
+ggplot(df_long, aes(x = x, y = density, color = distribution)) +
+  geom_line(size = 1) +
+  labs(title = "t-Distributions with Different Degrees of Freedom and Normal Distribution",
+       x = "x", y = "Density") +
+  scale_color_manual(values = c("black", "blue", "green", "red"),
+                     labels = c("Normal", "t (df = 10)", "t (df = 20)", "t (df = 30)")) +
+  theme_classic()
+
+# 課題5
+# 片側検定の臨界値
+critical_value_one_sided <- qt(0.95, df = 15)
+
+# 両側検定の臨界値
+critical_value_two_sided <- qt(0.975, df = 15)
+
+# 結果の表示
+cat("片側検定の臨界値: ", critical_value_one_sided, "\n")
+cat("両側検定の臨界値: ", critical_value_two_sided, "\n")
+
+```

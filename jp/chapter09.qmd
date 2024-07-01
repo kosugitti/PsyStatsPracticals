@@ -72,7 +72,7 @@ mu <- 10
 delta <- 1
 sigma <- 3
 # 群平均
-mu1 <- mu -(delta * sigma)
+mu1 <- mu - (delta * sigma)
 mu2 <- mu
 mu3 <- mu + (delta * sigma)
 # データセット
@@ -81,9 +81,9 @@ X2 <- rnorm(n2, mu2, sigma)
 X3 <- rnorm(n3, mu3, sigma)
 ## 組み上げる
 dat <- data.frame(
-    ID = 1:(n1+n2+n3),
-    group = as.factor(rep(LETTERS[1:3],c(n1,n2,n3))),
-    value = c(X1,X2,X3)
+  ID = 1:(n1 + n2 + n3),
+  group = as.factor(rep(LETTERS[1:3], c(n1, n2, n3))),
+  value = c(X1, X2, X3)
 )
 ## データの確認
 dat
@@ -117,9 +117,9 @@ delta2 <- 0 # ここではあえて要因Bの効果を0にしている
 delta3 <- 2
 sigma <- 3
 # 効果の計算
-effectA <- delta1 * sigma   # Factor A
-effectB <- delta2 * sigma   # Factor B
-effectAB <- delta3 * sigma  # interaction
+effectA <- delta1 * sigma # Factor A
+effectB <- delta2 * sigma # Factor B
+effectAB <- delta3 * sigma # interaction
 # 各群の平均
 mu11 <- mu + effectA + effectB + effectAB
 mu12 <- mu + effectA - effectB - effectAB
@@ -136,10 +136,12 @@ X11 <- rnorm(n, mean = mu11, sd = sigma)
 X12 <- rnorm(n, mean = mu12, sd = sigma)
 X21 <- rnorm(n, mean = mu21, sd = sigma)
 X22 <- rnorm(n, mean = mu22, sd = sigma)
-dat <- data.frame(ID = 1:(n*4),
-                    FactorA = rep(1:2,each = n*2),
-                    FactorB = rep(rep(1:2,each = n),2),
-                    value = c(X11,X12,X21,X22))
+dat <- data.frame(
+  ID = 1:(n * 4),
+  FactorA = rep(1:2, each = n * 2),
+  FactorB = rep(rep(1:2, each = n), 2),
+  value = c(X11, X12, X21, X22)
+)
 dat
 ```
 
@@ -171,23 +173,24 @@ s1 <- s2 <- s3 <- 1
 rho12 <- 0.1
 rho13 <- 0.3
 rho23 <- 0.8
-mus <- c(mu, mu + s1*delta, mu-s1*delta)
+mus <- c(mu, mu + s1 * delta, mu - s1 * delta)
 # 共分散行列の生成
-Sigma <- matrix(NA,ncol=3,nrow=3)
-Sigma[1,1] <- s1^2
-Sigma[2,2] <- s2^2
-Sigma[3,3] <- s3^2
-Sigma[1,2] <- Sigma[2,1] <- rho12 * s1 * s2
-Sigma[1,3] <- Sigma[3,1] <- rho13 * s1 * s3
-Sigma[2,3] <- Sigma[3,2] <- rho23 * s2 * s3
+Sigma <- matrix(NA, ncol = 3, nrow = 3)
+Sigma[1, 1] <- s1^2
+Sigma[2, 2] <- s2^2
+Sigma[3, 3] <- s3^2
+Sigma[1, 2] <- Sigma[2, 1] <- rho12 * s1 * s2
+Sigma[1, 3] <- Sigma[3, 1] <- rho13 * s1 * s3
+Sigma[2, 3] <- Sigma[3, 2] <- rho23 * s2 * s3
 # データの生成
 X <- mvrnorm(n, mus, Sigma) %>% as.data.frame()
 # データの確認
 X
 # Long型に整形
-X <- X %>% 
-    rowid_to_column("ID") %>% 
-    pivot_longer(-ID) %>% print
+X <- X %>%
+  rowid_to_column("ID") %>%
+  pivot_longer(-ID) %>%
+  print()
 # 分析の実行
 anovakun(X, "sA", long = TRUE, peta = TRUE, GG = TRUE)
 ```
@@ -205,7 +208,7 @@ anovakun(X, "sA", long = TRUE, peta = TRUE, GG = TRUE)
 
 分散分析は，あくまでも大雑把な全体的傾向を見るためのものであることに留意しよう。心理学のデータがより精緻な仮定に耐えうる精度を持つものになれば，分散分析は過去の遺物となるかもしれない。
 
-## 課題；データ生成過程にみる分散分析
+## 課題
 
 1. 以下のデータセットは一要因4水準Between計画で得られたものです。分散分析を行って，要因の効果があるかどうか，水準間に差があるとすればどこに見られるかを報告してください。なおこのデータセットはこちら[ex_anova1.csv](ex_anova1.csv)からダウンロード可能です。
 
@@ -235,9 +238,9 @@ X3 <- rnorm(n3, mu3, sigma) %>% round(2)
 X4 <- rnorm(n4, mu3, sigma) %>% round(2)
 ## 組み上げる
 dat <- data.frame(
-    ID = 1:(n1+n2+n3+n4),
-    group = as.factor(rep(LETTERS[1:4],c(n1,n2,n3,n4))),
-    value = c(X1,X2,X3,X4)
+  ID = 1:(n1 + n2 + n3 + n4),
+  group = as.factor(rep(LETTERS[1:4], c(n1, n2, n3, n4))),
+  value = c(X1, X2, X3, X4)
 )
 dat
 write.csv(dat, file = "ex_anova1.csv")
@@ -258,15 +261,19 @@ delta1 <- 1
 delta2 <- 3
 delta3 <- 4
 delta4 <- 0 - (delta1 + delta2 + delta3)
-Mus <- c(mu+delta1, mu+delta2, mu+delta3, mu+delta4)
-SDs <- c(2,3,4,4)
-rhos <- matrix(c(1, 0.2, 0.3, 0.4,
-                0.2, 1, 0.3, 0.5,
-                0.3, 0.3, 1, 0.8,
-                0.4, 0.5,0.8,1),ncol=4)
+Mus <- c(mu + delta1, mu + delta2, mu + delta3, mu + delta4)
+SDs <- c(2, 3, 4, 4)
+rhos <- matrix(c(
+  1, 0.2, 0.3, 0.4,
+  0.2, 1, 0.3, 0.5,
+  0.3, 0.3, 1, 0.8,
+  0.4, 0.5, 0.8, 1
+), ncol = 4)
 Sigma <- diag(SDs) %*% rhos
 # データの生成
-X <- mvrnorm(n, Mus, Sigma)  %>% round(2) %>% as.data.frame()
+X <- mvrnorm(n, Mus, Sigma) %>%
+  round(2) %>%
+  as.data.frame()
 # データの確認
 X
 write.csv(dat, file = "ex_anova2.csv")

@@ -17,7 +17,7 @@
 
 ```{r, override}
 a <- 0
-a = a + 1
+a <- a + 1
 print(a)
 ```
 
@@ -261,7 +261,7 @@ result <- calculate_values(10, 5)
 print(result)
 ```
 
-## 関数化の練習問題
+## 課題
 
 1. ある値を与えたとき，正の値なら"positive"，負の値なら"negative"，0のときは"Zero"と表示する関数を書いてください。
 2. ある2組の数字を与えた時，和，差，積，商を返す関数を書いてください。
@@ -270,4 +270,64 @@ print(result)
 $$\hat{\sigma} = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2 $$
 $$v= \frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2 $$
 
+```{r}
+#| eval: FALSE
+#| include: FALSE
+#| echo: FALSE
 
+
+# 課題1.関数の定義
+check_value <- function(x) {
+  if (x > 0) {
+    return("positive")
+  } else if (x < 0) {
+    return("negative")
+  } else {
+    return("Zero")
+  }
+}
+
+# 使用例
+check_value(5)  # "positive"
+check_value(-3) # "negative"
+check_value(0)  # "Zero"
+
+# 課題2.
+calculate_operations <- function(a, b) {
+  sum <- a + b
+  difference <- a - b
+  product <- a * b
+  quotient <- ifelse(b != 0, a / b, NA)  # bが0の時はNAを返す
+  
+  return(list(sum = sum, difference = difference, product = product, quotient = quotient))
+}
+
+# 使用例
+calculate_operations(10, 5)
+
+# 課題3. 関数の定義
+calculate_statistics <- function(vec) {
+  mean_val <- mean(vec)
+  median_val <- median(vec)
+  max_val <- max(vec)
+  min_val <- min(vec)
+  range_val <- range(vec)
+  
+  return(list(mean = mean_val, median = median_val, max = max_val, min = min_val, range = range_val))
+}
+
+# 使用例
+calculate_statistics(c(1, 2, 3, 4, 5))
+
+# 課題4.関数の定義
+sample_variance <- function(vec) {
+  n <- length(vec)
+  mean_val <- mean(vec)
+  variance <- sum((vec - mean_val)^2) / n
+  
+  return(variance)
+}
+
+# 使用例
+sample_variance(c(1, 2, 3, 4, 5))
+```

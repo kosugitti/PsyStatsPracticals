@@ -451,7 +451,7 @@ result.df <- data.frame(m = m, interval = interval) %>%
   print()
 ```
 
-## 練習問題；推定量と区間推定
+## 課題
 
 1. 算術平均$M = \frac{1}{n}\sum x_i$が一致推定量であることが示されましたが，調和平均$HM = \frac{n}{\sum \frac{1}{x_i}}$や幾何平均$GM = (\prod x_i)^{\frac{1}{n}} = \exp(\frac{1}{n}\sum \log(x_i)))$はどうでしょうか。シミュレーションで確かめてみましょう。
 2. サンプルサイズ$n$が大きくなるほど，標本平均が母平均に近づくという性質は正規分布以外でも成立するでしょうか。自由度$\nu = 3$のt分布を使って，シミュレーションで確認してみましょう。なおt分布の乱数は`rt()`で生成でき，非心度パラメータ`ncp`を指定しなければその平均は0です。
@@ -459,3 +459,127 @@ result.df <- data.frame(m = m, interval = interval) %>%
 4. 平均が50，標準偏差が10の正規分布からサンプルサイズ20の乱数を10000個生成し，quantile関数をつかって95％信頼区間をシミュレートしてください。理論値と比較して確認してください。
 5. 平均が100，標準偏差が15の正規分布から抽出された標本について，サンプルサイズを10，100，1000と変えたときの標本平均の95%信頼区間の幅を比較してください。
 
+```{r}
+#| include: FALSE
+#| echo: FALSE
+#| eval: FALSe
+
+
+# 課題1
+
+library(tidyverse)
+
+# シミュレーションの設定
+set.seed(123)
+n_sim <- 1000
+n <- 100
+true_mean <- 50
+true_sd <- 10
+
+# シミュレーションの実行
+results <- replicate(n_sim, {
+  sample_data <- rnorm(n, mean = true_mean, sd = true_sd)
+  arithmetic_mean <- mean(sample_data)
+  harmonic_mean <- n / sum(1 / sample_data)
+  geometric_mean <- exp(mean(log(sample_data)))
+  c(arithmetic_mean, harmonic_mean, geometric_mean)
+})
+
+# 結果の要約
+results_df <- as.data.frame(t(results))
+colnames(results_df) <- c("Arithmetic", "Harmonic", "Geometric")
+
+# 算術平均、調和平均、幾何平均の平均値
+colMeans(results_df)
+
+# 算術平均、調和平均、幾何平均のヒストグラムをプロット
+results_df %>%
+  gather(key = "Mean_Type", value = "Mean_Value") %>%
+  ggplot(aes(x = Mean_Value, fill = Mean_Type)) +
+  geom_histogram(alpha = 0.6, position = "identity", bins = 30) +
+  facet_wrap(~ Mean_Type, scales = "free") +
+  theme_classic()
+
+# 課題2
+set.seed(123)
+n_sim <- 1000
+sample_sizes <- c(10, 50, 100, 500, 1000)
+true_mean <- 0
+true_sd <- 1
+df <- 3
+
+# シミュレーションの実行
+mean_errors <- sapply(sample_sizes, function(n) {
+  sample_means <- replicate(n_sim, mean(rt(n, df = df)))
+  mean(abs(sample_means - true_mean))
+})
+
+# 結果の表示
+data.frame(Sample_Size = sample_sizes, Mean_Abs_Error = mean_errors)
+
+# 課題3
+set.seed(123)
+n_sim <- 1000
+dfs <- c(10, 50, 100)
+
+# ヒストグラムのプロット
+df_data <- lapply(dfs, function(df) rt(n_sim, df = df))
+names(df_data) <- paste("df =", dfs)
+df_data <- stack(df_data)
+
+ggplot(df_data, aes(x = values)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.5) +
+  facet_wrap(~ ind, scales = "free") +
+  geom_density(col = "red") +
+  theme_classic()
+
+# 平均と標本標準偏差の計算
+df_summary <- sapply(dfs, function(df) {
+  sample_data <- rt(n_sim, df = df)
+  c(mean = mean(sample_data), sd = sd(sample_data))
+})
+df_summary
+
+# 課題4
+# シミュレーションの設定
+set.seed(123)
+n_sim <- 10000
+sample_size <- 20
+true_mean <- 50
+true_sd <- 10
+
+# サンプル生成と信頼区間計算
+sample_data <- replicate(n_sim, rnorm(sample_size, mean = true_mean, sd = true_sd))
+sample_means <- colMeans(sample_data)
+sample_sds <- apply(sample_data, 2, sd)
+ci_lower <- sample_means - qnorm(0.975) * sample_sds / sqrt(sample_size)
+ci_upper <- sample_means + qnorm(0.975) * sample_sds / sqrt(sample_size)
+
+# 結果の表示
+mean(ci_lower <= true_mean & ci_upper >= true_mean)
+
+# ヒストグラムのプロット
+ci_widths <- ci_upper - ci_lower
+hist(ci_widths, breaks = 30, main = "95% Confidence Interval Widths", xlab = "Width")
+
+# 課題5
+# シミュレーションの設定
+set.seed(123)
+n_sim <- 1000
+sample_sizes <- c(10, 100, 1000)
+true_mean <- 100
+true_sd <- 15
+
+# シミュレーションの実行
+ci_widths <- sapply(sample_sizes, function(n) {
+  sample_means <- replicate(n_sim, mean(rnorm(n, mean = true_mean, sd = true_sd)))
+  sample_sds <- replicate(n_sim, sd(rnorm(n, mean = true_mean, sd = true_sd)))
+  ci_lower <- sample_means - qnorm(0.975) * sample_sds / sqrt(n)
+  ci_upper <- sample_means + qnorm(0.975) * sample_sds / sqrt(n)
+  mean(ci_upper - ci_lower)
+})
+
+# 結果の表示
+data.frame(Sample_Size = sample_sizes, CI_Width = ci_widths)
+
+```
