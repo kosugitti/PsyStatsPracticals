@@ -349,7 +349,6 @@ window.Quarto = {
   <li><a href="#対応のないt検定" id="toc-対応のないt検定" class="nav-link" data-scroll-target="#対応のないt検定"><span class="header-section-number">10.2.1</span> 対応のないt検定</a></li>
   <li><a href="#シミュレーションによるサンプルサイズ設計" id="toc-シミュレーションによるサンプルサイズ設計" class="nav-link" data-scroll-target="#シミュレーションによるサンプルサイズ設計"><span class="header-section-number">10.2.2</span> シミュレーションによるサンプルサイズ設計</a></li>
   </ul></li>
-  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">10.3</span> 課題</a></li>
   </ul>
 </nav>
     </div>
@@ -390,44 +389,44 @@ window.Quarto = {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># 分析結果をtidyに整形するパッケージ。ない場合はinstallしておこう</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># 有意水準を0.05に設定</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> n3 <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># 各グループのサンプルサイズを10に設定</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># 平均値を10に設定</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="co"># 標準偏差を2に設定</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># 有意水準を0.05に設定</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> n3 <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 各グループのサンプルサイズを10に設定</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 平均値を10に設定</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span>  <span class="co"># 標準偏差を2に設定</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> mu2 <span class="ot">&lt;-</span> mu3 <span class="ot">&lt;-</span> mu <span class="co"># 各グループの平均値を同じに設定</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> mu2 <span class="ot">&lt;-</span> mu3 <span class="ot">&lt;-</span> mu  <span class="co"># 各グループの平均値を同じに設定</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)  <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>anova.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter) <span class="co"># ANOVA検出結果の保存用ベクトルを初期化</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>ttest.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter) <span class="co"># t検定検出結果の保存用ベクトルを初期化</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>anova.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># ANOVA検出結果の保存用ベクトルを初期化</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>ttest.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># t検定検出結果の保存用ベクトルを初期化</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) { <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu, sigma) <span class="co"># グループ1のデータを生成</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu, sigma) <span class="co"># グループ2のデータを生成</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  X3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n3, mu, sigma) <span class="co"># グループ3のデータを生成</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {  <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu, sigma)  <span class="co"># グループ1のデータを生成</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu, sigma)  <span class="co"># グループ2のデータを生成</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  X3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n3, mu, sigma)  <span class="co"># グループ3のデータを生成</span></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="co"># データフレームを作成</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n1), <span class="fu">rep</span>(<span class="dv">2</span>, n2), <span class="fu">rep</span>(<span class="dv">3</span>, n3)), <span class="co"># グループ番号を追加</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(X1, X2, X3) <span class="co"># データを追加</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(  <span class="co"># データフレームを作成</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n1), <span class="fu">rep</span>(<span class="dv">2</span>, n2), <span class="fu">rep</span>(<span class="dv">3</span>, n3)),  <span class="co"># グループ番号を追加</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(X1, X2, X3)  <span class="co"># データを追加</span></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  result.anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dat) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>() <span class="co"># ANOVAを実行し結果を整形</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  anova.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(result.anova<span class="sc">$</span>p.value[<span class="dv">1</span>] <span class="sc">&lt;</span> alpha, <span class="dv">1</span>, <span class="dv">0</span>) <span class="co"># 有意差があるかを判定して保存</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  result.anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dat) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()  <span class="co"># ANOVAを実行し結果を整形</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  anova.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(result.anova<span class="sc">$</span>p.value[<span class="dv">1</span>] <span class="sc">&lt;</span> alpha, <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># 有意差があるかを判定して保存</span></span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># t検定を繰り返す</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  ttest12 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2)<span class="sc">$</span>p.value <span class="co"># グループ1と2のt検定</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  ttest13 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X3)<span class="sc">$</span>p.value <span class="co"># グループ1と3のt検定</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  ttest23 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X2, X3)<span class="sc">$</span>p.value <span class="co"># グループ2と3のt検定</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  ttest12 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2)<span class="sc">$</span>p.value  <span class="co"># グループ1と2のt検定</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  ttest13 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X3)<span class="sc">$</span>p.value  <span class="co"># グループ1と3のt検定</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  ttest23 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X2, X3)<span class="sc">$</span>p.value  <span class="co"># グループ2と3のt検定</span></span>
 <span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  ttest.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ttest12 <span class="sc">&lt;</span> alpha <span class="sc">|</span> ttest13 <span class="sc">&lt;</span> alpha <span class="sc">|</span> ttest23 <span class="sc">&lt;</span> alpha, <span class="dv">1</span>, <span class="dv">0</span>) <span class="co"># いずれかのt検定で有意差があれば保存</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  ttest.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ttest12 <span class="sc">&lt;</span> alpha <span class="sc">|</span> ttest13 <span class="sc">&lt;</span> alpha <span class="sc">|</span> ttest23 <span class="sc">&lt;</span> alpha, <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># いずれかのt検定で有意差があれば保存</span></span>
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>ttest.detect <span class="sc">%&gt;%</span> <span class="fu">mean</span>() <span class="co"># t検定で有意差が検出された割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>ttest.detect <span class="sc">%&gt;%</span> <span class="fu">mean</span>()  <span class="co"># t検定で有意差が検出された割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.109</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>anova.detect <span class="sc">%&gt;%</span> <span class="fu">mean</span>() <span class="co"># ANOVAで有意差が検出された割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>anova.detect <span class="sc">%&gt;%</span> <span class="fu">mean</span>()  <span class="co"># ANOVAで有意差が検出された割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.04</code></pre>
 </div>
@@ -443,14 +442,14 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># シミュレーション用の関数を定義</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>studyMake <span class="ot">&lt;-</span> <span class="cf">function</span>(n, mu, sigma, delta) {</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu, sigma) <span class="co"># グループ1のデータを生成</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma) <span class="co"># グループ2のデータを生成（平均値が異なる）</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="co"># データフレームを作成</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> n), <span class="co"># グループ番号を追加</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(X1, X2) <span class="co"># データを追加</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu, sigma)  <span class="co"># グループ1のデータを生成</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma)  <span class="co"># グループ2のデータを生成（平均値が異なる）</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(  <span class="co"># データフレームを作成</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> n),  <span class="co"># グループ番号を追加</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(X1, X2)  <span class="co"># データを追加</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2)<span class="sc">$</span>p.value <span class="co"># グループ間のt検定を実行</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result) <span class="co"># p値を返す</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2)<span class="sc">$</span>p.value  <span class="co"># グループ間のt検定を実行</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)  <span class="co"># p値を返す</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>この関数は，引数としてサンプルサイズ<code>n</code>，平均値<code>mu</code>，標準偏差<code>sigma</code>，効果量<code>delta</code>をとり，2群のt検定の結果である<span class="math inline">\(p\)</span>値を返す関数である。</p>
@@ -463,25 +462,25 @@ window.Quarto = {
 </div>
 <p>これ一回で1分析するので，これを複数回行って一つの研究とし，一つの論文のなかで<code>num_studies</code>回の研究を行ったとしよう。今回は<code>num_studies = 3</code>としている。Rの<code>replicate</code>関数で研究回数繰り返した<span class="math inline">\(p\)</span>値ベクトルを得て，どこかに差が検出されるかどうかをチェックする。「どこかに」を表現するために<code>any</code>関数を使って判定する。判定する有意水準として，<span class="math inline">\(\alpha\)</span>と補正をかけた<span class="math inline">\(\alpha_{adj}\)</span>の2つを用意した。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># 有意水準を0.05に設定</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>num_studies <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="co"># 研究の数を3に設定</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>alpha_adjust <span class="ot">&lt;-</span> alpha <span class="sc">/</span> num_studies <span class="co"># 多重検定補正後の有意水準を計算</span></span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)  <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># 有意水準を0.05に設定</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>num_studies <span class="ot">&lt;-</span> <span class="dv">3</span>  <span class="co"># 研究の数を3に設定</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>alpha_adjust <span class="ot">&lt;-</span> alpha <span class="sc">/</span> num_studies  <span class="co"># 多重検定補正後の有意水準を計算</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>FLG.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter) <span class="co"># 検出結果を保存するベクトルを初期化</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>FLG.detect.adj <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter) <span class="co"># 補正後の検出結果を保存するベクトルを初期化</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) { <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  p_values <span class="ot">&lt;-</span> <span class="fu">replicate</span>(num_studies, <span class="fu">studyMake</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">delta =</span> <span class="dv">0</span>)) <span class="co"># 各研究のp値を生成</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  FLG.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">any</span>(p_values <span class="sc">&lt;</span> alpha), <span class="dv">1</span>, <span class="dv">0</span>) <span class="co"># 補正前の有意差検出を判定して保存</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  FLG.detect.adj[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">any</span>(p_values <span class="sc">&lt;</span> alpha_adjust), <span class="dv">1</span>, <span class="dv">0</span>) <span class="co"># 補正後の有意差検出を判定して保存</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>FLG.detect <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># 検出結果を保存するベクトルを初期化</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>FLG.detect.adj <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)  <span class="co"># 補正後の検出結果を保存するベクトルを初期化</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {  <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  p_values <span class="ot">&lt;-</span> <span class="fu">replicate</span>(num_studies, <span class="fu">studyMake</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mu =</span> <span class="dv">10</span>, <span class="at">sigma =</span> <span class="dv">1</span>, <span class="at">delta =</span> <span class="dv">0</span>))  <span class="co"># 各研究のp値を生成</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  FLG.detect[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">any</span>(p_values <span class="sc">&lt;</span> alpha), <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># 補正前の有意差検出を判定して保存</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  FLG.detect.adj[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">any</span>(p_values <span class="sc">&lt;</span> alpha_adjust), <span class="dv">1</span>, <span class="dv">0</span>)  <span class="co"># 補正後の有意差検出を判定して保存</span></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>FLG.detect <span class="sc">%&gt;%</span> <span class="fu">mean</span>() <span class="co"># 補正前の有意差検出率を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>FLG.detect <span class="sc">%&gt;%</span> mean  <span class="co"># 補正前の有意差検出率を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.145</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>FLG.detect.adj <span class="sc">%&gt;%</span> <span class="fu">mean</span>() <span class="co"># 補正後の有意差検出率を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>FLG.detect.adj <span class="sc">%&gt;%</span> mean  <span class="co"># 補正後の有意差検出率を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.049</code></pre>
 </div>
@@ -495,41 +494,41 @@ window.Quarto = {
 <p>実はこの考え方はQRPsのひとつである。検定は真偽判定をする競技のようなものなので，ゲームの途中でプレイヤーの人数が変わるのはよろしくない。このことをシミュレーションで確認してみよう。</p>
 <p>以下のコードは，t検定のデータを最初<code>n1=n2=10</code>で作成して行っている。タイプ1エラーの検証をするので，効果量は<span class="math inline">\(0\)</span>である。ここでt検定を行い，もしその<span class="math inline">\(p\)</span>値が<span class="math inline">\(\alpha\)</span>よりも大きかったら，つまり有意であると判断されなかったら，同じ方法でデータを1件追加する。そしてまたt検定を行う。このサンプルの追加は，効果量<span class="math inline">\(0\)</span>なので，偶然のお許しが出るまでいつまで経っても終わることがないため，上限を100にしてある。上限に達したら流石に諦めてもらうとして，さてそうしたQRPsな努力の結果，<span class="math inline">\(\alpha\)</span>水準はどれぐらいに保たれているだろうか。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># 有意水準を0.05に設定</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter) <span class="co"># p値を保存するベクトルを初期化</span></span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># シミュレーションの繰り返し回数を1000に設定</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># 有意水準を0.05に設定</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter)  <span class="co"># p値を保存するベクトルを初期化</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>add.vec <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter) <span class="co"># 増やした人数を保存するベクトルを初期化</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># 乱数のシードを設定して再現性を確保</span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># 各グループのサンプルサイズを10に設定</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># 平均値を10に設定</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="co"># 標準偏差を2に設定</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># 平均の差を0に設定</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 各グループのサンプルサイズを10に設定</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 平均値を10に設定</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span>  <span class="co"># 標準偏差を2に設定</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">0</span>  <span class="co"># 平均の差を0に設定</span></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="do">## シミュレーション本体</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) { <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 最初のデータを生成</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  Y1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu, sigma) <span class="co"># グループ1のデータを生成</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  Y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma) <span class="co"># グループ2のデータを生成</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  p[i] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Y1, Y2)<span class="sc">$</span>p.value <span class="co"># t検定を実行しp値を保存</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># データを追加する</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  count <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># 追加したデータの数をカウント</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="do">## p値が5%を下回るか、データが100になるまでデータを増やし続ける</span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (p[i] <span class="sc">&gt;=</span> alpha <span class="sc">&amp;&amp;</span> count <span class="sc">&lt;</span> <span class="dv">100</span>) { <span class="co"># 条件を満たすまでループを繰り返す</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 有意でなかった場合、変数ごとに1つずつデータを追加</span></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    Y1_add <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, mu, sigma) <span class="co"># グループ1に新しいデータを1つ追加</span></span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    Y2_add <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma) <span class="co"># グループ2に新しいデータを1つ追加</span></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    Y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(Y1, Y1_add) <span class="co"># グループ1のデータを更新</span></span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    Y2 <span class="ot">&lt;-</span> <span class="fu">c</span>(Y2, Y2_add) <span class="co"># グループ2のデータを更新</span></span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Y1, Y2)<span class="sc">$</span>p.value <span class="co"># 新しいデータでt検定を再度実行しp値を更新</span></span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span> <span class="co"># データを追加した回数をカウント</span></span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  add.vec[i] <span class="ot">&lt;-</span> count</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {  <span class="co"># 1000回のシミュレーションを繰り返すループ</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 最初のデータを生成</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    Y1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu, sigma)  <span class="co"># グループ1のデータを生成</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    Y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma)  <span class="co"># グループ2のデータを生成</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Y1, Y2)<span class="sc">$</span>p.value  <span class="co"># t検定を実行しp値を保存</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># データを追加する</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    count <span class="ot">&lt;-</span> <span class="dv">0</span>  <span class="co"># 追加したデータの数をカウント</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="do">## p値が5%を下回るか、データが100になるまでデータを増やし続ける</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (p[i] <span class="sc">&gt;=</span> alpha <span class="sc">&amp;&amp;</span> count <span class="sc">&lt;</span> <span class="dv">100</span>) {  <span class="co"># 条件を満たすまでループを繰り返す</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 有意でなかった場合、変数ごとに1つずつデータを追加</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        Y1_add <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, mu, sigma)  <span class="co"># グループ1に新しいデータを1つ追加</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        Y2_add <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, mu <span class="sc">+</span> sigma <span class="sc">*</span> delta, sigma)  <span class="co"># グループ2に新しいデータを1つ追加</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        Y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(Y1, Y1_add)  <span class="co"># グループ1のデータを更新</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        Y2 <span class="ot">&lt;-</span> <span class="fu">c</span>(Y2, Y2_add)  <span class="co"># グループ2のデータを更新</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        p[i] <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Y1, Y2)<span class="sc">$</span>p.value  <span class="co"># 新しいデータでt検定を再度実行しp値を更新</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span>  <span class="co"># データを追加した回数をカウント</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    add.vec[i] <span class="ot">&lt;-</span> count</span>
 <span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 結果</span></span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(p <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">|&gt;</span> <span class="fu">mean</span>() <span class="co"># p値が5%未満の割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(p <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">|&gt;</span> <span class="fu">mean</span>()  <span class="co"># p値が5%未満の割合を計算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.306</code></pre>
 </div>
@@ -623,17 +622,15 @@ window.Quarto = {
 <p>この非心度の分だけ，非心t分布はt分布からズレていることになる。Rでは<code>dt</code>関数に<code>ncp</code>パラメータがあり，デフォルトでは<code>ncp=0</code>になっていた。これを変えて描画してみよう。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データの準備</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># 自由度を指定</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 自由度を指定</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplotでプロット</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dt, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> df, <span class="at">ncp =</span> <span class="dv">0</span>), <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"ncp=0"</span>)) <span class="sc">+</span></span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dt, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> df, <span class="at">ncp =</span> <span class="dv">3</span>), <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"ncp=3"</span>)) <span class="sc">+</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"非心t分布"</span>,</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"x"</span>,</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"密度"</span>,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"ncp"</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"非心t分布"</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"x"</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"密度"</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"ncp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -645,14 +642,14 @@ window.Quarto = {
 <p><code>ncp=0</code>の時は，中心が<code>0</code>にある帰無仮説の世界であり，これを使ってタイプ1エラー，つまり<span class="math inline">\(\alpha\)</span>が算出されたのであった。<code>ncp</code>を効果量で表現すれば，母平均の差がゼロでない時の分布が描けるのだから，タイプ2エラー，つまり<span class="math inline">\(\beta\)</span>が計算できる。</p>
 <p>自由度<code>df = 10</code>，非心度<code>ncp = 3</code>の例で考えてみよう。 タイプ1エラーになるのは，自由度<code>10</code>のt分布で上2.5%の臨界値以上の実現値が得られた時である。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="dv">10</span>, <span class="at">ncp =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df=</span><span class="dv">10</span>, <span class="at">ncp=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.228139</code></pre>
 </div>
 </div>
 <p>このとき，実際は<code>ncp = 3</code>ほどずれていたのだから，タイプ2エラーが生じる確率は次のとおりである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="dv">10</span>, <span class="at">ncp =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">pt</span>(<span class="at">df =</span> <span class="dv">10</span>, <span class="at">ncp =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df=</span><span class="dv">10</span>, <span class="at">ncp=</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">pt</span>(<span class="at">df=</span><span class="dv">10</span>, <span class="at">ncp=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2285998</code></pre>
 </div>
@@ -665,16 +662,14 @@ window.Quarto = {
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">1000</span>) {</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">1000</span>){</span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> n <span class="sc">+</span> n <span class="sc">-</span> <span class="dv">2</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> delta <span class="sc">*</span> (<span class="fu">sqrt</span>((n <span class="sc">*</span> n) <span class="sc">/</span> (n <span class="sc">+</span> n)))</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  cv <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span> <span class="sc">-</span> alpha <span class="sc">/</span> <span class="dv">2</span>, <span class="at">df =</span> df) <span class="co"># Type1errorの臨界値</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> delta <span class="sc">*</span> (<span class="fu">sqrt</span>((n<span class="sc">*</span>n)<span class="sc">/</span>(n<span class="sc">+</span>n)))</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  cv <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> df) <span class="co"># Type1errorの臨界値</span></span>
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  er <span class="ot">&lt;-</span> <span class="fu">pt</span>(cv, <span class="at">df =</span> df, <span class="at">ncp =</span> lambda) <span class="co"># Type2errorの確率</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (er <span class="sc">&lt;=</span> beta) {</span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(er <span class="sc">&lt;=</span> beta){<span class="cf">break</span>}</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 64</code></pre>
 </div>
@@ -687,31 +682,38 @@ window.Quarto = {
 <p>そこで，電子計算機の演算力をたのみに，データ生成のシミュレーションを通じて設計していくことを考えてみよう。サンプルサイズや効果量を定めれば，仮想データを作ることができるし，それ対して検定をかけることもできる。仮想データの生成と検定を反復し，タイプ2エラーがどの程度生じるかを相対度数で近似することもできるだろう。であれば，その近似をサンプルサイズを徐々に変えることで繰り返してサンプルサイズを定めることもできる。</p>
 <p>以下は，母相関が<span class="math inline">\(\rho = 0.5\)</span>とした時に，検出力が80%になるために必要なサンプルサイズを求めるシミュレーションコードである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> sd<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> sd <span class="sc">*</span> sd <span class="sc">*</span> rho</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">1000</span>, <span class="at">by =</span> <span class="dv">1</span>)) {</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  FLG <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter)</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {</span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), Sigma)</span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    cor_test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>])</span>
-<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    FLG[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(cor_test<span class="sc">$</span>p.value <span class="sc">&gt;</span> alpha, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>  t2error <span class="ot">&lt;-</span> <span class="fu">mean</span>(FLG)</span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"n="</span>, n, <span class="st">"のとき，betaは"</span>, t2error, <span class="st">"です。"</span>))</span>
-<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (t2error <span class="sc">&lt;=</span> beta) {</span>
-<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
-<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+次のパッケージを付け加えます: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>以下のオブジェクトは 'package:dplyr' からマスクされています:
+
+    select</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,<span class="at">ncol=</span><span class="dv">2</span>,<span class="at">nrow=</span><span class="dv">2</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> sd<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> sd <span class="sc">*</span> sd <span class="sc">*</span> rho</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>,<span class="at">to =</span> <span class="dv">1000</span>, <span class="at">by =</span> <span class="dv">1</span>)){</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  FLG <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, iter)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter){</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), Sigma)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    cor_test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(X[,<span class="dv">1</span>],X[,<span class="dv">2</span>])</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    FLG[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( cor_test<span class="sc">$</span>p.value <span class="sc">&gt;</span> alpha , <span class="dv">1</span> , <span class="dv">0</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  t2error <span class="ot">&lt;-</span> <span class="fu">mean</span>(FLG)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"n="</span>,n,<span class="st">"のとき，betaは"</span>, t2error,<span class="st">"です。"</span>))</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(t2error <span class="sc">&lt;=</span> beta){<span class="cf">break</span>}</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "n= 10 のとき，betaは 0.681 です。"
 [1] "n= 11 のとき，betaは 0.639 です。"
@@ -733,21 +735,11 @@ window.Quarto = {
 [1] "n= 27 のとき，betaは 0.227 です。"
 [1] "n= 28 のとき，betaは 0.176 です。"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 28</code></pre>
 </div>
 </div>
-<p>ここではシミュレーション回数1000，上限1000，刻み幅を1にしているが，状況に応じて変更すると良い。</p>
-</section>
-</section>
-<section id="課題" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="課題"><span class="header-section-number">10.3</span> 課題</h2>
-<ol type="1">
-<li>一要因3水準Berweenデザインの分散分析において，1.分散分析で有意差が見られる場合と，2.任意の2水準の組み合わせのどこかで有意差が見られる場合を考えたとき，タイプ2エラーはどのように異なるか。シミュレーションで確かめてみよう。設定として，<code>n1=n2=n3=10</code>, SDも各群等しく<code>sigma = 1</code>とし，効果量<code>delta = 2</code>でモデル化してみよう。</li>
-<li>N増し問題は相関係数の検定の時も生じるだろうか。母相関が<span class="math inline">\(\rho = 0.3\)</span>のとき，サンプルサイズを10から始めて，有意になるまでデータを追加する仮想研究を1000回やってみよう。データ追加の上限は100，有意水準は<span class="math inline">\(\alpha = 0.05\)</span>として，最終的に有意になる割合を計算してみよう。</li>
-<li><span class="math inline">\(\alpha = 0.05, \beta = 0.2\)</span>とし，効果量<span class="math inline">\(\delta = 1\)</span>とした時の対応のないt検定のサンプルサイズ設計をしたい。1.非心t分布をつかった解析的な方法と，2.シミュレーションによる近似的な方法の両方で，同等の結果が出ることを確認しよう。</li>
-</ol>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -758,6 +750,7 @@ window.Quarto = {
 小杉考司, 紀ノ定保礼, and 清水裕士. 2023. <em>数値シミュレーションで読み解く統計のしくみ〜Rでためしてわかる心理統計</em>. 技術評論社.
 </div>
 </div>
+</section>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
