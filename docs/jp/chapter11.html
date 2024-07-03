@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>心理学統計実習 - 11&nbsp; 回帰分析</title>
+<title>心理学統計実習 - 11&nbsp; 重回帰分析の基礎</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -164,7 +164,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter11.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">回帰分析</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter11.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -294,7 +294,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter11.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">回帰分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -361,6 +361,8 @@ window.Quarto = {
   <li><a href="#モデル適合度の検定" id="toc-モデル適合度の検定" class="nav-link" data-scroll-target="#モデル適合度の検定"><span class="header-section-number">11.4.2</span> モデル適合度の検定</a></li>
   </ul></li>
   <li><a href="#サンプルサイズ設計" id="toc-サンプルサイズ設計" class="nav-link" data-scroll-target="#サンプルサイズ設計"><span class="header-section-number">11.5</span> サンプルサイズ設計</a></li>
+  <li><a href="#まとめ" id="toc-まとめ" class="nav-link" data-scroll-target="#まとめ"><span class="header-section-number">11.6</span> まとめ</a></li>
+  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">11.7</span> 課題</a></li>
   </ul>
 </nav>
     </div>
@@ -369,7 +371,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">回帰分析</span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></h1>
 </div>
 
 
@@ -755,42 +757,132 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div>
+<p>このt分布を用いて，係数が0の母集団から得られたサンプルなのかどうかの検定が行われる。</p>
 </section>
 <section id="モデル適合度の検定" class="level3" data-number="11.4.2">
 <h3 data-number="11.4.2" class="anchored" data-anchor-id="モデル適合度の検定"><span class="header-section-number">11.4.2</span> モデル適合度の検定</h3>
+<p>一方で，出力の最後にはF統計量による検定も行われていたことを確認しておこう。次に示すのは重回帰分析の例である。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2 <span class="sc">+</span> e</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y,x1,x2)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> sample)</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x1 + x2, data = sample)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.85235 -0.68275 -0.01436  0.67809  2.70488 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.996999   0.045263  44.120   &lt;2e-16 ***
+x1          -0.006453   0.007970  -0.810    0.418    
+x2          -0.003928   0.007795  -0.504    0.615    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.012 on 497 degrees of freedom
+Multiple R-squared:  0.001893,  Adjusted R-squared:  -0.002124 
+F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
+</div>
+</div>
+<p>上の例では，統計量<span class="math inline">\(F\)</span>が，自由度<span class="math inline">\(F(\)</span> 2,497 <span class="math inline">\()\)</span>のもとで，0.4713であり，統計的に有意ではないと判断される(p=0.6245,n.s.)。</p>
+<p>これは重相関係数に対する検定であり，母集団においてモデル全体としての説明力が0である，という帰無仮説を検証しているものである。この有意性検定には，説明変数の数<span class="math inline">\(p\)</span>，サンプルサイズ<span class="math inline">\(n\)</span>，重相関係数<span class="math inline">\(R^2\)</span>を用いて，以下の式で用いられる検定統計量Fを利用する<span class="citation" data-cites="Haebara2014">(<a href="references.html#ref-Haebara2014" role="doc-biblioref">南風原 2014</a>)</span>。</p>
+<p><span class="math display">\[ F= \frac{R^2}{1-R^2}\cdot\frac{n-p-1}{p} \]</span></p>
+<p>ここで右辺第一項目はCohenの効果量(<span class="math inline">\(f^2=\frac{R^2}{1-R^2}\)</span>) といわれ，サンプルサイズ設計においてはこの指標が利用される。</p>
 </section>
 </section>
 <section id="サンプルサイズ設計" class="level2" data-number="11.5">
 <h2 data-number="11.5" class="anchored" data-anchor-id="サンプルサイズ設計"><span class="header-section-number">11.5</span> サンプルサイズ設計</h2>
-<!-- 
-7.1.3 シミュレーションとパラメータリカバリ
-
-・シミュレーションデータ 1 つを使って回帰分析をすると，パラメータリカバリができる。
-・シミュレーションデータを 10000 点使って回帰分析をすると，SE の意味がわかる。
-・正規分布でない乱数データに対して lm 関数で分析すると，パラメータリカバリできない
-・回帰係数が 0 の帰無仮説から小サンプルを大量に作って回帰係数の検定シミュレーション
-・回帰係数が b のモデルから小サンプルを大量に作って，回帰係数の例数設計とする
-
-7.3.1 残差の分散についての仮定?
-
-・回帰分析の残差についての分析，考察の仕方について説明しているテキストは少ない。まずそこをカバー。
-・その上で分散が均一的であるという仮定が満たされないと，係数の SE が過小評価されることを示す
-
-7.2.2 全ての説明変数を含んでないと予測モデルとしてはダメだって
-
-・予測に際して，本当はデータ生成メカニズムに寄与している変数があるが，それなしで予測すると係数にずれが生じることを示す。
-・説明・記述のモデルとしては問題ないが，予測のモデルとして考えると問題があるということ。
-
-7.2.3 時系列はよくわからないので無視してみます
-
-・データの各点は独立である，という仮定が満たされないケースの一例として，時系列的なデータの場合（自己相関があるばあい）をあげて，データ生成する。
-・データ生成モデルは状態空間モデルと同じにしておく。
-・回帰分析での係数が真値からどれぐらいバイアスを生じているかをデモンストレーションする。
-・状態空間モデルで推定すると正しくパラメータリカバリができることを示す。
-・これは誤差が独立でない問題なので，階層モデルとも関係する。 -->
+<p>重回帰分析のサンプルサイズ設計は，変数の効果の大きさ(回帰係数)が事前にわかっているのであれば，nを徐々に増やしていくシミュレーションによって行える。しかしそのようなケースは稀であり，実際には<span class="math inline">\(R^2\)</span>の検定を用いて，ある効果量と検出力の下で，正しく検出できるサイズを算出することになる。</p>
+<p>サンプルサイズの算出には，非心F分布を用いる。この時の非心度は，効果量<span class="math inline">\(f^2\)</span>に<span class="math inline">\(n\)</span>をかけたものになる。これを使ってサンプルサイズ設計をする例は以下のとおりである。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fl">0.15</span>      <span class="co"># 効果量</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>   <span class="co"># タイプ1エラー率</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span>     <span class="co"># タイプ2エラー率</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">5</span>         <span class="co"># 説明変数の数</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="dv">10</span> <span class="sc">:</span> <span class="dv">500</span>){</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    lambda <span class="ot">&lt;-</span> f2 <span class="sc">*</span> n</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    df1 <span class="ot">&lt;-</span> p</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    df2 <span class="ot">&lt;-</span> n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    cv <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">-</span> alpha, df1, df2)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    t2error <span class="ot">&lt;-</span> <span class="fu">pf</span>(<span class="at">q =</span> cv, df1, df2, <span class="at">ncp  =</span> lambda)</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(t2error <span class="sc">&lt;</span> beta){</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 92</code></pre>
+</div>
+</div>
+<p>この設定では，n = 92以上であればモデルとして影響力がないとは言えない，ということがわかる。</p>
+</section>
+<section id="まとめ" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="まとめ"><span class="header-section-number">11.6</span> まとめ</h2>
+<p>重回帰分析は，人文社会科学で多用される技術ではあるが，技術が先行して理解が伴わないまま利用されているケースも少なくない。繰り返しになる点もあるが，以下に注意点をまとめておく。</p>
+<ul>
+<li><strong>偏回帰係数の意味</strong>；重回帰分析における偏回帰係数は，ほかの変数を統制した上での値であり，あたかも各係数が独立直交しているかのように解釈するのは適切ではない。</li>
+<li><strong>誤差の正規性</strong>；誤差は正規分布に従っているという仮定があり，二値データや整数しかとらないカウントデータなどに盲目的にモデルを適用してはならない。誤差の正規性が満たされているかどうかは，分析後にQ-Qプロットを用いて確認する。</li>
+<li><strong>誤差の均質性</strong>；誤差はモデル全体にわたって同じ正規分布に従っているというのもモデルの仮定である。すなわち，独立変数に応じて誤差分散が変わるといった均質でないデータの場合は，正しく推定されない。誤差の均質性については，分析後のQ-Qプロットを用いて確認する。</li>
+<li><strong>誤差間の独立性</strong>；誤差はモデル全体にわたって同じ正規分布から独立に生成されている(i.i.d)というのがモデルの仮定である。時系列データのように，誤差間に対応(自己回帰)がみられるデータの場合は回帰分析は適切な手法とならない。状態空間モデルなど，誤差間関係を適切にモデリングしたものを当てはめる必要がある。</li>
+<li><strong>モデルの適切な定式化</strong>；モデルには被説明変数に影響を与えるすべての変数が正しく含まれている必要がある。例えば，影響を与えることがわかっている変数<span class="math inline">\(X_o\)</span>を意図的に除外して分析をしたとする。そのモデルに含まれる変数<span class="math inline">\(X_a\)</span>が被説明変数<span class="math inline">\(y\)</span>に影響を与えていたとしても，<span class="math inline">\(X_a\)</span>と<span class="math inline">\(X_o\)</span>に相関があれば，<span class="math inline">\(X_o\)</span>の影響力が<span class="math inline">\(X_a\)</span>を通じて<span class="math inline">\(y\)</span>に伝播するkから，<span class="math inline">\(X_a\)</span>の影響力が課題に評価されることになる。自らの仮説のために，意図的に変数を選択するのはQRPsに該当する。</li>
+<li><strong>説明変数間の相関関係</strong>；説明変数のうちにあまりにも相関関係が高い変数ペアがあれば，多重共線性の疑いが生じる。多重共線性は推定値の不安定さとなって現れる。このような場合は，説明変数を主成分分析で合成変数にまとめるといった対応が考えられる。また，高い相関ではないが交互作用効果が見たいといった場合は，逐次投入など慎重に個々の影響を考えながら投入するようにする(階層的重回帰分析)。なお交互作用項は，各変数の平均からの偏差をかけ合わせたものにすることが一般的である。</li>
+</ul>
+</section>
+<section id="課題" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="課題"><span class="header-section-number">11.7</span> 課題</h2>
+<ol type="1">
+<li>以下のデータセットは被説明変数<span class="math inline">\(y\)</span>，説明変数<span class="math inline">\(x1,x2\)</span>からなる重回帰分析のサンプルデータです。画面には一部しか表示しておらず，全体(<span class="math inline">\(n=100\)</span>)はこちら<a href="ex_regression1.csv">ex_regression1.csv</a>からダウンロード可能です。このデータセットを用いて重回帰分析を行い，結果を出力してください。</li>
+</ol>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>           y        x1         x2
+1  1.8685595 -4.248450  1.9997792
+2 -0.5728781  5.766103 -3.3435292
+3  1.0321850 -1.820462 -0.2277393
+4 10.0468488  7.660348  9.0894765
+5 -1.1968078  8.809346 -0.3419521
+6  9.6719213 -9.088870  7.8070044</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>以下のデータセットは被説明変数<span class="math inline">\(y\)</span>，説明変数<span class="math inline">\(x1,x2\)</span>からなる重回帰分析のサンプルデータです。画面には一部しか表示しておらず，全体(<span class="math inline">\(n=300\)</span>)はこちら<a href="ex_regression2.csv">ex_regression2.csv</a>からダウンロード可能です。このデータセットを用いて重回帰分析を行ってください。結果のプロットから，上に挙げた重回帰分析の仮定に反しているところを指摘してください。</li>
+</ol>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>          y         x1           x2
+1  3.586304 -0.4248450  0.132767341
+2  8.599252  0.5766103  0.922713561
+3  2.397115 -0.1820462  0.053684622
+4  3.505236  0.7660348  0.007801881
+5  6.517720  0.8809346  0.633076091
+6 -1.394231 -0.9088870 -0.895346802</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li><span class="math inline">\(R^2=0.3\)</span>を目標として，説明変数の数<span class="math inline">\(p=10\)</span>の重回帰分析を行う際に，必要なサンプルサイズはいくつになるか，計算してみましょう。ここで，<span class="math inline">\(\alpha = 0.05,\beta=0.2\)</span>とします。</li>
+</ol>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Haebara2014" class="csl-entry" role="listitem">
+南風原朝和. 2014. <em>心理統計学の基礎: 続・統合的理解のために</em>. 有斐閣.
+</div>
 <div id="ref-yoshidaMRA" class="csl-entry" role="listitem">
 吉田寿夫, and 村井潤一郎. 2021. <span>“心理学的研究における重回帰分析の適用に関わる諸問題.”</span> <em>心理学研究</em> 92 (3): 178–87. <a href="https://doi.org/10.4992/jjpsy.92.19226">https://doi.org/10.4992/jjpsy.92.19226</a>.
 </div>
@@ -814,8 +906,8 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li id="fn1"><p>もちろん証明できる。<span class="math inline">\(\beta_0 = \bar{y} - \beta_1\bar{x},\beta_1 = r_{xy} \frac{s_y}{s_x}\)</span>より，<span class="math inline">\(\bar{\bar{y}} = \frac{1}{n}\sum(\bar{y} - \beta_1\bar{x} + \beta_1x_i) = \bar{y} - \beta_1\bar{x} + \beta_1\frac{1}{n}\sum x_i = \bar{y}\)</span>である。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>もちろん証明できる。<span class="math inline">\(\bar{e} = \frac{1}{n}\sum e_i = \frac{1}{n} \sum (y_i - \hat{y}_i) = \bar{y} = \bar{\hat{y}} = 0\)</span>である。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>縦軸の標準化された残差の大きな値は解釈に注意が必要な外れ値である可能性が高い。レバレッジも同様に回帰係数に大きな影響を与える値の指標であり，この図の端に位置する変数は注意が必要，と考える。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>論文のプレプリントが出された後，心理学会が主催するオンラインシンポジウムでは著者とこの論文で取り上げられた論文の著者が登場して，議論が交わされた(日本心理学会YouTubeライブ・話題の論文について著者と語るシリーズ,2021年7月2日20時-21時40分)。平日の夜という設定，早期公開版における議論であったにも関わらず，1700名近い視聴者が参加した。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>論文のプレプリントが出された後，心理学会が主催するオンラインシンポジウムでは著者とこの論文で取り上げられた論文の著者が登場して，議論が交わされた(日本心理学会YouTubeライブ・話題の論文について著者と語るシリーズ,2021年7月2日20時-21時40分)。平日の夜という設定，早期公開版における議論であったにも関わらず，1700名近い視聴者が参加した。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>論文が早期公開された後，心理学会が主催するオンラインシンポジウムでは著者とこの論文で取り上げられた論文の著者が登場して，議論が交わされた(日本心理学会YouTubeライブ・話題の論文について著者と語るシリーズ,2021年7月2日20時-21時40分)。平日の夜という設定，早期公開版における議論であったにも関わらず，1700名近い視聴者が参加した。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>論文が早期公開された後，心理学会が主催するオンラインシンポジウムでは著者とこの論文で取り上げられた論文の著者が登場して，議論が交わされた(日本心理学会YouTubeライブ・話題の論文について著者と語るシリーズ,2021年7月2日20時-21時40分)。平日の夜という設定，早期公開版における議論であったにも関わらず，1700名近い視聴者が参加した。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>2変数重回帰分析モデルで，VIFが3であれば説明変数間の相関は<span class="math inline">\(r=0.81\)</span>程度である。VIFが10であれば<span class="math inline">\(r=0.97\)</span>にもなる。詳しくは <span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> を参照。<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>もちろん証明できる。<span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> を参照。<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>これに対して，データの階層性(ex.学級<span class="math inline">\(\subset\)</span>市区町村<span class="math inline">\(\subset\)</span>都道府県)を考慮する線形モデルのことを，階層線形モデルHierarichal Linear Model:HLM という。<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
