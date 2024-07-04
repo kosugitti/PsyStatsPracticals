@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<head>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.557">
 
-<meta charset="utf-8" />
-<meta name="generator" content="quarto-1.4.557" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>心理学統計実習 – 14  ベイジアン分析</title>
+<title>心理学統計実習 - 12&nbsp; 線型モデルの展開</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,7 +22,25 @@ ul.task-list li input[type="checkbox"] {
 }
 </style>
 
-<!-- htmldependencies:E3FAD763 -->
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter13.html" rel="next">
+<link href="./chapter11.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -56,22 +72,17 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body>
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn"
-      data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" 
-      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
-      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <h1 class="quarto-secondary-nav-title no-breadcrumbs"></h1>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" 
-        aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
-        onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter12.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -85,21 +96,19 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="/">
-      心理学統計実習
-      </a> 
+      <a href="./">心理学統計実習</a> 
         <div class="sidebar-tools-main">
     <div class="dropdown">
       <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="/心理学統計実習.pdf">
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.pdf">
               <i class="bi bi-bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
           <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="/心理学統計実習.epub">
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.epub">
               <i class="bi bi-bi-journal pe-1"></i>
             Download ePub
             </a>
@@ -135,126 +144,134 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">はじめに</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>1</span>  <span class='chapter-title'>はじめようR/RStudio</span></span></a>
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめようR/RStudio</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>2</span>  <span class='chapter-title'>Rの基礎</span></span></a>
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>3</span>  <span class='chapter-title'>Rによるデータハンドリング</span></span></a>
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>4</span>  <span class='chapter-title'>Rによるレポートの作成</span></span></a>
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Rによるレポートの作成</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter05.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>5</span>  <span class='chapter-title'>Rでプログラミング</span></span></a>
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Rでプログラミング</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span></span></a>
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>7</span>  <span class='chapter-title'>統計的仮説検定(Null Hypothesis Statistical Testing)</span></span></a>
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter08.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span></span></a>
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter09.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>9</span>  <span class='chapter-title'>多群の平均値差の検定</span></span></a>
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>10</span>  <span class='chapter-title'>疑わしき研究実践とサンプルサイズ設計</span></span></a>
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter11.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>11</span>  <span class='chapter-title'>重回帰分析の基礎</span></span></a>
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter12.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>12</span>  <span class='chapter-title'>線型モデルの展開</span></span></a>
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter13.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>13</span>  <span class='chapter-title'>多変量解析の入り口</span></span></a>
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter14.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class='chapter-number'>14</span>  <span class='chapter-title'>ベイジアン分析</span></span></a>
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">ベイジアン分析</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/chapter15.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>15</span>  <span class='chapter-title'>ベイジアンモデリング</span></span></a>
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/practices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>16</span>  <span class='chapter-title'>演習問題</span></span></a>
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">演習問題</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/references.html" class="sidebar-item-text sidebar-link">
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" ></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <div id="quarto-toc-target"></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#一般線型モデル" id="toc-一般線型モデル" class="nav-link active" data-scroll-target="#一般線型モデル"><span class="header-section-number">12.1</span> 一般線型モデル</a></li>
+  <li><a href="#一般化線型モデル" id="toc-一般化線型モデル" class="nav-link" data-scroll-target="#一般化線型モデル"><span class="header-section-number">12.2</span> 一般化線型モデル</a></li>
+  <li><a href="#階層線型モデル" id="toc-階層線型モデル" class="nav-link" data-scroll-target="#階層線型モデル"><span class="header-section-number">12.3</span> 階層線型モデル</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">14</span>  <span class="chapter-title">ベイジアン分析</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></h1>
 </div>
 
 
@@ -271,15 +288,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div id="quarto-navigation-envelope" class="hidden">
-<p><span class="hidden" data-render-id="quarto-int-sidebar-title">心理学統計実習</span> <span class="hidden" data-render-id="quarto-int-navbar-title">心理学統計実習</span> <span class="hidden" data-render-id="quarto-int-next"><span class="chapter-number">15</span>  <span class="chapter-title">ベイジアンモデリング</span></span> <span class="hidden" data-render-id="quarto-int-prev"><span class="chapter-number">13</span>  <span class="chapter-title">多変量解析の入り口</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.htmlはじめに">はじめに</span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter01.html&lt;span-class=&#39;chapter-number&#39;&gt;1&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;はじめようR/RStudio&lt;/span&gt;"><span class="chapter-number">1</span>  <span class="chapter-title">はじめようR/RStudio</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter02.html&lt;span-class=&#39;chapter-number&#39;&gt;2&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Rの基礎&lt;/span&gt;"><span class="chapter-number">2</span>  <span class="chapter-title">Rの基礎</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter03.html&lt;span-class=&#39;chapter-number&#39;&gt;3&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Rによるデータハンドリング&lt;/span&gt;"><span class="chapter-number">3</span>  <span class="chapter-title">Rによるデータハンドリング</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter04.html&lt;span-class=&#39;chapter-number&#39;&gt;4&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Rによるレポートの作成&lt;/span&gt;"><span class="chapter-number">4</span>  <span class="chapter-title">Rによるレポートの作成</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter05.html&lt;span-class=&#39;chapter-number&#39;&gt;5&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Rでプログラミング&lt;/span&gt;"><span class="chapter-number">5</span>  <span class="chapter-title">Rでプログラミング</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter06.html&lt;span-class=&#39;chapter-number&#39;&gt;6&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;確率とシミュレーション&lt;/span&gt;"><span class="chapter-number">6</span>  <span class="chapter-title">確率とシミュレーション</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter07.html&lt;span-class=&#39;chapter-number&#39;&gt;7&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;統計的仮説検定(Null-Hypothesis-Statistical-Testing)&lt;/span&gt;"><span class="chapter-number">7</span>  <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter08.html&lt;span-class=&#39;chapter-number&#39;&gt;8&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;平均値差の検定&lt;/span&gt;"><span class="chapter-number">8</span>  <span class="chapter-title">平均値差の検定</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter09.html&lt;span-class=&#39;chapter-number&#39;&gt;9&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;多群の平均値差の検定&lt;/span&gt;"><span class="chapter-number">9</span>  <span class="chapter-title">多群の平均値差の検定</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter10.html&lt;span-class=&#39;chapter-number&#39;&gt;10&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;疑わしき研究実践とサンプルサイズ設計&lt;/span&gt;"><span class="chapter-number">10</span>  <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter11.html&lt;span-class=&#39;chapter-number&#39;&gt;11&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;重回帰分析の基礎&lt;/span&gt;"><span class="chapter-number">11</span>  <span class="chapter-title">重回帰分析の基礎</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter12.html&lt;span-class=&#39;chapter-number&#39;&gt;12&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;線型モデルの展開&lt;/span&gt;"><span class="chapter-number">12</span>  <span class="chapter-title">線型モデルの展開</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter13.html&lt;span-class=&#39;chapter-number&#39;&gt;13&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;多変量解析の入り口&lt;/span&gt;"><span class="chapter-number">13</span>  <span class="chapter-title">多変量解析の入り口</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter14.html&lt;span-class=&#39;chapter-number&#39;&gt;14&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;ベイジアン分析&lt;/span&gt;"><span class="chapter-number">14</span>  <span class="chapter-title">ベイジアン分析</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/chapter15.html&lt;span-class=&#39;chapter-number&#39;&gt;15&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;ベイジアンモデリング&lt;/span&gt;"><span class="chapter-number">15</span>  <span class="chapter-title">ベイジアンモデリング</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/practices.html&lt;span-class=&#39;chapter-number&#39;&gt;16&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;演習問題&lt;/span&gt;"><span class="chapter-number">16</span>  <span class="chapter-title">演習問題</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/references.htmlReferences">References</span> <span class="hidden" data-render-id="quarto-breadcrumbs-&lt;span-class=&#39;chapter-number&#39;&gt;14&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;ベイジアン分析&lt;/span&gt;"><span class="chapter-number">14</span>  <span class="chapter-title">ベイジアン分析</span></span></p>
-</div>
-<div id="quarto-meta-markdown" class="hidden">
-<p><span class="hidden" data-render-id="quarto-metatitle">心理学統計実習 - <span class="chapter-number">14</span>  <span class="chapter-title">ベイジアン分析</span></span> <span class="hidden" data-render-id="quarto-twittercardtitle">心理学統計実習 - <span class="chapter-number">14</span>  <span class="chapter-title">ベイジアン分析</span></span> <span class="hidden" data-render-id="quarto-ogcardtitle">心理学統計実習 - <span class="chapter-number">14</span>  <span class="chapter-title">ベイジアン分析</span></span> <span class="hidden" data-render-id="quarto-metasitename">心理学統計実習</span> <span class="hidden" data-render-id="quarto-twittercarddesc"></span> <span class="hidden" data-render-id="quarto-ogcardddesc"></span></p>
-</div>
+<section id="一般線型モデル" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="一般線型モデル"><span class="header-section-number">12.1</span> 一般線型モデル</h2>
+</section>
+<section id="一般化線型モデル" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="一般化線型モデル"><span class="header-section-number">12.2</span> 一般化線型モデル</h2>
+</section>
+<section id="階層線型モデル" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="階層線型モデル"><span class="header-section-number">12.3</span> 階層線型モデル</h2>
+
+
+</section>
 
 </main> <!-- /main -->
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -690,18 +712,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a  href="/chapter13.html" class="pagination-link" aria-label="多変量解析の入り口">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class='chapter-number'>13</span>  <span class='chapter-title'>多変量解析の入り口</span></span>
+      <a href="./chapter11.html" class="pagination-link" aria-label="重回帰分析の基礎">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a  href="/chapter15.html" class="pagination-link" aria-label="ベイジアンモデリング">
-        <span class="nav-page-text"><span class='chapter-number'>15</span>  <span class='chapter-title'>ベイジアンモデリング</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapter13.html" class="pagination-link" aria-label="多変量解析の入り口">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 
-</body>
 
-</html>
+
+
+</body></html>
