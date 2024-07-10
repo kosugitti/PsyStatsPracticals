@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.53">
+<meta name="generator" content="quarto-1.5.54">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -69,6 +89,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -255,8 +304,14 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#最終課題" id="toc-最終課題" class="nav-link active" data-scroll-target="#最終課題"><span class="header-section-number">16.1</span> 最終課題</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -280,8 +335,28 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>このコースでは，確率的に生じるデータを意識しながら，そのメカニズムから生成されるデータを乱数によって具体化し，そうしたサンプルデータに基づいて検定と分析のロジックを学んできました。 検定には，サンプルサイズ，有意水準，検出力，効果量が相互に関わっており，確率的判断がこれらの関数としてどのように現れるかを確認しました。 また仮想データをつくれるところから，QRPsのシミュレーションを行ったり，例数設計が行えることも見てきました。 線形モデルやそのほか発展的なモデルについても，データ生成メカニズムの観点からアプローチできます。</p>
+<p>より発展的な内容になりますが，確率的プログラミング言語を用いれば，データ生成メカニズムを記述することでモデルパラメータの推定が可能になります。 確率的プログラミング言語を利用するには，プログラミングの技術，ベイズ統計の理論，MCMCによる近似の理論と方法についての知識が必要です。 これらは，このコースで扱ってきたR言語による非ベイズ統計的モデルへの乱数近似アプローチのちょっと先にあるものです。</p>
+<p>本コースの内容を十分に身につけていれば，すぐにでも対応できるでしょう！</p>
+<section id="最終課題" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="最終課題"><span class="header-section-number">16.1</span> 最終課題</h2>
+<ul>
+<li><p>無相関検定において，真の状態が母相関<span class="math inline">\(\rho=0.4\)</span>であったときに，サンプルサイズ<span class="math inline">\(n=20\)</span>のデータをとって検定を行うとします。この時の帰無仮説の分布と，真の状態の分布を重ねて図示し，<span class="math inline">\(\alpha=0.05\)</span>の臨界値，検出力を可視化する図を描くコードを書いてください。(参考；<span class="citation" data-cites="Haebara200206">南風原 (<a href="references.html#ref-Haebara200206" role="doc-biblioref">2002</a>)</span> ,Pp.144)</p></li>
+<li><p>2要因Betweenデザインの分散分析において，交互作用のみ有意になるようなサンプルデータを作るコードを書いてください。また，サンプルデータが正しくできているかどうかを確認するために，<code>anovakun</code>での分析結果も出力させてください。。</p></li>
+<li><p>2つの変数X,Yをもつ3つの群があり，群ごとX,Yの相関を見るとすべて<span class="math inline">\(r = -0.3\)</span>程度の負の相関を持っているが，3つの群をあわせてX,Yの相関を見ると正の相関を示すようなデータセットを作流コードを書いてください。なお，出来上がったデータは群ごとに色分けした散布図で図示するようにしてください。</p>
+<ul>
+<li>ヒント：群ごとに回帰分析のサンプルデータを作ることを考え，傾きは一貫して<span class="math inline">\(\beta_1=-0.3\)</span>であるのに対し，群ごとの切片<span class="math inline">\(\beta_0\)</span>を適当に調整すると良いでしょう。</li>
+<li>ねらい：このようなデータは，相関を見るときに可視化することの重要性を伝えるとともに，階層線形モデルの必要性を理解することに役立ちます。</li>
+</ul></li>
+</ul>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Haebara200206" class="csl-entry" role="listitem">
+南風原朝和. 2002. <em>心理統計学の基礎: 統合的理解のために</em>. 有斐閣. <a href="http://amazon.co.jp/o/ASIN/4641121605/">http://amazon.co.jp/o/ASIN/4641121605/</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

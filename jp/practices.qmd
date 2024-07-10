@@ -1,3 +1,113 @@
 # 演習問題
 
-+ 
+このコースでは，確率的に生じるデータを意識しながら，そのメカニズムから生成されるデータを乱数によって具体化し，そうしたサンプルデータに基づいて検定と分析のロジックを学んできました。
+検定には，サンプルサイズ，有意水準，検出力，効果量が相互に関わっており，確率的判断がこれらの関数としてどのように現れるかを確認しました。
+また仮想データをつくれるところから，QRPsのシミュレーションを行ったり，例数設計が行えることも見てきました。
+線形モデルやそのほか発展的なモデルについても，データ生成メカニズムの観点からアプローチできます。
+
+より発展的な内容になりますが，確率的プログラミング言語を用いれば，データ生成メカニズムを記述することでモデルパラメータの推定が可能になります。
+確率的プログラミング言語を利用するには，プログラミングの技術，ベイズ統計の理論，MCMCによる近似の理論と方法についての知識が必要です。
+これらは，このコースで扱ってきたR言語による非ベイズ統計的モデルへの乱数近似アプローチのちょっと先にあるものです。
+
+本コースの内容を十分に身につけていれば，すぐにでも対応できるでしょう！
+
+## 最終課題
+
++ 無相関検定において，真の状態が母相関$\rho=0.4$であったときに，サンプルサイズ$n=20$のデータをとって検定を行うとします。この時の帰無仮説の分布と，真の状態の分布を重ねて図示し，$\alpha=0.05$の臨界値，検出力を可視化する図を描くコードを書いてください。(参考；@Haebara200206 ,Pp.144)
+
++ 2要因Betweenデザインの分散分析において，交互作用のみ有意になるようなサンプルデータを作るコードを書いてください。また，サンプルデータが正しくできているかどうかを確認するために，`anovakun`での分析結果も出力させてください。。
+
++ 2つの変数X,Yをもつ3つの群があり，群ごとX,Yの相関を見るとすべて$r = -0.3$程度の負の相関を持っているが，3つの群をあわせてX,Yの相関を見ると正の相関を示すようなデータセットを作流コードを書いてください。なお，出来上がったデータは群ごとに色分けした散布図で図示するようにしてください。
+    + ヒント：群ごとに回帰分析のサンプルデータを作ることを考え，傾きは一貫して$\beta_1=-0.3$であるのに対し，群ごとの切片$\beta_0$を適当に調整すると良いでしょう。
+    + ねらい：このようなデータは，相関を見るときに可視化することの重要性を伝えるとともに，階層線形モデルの必要性を理解することに役立ちます。
+
+
+```{r}
+#| eval: FALSE
+#| include: FALSE
+
+library(ggplot2)
+# パラメータ設定
+rho <- 0.4
+n <- 20
+alpha <- 0.05
+df <- n - 2
+# 臨界値の計算（双方向）
+critical_value_t <- qt(1 - alpha / 2, df)
+# 非心パラメータ（ncp）の計算
+ncp <- sqrt(n) * rho / sqrt(1 - rho^2)
+# 理論的なt分布の値を計算
+t_values <- seq(-5, 5, length.out = 1000)
+null_density <- dt(t_values, df)
+true_density <- dt(t_values, df, ncp = ncp)
+# データフレームの作成
+data <- data.frame(
+  t_value = rep(t_values, 2),
+  density = c(null_density, true_density),
+  group = factor(rep(c("Null Distribution", "True Distribution"), each = length(t_values)))
+)
+
+# 検出力の計算
+power <- pt(critical_value_t, df, ncp = ncp, lower.tail = FALSE) + pt(-critical_value_t, df, ncp = ncp, lower.tail = TRUE)
+## 検算
+library(pwr)
+pwr.r.test(n=20,r=0.4)
+h# ggplotでプロット
+ggplot(data, aes(x = t_value, y = density, color = group, fill = group)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = c(-critical_value_t, critical_value_t), linetype = "dashed", color = "black") +
+  labs(title = "Distribution of t Values", x = "t Value", y = "Density") +
+  scale_color_manual(values = c("red", "blue")) +
+  scale_fill_manual(values = c("red", "blue"), guide = "none") +
+  annotate("text", x = critical_value_t + 1, y = max(null_density) * 0.5, label = sprintf("Power = %.2f", power), color = "black") +
+  theme_minimal()
+```
+
+```{r}
+#| eval: FALSE
+#| include: FALSE
+# 必要なパッケージを読み込む
+library(tidyverse)
+
+# パラメータ設定
+set.seed(123)
+n <- 99 # 全体のサンプルサイズ
+n_groups <- 3 # サブグループの数
+group_size <- n %/% n_groups # サブグループのサイズ
+
+# グループごとにデータを生成
+x <- rnorm(n)
+y <- numeric(n)
+
+# 各サブグループで負の相関を持つデータを生成
+for (i in 1:n_groups) {
+  start_index <- (i - 1) * group_size + 1
+  end_index <- i * group_size
+  intercept <- (i - 2) * 5 # グループごとに異なる切片
+  slope <- -0.3 # 一貫した負の相関
+  y[start_index:end_index] <- intercept + slope * x[start_index:end_index] + rnorm(group_size, sd = 1)
+}
+
+# 全体として正の相関を持つように調整
+# 全体の正の相関を持たせるためにyにxを加算しますが、サブグループ内の負の相関は保たれます
+
+# データフレームの作成
+data <- data.frame(
+  x = x,
+  y = y,
+  group = factor(rep(1:n_groups, each = group_size))
+)
+
+# 散布図をプロット
+ggplot(data, aes(x = x, y = y, color = group)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Overall Positive Correlation with Negative Correlation in Subgroups",
+       x = "X",
+       y = "Y",
+       color = "Group") +
+  theme_minimal()
+
+cor(data$x,data$y)
+data %>% group_by(group) %>% summarise(r = cor(x,y))
+```
