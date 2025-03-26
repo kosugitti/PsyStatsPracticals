@@ -394,7 +394,7 @@ window.Quarto = {
 <p><span class="math display">\[ y_i  = \beta_0 + \beta_1 x_i + e_i = \hat{y}_i + e_i\]</span></p>
 <p>一次式を<span class="math inline">\(\hat{y}\)</span>とまとめたものを予測値といい，予測値と実測値<span class="math inline">\(y\)</span>の差分<span class="math inline">\(e_i\)</span>を残差residualsという。</p>
 <p>空間上の一次直線の切片，傾きを求めるというのが基本的な問題であり，二点であれば一意に定めることができるが，データ分析の場面では3点以上の多くのデータセットの中に直線を当てはめることになるので，なんらかの外的な基準が必要になる。この時，「残差の分散が最も小さくなるように」と考えるのが<strong>最小二乗法</strong>の考え方であり，「残差が正規分布に従っていると考え，その尤度が最も大きくなるように」と考えるのが<strong>最尤法</strong>の考え方である。前者は記述統計的な，後者は確率モデルとしての感が過多になっていることに注意してほしい。また確率モデルの推定方法としては，事前分布を用いた<strong>ベイズ推定</strong>が用いられることもある。</p>
-<p>最小二乗法による推定値は，次の式で表される。証明は他書<span class="citation" data-cites="kosugi2018 Nishiuchi201712">(<a href="#ref-kosugi2018" role="doc-biblioref">小杉 2018</a>; <a href="#ref-Nishiuchi201712" role="doc-biblioref">西内 2017</a>)</span>に譲るが，ロジックとして残差の二乗和<span class="math inline">\(\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2\)</span>を最小にすることを考え，この式を展開するか偏微分を用いて極小値を求めることで算出できるとだけ伝えておこう。いずれにせよ，平均値<span class="math inline">\(\bar{x},\bar{y}\)</span>や分散・共分散<span class="math inline">\(s_x,s_y,r_{xy}\)</span>など標本統計量から推定できるのはありがたいことである。</p>
+<p>最小二乗法による推定値は，次の式で表される。証明は他書<span class="citation" data-cites="kosugi2018 Nishiuchi201712">(<a href="references.html#ref-kosugi2018" role="doc-biblioref">小杉 2018</a>; <a href="references.html#ref-Nishiuchi201712" role="doc-biblioref">西内 2017</a>)</span>に譲るが，ロジックとして残差の二乗和<span class="math inline">\(\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2\)</span>を最小にすることを考え，この式を展開するか偏微分を用いて極小値を求めることで算出できるとだけ伝えておこう。いずれにせよ，平均値<span class="math inline">\(\bar{x},\bar{y}\)</span>や分散・共分散<span class="math inline">\(s_x,s_y,r_{xy}\)</span>など標本統計量から推定できるのはありがたいことである。</p>
 <p><span class="math display">\[\beta_0 = \bar{y} - \beta_1\bar{x},\quad \beta_1 = r_{xy} \frac{s_y}{s_x}\]</span></p>
 <p>また，ここでは<span class="math inline">\(x,y\)</span>ともに連続変数を想定しているが，説明変数<span class="math inline">\(x\)</span>が二値，あるいはカテゴリカルなものであれば<span class="math inline">\(y\)</span>の平均値を通る直線を探すことになる。直線の傾きが0であれば「平均値が同じ」という線形モデルであり，これは平均値差の検定における帰無仮説と同等である。このように，t検定やANOVAは回帰分析の特殊ケースとも考えられ，まとめて<strong>一般線形モデル</strong>と呼ばれる。一般線形モデルは，被説明変数が連続的で，線形モデルによる平均値に正規分布に従う残差が加わったものとして考えるという意味で統一的に表現される。</p>
 <!-- これらの平均的な位置に説明変数からの線形モデルを当てはめる場合は，線形モデルによる重み付き加算の値を**リンク関数**で変換して確率分布のパラメータに当てはめるという方法で一般化される。こうしたモデルを**一般化線形モデル**という。 -->
@@ -611,8 +611,8 @@ V3 0.5 0.8 1.0</code></pre>
 </div>
 <p>重回帰分析の結果<code>result.mra</code>の<code>V2</code>から<code>V1</code>への回帰係数は-0.2778である。また，<code>V3</code>で<code>V1,V2</code>を統制した残差同士をつかい，回帰係数を求めた結果は-0.2778と，同じ値になっていることが確認できただろう。</p>
 <p><code>V3</code>から<code>V1</code>への偏回帰係数も同様で，<code>V2</code>で両者を統制した残差同士による回帰係数になっている。このように，重回帰分析の回帰係数は，他の説明変数で統制した値になっており，日本語で説明するなら「他の変数の値が同じであると想定した条件つきの，当該変数の影響力」とでもいうべき値になっている。</p>
-<p>なぜこのような持って回った説明をするかというと，つい「条件付きの」という話を忘れて報告，解釈してしまうことが多いからで，<span class="citation" data-cites="yoshidaMRA">吉田 and 村井 (<a href="#ref-yoshidaMRA" role="doc-biblioref">2021</a>)</span> の論文での指摘は議論を呼んだのは記憶に新しい<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>。 たとえば今回の例でも，回帰係数が-0.2778であったのに対し，<code>V1</code>と<code>V2</code>の単相関が0.3 であったことを思い出そう。符号が反転しているため，解釈は真逆になってしまう。実際の単相関は正の関係であるから，条件付きであることを忘れて「<code>V2</code>は負の影響，<code>V3</code>は正の影響」と表現してしまうと，ミスリーディングなことになるからである。</p>
-<p>また，<span class="citation" data-cites="Toyoda201706">豊田 (<a href="#ref-Toyoda201706" role="doc-biblioref">2017</a>)</span> は重回帰分析のこうした誤用を避けるために，独立変数を事前に直交化したデザインで行うコンジョイント分析の積極的な利用を提案している。我々が重回帰分析をうまく使いこなせないのであれば，そうした手法も有用であるだろう。</p>
+<p>なぜこのような持って回った説明をするかというと，つい「条件付きの」という話を忘れて報告，解釈してしまうことが多いからで，<span class="citation" data-cites="yoshidaMRA">吉田 and 村井 (<a href="references.html#ref-yoshidaMRA" role="doc-biblioref">2021</a>)</span> の論文での指摘は議論を呼んだのは記憶に新しい<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>。 たとえば今回の例でも，回帰係数が-0.2778であったのに対し，<code>V1</code>と<code>V2</code>の単相関が0.3 であったことを思い出そう。符号が反転しているため，解釈は真逆になってしまう。実際の単相関は正の関係であるから，条件付きであることを忘れて「<code>V2</code>は負の影響，<code>V3</code>は正の影響」と表現してしまうと，ミスリーディングなことになるからである。</p>
+<p>また，<span class="citation" data-cites="Toyoda201706">豊田 (<a href="references.html#ref-Toyoda201706" role="doc-biblioref">2017</a>)</span> は重回帰分析のこうした誤用を避けるために，独立変数を事前に直交化したデザインで行うコンジョイント分析の積極的な利用を提案している。我々が重回帰分析をうまく使いこなせないのであれば，そうした手法も有用であるだろう。</p>
 </section>
 <section id="多重共線性" class="level3" data-number="11.3.2">
 <h3 data-number="11.3.2" class="anchored" data-anchor-id="多重共線性"><span class="header-section-number">11.3.2</span> 多重共線性</h3>
@@ -799,7 +799,7 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 </div>
 </div>
 <p>上の例では，統計量<span class="math inline">\(F\)</span>が，自由度<span class="math inline">\(F(\)</span> 2,497 <span class="math inline">\()\)</span>のもとで，0.4713であり，統計的に有意ではないと判断される(p=0.6245,n.s.)。</p>
-<p>これは重相関係数に対する検定であり，母集団においてモデル全体としての説明力が0である，という帰無仮説を検証しているものである。この有意性検定には，説明変数の数<span class="math inline">\(p\)</span>，サンプルサイズ<span class="math inline">\(n\)</span>，重相関係数<span class="math inline">\(R^2\)</span>を用いて，以下の式で用いられる検定統計量Fを利用する<span class="citation" data-cites="Haebara2014">(<a href="#ref-Haebara2014" role="doc-biblioref">南風原 2014</a>)</span>。</p>
+<p>これは重相関係数に対する検定であり，母集団においてモデル全体としての説明力が0である，という帰無仮説を検証しているものである。この有意性検定には，説明変数の数<span class="math inline">\(p\)</span>，サンプルサイズ<span class="math inline">\(n\)</span>，重相関係数<span class="math inline">\(R^2\)</span>を用いて，以下の式で用いられる検定統計量Fを利用する<span class="citation" data-cites="Haebara2014">(<a href="references.html#ref-Haebara2014" role="doc-biblioref">南風原 2014</a>)</span>。</p>
 <p><span class="math display">\[ F= \frac{R^2}{1-R^2}\cdot\frac{n-p-1}{p} \]</span></p>
 <p>ここで右辺第一項目はCohenの効果量(<span class="math inline">\(f^2=\frac{R^2}{1-R^2}\)</span>) といわれ，サンプルサイズ設計においてはこの指標が利用される。</p>
 </section>
@@ -879,7 +879,7 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 </ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-Haebara2014" class="csl-entry" role="listitem">
 南風原朝和. 2014. <em>心理統計学の基礎: 続・統合的理解のために</em>. 有斐閣.
 </div>
@@ -906,10 +906,10 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 <li id="fn1"><p>もちろん証明できる。<span class="math inline">\(\beta_0 = \bar{y} - \beta_1\bar{x},\beta_1 = r_{xy} \frac{s_y}{s_x}\)</span>より，<span class="math inline">\(\bar{\bar{y}} = \frac{1}{n}\sum(\bar{y} - \beta_1\bar{x} + \beta_1x_i) = \bar{y} - \beta_1\bar{x} + \beta_1\frac{1}{n}\sum x_i = \bar{y}\)</span>である。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>もちろん証明できる。<span class="math inline">\(\bar{e} = \frac{1}{n}\sum e_i = \frac{1}{n} \sum (y_i - \hat{y}_i) = \bar{y} = \bar{\hat{y}} = 0\)</span>である。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>縦軸の標準化された残差の大きな値は解釈に注意が必要な外れ値である可能性が高い。レバレッジも同様に回帰係数に大きな影響を与える値の指標であり，この図の端に位置する変数は注意が必要，と考える。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>もちろん証明できる。詳細は <span class="citation" data-cites="kosugi2018">小杉 (<a href="#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> を参照すること。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>もちろん証明できる。詳細は <span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> を参照すること。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>論文が早期公開された後，心理学会が主催するオンラインシンポジウムでは著者とこの論文で取り上げられた論文の著者が登場して，議論が交わされた(日本心理学会YouTubeライブ・話題の論文について著者と語るシリーズ,2021年7月2日20時-21時40分)。平日の夜という設定，早期公開版における議論であったにも関わらず，1700名近い視聴者が参加した。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>2変数重回帰分析モデルで，VIFが3であれば説明変数間の相関は<span class="math inline">\(r=0.81\)</span>程度である。VIFが10であれば<span class="math inline">\(r=0.97\)</span>にもなる。詳しくは <span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> を参照。<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>もちろん証明できる。<span class="citation" data-cites="kosugi2018">小杉 (<a href="#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> を参照。<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>2変数重回帰分析モデルで，VIFが3であれば説明変数間の相関は<span class="math inline">\(r=0.81\)</span>程度である。VIFが10であれば<span class="math inline">\(r=0.97\)</span>にもなる。詳しくは <span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> を参照。<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>もちろん証明できる。<span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> を参照。<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>これに対して，データの階層性(ex.学級<span class="math inline">\(\subset\)</span>市区町村<span class="math inline">\(\subset\)</span>都道府県)を考慮する線形モデルのことを，階層線形モデルHierarchical Linear Model:HLM という。<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
