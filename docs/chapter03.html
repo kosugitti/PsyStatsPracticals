@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -91,7 +91,7 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -391,7 +391,7 @@ window.Quarto = {
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ ggplot2   3.5.2     ✔ tibble    3.2.1
 ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
 ✔ purrr     1.0.4     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -400,13 +400,13 @@ window.Quarto = {
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
-<p>Attaching core tidyverse packages,と表示され，複数のパッケージ名にチェックマークが入っていたものが表示されただろう。<code>tidyverse</code>パッケージはこれらの下位パッケージを含むパッケージ群である。これに含まれる<code>dplyr</code>,<code>tidyr</code>パッケージはデータの整形に，<code>readr</code>はファイルの読み込みに，<code>forecats</code>はFactor型変数の操作に，<code>stringr</code>は文字型変数の操作に，<code>lubridate</code>は日付型変数の操作に，<code>tibble</code>はデータフレーム型オブジェクトの操作に，<code>purrr</code>はデータに適用する関数に，<code>ggplot2</code>は可視化に特化したパッケージである。</p>
+<p>Attaching core tidyverse packages,と表示され，複数のパッケージ名にチェックマークが入っていたものが表示されただろう。<code>tidyverse</code>パッケージはこれらの下位パッケージを含むパッケージ群である。これに含まれる<code>dplyr</code>,<code>tidyr</code>パッケージはデータの整形に，<code>readr</code>はファイルの読み込みに，<code>forcats</code>はFactor型変数の操作に，<code>stringr</code>は文字型変数の操作に，<code>lubridate</code>は日付型変数の操作に，<code>tibble</code>はデータフレーム型オブジェクトの操作に，<code>purrr</code>はデータに適用する関数に，<code>ggplot2</code>は可視化に特化したパッケージである。</p>
 <p>続いてConflictsについての言及がある。<code>tidyverse</code>パッケージに限らず，パッケージを読み込むと表示されることのあるこの警告は，「関数名の衝突」を意味している。ここまで，Rを起動するだけで，<code>sqrt</code>,<code>mean</code>などの関数が利用できた。これはRの基本関数であるが，具体的には<code>base</code>パッケージに含まれた関数である。Rは起動時に<code>base</code>などいくつかのパッケージを自動的に読み込んでいるのである。これに別途パッケージを読み込むとき，あとで読み込まれたパッケージが同名の関数を使っていることがある。このとき，関数名は後から読み込んだもので上書きされる。そのことについての警告が表示されているのである。具体的にみると，<code>dplyr::filter() masks stats::filter()</code>とあるのは，最初に読み込んでいた<code>stats</code>パッケージの<code>filter</code>関数は，(<code>tidyverse</code>パッケージに含まれる)<code>dplyr</code>パッケージのもつ同名の関数で上書きされ，今後はこちらが優先的に利用されるよ，ということを示している。</p>
 <p>このような同音異字関数は，関数を特定するときに混乱を招くかもしれない。あるパッケージの関数であることを明示したい場合は，この警告文にあるように，パッケージ名<code>::</code>関数名，という書き方にすると良い。</p>
 </section>
 <section id="パイプ演算子" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="パイプ演算子"><span class="header-section-number">3.2</span> パイプ演算子</h2>
-<p>続いてパイプ演算子について解説する。パイプ演算子は<code>tidyverse</code>パッケージに含まれていた<code>magrittr</code>パッケージで導入されたもので，これによってデータハンドリングの利便性が一気に向上した。そこでRもver 4.2からこの演算子を導入し，特段パッケージのインストールを必要としなくとも使えるようになった。このR本体のパイプ演算子のことを，<code>tidyverse</code>のそれと区別して，ナイーブパイプと呼ぶこともある。</p>
+<p>続いてパイプ演算子について解説する。パイプ演算子は<code>tidyverse</code>パッケージに含まれていた<code>magrittr</code>パッケージで導入されたもので，これによってデータハンドリングの利便性が一気に向上した。そこでRもver 4.2からこの演算子を導入し，特段パッケージのインストールを必要としなくとも使えるようになった。このR本体のパイプ演算子のことを，<code>tidyverse</code>のそれと区別して，ネイティブパイプと呼ぶこともある。</p>
 <p>ともあれこのパイプ演算子がいかに優れたものであるかを解説しよう。次のスクリプトは，あるデータセットの標準偏差を計算するものである<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。数式で表現すると次の通り。ここで<span class="math inline">\(\bar{x}\)</span>はデータベクトル<span class="math inline">\(x\)</span>の算術平均。 <span class="math display">\[v = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">14</span>) <span class="co"># データ</span></span>
@@ -512,10 +512,10 @@ window.Quarto = {
 </div>
 <p>これだけでも便利だが，<code>select</code>関数は適用時に抜き出す条件を指定してやればよく，そのために便利な以下のような関数がある。</p>
 <ul>
-<li>starts_with()</li>
-<li>ends_with()</li>
-<li>contains()</li>
-<li>matches()</li>
+<li><code>starts_with()</code></li>
+<li><code>ends_with()</code></li>
+<li><code>contains()</code></li>
+<li><code>matches()</code></li>
 </ul>
 <p>使用例を以下に挙げる。</p>
 <div class="cell">
@@ -673,7 +673,7 @@ window.Quarto = {
 <section id="sec-Long_and_Wide" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="sec-Long_and_Wide"><span class="header-section-number">3.7</span> ロング型とワイド型</h2>
 <p>ここまでみてきたデータは行列の2次元に，ケース<span class="math inline">\(\times\)</span>変数の形で格納されていた。この形式は，人間が見て管理するときにわかりやすい形式をしているが，計算機にとっては必ずしもそうではない。たとえば「神エクセル」と揶揄されることがあるように，稀に表計算ソフトを方眼紙ソフトあるいは原稿用紙ソフトと勘違いしたかのような使い方がなされる場合がある。人間にとってはわかりやすい(見て把握しやすい)かもしれないが，計算機にとって構造が把握できないため，データ解析に不向きである。巷には，こうした分析しにくい電子データがまだまだたくさん存在する。</p>
-<p>これをうけて2020年12月，総務省により機械判読可能なデータの表記方法の統一ルールが策定された<span class="citation" data-cites="soumu">(<a href="references.html#ref-soumu" role="doc-biblioref">総務省 2020</a>)</span>。それには次のようなチェック項目が含まれている。</p>
+<p>これをうけて2020年12月，総務省により機械判読可能なデータの表記方法の統一ルールが策定された<span class="citation" data-cites="soumu">(<a href="#ref-soumu" role="doc-biblioref">総務省 2020</a>)</span>。それには次のようなチェック項目が含まれている。</p>
 <ul>
 <li>ファイル形式はExcelかCSVとなっているか</li>
 <li>1セル1データとなっているか</li>
@@ -689,7 +689,7 @@ window.Quarto = {
 <li>1シートに複数の表が掲載されていないか</li>
 </ul>
 <p>データの入力の基本は，<strong>1行に1ケースの情報が入っている，過不足のない1つのデータセットを作ること</strong>といえるだろう。</p>
-<p>同様に，計算機にとって分析しやすいデータの形について，<span class="citation" data-cites="Hadley2014">Hadley (<a href="references.html#ref-Hadley2014" role="doc-biblioref">2014</a>)</span> が提唱したのが<strong>整然データ(Tidy Data)</strong>という考え方である。整然データとは，次の4つの特徴を持ったデータ形式のことを指す。</p>
+<p>同様に，計算機にとって分析しやすいデータの形について，<span class="citation" data-cites="Hadley2014">Hadley (<a href="#ref-Hadley2014" role="doc-biblioref">2014</a>)</span> が提唱したのが<strong>整然データ(Tidy Data)</strong>という考え方である。整然データとは，次の4つの特徴を持ったデータ形式のことを指す。</p>
 <ul>
 <li>個々の変数(variable)が1つの列(column)をなす。</li>
 <li>個々の観測(observation)が1つの行(row)をなす。</li>
@@ -934,7 +934,7 @@ window.Quarto = {
 3 virginica          6.59        2.97         5.55</code></pre>
 </div>
 </div>
-<p>ラムダ関数や自作関数の作り方については，後ほどあらためて触れるとして，ここでは複数の変数に関数をあてがう方法を確認して置いて欲しい。<code>across</code>関数で変数を選ぶ際は，<code>select</code>関数の時に紹介した<code>starts_with</code>なども利用できる。次に示す例は，複数の変数を選択し，かつ，複数の関数を適用する例である。複数の関数を適用するために，ラムダ関数をリストで与えることができる。</p>
+<p>ラムダ関数や自作関数の作り方については，後ほどあらためて触れるとして，ここでは複数の変数に関数をあてがう方法を確認して欲しい。<code>across</code>関数で変数を選ぶ際は，<code>select</code>関数の時に紹介した<code>starts_with</code>なども利用できる。次に示す例は，複数の変数を選択し，かつ，複数の関数を適用する例である。複数の関数を適用するために，ラムダ関数をリストで与えることができる。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
@@ -967,7 +967,7 @@ window.Quarto = {
 </ul>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-Hadley2014" class="csl-entry" role="listitem">
 Hadley, Wickham. 2014. <span>“Tidy Data.”</span> <em>Journal of Statistical Software</em> 59: 1–23. <a href="https://doi.org/10.18637/jss.v059.i10">https://doi.org/10.18637/jss.v059.i10</a>.
 </div>
