@@ -1,6 +1,6 @@
 rm(list = ls())
-library(tidyverse)
-library(broom)
+pacman::p_load(tidyverse)
+pacman::p_load(broom)
 # 検定の繰り返し問題 -------------------------------------------------------
 
 ### t検定を繰り返す

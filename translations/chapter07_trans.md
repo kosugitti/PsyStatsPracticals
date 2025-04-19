@@ -25,7 +25,7 @@ You may wonder why we start with the Null Hypothesis being zero. This is because
 | `## 相関係数の検定` | `## Testing the Correlation Coefficient` |
 | `ここでは相関係数の検定を例に取り上げる。俗に「無相関検定」と呼ばれるように，相関がどれほど大きいとかどれほど意味があるということをチェックするのでは無く，無相関ではない，ということをチェックする。もちろん標本相関は計算してゼロでなければ，それは無相関ではない。ここで考えたいのは，母相関がゼロではないということである。言い換えると，母相関がゼロの状態であっても，標本相関がゼロでないことは，小標本のサンプリングという背景のもとでは当然のことである。` | `We will look at the test of the correlation coefficient, commonly referred to as the "correlation absence test." Instead of checking how big the correlation is or how significant it is, we check if it's not uncorrelated. Of course, if the sample correlation is calculated and isn't zero, then it's not uncorrelated. What we want to consider here is that the population correlation is not zero. In other words, even if the population correlation is in a state of zero, the fact that the sample correlation isn't zero is a natural thing under the context of sampling a small sample.` |
 | `確認してみよう。まず，無相関なデータセットを作ることを考える。Rの`MASS`パッケージを使い，多変量正規分布の確率分布関数から乱数を生成しよう。` | `Let's check it out. First, consider creating an uncorrelated dataset. Use the `MASS` package in R, and generate random numbers from the probability distribution function of a multivariate normal distribution.` |
-| `library(MASS)` | `library(MASS)` |
+| `pacman::p_load(MASS)` | `pacman::p_load(MASS)` |
 | `set.seed(12345)` | `set.seed(12345)` |
 | `N <- 100000` | `N <- 100000` |
 | `X <- mvrnorm(N,` | `X <- mvrnorm(N,` |
@@ -73,7 +73,7 @@ Variance is a measure that exhibits how much a set of values spreads out, while 
 | `#| fig.height: 5` | `#| fig.height: 5` |
 | `#| fig.width: 5` | `#| fig.width: 5` |
 | `#| dev: "ragg_png"` | `#| dev: "ragg_png"` |
-| `library(tidyverse)` | `library(tidyverse)` |
+| `pacman::p_load(tidyverse)` | `pacman::p_load(tidyverse)` |
 | `X %>%` | `X %>%` |
 | `as.data.frame() %>%` | `as.data.frame() %>%` |
 | `ggplot(aes(x = V1, y = V2)) +` | `ggplot(aes(x = V1, y = V2)) +` |

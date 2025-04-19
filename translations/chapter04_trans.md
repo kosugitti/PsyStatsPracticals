@@ -3,7 +3,7 @@
 | `# Rによるレポートの作成` | `# Creating Reports with R` |
 | `#| echo: FALSE` | `#| echo: FALSE` |
 | `#| include: FALSE` | `#| include: FALSE` |
-| `library(tidyverse)` | `library(tidyverse)` |
+| `pacman::p_load(tidyverse)` | `pacman::p_load(tidyverse)` |
 | `## Rmd/Quartoの使い方` | `## How to Use Rmd/Quarto` |
 | `### 概略` | `### Overview` |
 | `今回はRStudioを使った文書作成法について解説する。皆さんは、これまで作成と言えば、基本的にMicrosoft Wordのような文書作成ソフトを使ってきたものと思う。また，統計解析といえばR(やその他のソフト)，図表の作成はExcelといったように，用途ごとに異なるアプリケーションを活用するのが一般的であろう。` | `In this section, we will explain how to create documents using RStudio. Up until now, when most of you heard about creating documents, you probably thought of using word processing software like Microsoft Word. In addition, it's typical to use different applications for different purposes – R or other such software for statistical analysis, and Excel for creating graphs and tables.` |
@@ -115,13 +115,13 @@ In psychology, understanding statistics and the use of R and RStudio is essentia
 | ``ggplot2` パッケージの提供する描画環境の特徴は，レイア(Layer)の概念である。図版は複数のレイアの積み重ねとして表現される。まず土台となるキャンバスがあり，そこにデータセット，幾何学的オブジェクト(点，線，バーなど)，エステティックマッピング(色，形，サイズなど)，凡例やキャプションを重ねていく，という発想である。そして図版全体を通したテーマを手強することで，カラーパレットの統一などの仕上げをすれば，すぐにでも論文投稿可能なレベルの図版を描くことができる。` | `The central concept of the plotting environment provided by the `ggplot2` package is the concept of layers. A plot is expressed as a stack of several layers. The idea is to start with a base canvas, then layer on top of it datasets, geometric objects (such as points, lines, bars, etc.), aesthetic mappings (like colors, shapes, sizes), legends and captions. Finally, by adjusting themes that apply to the overall plot, you can finish off with things like unifying the color palette. This process will let you create plots that are immediately ready for publication in academic papers.` |
 | `以下に`ggplot2`における描画のサンプルを示す。サンプルデータ`mtcars`を用いた。` | `Here we present a drawing example using `ggplot2`. We will be utilizing sample data `mtcars`.` |
 | `#| dev: "ragg_png"` | `#| dev: "ragg_png"` |
-| `library(ggplot2)` | `library(ggplot2)` |
+| `pacman::p_load(ggplot2)` | `pacman::p_load(ggplot2)` |
 | `ggplot(data = mtcars, aes(x = wt, y = mpg)) +` | `ggplot(data = mtcars, aes(x = wt, y = mpg)) +` |
 | `geom_point() +` | `geom_point() +` |
 | `geom_smooth(method = "lm", formula = "y ~ x") +` | `geom_smooth(method = "lm", formula = "y ~ x") +` |
 | `labs(title = "車の重量と燃費の関係", x = "重量", y = "燃費")` | `labs(title = "車の重量と燃費の関係", x = "重量", y = "燃費")` |
 | `まずは出来上がる図版の美しさと，コードのイメージを把握してもらいたい。` | `Firstly, we want you to grasp the beauty of the finished figures and the image of the code.` |
-| `最初の`library(ggplot2)`はパッケージを読み込んでいるところである。今回は明示的に`ggplot2`を読み込んでいるが，`tidyverse`パッケージを読み込むと同時に読み込まれているので，Rのスクリプトの冒頭に`library(tidyverse)`と書く癖をつけておけば必要ない。` | `The first `library(ggplot2)` is where the package is being loaded. In this example, we are explicitly loading `ggplot2`, but it's also included when you load the `tidyverse` package. So, if you get in the habit of writing `library(tidyverse)` at the start of your R scripts, there won’t be any need to load it separately.` |
+| `最初の`pacman::p_load(ggplot2)`はパッケージを読み込んでいるところである。今回は明示的に`ggplot2`を読み込んでいるが，`tidyverse`パッケージを読み込むと同時に読み込まれているので，Rのスクリプトの冒頭に`pacman::p_load(tidyverse)`と書く癖をつけておけば必要ない。` | `The first `pacman::p_load(ggplot2)` is where the package is being loaded. In this example, we are explicitly loading `ggplot2`, but it's also included when you load the `tidyverse` package. So, if you get in the habit of writing `pacman::p_load(tidyverse)` at the start of your R scripts, there won’t be any need to load it separately.` |
 | `続いて`ggplot`の関数が4行にわたって書いてあるが，それぞれが`+`の記号で繋がれていることがわかるだろう。これがレイアを重ねるという作業に相当する。まずは，図を書くためのキャンバスを用意し，その上にいろいろ重ねていくのである。` | `Next, you may notice that the `ggplot` function is written over four lines, each one connected by a `+` symbol. This represents the process of layering the layout. Firstly, a canvas is prepared for drawing the figure, and various elements are then layered on top of it.` |
 | `次のコードは，キャンバスだけを描画した例である。` | `The following code is an example of drawing only the canvas.` |
 | `g <- ggplot()` | `g <- ggplot()` |
@@ -215,7 +215,7 @@ When you start writing down your "recipe", it might be helpful to borrow the pow
 | `# キャプションをつける` | `# キャプションをつける` |
 | `labs(caption = "facet_gridの例")` | `labs(caption = "facet_gridの例")` |
 | `一枚の図をサブグループに分けるのではなく，異なる図を一枚の図として赤痛いこともあるかもしれない。そのような場合は，`patchwork`パッケージを使うと便利である。` | `Instead of dividing one graph into subgroups, there may be times when it is more suitable to combine different graphs into one cohesive figure. In such instances, the `patchwork` package can be quite useful.` |
-| `library(patchwork)` | `library(patchwork)` |
+| `pacman::p_load(patchwork)` | `pacman::p_load(patchwork)` |
 | `# 散布図の作成` | `# 散布図の作成` |
 | `g1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +` | `g1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +` |
 | `geom_point() +` | `geom_point() +` |
@@ -259,7 +259,7 @@ When you start writing down your "recipe", it might be helpful to borrow the pow
 | `scale_fill_brewer(palette = "Greys") +` | `scale_fill_brewer(palette = "Greys") +` |
 | `ggtitle("Gray Palette")` | `ggtitle("Gray Palette")` |
 | `# カラーパレットが多く含まれているパッケージの利用` | `# カラーパレットが多く含まれているパッケージの利用` |
-| `library(RColorBrewer)` | `library(RColorBrewer)` |
+| `pacman::p_load(RColorBrewer)` | `pacman::p_load(RColorBrewer)` |
 | `# 色覚特性を考慮したカラーパレット` | `# 色覚特性を考慮したカラーパレット` |
 | `p2 <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +` | `p2 <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +` |
 | `geom_point(size = 3) +` | `geom_point(size = 3) +` |

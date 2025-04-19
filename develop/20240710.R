@@ -1,4 +1,4 @@
-library(ggplot2)
+pacman::p_load(ggplot2)
 
 # パラメータ設定
 rho <- 0.3

@@ -2,8 +2,8 @@
 if (!requireNamespace("tidyverse", quietly = TRUE)) install.packages("tidyverse")
 if (!requireNamespace("broom", quietly = TRUE)) install.packages("broom")
 
-library(tidyverse)
-library(broom)
+pacman::p_load(tidyverse)
+pacman::p_load(broom)
 
 # シミュレーションの設定
 set.seed(123) # 再現性のためのシード設定
@@ -60,8 +60,8 @@ cat("最終的に有意になる割合:", result, "\n")
 if (!requireNamespace("tidyverse", quietly = TRUE)) install.packages("tidyverse")
 if (!requireNamespace("broom", quietly = TRUE)) install.packages("broom")
 
-library(tidyverse)
-library(broom)
+pacman::p_load(tidyverse)
+pacman::p_load(broom)
 
 # シミュレーションの設定
 set.seed(123) # 再現性のためのシード設定

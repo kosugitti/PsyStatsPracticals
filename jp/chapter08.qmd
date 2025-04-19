@@ -9,7 +9,7 @@
 たとえば7件法のデータを取ったときに，ある項目の平均が中点4より有意に離れていると言って良いかどうか，といった判定をするときに用いる。かりに，サンプルサイズ10で7件法のデータが得られたとしよう。ここでは平均4,SD1の正規乱数を10件生成することで表現する。実際にはこの値を，人に対する尺度カテゴリへの反応として得ているはずである。
 
 ```{r,oneTsample}
-library(tidyverse)
+pacman::p_load(tidyverse)
 set.seed(17)
 n <- 10
 mu <- 4
@@ -117,7 +117,7 @@ t.test(value ~ group, data = dataSet, var.equal = TRUE)
 
 ```{r}
 #| message: FALSE
-library(car)
+pacman::p_load(car)
 leveneTest(value ~ group, data = dataSet, center = mean)
 ```
 
@@ -143,9 +143,9 @@ print(result2)
 ```{r}
 #| echo: FALSE
 #| message: FALSE
-library(tidyverse)
-library(ggplot2)
-library(gridExtra)
+pacman::p_load(tidyverse)
+pacman::p_load(ggplot2)
+pacman::p_load(gridExtra)
 dL <- 2
 dS <- 0.2
 sL <- 2
@@ -192,7 +192,7 @@ $$ es = \frac{\mu_1 - \mu_2}{\sigma} $$
 で表現されるから，$d$が効果量を表していたのである。もちろん我々は母平均，母SDなどを知り得ないのでこれもデータから推定する他ない。幸いRには`effsize`パッケージなど，効果量を算出するものが用意されている。
 
 ```{r}
-library(effsize)
+pacman::p_load(effsize)
 cohen.d(value ~ group, data = dataSet)
 cohen.d(value ~ group, data = dataSet, hedges.correction = TRUE)
 ```
@@ -237,7 +237,7 @@ $$\mathbf{\Sigma} = \begin{pmatrix} \sigma_1^2 & \sigma_{12}\\ \sigma_{21} & \si
 
 ```{r}
 #| message: FALSE
-library(MASS) # 多次正規乱数を生成するのに必要
+pacman::p_load(MASS) # 多次正規乱数を生成するのに必要
 n <- 10
 mu1 <- 4
 sigma <- 1
@@ -283,7 +283,7 @@ $$ group2 = \{57, 60, 62, 77, 75 \} $$
 #| eval: FALSE
 #| include: FALSE
 
-library(tidyverse)
+pacman::p_load(tidyverse)
 
 # 課題1
 set.seed(123)
@@ -319,7 +319,7 @@ cat("t(", t_test_result$parameter, ") = ", t_test_result$statistic, ", p = ", t_
 # 2つの独立した群の平均に差があるかを検定した結果、有意な差が見られた（t(8) = -2.838, p = 0.022）。
 
 # 課題3
-library(MASS)
+pacman::p_load(MASS)
 
 # 多次元正規分布からデータ生成
 set.seed(123)

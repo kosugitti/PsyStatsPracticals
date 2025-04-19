@@ -6,7 +6,7 @@
 | `## 一標本検定` | `## One-Sample Test` |
 | `まず配置標本検定の例から始める。母平均がわかっている，あるいは理論的に仮定される特定の値に対して，標本平均が統計的に有意に異なっていると言って良いかどうかの判断をするときに用いる。` | `We'll start with an example of permutation sample testing. This method is used to determine whether the sample mean is statistically significantly different from a specific value, which is known or theoretically assumed as the population mean.` |
 | `たとえば7件法のデータを取ったときに，ある項目の平均が中点4より有意に離れていると言って良いかどうか，といった判定をするときに用いる。かりに，サンプルサイズ10で7件法のデータが得られたとしよう。ここでは平均4,SD1の正規乱数を10件生成することで表現する。実際にはこの値を，人に対する尺度カテゴリへの反応として得ているはずである。` | `For example, when collecting data based on a 7-point scale, we determine whether or not it's accurate to say that the average of a certain item significantly deviates from the midpoint of 4. Suppose we obtained data from a 7-point scale with a sample size of 10. Here, we represent it by generating 10 normal random numbers with an average of 4 and a standard deviation of 1. In reality, these values should be obtained as responses to scale categories from individuals.` |
-| `library(tidyverse)` | `library(tidyverse)` |
+| `pacman::p_load(tidyverse)` | `pacman::p_load(tidyverse)` |
 | `set.seed(17)` | `set.seed(17)` |
 | `n <- 10` | `n <- 10` |
 | `mu <- 4` | `mu <- 4` |
@@ -84,7 +84,7 @@ Understanding these mathematical concepts is key to mastering psychological stat
 | `t.test(value ~ group, data = dataSet, var.equal = TRUE)` | `t.test(value ~ group, data = dataSet, var.equal = TRUE)` |
 | `## 二標本検定(ウェルチの補正)` | `## Two-Sample Test (Welch's Correction)` |
 | `先ほどのt.test関数には，`var.equal = TRUE`というオプションが追加されていた。これは2群の分散が等しいと仮定した場合の検定になる。t検定は歴史的にこちらが先に登場しているが，2群の分散が等しいかどうかはいきなり前提できるものでもない。等分散性の検定は，Levene検定を行うのが一般的であり，R においては，`car`パッケージや`lawstat` パッケージが対応する関数を持っている。ここでは`car`パッケージの `leveneTest`関数を用いる例を示す。` | `The previous t.test function added an option, `var.equal = TRUE`. This is a test that assumes equal variances between the two groups. While t-tests historically first appeared in this form, it's not a premise that can be immediately made whether the variances of the two groups are equal. Testing for equality of variances is typically done using the Levene test, and in R, the `car` and `lawstat` packages provide corresponding functions. Here, we will show an example using the `leveneTest` function from the `car` package.` |
-| `library(car)` | `library(car)` |
+| `pacman::p_load(car)` | `pacman::p_load(car)` |
 | `leveneTest(value ~ group, data = dataSet, center = mean)` | `leveneTest(value ~ group, data = dataSet, center = mean)` |
 | `この結果を見ると，p値から明らかなように，2群の分散が等しいという帰無仮説が棄却**できなかった**ので，等しいと考えてt検定に進むことができる。もしこれが棄却されてしまったら，2群の分散が等しいという帰無仮説が成り立たないのだから，等分散性の仮定を外す必要がある。実行は簡単で，`var.equal`を`FALSE`にすれば良い。` | `Upon reviewing the results, as indicated by the p-value, we were unable to reject the null hypothesis that the variances of the two groups are equal. Consequently, we can presume their equality and proceed to the t-test. If we were to reject this, it would mean that the null hypothesis of equal variances does not hold. In this case, we would need to remove the assumption of equal variances. The execution is straightforward: simply set `var.equal` to `FALSE`.` |
 | `result2 <- t.test(value ~ group, data = dataSet, var.equal = FALSE)` | `result2 <- t.test(value ~ group, data = dataSet, var.equal = FALSE)` |

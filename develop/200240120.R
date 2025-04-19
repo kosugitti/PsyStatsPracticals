@@ -1,4 +1,4 @@
-library(tidyverse)
+pacman::p_load(tidyverse)
 dat <- read_csv("Baseball.csv") %>%
   filter(Year == "2022年度") %>%
   dplyr::select(Year, Name, team, salary, position, Games, AtBats, Hit) %>%

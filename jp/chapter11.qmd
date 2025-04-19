@@ -34,7 +34,7 @@ $$ y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + e_i $$
 説明変数については制約がないので一様乱数から生成し，平均0，標準偏差$\sigma$の誤差とともに被説明変数を作る。
 ```{r}
 #| message: FALSE
-library(tidyverse)
+pacman::p_load(tidyverse)
 set.seed(123)
 n <- 500
 beta0 <- 2
@@ -106,7 +106,7 @@ plot(result.lm)
 
 ```{r}
 #| message: FALSE
-library(GGally) # 必要ならインストールしよう
+pacman::p_load(GGally) # 必要ならインストールしよう
 ggpairs(dat)
 ```
 
@@ -132,8 +132,8 @@ ggpairs(dat)
 偏相関係数を計算してみよう。
 ```{r}
 #| message: FALSE
-library(MASS)
-library(psych)
+pacman::p_load(MASS)
+pacman::p_load(psych)
 Sigma <- matrix(c(1, 0.3, 0.5, 0.3, 1, 0.8, 0.5, 0.8, 1), ncol = 3)
 X <- mvrnorm(1000, c(0, 0, 0), Sigma, empirical = TRUE) %>% as.data.frame()
 ## 相関行列
@@ -190,7 +190,7 @@ summary(result.mra)
 このインフレを確認するための指標がVariance Infration Factor: VIFである。Rでは`car`パッケージにある`vif`関数に重回帰モデルを入れることでこの指標が算出される。一般にVIFが3，あるいは10を超えると多重共線性が生じており，解釈に注意が必要と言われている[^11.7]。
 ```{r}
 #| message: FALSE
-library(car) # なければ入れておこう
+pacman::p_load(car) # なければ入れておこう
 vif(result.mra)
 ```
 

@@ -22,7 +22,7 @@ One tip for advancing your understanding is to think of probability in terms of 
 | `curve(dnorm(x), from = -4, to = 4)` | `curve(dnorm(x), from = -4, to = 4)` |
 | `#| dev: "ragg_png"` | `#| dev: "ragg_png"` |
 | `# ggplot2を使ってカッコよく` | `# ggplot2を使ってカッコよく` |
-| `library(tidyverse)` | `library(tidyverse)` |
+| `pacman::p_load(tidyverse)` | `pacman::p_load(tidyverse)` |
 | `data.frame(x = seq(-4, 4, by = 0.01)) %>%` | `data.frame(x = seq(-4, 4, by = 0.01)) %>%` |
 | `mutate(y = dnorm(x)) %>%` | `mutate(y = dnorm(x)) %>%` |
 | `ggplot(aes(x = x, y = y)) +` | `ggplot(aes(x = x, y = y)) +` |
