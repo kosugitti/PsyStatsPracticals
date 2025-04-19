@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -91,7 +91,7 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -410,7 +410,7 @@ window.Quarto = {
 <p>回帰分析のモデル式にそってデータを生成し，分析によってパラメータリカバリを行ってみよう。</p>
 <p>説明変数については制約がないので一様乱数から生成し，平均0，標準偏差<span class="math inline">\(\sigma\)</span>の誤差とともに被説明変数を作る。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
@@ -539,7 +539,7 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>残差と予測値のプロットからも想像できるが，両者の相関はゼロである。図で確認しておこう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally) <span class="co"># 必要ならインストールしよう</span></span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(GGally) <span class="co"># 必要ならインストールしよう</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -563,8 +563,8 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>ここで第二の変数<span class="math inline">\(x_2\)</span>があったとする。第一の変数<span class="math inline">\(x_1\)</span>で<span class="math inline">\(y\)</span>を説明した残差<span class="math inline">\(e_y\)</span>と，第一の変数で第二の変数を説明した残差<span class="math inline">\(e_{x2}\)</span>との相関を<strong>偏相関partial correlation</strong>という。これは第一の変数<span class="math inline">\(x_1\)</span>からの影響を両者から取り除いているので，<span class="math inline">\(x_1\)</span>で統制した相関係数ということができる。偏相関は単純な相関が「見せかけの関係」でないことを検証するための重要な指標である。</p>
 <p>偏相関係数を計算してみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(psych)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="fl">0.8</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">3</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">1000</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), Sigma, <span class="at">empirical =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 相関行列</span></span>
@@ -596,7 +596,7 @@ V3 0.5 0.8 1.0</code></pre>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>result.mra<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept)            V2            V3 
--3.414371e-17 -2.777778e-01  7.222222e-01 </code></pre>
+-5.218050e-17 -2.777778e-01  7.222222e-01 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差をつかって偏回帰係数を確認する</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>result.lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V1 <span class="sc">~</span> V3, <span class="at">data =</span> X)</span>
@@ -606,7 +606,7 @@ V3 0.5 0.8 1.0</code></pre>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>result.lm5<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         (Intercept) result.lm4$residuals 
-        3.242857e-17        -2.777778e-01 </code></pre>
+       -7.925711e-18        -2.777778e-01 </code></pre>
 </div>
 </div>
 <p>重回帰分析の結果<code>result.mra</code>の<code>V2</code>から<code>V1</code>への回帰係数は-0.2778である。また，<code>V3</code>で<code>V1,V2</code>を統制した残差同士をつかい，回帰係数を求めた結果は-0.2778と，同じ値になっていることが確認できただろう。</p>
@@ -631,7 +631,7 @@ Residuals:
 
 Coefficients:
               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -3.414e-17  2.690e-02   0.000        1    
+(Intercept) -5.218e-17  2.690e-02   0.000        1    
 V2          -2.778e-01  4.486e-02  -6.192 8.65e-10 ***
 V3           7.222e-01  4.486e-02  16.100  &lt; 2e-16 ***
 ---
@@ -645,7 +645,7 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>標準誤差は0.0449であり，それほど大きくない標準誤差で問題がないようである。しかし両者の相関係数がより高くなり，一方が他方に線形的に従属してしまうと係数の推定値が不安定になるため，注意が必要である。</p>
 <p>このインフレを確認するための指標がVariance Infration Factor: VIFである。Rでは<code>car</code>パッケージにある<code>vif</code>関数に重回帰モデルを入れることでこの指標が算出される。一般にVIFが3，あるいは10を超えると多重共線性が生じており，解釈に注意が必要と言われている<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car) <span class="co"># なければ入れておこう</span></span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(car) <span class="co"># なければ入れておこう</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(result.mra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      V2       V3 
