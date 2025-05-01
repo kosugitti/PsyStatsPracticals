@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -365,8 +399,10 @@ window.Quarto = {
 <section id="因子分析" class="level2" data-number="14.1">
 <h2 data-number="14.1" class="anchored" data-anchor-id="因子分析"><span class="header-section-number">14.1</span> 因子分析</h2>
 <p>ここでは心理学で最もよく用いられる手法の一つである，因子分析法について概説する。 因子分析法は測定についての統計モデルである。類似の手法として主成分分析があげられるが，主成分分析は測定のモデルというより要約のモデルというべきである。</p>
-<p>因子分析のモデルは次の式で表される。 <span class="math display">\[ z_{ij} = a_{j1}f_{i1}+a_{j2}f_{i2}+cdots+a_{jm}f_{im}+d_jU_{ij} \]</span> ここで<span class="math inline">\(z_{ij}\)</span>は個人<span class="math inline">\(i\)</span>の項目<span class="math inline">\(j\)</span>に対するスコアを標準化したものである。<span class="math inline">\(a_{j.}\)</span>は項目<span class="math inline">\(j\)</span>の因子負荷量(factor loadings)，<span class="math inline">\(f_{i.}\)</span>は個人<span class="math inline">\(i\)</span>の因子得点(factor score)，<span class="math inline">\(d_j\)</span>は項目<span class="math inline">\(j\)</span>の独自因子負荷量，<span class="math inline">\(U_{ij}\)</span>は項目<span class="math inline">\(j\)</span>に伴う個人<span class="math inline">\(i\)</span>の独自因子得点である。<span class="math inline">\(a_{j.}\)</span>で表される<span class="math inline">\(m\)</span>個の因子を共通因子と呼ぶ。一般に<span class="math inline">\(m\)</span>は項目数<span class="math inline">\(M\)</span>よりもかなり小さい。例えば性格検査のBIG-fiveは<span class="math inline">\(M=25\)</span>で<span class="math inline">\(m=5\)</span>である。YG正確検査は<span class="math inline">\(M=120\)</span>で<span class="math inline">\(m=12\)</span>である。この意味で多変量解析の目的の一つ，情報圧縮のモデルであるということもできる。</p>
-<p>これに対して主成分分析は次のように表される。 <span class="math display">\[ P_{i} = w_1X_{i1} + w_2X_{i2} + \cdots + w_MX_{iM} \]</span> ここで<span class="math inline">\(X_{i.}\)</span>は個人<span class="math inline">\(i\)</span>の項目<span class="math inline">\(j\)</span>に対する反応を表し，この重み付き線型結合で主成分<span class="math inline">\(P\)</span>を形成する。ここでの未知数は<span class="math inline">\(w_j\)</span>であるから，一つの合成変数に作るための最適な重みを見つけることが目的となる。その基準の一つが，生成される合成変数<span class="math inline">\(P\)</span>が個人<span class="math inline">\(i\)</span>の特徴を最大限際立たせるように，すなわち<span class="math inline">\(P_i\)</span>の分散を最大にすることと考える。もちろん一つの合成変数で<span class="math inline">\(M\)</span>個の変数が持つ情報をすべて反映させることは難しいので，第二，第三の合成得点(主成分)を作ることも可能である。</p>
+<p>因子分析のモデルは次の式で表される。 <span class="math display">\[ z_{ij} = a_{j1}f_{i1}+a_{j2}f_{i2}+cdots+a_{jm}f_{im}+d_jU_{ij} \]</span></p>
+<p>ここで<span class="math inline">\(z_{ij}\)</span>は個人<span class="math inline">\(i\)</span>の項目<span class="math inline">\(j\)</span>に対するスコアを標準化したものである。<span class="math inline">\(a_{j.}\)</span>は項目<span class="math inline">\(j\)</span>の因子負荷量(factor loadings)，<span class="math inline">\(f_{i.}\)</span>は個人<span class="math inline">\(i\)</span>の因子得点(factor score)，<span class="math inline">\(d_j\)</span>は項目<span class="math inline">\(j\)</span>の独自因子負荷量，<span class="math inline">\(U_{ij}\)</span>は項目<span class="math inline">\(j\)</span>に伴う個人<span class="math inline">\(i\)</span>の独自因子得点である。<span class="math inline">\(a_{j.}\)</span>で表される<span class="math inline">\(m\)</span>個の因子を共通因子と呼ぶ。一般に<span class="math inline">\(m\)</span>は項目数<span class="math inline">\(M\)</span>よりもかなり小さい。例えば性格検査のBIG-fiveは<span class="math inline">\(M=25\)</span>で<span class="math inline">\(m=5\)</span>である。YG正確検査は<span class="math inline">\(M=120\)</span>で<span class="math inline">\(m=12\)</span>である。この意味で多変量解析の目的の一つ，情報圧縮のモデルであるということもできる。</p>
+<p>これに対して主成分分析は次のように表される。 <span class="math display">\[ P_{i} = w_1X_{i1} + w_2X_{i2} + \cdots + w_MX_{iM} \]</span></p>
+<p>ここで<span class="math inline">\(X_{i.}\)</span>は個人<span class="math inline">\(i\)</span>の項目<span class="math inline">\(j\)</span>に対する反応を表し，この重み付き線型結合で主成分<span class="math inline">\(P\)</span>を形成する。ここでの未知数は<span class="math inline">\(w_j\)</span>であるから，一つの合成変数に作るための最適な重みを見つけることが目的となる。その基準の一つが，生成される合成変数<span class="math inline">\(P\)</span>が個人<span class="math inline">\(i\)</span>の特徴を最大限際立たせるように，すなわち<span class="math inline">\(P_i\)</span>の分散を最大にすることと考える。もちろん一つの合成変数で<span class="math inline">\(M\)</span>個の変数が持つ情報をすべて反映させることは難しいので，第二，第三の合成得点(主成分)を作ることも可能である。</p>
 <p>そうすると，情報圧縮という観点から見た<span class="math inline">\(m\)</span>個の共通因子，<span class="math inline">\(m\)</span>個の主成分の違いは何だろうか。これはすでに述べたように，因子分析は測定のモデルなので，得られたデータ<span class="math inline">\(z_{ij}=\frac{X_{ij}-\bar{X_j}}{\sigma_j}\)</span>には誤差<span class="math inline">\(d_jU_{ij}\)</span>が含まれていると考えているのに対し，主成分分析では<span class="math inline">\(X_{ij}\)</span>にそれを仮定せず，得られた値をそのまま用いているところが異なる。</p>
 <p>実践的な面では，心理尺度のような反応に誤差が仮定されるものには因子分析を用い，公的な記録など値に誤差が想定されないものには主成分分析を用いることが相応しい。因子分析が心理学やテスト理論の領域で広まり，主成分分析が経済学，商学，社会学の領域で広まったのはそうした背景による。</p>
 <p>計算論的には，いずれも変数間関係を元に最大限説明できる要素を抽出するというところで，行列の固有値分解を用いるという点が同じであるから，統計パッケージによっては同じメニューで異なる出力になっているものも少なくない。しかし上で述べたように，モデルの設計上の違いがあることは知っておいて損はないだろう。また，因子分析は変数間関係として相関行列を，主成分分析は分散共分散行列を用いることが多い。これは因子分析を用いる心理学的な領域では，測定値に絶対的な意味がなく相対的な意味(ex.より外向的，より内向的)しかないことに対し，他の社会科学領域では絶対的な意味がある(ex.国家間の貿易黒字・赤字の額など)場合が多いからである。また，主成分分析は多くの変数を情報圧縮する目的で第一主成分のみに注目することが多いのに対し，因子分析は測定しているものの考え方から複数の因子を考えることが多い。因子分析において単因子で考えるか多因子で考えるかについては，知能検査において知能を一般的な単一の因子で考えるのか，各領域に対応する複数の因子があるのかといった，理論的な相違がその黎明期にみられたことを反映している。</p>
@@ -386,7 +422,127 @@ window.Quarto = {
 <p>因子分析を数学的に語れば，<span class="math inline">\(M\)</span>個の項目相互の相関係数を表した相関行列<span class="math inline">\(\mathbb{R}\)</span>を固有値分解することに尽きる。相関係数はピアソンの積率相関係数を用いることが一般的であるが，項目が順序尺度水準であるとかバイナリ変数であるとかいった場合は，それに応じた相応しい相関係数を用いる。</p>
 <p>固有値分解とは相関行列の次元性を見ることでもある。<span class="math inline">\(M\)</span>個の項目もつ情報は<span class="math inline">\(M\)</span>次元あると考える。例えば2変数<span class="math inline">\(X,Y\)</span>があれば，変数<span class="math inline">\(X\)</span>をx軸，変数<span class="math inline">\(Y\)</span>をy軸に取った2次元空間に核反応をプロットすることでデータ全体の関係を表現できるだろう。しかしこれらの二変数が相関しているなら，変数<span class="math inline">\(X,Y\)</span>を直交させた空間で表現する必要は必ずしもなく，より分散の大きくとれる二次元基底を見つけることができるに違いない。これが因子分析，主成分分析に共通する考え方であり，最大の分散を持つ次元に注目するのが主成分分析，多次元のなかで有用な次元を共通因子，それ以外を誤差因子と区別して多因子(多次元)で考えるのが因子分析である。</p>
 <p>ここで共通因子の数を決めるのは分析者であり，「有用な次元」の決定は主観的な側面を含むことに注意しよう。もちろんデータの構造から適した次元数を考える手法はいろいろ提案されており，昨今はより客観的基準で因子数を決定するのが一般的であるが，数学的な特徴から実践的な意味合いをもつ共通次元とみなすのは，あくまでも分析者の責任において行われるものである。</p>
-<p>因子数を決定する手法として，スクリープロットをつかった平行分析がある。 次のコードを見ながら具体的に見ていこう。分析には<code>psych</code>パッケージを用い，データは<code>psych</code>パッケージの持つサンプルデータ，<code>bfi</code>を用いる。</p>
+<p>因子数を決定する手法として，スクリープロットをつかった平行分析がある。 次のコードを見ながら具体的に見ていこう。分析には<code>psych</code>パッケージを用い，データは<code>psych</code>パッケージの持つサンプルデータ，<code>bfi</code>を用いる。 これは性格テストのビッグファイブ因子それぞれについて5項目で測定したデータである。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> psych<span class="sc">::</span>bfi <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>gender,<span class="sc">-</span>education,<span class="sc">-</span>age)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 並行分析</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter14_files/figure-html/parallel-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parallel analysis suggests that the number of factors =  6  and the number of components =  6 </code></pre>
+</div>
+</div>
+<p>データ行列から得られる固有値の大きい順に折れ線グラフを描いたものを，スクリープロットという。 デフォルトではPCすなわち主成分分析Principle Component Analysisのスクリープロットと，FAすなわち因子分析Factor Analysisのスクリープロットが表示されている。この違いは上で述べたように，データに誤差を仮定するかどうかの違いにある。因子分析はこれを仮定するため1つの項目のもつ情報量が1単位以下になる(相関係数<span class="math inline">\(r_{jj}\)</span>が<span class="math inline">\(1.0\)</span>より小さくなる。正確には，<span class="math inline">\(r_{jj} = 1-h_j^2 = u^2 &lt; 0\)</span>であり，ここで<span class="math inline">\(h_j^2\)</span>は共通性と呼ばれる共通因子負荷量の二乗和，<span class="math inline">\(u_j^2\)</span>は独自性因子負荷量の二乗和)ため，主成分分析のそれより必ず低くなる。</p>
+<p>プロットされているのはActual Data, Simulated Data, Resmapled Dataとなっているのがわかるだろう。実際のデータは何らかの意味構造を有しているだろうから，その相関関係にも偏りが生じ，よく説明できる次元とそうでない次元とが生まれるため，徐々に減衰するカーブで表示される。これに対してSimulated Dataは同じサイズの乱数データから，Resampled Dataは実際のデータをごちゃ混ぜにした行列を作って得られた固有値構造を表している。乱数や撹拌したデータは実際の意味構造を持たず，どの次元も均等に無意味になるため，フラットな線で表示されるだろう。このフラットな線と実データの線を比べ，フラットなラインよりも大きな意味がある次元は無意味ではない，と考えて因子数を決めるのが平行分析の考え方である。この考え方に基づくと，因子分析解も主成分分析解も6因子(6成分)がてきせつであるということになる。</p>
+<p>なお図中には固有値が1.0のところにもラインが引かれている。これはかつて使われていたガットマン基準というもので，項目1つ分の分散も持たないような因子は共通因子たり得ない，という考え方である。この考え方によると3因子が妥当ということになる。ただし判断の基準として，共通因子で分散全体の何%を説明したか，というのもあり，たとえば3因子までで50%も説明しないようであれば半分以上の情報を捨てることになるから，4，5因子まで採用するという考え方もあり得る。</p>
+</section>
+<section id="因子負荷量の推定" class="level4" data-number="14.1.1.2">
+<h4 data-number="14.1.1.2" class="anchored" data-anchor-id="因子負荷量の推定"><span class="header-section-number">14.1.1.2</span> 因子負荷量の推定</h4>
+<p>因子の数が決まると，その過程のもとで因子負荷量の推定に入る。例えば次のようにして結果を得る。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>result.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(dat, <span class="at">nfactors =</span> <span class="dv">6</span>, <span class="at">fm =</span> <span class="st">"ML"</span>, <span class="at">rotate =</span> <span class="st">"geominQ"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>要求されたパッケージ GPArotation をロード中です</code></pre>
+</div>
+</div>
+<p><code>psych</code>パッケージの<code>fa</code>関数は実に多くのオプションを持っているが，ここでは因子数(<code>nfactors</code>)，推定法(<code>fm</code>)，回転法(<code>rotate</code>)の3つを指定した。 因子数はすでに述べたので，推定法と回転法について解説する。</p>
+<p>推定法は，ここでは<strong>最尤法(<code>ML</code>)</strong>を指定した。サンプルサイズが200を超えるような大きなデータであれば，多変量正規分布のもとからデータが得られたと仮定して因子負荷量を推定するのが最も適切だろう。サンプルサイズが小さい場合は，<strong>最小二乗法系列(<code>ULS,OLS,WLS,GLS</code>など)</strong>の推定法を指定し，データとモデルのずれを最も小さくするような手法にするのが良い。特段の指定がなければ<strong>最小残差法(<code>minres</code>)</strong>が選ばれる。これは最小二乗法と同じだが，アルゴリズムが改善されていて収束しやすいという特徴がある。推定法として主成分解(<code>pa</code>)を選べば，残差を推定しないモデルとなる。アルゴリズムの違い，仮定の違いなどでいろいろ変えうるが，基本的にこれで大きく変化が出るようなものではない。</p>
+<p>回転法は因子負荷量を推定した後で，さらに解釈をしやすくするためのものである。因子分析や主成分分析は，データの持ってる空間的特徴の軸を見つけ直すという説明はすでにした通りだが，この軸は原点こそ決まっているが，線形代数的変換によって軸を任意の方向に回転させることができる。であれば最も解釈がやりやすい方向に回転させるのが実践上便利である。この解釈がやりやすい方向というのを数学的に言い換えるならば，一つは項目と因子の関係が<strong>単純構造</strong>にあることだろう。単純構造とは，ある項目が特定の因子に寄与しているのなら，そのほかの因子には寄与していないということである。例えば，外向性を測定する項目が第1因子に重く負荷しているのであれば，第2,3,4,5因子には負荷していないほうが解釈しやすい。因子はデータの空間的特徴を表す軸(次元)なのだから，事後的にその軸がの意味であったかを考察する必要があるので，「この因子はこの項目にもあの項目にも影響している」という状況は悩みの種だからである。</p>
+<p>この基本方針のもと，いくつかの計算法が考えられている。もっとも古典的なバリマックス回転は，因子負荷量の二乗和の分散が最大になるように回転角を定める。ほかにも，オブリミン回転やジオミン回転などさまざまな回転方法が考えられており，これらについて詳しくは <span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> などを参照されたい。 また，回転方法は大きく分けて<strong>斜交回転</strong>と<strong>直交回転</strong>とに分けられる。直交回転は回転後の軸が直交する，すなわち因子間相関を仮定しない方法であり，斜交回転は因子間相関を仮定する回転方法である。後者の方が数学的な仮定が緩いため，分析の手順としてはまず斜交回転を行い，因子間相関が十分にひくく直交をかていできるなら直交回転をやり直す，という方法をとるべきである。ちなみにここでは<code>geominQ</code>というジオミン回転の斜交版を適用して結果を出力している。</p>
+<p><span class="citation" data-cites="GPArotation">Bernaards and Jennrich (<a href="references.html#ref-GPArotation" role="doc-biblioref">2005</a>)</span> パッケージには多くの回転法が含まれており，回転法を<code>rotate</code>オプションで選択することができるので，ヘルプなどを見て理解を深めて欲しい。</p>
+<p>因子軸の回転についても，推定法と同じように絶対的な基準はなく，それぞれの考え方や仮定に基づくアルゴリズムの違いがあるだけである。推定法と違って，因子負荷量は異なる回転法を施すと大きく変わることがある。因子軸の回転は解釈を容易にするためのものであるから，分析者にとって都合の良い回転方法を指定していいが，その回転方法が何で，どういう仮定があるのかについては，自身の言葉で説明できるようになっていた方がいい。</p>
+</section>
+<section id="出力結果を確認する" class="level4" data-number="14.1.1.3">
+<h4 data-number="14.1.1.3" class="anchored" data-anchor-id="出力結果を確認する"><span class="header-section-number">14.1.1.3</span> 出力結果を確認する</h4>
+<p>推定法，回転法についての概略を踏まえた上で，結果を見てみよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result.fa,<span class="at">sort =</span> T, <span class="at">cut=</span><span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Factor Analysis using method =  ml
+Call: fa(r = dat, nfactors = 6, rotate = "geominQ", fm = "ML")
+Standardized loadings (pattern matrix) based upon correlation matrix
+   item   ML1   ML2   ML5   ML3   ML4   ML6   h2   u2 com
+E2   12  0.70                               0.55 0.45 1.0
+E1   11  0.58                               0.39 0.61 1.4
+N4   19  0.51  0.35                         0.48 0.52 2.0
+E4   14 -0.50                          0.33 0.56 0.44 2.2
+E5   15 -0.41                               0.40 0.60 2.8
+N2   17        0.84                         0.69 0.31 1.1
+N1   16        0.83                         0.71 0.29 1.1
+N3   18        0.61                         0.52 0.48 1.3
+N5   20  0.33  0.37                         0.34 0.66 2.8
+A2    2              0.70                   0.50 0.50 1.2
+A3    3              0.65                   0.51 0.49 1.1
+A1    1             -0.57              0.37 0.33 0.67 1.8
+A5    5              0.50                   0.48 0.52 1.7
+A4    4              0.42                   0.28 0.72 1.7
+C2    7                    0.67             0.50 0.50 1.2
+C4    9                   -0.60        0.35 0.55 0.45 1.9
+C3    8                    0.54             0.31 0.69 1.1
+C1    6                    0.53             0.35 0.65 1.4
+C5   10                   -0.51             0.43 0.57 1.8
+O3   23                          0.67       0.48 0.52 1.0
+O1   21                          0.58       0.34 0.66 1.1
+O5   25                         -0.49  0.41 0.37 0.63 2.0
+O2   22                         -0.40  0.34 0.29 0.71 2.3
+O4   24  0.40                    0.40       0.25 0.75 2.4
+E3   13                          0.38       0.48 0.52 3.0
+
+                       ML1  ML2  ML5  ML3  ML4  ML6
+SS loadings           2.34 2.25 2.00 1.89 1.77 0.82
+Proportion Var        0.09 0.09 0.08 0.08 0.07 0.03
+Cumulative Var        0.09 0.18 0.26 0.34 0.41 0.44
+Proportion Explained  0.21 0.20 0.18 0.17 0.16 0.07
+Cumulative Proportion 0.21 0.41 0.59 0.77 0.93 1.00
+
+ With factor correlations of 
+      ML1   ML2   ML5   ML3   ML4   ML6
+ML1  1.00  0.24 -0.36 -0.20 -0.28 -0.08
+ML2  0.24  1.00 -0.01 -0.12  0.05  0.25
+ML5 -0.36 -0.01  1.00  0.19  0.28  0.26
+ML3 -0.20 -0.12  0.19  1.00  0.14  0.04
+ML4 -0.28  0.05  0.28  0.14  1.00  0.11
+ML6 -0.08  0.25  0.26  0.04  0.11  1.00
+
+Mean item complexity =  1.7
+Test of the hypothesis that 6 factors are sufficient.
+
+df null model =  300  with the objective function =  7.23 with Chi Square =  20163.79
+df of  the model are 165  and the objective function was  0.36 
+
+The root mean square of the residuals (RMSR) is  0.02 
+The df corrected root mean square of the residuals is  0.03 
+
+The harmonic n.obs is  2762 with the empirical chi square  661.28  with prob &lt;  1.4e-60 
+The total n.obs was  2800  with Likelihood Chi Square =  1013.79  with prob &lt;  4.6e-122 
+
+Tucker Lewis Index of factoring reliability =  0.922
+RMSEA index =  0.043  and the 90 % confidence intervals are  0.04 0.045
+BIC =  -295.88
+Fit based upon off diagonal values = 0.99
+Measures of factor score adequacy             
+                                                   ML1  ML2  ML5  ML3  ML4  ML6
+Correlation of (regression) scores with factors   0.90 0.93 0.89 0.87 0.86 0.78
+Multiple R square of scores with factors          0.81 0.86 0.78 0.76 0.75 0.61
+Minimum correlation of possible factor scores     0.61 0.72 0.57 0.53 0.49 0.22</code></pre>
+</div>
+</div>
+<p>この出力では<code>sort</code>オプションと<code>cut</code>オプションを指定した。<code>sort</code>オプションは因子負荷量の大きい順に並べ替えてくれるものであり，<code>cut</code>オプションは因子負荷量の表示を抑制するものである。あくまで表示上のオプションであり，実際は各因子から各項目へのパス(<span class="math inline">\(5 \times 25\)</span>本)が計算されている。</p>
+<p>まず表示されているのが因子負荷行列であり，項目の因子ごとの負荷量に加え，共通性<span class="math inline">\(h_j^2\)</span>と独自性<span class="math inline">\(u_j^2=1-h_j^2\)</span>，複雑度complexityが示されている<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。なお，ここで表示されている因子負荷量などは回転後のパターン行列である<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
+<p>その下には負荷量の平方和SS loagingsがあり，これが説明する分散の大きさである。それを比率にしたもの(Proportion Var)，累積比率にしたもの(Cumulative Var)がある。今回は累積して44%の説明しかしていないことになるから，56%もの情報をカットしているので，情報圧縮の観点から言えば少し捨てすぎている危険性もある。</p>
+<p>続いて，回転行列に斜交回転を指定しているから，因子間相関が出力されている。これを見ると絶対値最大で-0.36がみられる。全ての因子間相関が<span class="math inline">\(\pm 0.3\)</span>に収まるようであれば，直交回転を考えても良い。</p>
+<p>その後に出力されているのは適合度に関する指標である。各指標に関する解説は割愛する。</p>
+</section>
+<section id="因子得点の推定" class="level4" data-number="14.1.1.4">
+<h4 data-number="14.1.1.4" class="anchored" data-anchor-id="因子得点の推定"><span class="header-section-number">14.1.1.4</span> 因子得点の推定</h4>
 </section>
 </section>
 <section id="確認的因子分析" class="level3" data-number="14.1.2">
@@ -407,11 +563,17 @@ window.Quarto = {
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-GPArotation" class="csl-entry" role="listitem">
+Bernaards, Coen A., and Robert I. Jennrich. 2005. <span>“Gradient Projection Algorithms and Software for Arbitrary Rotation Criteria in Factor Analysis.”</span> <em>Educational and Psychological Measurement</em> 65: 676–96. <a href="https://doi.org/10.1177/0013164404272507">https://doi.org/10.1177/0013164404272507</a>.
+</div>
 <div id="ref-Network2024" class="csl-entry" role="listitem">
 アデラ＝マリアイスヴォラヌ, サシャエプスカンプ, ローレンスウォルドープ, and デニーボースブーム. (2022) 2024. <em>心理ネットワークアプローチ入門:行動科学者と社会科学者のためのガイド</em>. Translated by 樫原潤 and 小杉考司. 勁草書房.
 </div>
 <div id="ref-Miyagawa1997" class="csl-entry" role="listitem">
 宮川雅巳. 1997. <em>グラフィカルモデリング (統計ライブラリー)</em>. 朝倉書店.
+</div>
+<div id="ref-kosugi2018" class="csl-entry" role="listitem">
+小杉考司. 2018. <em>言葉と数式で理解する多変量解析入門</em>. 北大路書房. <a href="http://ci.nii.ac.jp/ncid/BB27527420">http://ci.nii.ac.jp/ncid/BB27527420</a>.
 </div>
 <div id="ref-Okada19940115" class="csl-entry" role="listitem">
 岡太彬訓, and 今泉忠. 1994. <em>パソコン多次元尺度構成法</em>. 共立出版.
@@ -429,6 +591,13 @@ window.Quarto = {
 高根芳雄. 1980. <em>多次元尺度法</em>. 東京大学出版会.
 </div>
 </div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>これは因子の複雑さを表す指標で、各項目(変数)がどれだけ単純に(あるいは複雑に)因子に負荷しているかを表す指標である。値が1に近い場合，その項目は基本的に1つの因子にのみ強く負荷することあらわしている。値が大きくなるほど、その項目が複数の因子に分散して負荷していることになる。この値は，項目<span class="math inline">\(j\)</span>の因子<span class="math inline">\(k\)</span>に対する負荷量を<span class="math inline">\(a_{jk}\)</span>としたとき，<span class="math inline">\(\frac{(\sum_k a_{jk}^2)^2}{\sum_k a_{jk}^4}\)</span>で算出する。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>斜交回転の場合は，因子軸の負荷量をどう考えるかによって因子パターンと因子構造とに分かれる。因子パターンは変数を斜交座標系に直交に投影した影のようなものであり，変数から因子への直接的な効果を表すと考えられる。因子構造は因子構造は変数を各因子軸に平行に投影した影のようなものであり，変数と因子の間の単純相関を表している。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
