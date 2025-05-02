@@ -236,9 +236,11 @@ df <- 3
 mu <- 0
 sigma <- 21.3
 
-curve(2 * dt((x - mu) / sigma, df) / sigma, from = 0, to = 100,
-      col = "blue", lwd = 2, main = "Half-Student-t Distribution",
-      xlab = "sigma", ylab = "Density")
+curve(2 * dt((x - mu) / sigma, df) / sigma,
+  from = 0, to = 100,
+  col = "blue", lwd = 2, main = "Half-Student-t Distribution",
+  xlab = "sigma", ylab = "Density"
+)
 ```
 
 分散は正の値しか取らないので，`brms` は `student_t(3, 0, 21.3)` を 半分に折りたたみ、半t分布（half-Student-t） に変換して利用している。t分布は正規分布より裾の重い分布であり，大きな値が出る可能性も考慮されている。分散の事前分布には他にも，cauchy分布やexponential分布などが用いられることもある。
@@ -251,18 +253,18 @@ curve(2 * dt((x - mu) / sigma, df) / sigma, from = 0, to = 100,
 #| eval: false
 # 事前分布の設定
 priors <- c(
-  set_prior("uniform(0, 100)", class = "Intercept"),  # 切片: 一様分布(0, 100)
-  set_prior("normal(0, 10)", class = "b"),           # 回帰係数: N(0, 10)
-  set_prior("cauchy(0, 5)", class = "sigma")         # 標準偏差: Cauchy(0, 5)
+  set_prior("uniform(0, 100)", class = "Intercept"), # 切片: 一様分布(0, 100)
+  set_prior("normal(0, 10)", class = "b"), # 回帰係数: N(0, 10)
+  set_prior("cauchy(0, 5)", class = "sigma") # 標準偏差: Cauchy(0, 5)
 )
 
-fit <- brm(y ~ x, 
-           data = dat, 
-           prior = priors, 
-           iter = 3000, 
-           warmup = 2000, 
-           chains = 3,
-           seed = 12345,
+fit <- brm(y ~ x,
+  data = dat,
+  prior = priors,
+  iter = 3000,
+  warmup = 2000,
+  chains = 3,
+  seed = 12345,
 )
 ```
 
@@ -294,7 +296,7 @@ x1 <- runif(n, -10, 10)
 x2 <- runif(n, -10, 10)
 e <- rnorm(n, 0, sigma)
 y <- beta0 + beta1 * x1 + beta2 * x2 + e
-sample <- data.frame(y,x1,x2)
+sample <- data.frame(y, x1, x2)
 head(sample)
 write.csv(sample, file = "ex_regression3.csv")
 ```
@@ -315,7 +317,7 @@ data <- read.csv("ex_regression3.csv")
 model <- brm(
   y ~ x1 + x2,
   data = data,
-  seed = 123  # 再現性のため
+  seed = 123 # 再現性のため
 )
 
 # 1. 推定値と95%信用区間の確認

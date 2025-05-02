@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -292,7 +312,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -340,10 +360,7 @@ window.Quarto = {
   <li><a href="#brmsパッケージのオプション" id="toc-brmsパッケージのオプション" class="nav-link" data-scroll-target="#brmsパッケージのオプション"><span class="header-section-number">12.4.5</span> brmsパッケージのオプション</a></li>
   <li><a href="#mcmcサンプリングの設定" id="toc-mcmcサンプリングの設定" class="nav-link" data-scroll-target="#mcmcサンプリングの設定"><span class="header-section-number">12.4.6</span> MCMCサンプリングの設定</a></li>
   </ul></li>
-  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">12.5</span> 課題</a>
-  <ul class="collapse">
-  <li><a href="#課題の解答例" id="toc-課題の解答例" class="nav-link" data-scroll-target="#課題の解答例"><span class="header-section-number">12.5.1</span> 課題の解答例</a></li>
-  </ul></li>
+  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">12.5</span> 課題</a></li>
   </ul>
 </nav>
     </div>
@@ -374,11 +391,11 @@ window.Quarto = {
 <section id="ベイズ統計の位置付け" class="level2" data-number="12.1">
 <h2 data-number="12.1" class="anchored" data-anchor-id="ベイズ統計の位置付け"><span class="header-section-number">12.1</span> ベイズ統計の位置付け</h2>
 <p>ベイズ統計学の生まれは古く，ベイズの定理にまで遡れば実に300年近く前になる。ベイズの定理を見出したとされるトーマス・ベイズは，18世紀の牧師であり，1763年に死んでいる。その古い人物の名を冠した定理が，現在は「ベイズ統計学」と学問全体を覆うほどになっているのは，それがこれまで紹介してきた統計モデルと考え方や解釈の仕方を大幅に変えているからである。</p>
-<p>また，ベイズ統計学はその長い歴史に対して，応用的な価値が見出されたのが比較的最近である。筆者の感覚で言えば，2010年以降になって，ベイズ統計学の応用が急速に広まったように思う。古くから知られていた理論が長らくその名をひそめていたのは，ベイズ統計学を応用できるシーンが限定的であったこと，その研究が軍事的な機密を含むことで公開されることが少なかったこと，そして冗談のように聞こえるかもしれないが，アメリカ統計学会の重鎮がベイズ統計学を嫌っていたこと，がその理由と考えられる。このあたりの事情については@mcgrayne2011theory を参考にしてほしい。</p>
+<p>また，ベイズ統計学はその長い歴史に対して，応用的な価値が見出されたのが比較的最近である。筆者の感覚で言えば，2010年以降になって，ベイズ統計学の応用が急速に広まったように思う。古くから知られていた理論が長らくその名をひそめていたのは，ベイズ統計学を応用できるシーンが限定的であったこと，その研究が軍事的な機密を含むことで公開されることが少なかったこと，そして冗談のように聞こえるかもしれないが，アメリカ統計学会の重鎮がベイズ統計学を嫌っていたこと，がその理由と考えられる。このあたりの事情については<span class="citation" data-cites="mcgrayne2011theory">(<a href="references.html#ref-mcgrayne2011theory" role="doc-biblioref">シャロン・バーチュ・マグレイン [2011] 2018</a>)</span>を参考にしてほしい。</p>
 <p>そして近年になって改めてベイズ統計学が注目されるようになったのには，2つの理由がある。第一は社会心理学における再現性の危機に対する対応として，従来の統計学ではない新しいアプローチとして期待されたこと。第二は計算機科学の発展により，非常にパワフルな推定方法が開発され，統計モデルを非常に柔軟に扱うことができるようになったこと，である。</p>
 <p>再現性の危機に対する対応としてのベイズ統計学は，従来の統計学を「頻度主義的」なものとして，ベイズ統計学を「ベイズ主義的」なものとして区別することで，その違いを強調するきらいがある。しかし，頻度主義的な方法に問題があるからという単純な理由でベイズ主義的な方法に乗り換えると，そもそもの問題であった統計法の悪用や誤用の種類が変わるだけに過ぎない。</p>
 <p>筆者は教育的観点から，ベイズ主義的な統計学の方が初学者には優しく，より理解しやすいのではないかと考えている。しかし，心理学のこの100年の歴史の中で積み重ねられてきた「頻度主義的」な研究のお作法は，誤用悪用を招く恐れもあるとは言え，非常にリッチな教育コンテンツ，分析ツールを提供してきた。またこれまでの心理学的文献が「頻度主義的」なものであったことを考えると，これらを捨て去って心機一転，一気にベイズに乗り換えようというのは現実的ではない。ベイズ統計学の弱点としては，教育コンテンツ，分析ツール，そしてベイズ統計学の教育者がそもそも少ないこと，が挙げられる。もちろんこれらの問題点が，近い将来のうちに解決されることを望むものである。</p>
-<p>第二の理由はベイズ統計学のポジティブな未来を予感させる。統計モデルが複雑になるにつれ，最尤推定法は実質的な限界を迎えるときでも，ベイズ推定の新しいアプローチは対応できる。これは，ベイズ統計学のパワーを誇るMCMC法の発展によるところが大きい。統計モデルを非常に柔軟に，自らの研究データにカスタマイズした分析モデルを構築でき，その他のモデルともベイズファクターという一元的な指標で評価できることは，ベイズ統計学の大きな魅力である。しかし反面，細かく統計モデルをカスタマイズできるということは，研究者にプログラマとしての技量を要求することになる。心理学者はあくまでも統計をツールとして使いたいユーザなのだから，ソフトウェア的なエンジニアリングにあまりエフォートをかけていられないということもあるだろう。しかし，平均値の差の検定や要因計画にとらわれない，自由なモデリングができる魅力はおおきく，心理学の中でも統計モデリングによるアプローチをとる人も年々増加傾向にある。</p>
+<p>第二の理由はベイズ統計学のポジティブな未来を予感させる。統計モデルが複雑になるにつれ，最尤推定法は実質的な限界を迎えるときでも，ベイズ推定の新しいアプローチは対応できる。これは，ベイズ統計学のパワーを具現化する計算機手法，すなわちMCMC法の発展によるところが大きい。統計モデルを非常に柔軟に，自らの研究データにカスタマイズした分析モデルを構築でき，その他のモデルともベイズファクターという一元的な指標で評価できることは，ベイズ統計学の大きな魅力である。しかし反面，細かく統計モデルをカスタマイズできるということは，研究者にプログラマとしての技量を要求することになる。心理学者はあくまでも統計をツールとして使いたいユーザなのだから，ソフトウェア的なエンジニアリングにあまりエフォートをかけていられないということもあるだろう。しかし，平均値の差の検定や要因計画にとらわれない，自由なモデリングができる魅力はおおきく，心理学の中でも統計モデリングによるアプローチをとる人も年々増加傾向にある。</p>
 </section>
 <section id="mcmc法" class="level2" data-number="12.2">
 <h2 data-number="12.2" class="anchored" data-anchor-id="mcmc法"><span class="header-section-number">12.2</span> MCMC法</h2>
@@ -487,8 +504,8 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 1.4e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+Chain 1: Gradient evaluation took 1.9e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.19 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -505,15 +522,15 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 0.011 seconds (Warm-up)
-Chain 1:                0.009 seconds (Sampling)
-Chain 1:                0.02 seconds (Total)
+Chain 1:  Elapsed Time: 0.025 seconds (Warm-up)
+Chain 1:                0.018 seconds (Sampling)
+Chain 1:                0.043 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 Chain 2: 
-Chain 2: Gradient evaluation took 1e-06 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 2: Gradient evaluation took 4e-06 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Chain 2: Adjust your expectations accordingly!
 Chain 2: 
 Chain 2: 
@@ -530,15 +547,15 @@ Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 2: 
-Chain 2:  Elapsed Time: 0.012 seconds (Warm-up)
-Chain 2:                0.01 seconds (Sampling)
-Chain 2:                0.022 seconds (Total)
+Chain 2:  Elapsed Time: 0.026 seconds (Warm-up)
+Chain 2:                0.017 seconds (Sampling)
+Chain 2:                0.043 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 Chain 3: 
-Chain 3: Gradient evaluation took 1e-06 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 3: Gradient evaluation took 4e-06 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Chain 3: Adjust your expectations accordingly!
 Chain 3: 
 Chain 3: 
@@ -555,15 +572,15 @@ Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 0.011 seconds (Warm-up)
-Chain 3:                0.008 seconds (Sampling)
-Chain 3:                0.019 seconds (Total)
+Chain 3:  Elapsed Time: 0.022 seconds (Warm-up)
+Chain 3:                0.018 seconds (Sampling)
+Chain 3:                0.04 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 Chain 4: 
-Chain 4: Gradient evaluation took 1e-06 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 4: Gradient evaluation took 4e-06 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Chain 4: Adjust your expectations accordingly!
 Chain 4: 
 Chain 4: 
@@ -580,9 +597,9 @@ Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 0.011 seconds (Warm-up)
-Chain 4:                0.009 seconds (Sampling)
-Chain 4:                0.02 seconds (Total)
+Chain 4:  Elapsed Time: 0.025 seconds (Warm-up)
+Chain 4:                0.019 seconds (Sampling)
+Chain 4:                0.044 seconds (Total)
 Chain 4: </code></pre>
 </div>
 </div>
@@ -600,20 +617,20 @@ Formula: y ~ x
 
 Regression Coefficients:
           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept     2.02      0.05     1.93     2.11 1.00     3576     2877
-x             3.00      0.01     2.99     3.02 1.00     4181     2652
+Intercept     2.02      0.05     1.93     2.12 1.00     3454     2451
+x             3.00      0.01     2.99     3.02 1.00     4822     3088
 
 Further Distributional Parameters:
       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sigma     1.01      0.03     0.95     1.07 1.00     3602     2759
+sigma     1.01      0.03     0.95     1.08 1.00     4124     3011
 
 Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 and Tail_ESS are effective sample size measures, and Rhat is the potential
 scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 </div>
-<p>まず<code>Regression Coefficients</code>のところを見てみよう。とりあえずリカバリーが上手くいってるか見てみたいからだ。推定値<code>Estimate</code>のところに，2.0214066と3.0022318とあるから，なるほど正しく推定できているようである。その後に標準誤差(SE)があるのはいいとして，その次にあるのが<code>l-95%CI</code>と<code>u-95%CI</code>，すなわちlower-upperで表される区間である。</p>
-<p>ベイズ統計学ではわからないものを確率分布として表現する。今回わからなかったものは回帰係数だから，切片<span class="math inline">\(\beta_0\)</span>と傾き<span class="math inline">\(\beta_1\)</span>はそれぞれ確率として表現され，結果も確率分布(事後分布)として得られている。つまり，ここに表されているのは事後分布の95%区間であり，<span class="math inline">\(\beta_0\)</span>は1.9328496, 2.1114449の間に分布しているもの，という結果になっている。</p>
+<p>まず<code>Regression Coefficients</code>のところを見てみよう。とりあえずリカバリーが上手くいってるか見てみたいからだ。推定値<code>Estimate</code>のところに，2.0214926と3.0021677とあるから，なるほど正しく推定できているようである。その後に標準誤差(SE)があるのはいいとして，その次にあるのが<code>l-95%CI</code>と<code>u-95%CI</code>，すなわちlower-upperで表される区間である。</p>
+<p>ベイズ統計学ではわからないものを確率分布として表現する。今回わからなかったものは回帰係数だから，切片<span class="math inline">\(\beta_0\)</span>と傾き<span class="math inline">\(\beta_1\)</span>はそれぞれ確率として表現され，結果も確率分布(事後分布)として得られている。つまり，ここに表されているのは事後分布の95%区間であり，<span class="math inline">\(\beta_0\)</span>は1.9291173, 2.1165503の間に分布しているもの，という結果になっている。</p>
 <p>最尤推定が点推定であったのに対し，ベイズ推定はこのように分布で表現されるから，表示されている推定値もその代表値である。代表値の取り方はご存知の通り，平均値，最頻値，中央値などが考えられ，そのいずれもが推定値として用いられる。平均値による代表値はExpectation A Posteriori，EAP推定値と呼ばれる。中央値による代表値はMEDian A Posteriori，そして最頻値というより分布のピークを取る推定値のことをMaximum A Posteriori，MAP推定値という。ここで得られた事後分布は分布の関数形によるものではなく，事後分布の代表値の集積による稜線で形を見ているに過ぎないから，MAP推定値を得る方法は1.ヒストグラムを書いてその最頻値である級数の平均値をとる，2.ヒストグラムにフィットする関数を近似し，そのピークを算出する，といった方法が考えられる。計算そのものはパッケージに含まれる関数を利用すれば良い。ここで大事なことは，分布の形状に応じてその代表値を選ぶことである。すなわち，正規分布のような左右対称の分布であれば，平均値，中央値，最頻値は同じ値になるが，ここが異なるようであれば歪んだ分布をしていることが考えられるから，事後分布のヒストグラムを描いて確認した上で，中央値やMAP推定値などを用いるといいだろう。</p>
 </section>
 <section id="mcmcを評価する" class="level3" data-number="12.4.2">
@@ -624,7 +641,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>MCMCがうまくいってるかどうかを評価するために，MCMCでは一般的に複数の初期値から始め，別々のステップを踏んでログを取る。このステップのログをチェインと呼ぶ。つまり，それぞれのチェインは異なる初期値から始まる一連の代表値の連なりなのである。今回の結果では，4つのチェイン，つまり4つの初期値から始まったことがわかる。</p>
 <p>さて，もう一度サンプリングの進み方を思い返してみよう。初期値から始めてステップしている最初のうちは，最終的に目的としている事後分布の代表値からは大きく外れているかもしれない。ステップを繰り返すことで，より事後分布の密度の濃いところに近づいていくのだから，最初のうちはうまくいってなくても当然である。この最初のうちのステップは代表値として信用できないので，「バーンインburn in期間だった」ということで切り捨てることが一般的である。<code>brms</code> が採用しているMCMCアルゴリズムのstanは，この初期の探索時に，効率よくサンプリングできるようにステップサイズ(どれぐらい遠くの近傍まで考えるか)等アルゴリズムを自動で調整する期間を設定している。これを特にウォームアップ期間という。</p>
 <p>結果に戻ってみてみると，4つのチェインで2000ステップ(<code>iter</code>)を踏んでいるが，ウォームアップ期間が1000あるので，実際にサンプリングが行われたのは1000ステップ以降である。なので<code>total post-warmup draws =4000</code>となっている。</p>
-<p><code>thin</code>は，サンプリングの間引き間隔を指定するものとした。ステップ毎に代表値のログを取っていくとしたが，原理的にはそれぞれのステップ・代表値は事後分布から独立にサンプリングされたものであるはずだ。MCMCの結果を見て，ステップ毎の自己相関を確認し，もし<span class="math inline">\(t-1\)</span>時点の代表値が<span class="math inline">\(t\)</span>時点の代表値に影響を与えているようであればよろしくない。そこで間引きをすることで，そのような影響を与えるようなステップを省略することで，より独立性の高いサンプルを得ることができる，と考えるのである。間引きをすると事後分布からのサンプルの数が減ることになる。また，自己相関が高いようなMCMCサンプルしか得られないのは，モデルやパラメタライゼーションが不適切である場合が多く，<code>thin</code>オプションを使うのは結果オブジェクトのサイズを減らす目的である，と考えた方がいいだろう。</p>
+<p><code>thin</code>は，サンプリングの間引き間隔を指定するものであった。ステップ毎に代表値のログを取っていくとしたが，原理的にはそれぞれのステップ・代表値は事後分布から独立にサンプリングされたものであるはずだ。MCMCの結果を見て，ステップ毎の自己相関を確認し，もし<span class="math inline">\(t-1\)</span>時点の代表値が<span class="math inline">\(t\)</span>時点の代表値に影響を与えているようであればよろしくない。そこで間引きをすることで，そのような影響を与えるようなステップを省略することで，より独立性の高いサンプルを得ることができる，と考えるのである。間引きをすると事後分布からのサンプルの数が減ることになる。また，自己相関が高いようなMCMCサンプルしか得られないのは，モデルやパラメタライゼーションが不適切である場合が多く，<code>thin</code>オプションを使うのは結果オブジェクトのサイズを減らす目的である，と考えた方がいいだろう。</p>
 <p>推定値の出力結果に，<code>Rhat</code>と<code>Bulk-ESS</code>という指標がある。<code>Rhat</code>は，チェイン間の自己相関を表す指標で，1に近いほどよいとされる。基準として，全てのパラメータにおける<code>Rhat</code>が1.1未満であれば，複数のチェインが絡み合った，良いサンプリングであったと評価される。逆に，<code>Rhat</code>が1.1以上であれば，初期値によって異なるパラメータ空間を探索していたことになり，事後分布からの適切な代表値ではない可能性があるので，モデルの見直しなどが必要になる。<code>Bulk-ESS</code>は，有効サンプルサイズEffective Sample Sizeの略であり，実際に独立したサンプルが何個分の情報を持っているかを推定する指標である。これの量的目安は大まかにいって，3桁以上の数字があれば良いと言われる。逆に1，2桁の数字しか示されないのであれば，有効なサンプリングができていないと考えて，モデルの見直しなどが必要になる。</p>
 </section>
 <section id="可視化してモデルの評価をみる" class="level3" data-number="12.4.3">
@@ -651,20 +668,20 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  b_Intercept      b_x     sigma Intercept    lprior      lp__ .chain
-1    2.005643 3.007028 0.9670094  1.722002 -7.430387 -720.0947      1
-2    2.034874 2.998960 0.9822221  1.751993 -7.430557 -719.4520      1
-3    2.139143 2.994792 0.9970785  1.856656 -7.431063 -723.0209      1
-4    1.997631 3.008462 1.0296125  1.713854 -7.430537 -719.7706      1
-5    2.075360 3.003420 1.0175833  1.792059 -7.430834 -719.8164      1
-6    2.039586 2.998572 0.9869394  1.756742 -7.430591 -719.4091      1
-  .iteration .draw
-1          1     1
-2          2     2
-3          3     3
-4          4     4
-5          5     5
-6          6     6</code></pre>
+<pre><code>  b_Intercept      b_x    sigma Intercept    lprior      lp__ .chain .iteration
+1    2.061512 2.991269 1.000285  1.779357 -7.430728 -720.4333      1          1
+2    1.973437 3.007679 1.005894  1.689734 -7.430367 -719.8786      1          2
+3    2.076145 3.001175 1.016152  1.793056 -7.430834 -719.8248      1          3
+4    2.058051 2.997289 1.045634  1.775328 -7.430846 -720.2810      1          4
+5    2.034868 3.002560 1.010605  1.751648 -7.430639 -719.1008      1          5
+6    1.964216 3.001014 1.002444  1.681142 -7.430322 -719.8857      1          6
+  .draw
+1     1
+2     2
+3     3
+4     4
+5     5
+6     6</code></pre>
 </div>
 </div>
 <p>いま取り出した<code>mcmc_samples</code>は，<code>as_draws_df</code>関数の出力によって，<code>data.frame</code>型の特殊系になっているので，改めて<code>as.data.frame</code>関数を用いてデータフレームに変換し，最初の数行を表示させている。 これの後ろの3列に，<code>.chain</code>,<code>.iteration</code>,<code>.draw</code>という列があるが，これはそれぞれMCMCサンプルのchain番号，サンプルの通し番号，サンプルの通し番号である。</p>
@@ -698,9 +715,9 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <pre><code># A tibble: 3 × 7
   name          EAP   MAD   MAP      SD   L95   U95
   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 b_Intercept  2.02  2.02  2.02 0.0458  1.93   2.11
-2 b_x          3.00  3.00  3.00 0.00786 2.99   3.02
-3 sigma        1.01  1.01  1.00 0.0318  0.948  1.07</code></pre>
+1 b_Intercept  2.02  2.02  2.02 0.0471  1.93   2.12
+2 b_x          3.00  3.00  3.00 0.00771 2.99   3.02
+3 sigma        1.01  1.01  1.01 0.0318  0.950  1.08</code></pre>
 </div>
 </div>
 <p>今回は，ベイズ統計の位置付けとMCMC法によるベイズ推定の実際を，パッケージを用いて説明した。 <code>brms</code>パッケージは線形モデルやその応用において非常に強力であり，ベイズ統計の実践においては，これを用いることが多いだろう。ただし，線形モデルでないモデルについては，自分でstanのコードを書いて推定することも多い。線形モデルの限界に囚われず，自由な統計モデリングの世界があることも視野に入れておいてほしい。</p>
@@ -730,9 +747,11 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">0</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">21.3</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">dt</span>((x <span class="sc">-</span> mu) <span class="sc">/</span> sigma, df) <span class="sc">/</span> sigma, <span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">100</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Half-Student-t Distribution"</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">xlab =</span> <span class="st">"sigma"</span>, <span class="at">ylab =</span> <span class="st">"Density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">dt</span>((x <span class="sc">-</span> mu) <span class="sc">/</span> sigma, df) <span class="sc">/</span> sigma,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">100</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Half-Student-t Distribution"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"sigma"</span>, <span class="at">ylab =</span> <span class="st">"Density"</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -749,18 +768,18 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 事前分布の設定</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"uniform(0, 100)"</span>, <span class="at">class =</span> <span class="st">"Intercept"</span>),  <span class="co"># 切片: 一様分布(0, 100)</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"normal(0, 10)"</span>, <span class="at">class =</span> <span class="st">"b"</span>),           <span class="co"># 回帰係数: N(0, 10)</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"cauchy(0, 5)"</span>, <span class="at">class =</span> <span class="st">"sigma"</span>)         <span class="co"># 標準偏差: Cauchy(0, 5)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"uniform(0, 100)"</span>, <span class="at">class =</span> <span class="st">"Intercept"</span>), <span class="co"># 切片: 一様分布(0, 100)</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"normal(0, 10)"</span>, <span class="at">class =</span> <span class="st">"b"</span>), <span class="co"># 回帰係数: N(0, 10)</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"cauchy(0, 5)"</span>, <span class="at">class =</span> <span class="st">"sigma"</span>) <span class="co"># 標準偏差: Cauchy(0, 5)</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> dat, </span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">prior =</span> priors, </span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">iter =</span> <span class="dv">3000</span>, </span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">warmup =</span> <span class="dv">2000</span>, </span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">chains =</span> <span class="dv">3</span>,</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">seed =</span> <span class="dv">12345</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> priors,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">3000</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="dv">2000</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">3</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">12345</span>,</span>
 <span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -789,28 +808,42 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 6  6.2687719 -9.088870  7.8070044</code></pre>
 </div>
 </div>
-<section id="課題の解答例" class="level3" data-number="12.5.1">
-<h3 data-number="12.5.1" class="anchored" data-anchor-id="課題の解答例"><span class="header-section-number">12.5.1</span> 課題の解答例</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データの読み込みと前処理</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(brms)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># データの読み込み</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"ex_regression3.csv"</span>)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># モデルの推定</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x1 <span class="sc">+</span> x2,</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">123</span>  <span class="co"># 再現性のため</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
+<!-- 
+### 課題の解答例
+
+
+
+
+
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+# データの読み込みと前処理
+pacman::p_load(tidyverse)
+pacman::p_load(brms)
+
+# データの読み込み
+data <- read.csv("ex_regression3.csv")
+
+# モデルの推定
+model <- brm(
+  y ~ x1 + x2,
+  data = data,
+  seed = 123 # 再現性のため
+)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 1.5e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.15 seconds.
+Chain 1: Gradient evaluation took 1.6e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.16 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -827,15 +860,15 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 0.009 seconds (Warm-up)
-Chain 1:                0.009 seconds (Sampling)
-Chain 1:                0.018 seconds (Total)
+Chain 1:  Elapsed Time: 0.02 seconds (Warm-up)
+Chain 1:                0.018 seconds (Sampling)
+Chain 1:                0.038 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 Chain 2: 
-Chain 2: Gradient evaluation took 1e-06 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 2: Gradient evaluation took 4e-06 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Chain 2: Adjust your expectations accordingly!
 Chain 2: 
 Chain 2: 
@@ -852,15 +885,15 @@ Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 2: 
-Chain 2:  Elapsed Time: 0.01 seconds (Warm-up)
-Chain 2:                0.008 seconds (Sampling)
-Chain 2:                0.018 seconds (Total)
+Chain 2:  Elapsed Time: 0.022 seconds (Warm-up)
+Chain 2:                0.017 seconds (Sampling)
+Chain 2:                0.039 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 Chain 3: 
-Chain 3: Gradient evaluation took 1e-06 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 3: Gradient evaluation took 3e-06 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 Chain 3: Adjust your expectations accordingly!
 Chain 3: 
 Chain 3: 
@@ -877,15 +910,15 @@ Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 0.01 seconds (Warm-up)
-Chain 3:                0.006 seconds (Sampling)
-Chain 3:                0.016 seconds (Total)
+Chain 3:  Elapsed Time: 0.022 seconds (Warm-up)
+Chain 3:                0.017 seconds (Sampling)
+Chain 3:                0.039 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 Chain 4: 
-Chain 4: Gradient evaluation took 1e-06 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 4: Gradient evaluation took 3e-06 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 Chain 4: Adjust your expectations accordingly!
 Chain 4: 
 Chain 4: 
@@ -902,15 +935,24 @@ Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 0.01 seconds (Warm-up)
-Chain 4:                0.008 seconds (Sampling)
-Chain 4:                0.018 seconds (Total)
-Chain 4: </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 推定値と95%信用区間の確認</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Family: gaussian 
+Chain 4:  Elapsed Time: 0.022 seconds (Warm-up)
+Chain 4:                0.017 seconds (Sampling)
+Chain 4:                0.039 seconds (Total)
+Chain 4: 
+```
+
+
+:::
+
+```{.r .cell-code}
+# 1. 推定値と95%信用区間の確認
+summary(model)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+ Family: gaussian 
   Links: mu = identity; sigma = identity 
 Formula: y ~ x1 + x2 
    Data: data (Number of observations: 100) 
@@ -919,112 +961,137 @@ Formula: y ~ x1 + x2
 
 Regression Coefficients:
           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept     1.87      0.12     1.64     2.10 1.00     4339     3185
-x1            1.51      0.02     1.47     1.55 1.00     4352     3090
-x2            2.30      0.02     2.25     2.34 1.00     4812     3365
+Intercept     1.87      0.12     1.63     2.10 1.00     4727     2987
+x1            1.51      0.02     1.47     1.55 1.00     4130     2753
+x2            2.30      0.02     2.26     2.34 1.00     4165     3132
 
 Further Distributional Parameters:
       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sigma     1.19      0.09     1.03     1.38 1.00     4215     2861
+sigma     1.19      0.09     1.04     1.37 1.00     4173     2904
 
 Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 and Tail_ESS are effective sample size measures, and Rhat is the potential
-scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. MCMCの収束診断の詳細確認</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Rhatと有効サンプルサイズの確認は summary() の出力に含まれています</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 事後分布のヒストグラムとトレースプロット</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="chapter12_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. デフォルトの事前分布の確認</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">get_prior</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 prior     class coef group resp dpar nlpar lb ub       source
+scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+
+:::
+
+```{.r .cell-code}
+# 2. MCMCの収束診断の詳細確認
+# Rhatと有効サンプルサイズの確認は summary() の出力に含まれています
+
+# 3. 事後分布のヒストグラムとトレースプロット
+plot(model)
+```
+
+::: {.cell-output-display}
+![](chapter12_files/figure-html/unnamed-chunk-11-1.png){width=672}
+:::
+
+```{.r .cell-code}
+# 4. デフォルトの事前分布の確認
+get_prior(model)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+                 prior     class coef group resp dpar nlpar lb ub       source
                 (flat)         b                                       default
                 (flat)         b   x1                             (vectorized)
                 (flat)         b   x2                             (vectorized)
  student_t(3, 1, 13.4) Intercept                                       default
- student_t(3, 0, 13.4)     sigma                             0         default</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. MCMCサンプルの取り出しとMAP推定値の計算</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># MAP推定用の関数</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>find_map <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  density_obj <span class="ot">&lt;-</span> <span class="fu">density</span>(x)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(density_obj<span class="sc">$</span>x[<span class="fu">which.max</span>(density_obj<span class="sc">$</span>y)])</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMCサンプルの取り出しと要約統計量の計算</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>mcmc_samples <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(model)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>mcmc_summary <span class="ot">&lt;-</span> mcmc_samples <span class="sc">%&gt;%</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(b_Intercept, b_x1, b_x2, sigma) <span class="sc">%&gt;%</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">MAP =</span> <span class="fu">find_map</span>(value),</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(value),</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(value),</span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">75%_Lower</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">quantile</span>(value, <span class="fl">0.125</span>),</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">75%_Upper</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">quantile</span>(value, <span class="fl">0.875</span>),</span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">90%_Lower</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">quantile</span>(value, <span class="fl">0.05</span>),</span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">90%_Upper</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">quantile</span>(value, <span class="fl">0.95</span>),</span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の表示</span></span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>mcmc_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 8
+ student_t(3, 0, 13.4)     sigma                             0         default
+```
+
+
+:::
+
+```{.r .cell-code}
+# 5. MCMCサンプルの取り出しとMAP推定値の計算
+# MAP推定用の関数
+find_map <- function(x) {
+  density_obj <- density(x)
+  return(density_obj$x[which.max(density_obj$y)])
+}
+
+# MCMCサンプルの取り出しと要約統計量の計算
+mcmc_samples <- as_draws_df(model)
+mcmc_summary <- mcmc_samples %>%
+  as.data.frame() %>%
+  select(b_Intercept, b_x1, b_x2, sigma) %>%
+  pivot_longer(everything()) %>%
+  group_by(name) %>%
+  summarise(
+    MAP = find_map(value),
+    Mean = mean(value),
+    SD = sd(value),
+    `75%_Lower` = quantile(value, 0.125),
+    `75%_Upper` = quantile(value, 0.875),
+    `90%_Lower` = quantile(value, 0.05),
+    `90%_Upper` = quantile(value, 0.95),
+    .groups = "drop"
+  )
+
+# 結果の表示
+mcmc_summary
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+# A tibble: 4 × 8
   name          MAP  Mean     SD `75%_Lower` `75%_Upper` `90%_Lower` `90%_Upper`
-  &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
-1 b_Intercept  1.88  1.87 0.118         1.73        2.01        1.67        2.07
-2 b_x1         1.51  1.51 0.0210        1.48        1.53        1.47        1.54
-3 b_x2         2.30  2.30 0.0225        2.27        2.32        2.26        2.34
-4 sigma        1.16  1.19 0.0883        1.09        1.29        1.05        1.34</code></pre>
-</div>
-</div>
-<p>この分析結果から以下のことが分かります：</p>
-<ol type="1">
-<li>推定値について：
-<ul>
-<li>切片（Intercept）、x1係数、x2係数のそれぞれについて、点推定値と95%信用区間が得られました</li>
-<li>これらの推定値は真の値（<span class="math inline">\(\beta_0=2\)</span>, <span class="math inline">\(\beta_1=1.5\)</span>, <span class="math inline">\(\beta_2=2.3\)</span>）を良く捉えています</li>
-</ul></li>
-<li>MCMCの収束診断：
-<ul>
-<li>すべてのパラメータでRhat値が1.1未満であり、収束は良好です</li>
-<li>Bulk-ESSも十分な値（&gt;1000）を示しており、効果的なサンプリングができています</li>
-</ul></li>
-<li>事後分布：
-<ul>
-<li>ヒストグラムから、各パラメータの事後分布が概ね正規分布に従っていることが確認できます</li>
-<li>トレースプロットは良好な混合を示しています</li>
-</ul></li>
-<li>事前分布：
-<ul>
-<li>デフォルトでは、回帰係数に対して無情報事前分布が使用されています</li>
-<li>分散パラメータには半t分布が使用されています</li>
-</ul></li>
-<li>MAP推定値：
-<ul>
-<li>各パラメータのMAP推定値は平均値に近い値を示しており、事後分布が対称的であることを示唆しています</li>
-</ul></li>
-<li>信用区間：
-<ul>
-<li>90%信用区間と75%信用区間は、パラメータの不確実性の程度を異なる水準で示しています</li>
-<li>これらの区間は真の値を含んでおり、モデルの推定精度が良好であることを示しています</li>
-</ul></li>
-</ol>
+  <chr>       <dbl> <dbl>  <dbl>       <dbl>       <dbl>       <dbl>       <dbl>
+1 b_Intercept  1.88  1.87 0.121         1.73        2.01        1.67        2.06
+2 b_x1         1.51  1.51 0.0213        1.48        1.53        1.47        1.54
+3 b_x2         2.30  2.30 0.0220        2.27        2.32        2.26        2.34
+4 sigma        1.19  1.19 0.0863        1.09        1.29        1.06        1.34
+```
 
 
-</section>
+:::
+:::
+
+
+
+
+
+
+
+
+この分析結果から以下のことが分かります：
+
+1. 推定値について：
+   - 切片（Intercept）、x1係数、x2係数のそれぞれについて、点推定値と95%信用区間が得られました
+   - これらの推定値は真の値（$\beta_0=2$, $\beta_1=1.5$, $\beta_2=2.3$）を良く捉えています
+
+2. MCMCの収束診断：
+   - すべてのパラメータでRhat値が1.1未満であり、収束は良好です
+   - Bulk-ESSも十分な値（>1000）を示しており、効果的なサンプリングができています
+
+3. 事後分布：
+   - ヒストグラムから、各パラメータの事後分布が概ね正規分布に従っていることが確認できます
+   - トレースプロットは良好な混合を示しています
+
+4. 事前分布：
+   - デフォルトでは、回帰係数に対して無情報事前分布が使用されています
+   - 分散パラメータには半t分布が使用されています
+
+5. MAP推定値：
+   - 各パラメータのMAP推定値は平均値に近い値を示しており、事後分布が対称的であることを示唆しています
+
+6. 信用区間：
+   - 90%信用区間と75%信用区間は、パラメータの不確実性の程度を異なる水準で示しています
+   - これらの区間は真の値を含んでおり、モデルの推定精度が良好であることを示しています -->
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-mcgrayne2011theory" class="csl-entry" role="listitem">
+シャロン・バーチュ・マグレイン. (2011) 2018. <em>異端の統計学ベイズ</em>. Translated by 冨永星. 草思社.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

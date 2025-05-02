@@ -312,7 +312,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -596,7 +596,7 @@ V3 0.5 0.8 1.0</code></pre>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>result.mra<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept)            V2            V3 
--5.218050e-17 -2.777778e-01  7.222222e-01 </code></pre>
+-1.635211e-17 -2.777778e-01  7.222222e-01 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差をつかって偏回帰係数を確認する</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>result.lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V1 <span class="sc">~</span> V3, <span class="at">data =</span> X)</span>
@@ -606,7 +606,7 @@ V3 0.5 0.8 1.0</code></pre>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>result.lm5<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         (Intercept) result.lm4$residuals 
-       -7.925711e-18        -2.777778e-01 </code></pre>
+       -1.901752e-18        -2.777778e-01 </code></pre>
 </div>
 </div>
 <p>重回帰分析の結果<code>result.mra</code>の<code>V2</code>から<code>V1</code>への回帰係数は-0.2778である。また，<code>V3</code>で<code>V1,V2</code>を統制した残差同士をつかい，回帰係数を求めた結果は-0.2778と，同じ値になっていることが確認できただろう。</p>
@@ -631,7 +631,7 @@ Residuals:
 
 Coefficients:
               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -5.218e-17  2.690e-02   0.000        1    
+(Intercept) -1.635e-17  2.690e-02   0.000        1    
 V2          -2.778e-01  4.486e-02  -6.192 8.65e-10 ***
 V3           7.222e-01  4.486e-02  16.100  &lt; 2e-16 ***
 ---
@@ -773,7 +773,7 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
 <span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
 <span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2 <span class="sc">+</span> e</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y,x1,x2)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2)</span>
 <span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> sample)</span>
 <span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -809,20 +809,20 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 <p>重回帰分析のサンプルサイズ設計は，変数の効果の大きさ(回帰係数)が事前にわかっているのであれば，nを徐々に増やしていくシミュレーションによって行える。しかしそのようなケースは稀であり，実際には<span class="math inline">\(R^2\)</span>の検定を用いて，ある効果量と検出力の下で，正しく検出できるサイズを算出することになる。</p>
 <p>サンプルサイズの算出には，非心F分布を用いる。この時の非心度は，効果量<span class="math inline">\(f^2\)</span>に<span class="math inline">\(n\)</span>をかけたものになる。これを使ってサンプルサイズ設計をする例は以下のとおりである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fl">0.15</span>      <span class="co"># 効果量</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span>   <span class="co"># タイプ1エラー率</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span>     <span class="co"># タイプ2エラー率</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">5</span>         <span class="co"># 説明変数の数</span></span>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fl">0.15</span> <span class="co"># 効果量</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># タイプ1エラー率</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># タイプ2エラー率</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># 説明変数の数</span></span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="dv">10</span> <span class="sc">:</span> <span class="dv">500</span>){</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    lambda <span class="ot">&lt;-</span> f2 <span class="sc">*</span> n</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    df1 <span class="ot">&lt;-</span> p</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    df2 <span class="ot">&lt;-</span> n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    cv <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">-</span> alpha, df1, df2)</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    t2error <span class="ot">&lt;-</span> <span class="fu">pf</span>(<span class="at">q =</span> cv, df1, df2, <span class="at">ncp  =</span> lambda)</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(t2error <span class="sc">&lt;</span> beta){</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">500</span>) {</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> f2 <span class="sc">*</span> n</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  df1 <span class="ot">&lt;-</span> p</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  df2 <span class="ot">&lt;-</span> n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  cv <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="at">p =</span> <span class="dv">1</span> <span class="sc">-</span> alpha, df1, df2)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  t2error <span class="ot">&lt;-</span> <span class="fu">pf</span>(<span class="at">q =</span> cv, df1, df2, <span class="at">ncp =</span> lambda)</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (t2error <span class="sc">&lt;</span> beta) {</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

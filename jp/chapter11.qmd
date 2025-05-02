@@ -294,7 +294,7 @@ x1 <- runif(n, -10, 10)
 x2 <- runif(n, -10, 10)
 e <- rnorm(n, 0, sigma)
 y <- beta0 + beta1 * x1 + beta2 * x2 + e
-sample <- data.frame(y,x1,x2)
+sample <- data.frame(y, x1, x2)
 result.lm <- lm(y ~ x1 + x2, data = sample)
 summary(result.lm)
 ```
@@ -314,20 +314,20 @@ $$ F= \frac{R^2}{1-R^2}\cdot\frac{n-p-1}{p} $$
 サンプルサイズの算出には，非心F分布を用いる。この時の非心度は，効果量$f^2$に$n$をかけたものになる。これを使ってサンプルサイズ設計をする例は以下のとおりである。
 
 ```{r}
-f2 <- 0.15      # 効果量
-alpha <- 0.05   # タイプ1エラー率
-beta <- 0.2     # タイプ2エラー率
-p <- 5         # 説明変数の数
+f2 <- 0.15 # 効果量
+alpha <- 0.05 # タイプ1エラー率
+beta <- 0.2 # タイプ2エラー率
+p <- 5 # 説明変数の数
 
-for(n in 10 : 500){
-    lambda <- f2 * n
-    df1 <- p
-    df2 <- n - p - 1
-    cv <- qf(p = 1- alpha, df1, df2)
-    t2error <- pf(q = cv, df1, df2, ncp  = lambda)
-    if(t2error < beta){
-        break
-    }
+for (n in 10:500) {
+  lambda <- f2 * n
+  df1 <- p
+  df2 <- n - p - 1
+  cv <- qf(p = 1 - alpha, df1, df2)
+  t2error <- pf(q = cv, df1, df2, ncp = lambda)
+  if (t2error < beta) {
+    break
+  }
 }
 
 print(n)
@@ -363,7 +363,7 @@ x1 <- runif(n, -10, 10)
 x2 <- runif(n, -10, 10)
 e <- rnorm(n, 0, sigma)
 y <- beta0 + beta1 * x1 + beta2 * x2 + e
-sample <- data.frame(y,x1,x2)
+sample <- data.frame(y, x1, x2)
 head(sample)
 write.csv(sample, file = "ex_regression1.csv")
 ```
@@ -383,7 +383,7 @@ x1 <- runif(n, -1, 1)
 x2 <- rho * x1 + sqrt(1 - rho^2) * rnorm(n)
 e <- rnorm(n, 0, exp(x2 * tau))
 y <- beta0 + beta1 * x1 + beta2 * x2 + e
-sample <- data.frame(y,x1,x2)
+sample <- data.frame(y, x1, x2)
 head(sample)
 write.csv(sample, file = "ex_regression2.csv")
 ```
@@ -396,20 +396,20 @@ write.csv(sample, file = "ex_regression2.csv")
 #| eval: FALSE
 
 R2 <- 0.3
-f2 <- R2/(1-R2)      # 効果量
-alpha <- 0.05   # タイプ1エラー率
-beta <- 0.2     # タイプ2エラー率
-p <- 10         # 説明変数の数
+f2 <- R2 / (1 - R2) # 効果量
+alpha <- 0.05 # タイプ1エラー率
+beta <- 0.2 # タイプ2エラー率
+p <- 10 # 説明変数の数
 
-for(n in 20 : 500){
-    lambda <- f2 * n
-    df1 <- p
-    df2 <- n - p - 1
-    cv <- qf(p = 1- alpha, df1, df2)
-    t2error <- pf(q = cv, df1, df2, ncp  = lambda)
-    if(t2error < beta){
-        break
-    }
+for (n in 20:500) {
+  lambda <- f2 * n
+  df1 <- p
+  df2 <- n - p - 1
+  cv <- qf(p = 1 - alpha, df1, df2)
+  t2error <- pf(q = cv, df1, df2, ncp = lambda)
+  if (t2error < beta) {
+    break
+  }
 }
 print(n)
 ```

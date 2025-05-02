@@ -51,8 +51,8 @@ data <- data.frame(
 power <- pt(critical_value_t, df, ncp = ncp, lower.tail = FALSE) + pt(-critical_value_t, df, ncp = ncp, lower.tail = TRUE)
 ## 検算
 pacman::p_load(pwr)
-pwr.r.test(n=20,r=0.4)
-h# ggplotでプロット
+pwr.r.test(n = 20, r = 0.4)
+h # ggplotでプロット
 ggplot(data, aes(x = t_value, y = density, color = group, fill = group)) +
   geom_line(size = 1) +
   geom_vline(xintercept = c(-critical_value_t, critical_value_t), linetype = "dashed", color = "black") +
@@ -102,12 +102,16 @@ data <- data.frame(
 ggplot(data, aes(x = x, y = y, color = group)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Overall Positive Correlation with Negative Correlation in Subgroups",
-       x = "X",
-       y = "Y",
-       color = "Group") +
+  labs(
+    title = "Overall Positive Correlation with Negative Correlation in Subgroups",
+    x = "X",
+    y = "Y",
+    color = "Group"
+  ) +
   theme_minimal()
 
-cor(data$x,data$y)
-data %>% group_by(group) %>% summarise(r = cor(x,y))
+cor(data$x, data$y)
+data %>%
+  group_by(group) %>%
+  summarise(r = cor(x, y))
 ```

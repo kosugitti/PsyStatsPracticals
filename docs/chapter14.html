@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>14&nbsp; 多変量解析の入り口 – 心理学統計実習</title>
+<title>14&nbsp; 多変量解析 – 心理学統計実習</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -69,6 +123,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -81,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter14.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter14.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -229,7 +312,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter14.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -260,8 +343,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#因子分析" id="toc-因子分析" class="nav-link active" data-scroll-target="#因子分析"><span class="header-section-number">14.1</span> 因子分析</a></li>
-  <li><a href="#構造方程式モデリング" id="toc-構造方程式モデリング" class="nav-link" data-scroll-target="#構造方程式モデリング"><span class="header-section-number">14.2</span> 構造方程式モデリング</a></li>
+  <li><a href="#因子分析" id="toc-因子分析" class="nav-link active" data-scroll-target="#因子分析"><span class="header-section-number">14.1</span> 因子分析</a>
+  <ul class="collapse">
+  <li><a href="#探索的因子分析" id="toc-探索的因子分析" class="nav-link" data-scroll-target="#探索的因子分析"><span class="header-section-number">14.1.1</span> 探索的因子分析</a></li>
+  <li><a href="#確認的因子分析" id="toc-確認的因子分析" class="nav-link" data-scroll-target="#確認的因子分析"><span class="header-section-number">14.1.2</span> 確認的因子分析</a></li>
+  </ul></li>
+  <li><a href="#項目反応理論" id="toc-項目反応理論" class="nav-link" data-scroll-target="#項目反応理論"><span class="header-section-number">14.2</span> 項目反応理論</a></li>
+  <li><a href="#そのほかの分析1距離行列を用いるもの" id="toc-そのほかの分析1距離行列を用いるもの" class="nav-link" data-scroll-target="#そのほかの分析1距離行列を用いるもの"><span class="header-section-number">14.3</span> そのほかの分析1；距離行列を用いるもの</a></li>
+  <li><a href="#クラスター分析" id="toc-クラスター分析" class="nav-link" data-scroll-target="#クラスター分析"><span class="header-section-number">14.4</span> クラスター分析</a></li>
+  <li><a href="#多次元尺度構成法" id="toc-多次元尺度構成法" class="nav-link" data-scroll-target="#多次元尺度構成法"><span class="header-section-number">14.5</span> 多次元尺度構成法</a></li>
+  <li><a href="#そのほかの分析2共頻行列を用いるもの" id="toc-そのほかの分析2共頻行列を用いるもの" class="nav-link" data-scroll-target="#そのほかの分析2共頻行列を用いるもの"><span class="header-section-number">14.6</span> そのほかの分析2；共頻行列を用いるもの</a></li>
   </ul>
 </nav>
     </div>
@@ -270,7 +361,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析の入り口</span></h1>
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析</span></h1>
 </div>
 
 
@@ -287,13 +378,526 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>ここでは心理系で最もよく使われる分析法のひとつ，因子分析を中心に多変量解析の全体的な解説を行う。 多変量解析はその名のとおり，変数が多く含まれるデータの解析であり，その目的は情報の要約にある。多くの変数が含まれる時にひとつ一つの変数を解釈していくのは大変な労力であるから，要領よくまとめることができればそれに越したことはないからである。</p>
+<p>この目的から派生して，多変量解析にはさまざまな意味解釈が付随する。以下にモデルの解釈と対応する多変量解析技術を列記してみた。</p>
+<ul>
+<li>要約する＝すべての情報を使わず，いくつかの情報を捨象することでもある。</li>
+<li>1つの合成変数にまとめ上げる：総合評価として一次元化することでもある(主成分分析)。</li>
+<li>2つ3つなど少数の次元に写像する：多次元空間に可視化することでもある(多次元尺度法)。</li>
+<li>少数のグループに変数を分類する：グループごとの特徴を記述したり分析することで解釈を深める(クラスター分析)。</li>
+<li>観測変数の背後にある少数の潜在変数にまとめ上げる：構成概念を測定して数値を割り振る(因子分析)。</li>
+<li>観測変数が0/1のバイナリデータに対して1つの潜在変数からの影響を考える：正答誤答を意味するテストと考える(項目反応理論)</li>
+<li>観測された解凍パターンから潜在変数を仮定したグループ分類を行う：隠れた購買層の発見などに使われる(潜在クラス分析)</li>
+<li>潜在変数間の構造的な関係もモデル化する：回帰分析や因子分析などの線形関数関係をデータ全体に当てはめて考察する(構造方程式モデリング)</li>
+<li>潜在変数を仮定せず，変数同士の結びつきの強さを可視化する：ノードnodeとタイtieで位相的な関係を描画したり，数学的構造を含めたモデリングを行ったりする(ネットワーク分析)</li>
+</ul>
+<p>これらのモデルに共通する本質的な特徴は「変数間関係をデータから見出すこと」である。変数間関係をどのようなもので表現するかによって，多少モデルの扱い方は変化する。一般的には分散共分散(相関係数)を変数間関係とするが，この場合は間隔尺度水準以上のデータが得られていることが必要になる。もし順序尺度水準でしか得られていないのであれば，ピアソンの相関係数の代わりにポリコリック相関係数やポリシリアル相関係数と呼ばれる相関係数を用いることになる。0/1のバイナリデータの場合はさらに特殊で，ピアソンの相関係数の代わりにテトラコリック相関係数を用いることになる。</p>
+<p>変数間関係は必ずしも相関係数だけではない。カテゴリカル変数の場合は，あるカテゴリと他のカテゴリが同時に選択される・発生する頻度(共頻関係)を，その変数間関係の指標として捉えることができる。共頻関係を分析する手法としては双対尺度法<span class="citation" data-cites="Nishisato2010">(<a href="references.html#ref-Nishisato2010" role="doc-biblioref">西里 2010</a>)</span> (対応分析や数量化III類と原理的に同じ)などが知られている。このようなカテゴリデータの分析は，自由記述などの自然言語を形態素解析し，多変量解析で分析するテキストマイニングなどで応用されている。</p>
+<p>また，変数間関係を変数同士の類似度，すなわち距離であると考えることもできる。距離の公理を満たすデータがあれば，それを元に多次元尺度構成法<span class="citation" data-cites="Takane198002 Okada19940115">(<a href="references.html#ref-Takane198002" role="doc-biblioref">高根 1980</a>; <a href="references.html#ref-Okada19940115" role="doc-biblioref">岡太 and 今泉 1994</a>)</span>で可視化したり，クラスター分析で分類<span class="citation" data-cites="clusterAnalysis Adachi200607">(<a href="references.html#ref-clusterAnalysis" role="doc-biblioref">新納 2007</a>; <a href="references.html#ref-Adachi200607" role="doc-biblioref">足立 2006</a>)</span>したりすることができる。</p>
+<p>さらに，相関係数は変数間の直線的な関係の強さを意味するが，隠れた変数による擬似相関の可能性も含まれるため，偏相関係数を使って周囲の変数からの影響を統制した変数間関係を考えることもある。この手法はグラフィカルモデリング<span class="citation" data-cites="Miyagawa1997">(<a href="references.html#ref-Miyagawa1997" role="doc-biblioref">宮川 1997</a>)</span>やネットワーク分析<span class="citation" data-cites="Network2024">(<a href="references.html#ref-Network2024" role="doc-biblioref">アデラ＝マリア et al. [2022] 2024</a>)</span>で用いられるものである。</p>
+<p>いずれにせよ，こうした変数間関係をもとに，外的な基準があればそこに対するフィッティングを目的として未知数を推定するし，外的な基準がなければモデル的仮定に基づいてデータから構造化していくことになる。またその目的の基本は情報の要約であるが，可視化に重点をおいたモデルや潜在得点の推定に重点を置いたモデルなど，各種モデルによって得意とする場所や理論的に強調されるところは異なる。</p>
+<p>やや本筋から外れるが，こうした多変量を同時に扱うための数学的基盤として，線形代数の知識が必要となることが少なくない。線形代数はベクトルや行列の演算体系であり，その利点は「計算」と「可視化」を統合する観点を得られるところにある。より深く理解したいものにとっては，これらの学習も合わせて行うことを期待する。</p>
 <section id="因子分析" class="level2" data-number="14.1">
 <h2 data-number="14.1" class="anchored" data-anchor-id="因子分析"><span class="header-section-number">14.1</span> 因子分析</h2>
+<p>ここでは心理学で最もよく用いられる手法の一つである，因子分析法について概説する。 因子分析法は測定についての統計モデルである。類似の手法として主成分分析があげられるが，主成分分析は測定のモデルというより要約のモデルというべきである。</p>
+<p>因子分析のモデルは次の式で表される。 <span class="math display">\[ z_{ij} = a_{j1}f_{i1}+a_{j2}f_{i2}+cdots+a_{jm}f_{im}+d_jU_{ij} \]</span></p>
+<p>ここで<span class="math inline">\(z_{ij}\)</span>は個人<span class="math inline">\(i\)</span>の項目<span class="math inline">\(j\)</span>に対するスコアを標準化したものである。<span class="math inline">\(a_{j.}\)</span>は項目<span class="math inline">\(j\)</span>の因子負荷量(factor loadings)，<span class="math inline">\(f_{i.}\)</span>は個人<span class="math inline">\(i\)</span>の因子得点(factor score)，<span class="math inline">\(d_j\)</span>は項目<span class="math inline">\(j\)</span>の独自因子負荷量，<span class="math inline">\(U_{ij}\)</span>は項目<span class="math inline">\(j\)</span>に伴う個人<span class="math inline">\(i\)</span>の独自因子得点である。<span class="math inline">\(a_{j.}\)</span>で表される<span class="math inline">\(m\)</span>個の因子を共通因子と呼ぶ。一般に<span class="math inline">\(m\)</span>は項目数<span class="math inline">\(M\)</span>よりもかなり小さい。例えば性格検査のBIG-fiveは<span class="math inline">\(M=25\)</span>で<span class="math inline">\(m=5\)</span>である。YG正確検査は<span class="math inline">\(M=120\)</span>で<span class="math inline">\(m=12\)</span>である。この意味で多変量解析の目的の一つ，情報圧縮のモデルであるということもできる。</p>
+<p>これに対して主成分分析は次のように表される。 <span class="math display">\[ P_{i} = w_1X_{i1} + w_2X_{i2} + \cdots + w_MX_{iM} \]</span></p>
+<p>ここで<span class="math inline">\(X_{i.}\)</span>は個人<span class="math inline">\(i\)</span>の項目<span class="math inline">\(j\)</span>に対する反応を表し，この重み付き線型結合で主成分<span class="math inline">\(P\)</span>を形成する。ここでの未知数は<span class="math inline">\(w_j\)</span>であるから，一つの合成変数に作るための最適な重みを見つけることが目的となる。その基準の一つが，生成される合成変数<span class="math inline">\(P\)</span>が個人<span class="math inline">\(i\)</span>の特徴を最大限際立たせるように，すなわち<span class="math inline">\(P_i\)</span>の分散を最大にすることと考える。もちろん一つの合成変数で<span class="math inline">\(M\)</span>個の変数が持つ情報をすべて反映させることは難しいので，第二，第三の合成得点(主成分)を作ることも可能である。</p>
+<p>そうすると，情報圧縮という観点から見た<span class="math inline">\(m\)</span>個の共通因子，<span class="math inline">\(m\)</span>個の主成分の違いは何だろうか。これはすでに述べたように，因子分析は測定のモデルなので，得られたデータ<span class="math inline">\(z_{ij}=\frac{X_{ij}-\bar{X_j}}{\sigma_j}\)</span>には誤差<span class="math inline">\(d_jU_{ij}\)</span>が含まれていると考えているのに対し，主成分分析では<span class="math inline">\(X_{ij}\)</span>にそれを仮定せず，得られた値をそのまま用いているところが異なる。</p>
+<p>実践的な面では，心理尺度のような反応に誤差が仮定されるものには因子分析を用い，公的な記録など値に誤差が想定されないものには主成分分析を用いることが相応しい。因子分析が心理学やテスト理論の領域で広まり，主成分分析が経済学，商学，社会学の領域で広まったのはそうした背景による。</p>
+<p>計算論的には，いずれも変数間関係を元に最大限説明できる要素を抽出するというところで，行列の固有値分解を用いるという点が同じであるから，統計パッケージによっては同じメニューで異なる出力になっているものも少なくない。しかし上で述べたように，モデルの設計上の違いがあることは知っておいて損はないだろう。また，因子分析は変数間関係として相関行列を，主成分分析は分散共分散行列を用いることが多い。これは因子分析を用いる心理学的な領域では，測定値に絶対的な意味がなく相対的な意味(ex.より外向的，より内向的)しかないことに対し，他の社会科学領域では絶対的な意味がある(ex.国家間の貿易黒字・赤字の額など)場合が多いからである。また，主成分分析は多くの変数を情報圧縮する目的で第一主成分のみに注目することが多いのに対し，因子分析は測定しているものの考え方から複数の因子を考えることが多い。因子分析において単因子で考えるか多因子で考えるかについては，知能検査において知能を一般的な単一の因子で考えるのか，各領域に対応する複数の因子があるのかといった，理論的な相違がその黎明期にみられたことを反映している。</p>
+<p>類似の手法ではあるが，こうした背景を知っておくことで適切な手法を用いることができるようになるだろう。</p>
+<section id="探索的因子分析" class="level3" data-number="14.1.1">
+<h3 data-number="14.1.1" class="anchored" data-anchor-id="探索的因子分析"><span class="header-section-number">14.1.1</span> 探索的因子分析</h3>
+<p>特に断りなく単に因子分析というとき，探索的因子分析(Exploratory Factor Analysis)を指すことが多い。探索的というのは，因子負荷量(因子から項目へのパス係数，因子と項目の関係の強さを反映したもの)はもちろん共通因子の数についても事前に定めず，データから因子構造を探ることを目的とするものだからである。</p>
+<p>探索的因子分析は次のステップで進められる。</p>
+<ol type="1">
+<li>因子数の決定</li>
+<li>因子負荷量の推定(因子軸の回転)</li>
+<li>因子得点の推定</li>
+</ol>
+<p>もちろん分析に入る前に，分析対象となるデータの記述統計や可視化を通じて基本的な項目属性を把握していることが前提である。</p>
+<section id="因子数の決定" class="level4" data-number="14.1.1.1">
+<h4 data-number="14.1.1.1" class="anchored" data-anchor-id="因子数の決定"><span class="header-section-number">14.1.1.1</span> 因子数の決定</h4>
+<p>因子分析を数学的に語れば，<span class="math inline">\(M\)</span>個の項目相互の相関係数を表した相関行列<span class="math inline">\(\mathbb{R}\)</span>を固有値分解することに尽きる。相関係数はピアソンの積率相関係数を用いることが一般的であるが，項目が順序尺度水準であるとかバイナリ変数であるとかいった場合は，それに応じた相応しい相関係数を用いる。</p>
+<p>固有値分解とは相関行列の次元性を見ることでもある。<span class="math inline">\(M\)</span>個の項目もつ情報は<span class="math inline">\(M\)</span>次元あると考える。例えば2変数<span class="math inline">\(X,Y\)</span>があれば，変数<span class="math inline">\(X\)</span>をx軸，変数<span class="math inline">\(Y\)</span>をy軸に取った2次元空間に核反応をプロットすることでデータ全体の関係を表現できるだろう。しかしこれらの二変数が相関しているなら，変数<span class="math inline">\(X,Y\)</span>を直交させた空間で表現する必要は必ずしもなく，より分散の大きくとれる二次元基底を見つけることができるに違いない。これが因子分析，主成分分析に共通する考え方であり，最大の分散を持つ次元に注目するのが主成分分析，多次元のなかで有用な次元を共通因子，それ以外を誤差因子と区別して多因子(多次元)で考えるのが因子分析である。</p>
+<p>ここで共通因子の数を決めるのは分析者であり，「有用な次元」の決定は主観的な側面を含むことに注意しよう。もちろんデータの構造から適した次元数を考える手法はいろいろ提案されており，昨今はより客観的基準で因子数を決定するのが一般的であるが，数学的な特徴から実践的な意味合いをもつ共通次元とみなすのは，あくまでも分析者の責任において行われるものである。</p>
+<p>因子数を決定する手法として，スクリープロットをつかった平行分析がある。 次のコードを見ながら具体的に見ていこう。分析には<code>psych</code>パッケージを用い，データは<code>psych</code>パッケージの持つサンプルデータ，<code>bfi</code>を用いる。 これは性格テストのビッグファイブ因子それぞれについて5項目で測定したデータである。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> psych<span class="sc">::</span>bfi <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>gender, <span class="sc">-</span>education, <span class="sc">-</span>age)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 並行分析</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter14_files/figure-html/parallel-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parallel analysis suggests that the number of factors =  6  and the number of components =  6 </code></pre>
+</div>
+</div>
+<p>データ行列から得られる固有値の大きい順に折れ線グラフを描いたものを，スクリープロットという。 デフォルトではPCすなわち主成分分析Principle Component Analysisのスクリープロットと，FAすなわち因子分析Factor Analysisのスクリープロットが表示されている。この違いは上で述べたように，データに誤差を仮定するかどうかの違いにある。因子分析はこれを仮定するため1つの項目のもつ情報量が1単位以下になる(相関係数<span class="math inline">\(r_{jj}\)</span>が<span class="math inline">\(1.0\)</span>より小さくなる。正確には，<span class="math inline">\(r_{jj} = 1-h_j^2 = u^2 &lt; 0\)</span>であり，ここで<span class="math inline">\(h_j^2\)</span>は共通性と呼ばれる共通因子負荷量の二乗和，<span class="math inline">\(u_j^2\)</span>は独自性因子負荷量の二乗和)ため，主成分分析のそれより必ず低くなる。</p>
+<p>プロットされているのはActual Data, Simulated Data, Resmapled Dataとなっているのがわかるだろう。実際のデータは何らかの意味構造を有しているだろうから，その相関関係にも偏りが生じ，よく説明できる次元とそうでない次元とが生まれるため，徐々に減衰するカーブで表示される。これに対してSimulated Dataは同じサイズの乱数データから，Resampled Dataは実際のデータをごちゃ混ぜにした行列を作って得られた固有値構造を表している。乱数や撹拌したデータは実際の意味構造を持たず，どの次元も均等に無意味になるため，フラットな線で表示されるだろう。このフラットな線と実データの線を比べ，フラットなラインよりも大きな意味がある次元は無意味ではない，と考えて因子数を決めるのが平行分析の考え方である。この考え方に基づくと，因子分析解も主成分分析解も6因子(6成分)がてきせつであるということになる。</p>
+<p>なお図中には固有値が1.0のところにもラインが引かれている。これはかつて使われていたガットマン基準というもので，項目1つ分の分散も持たないような因子は共通因子たり得ない，という考え方である。この考え方によると3因子が妥当ということになる。ただし判断の基準として，共通因子で分散全体の何%を説明したか，というのもあり，たとえば3因子までで50%も説明しないようであれば半分以上の情報を捨てることになるから，4，5因子まで採用するという考え方もあり得る。</p>
 </section>
-<section id="構造方程式モデリング" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="構造方程式モデリング"><span class="header-section-number">14.2</span> 構造方程式モデリング</h2>
+<section id="因子負荷量の推定" class="level4" data-number="14.1.1.2">
+<h4 data-number="14.1.1.2" class="anchored" data-anchor-id="因子負荷量の推定"><span class="header-section-number">14.1.1.2</span> 因子負荷量の推定</h4>
+<p>因子の数が決まると，その過程のもとで因子負荷量の推定に入る。例えば次のようにして結果を得る。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>result.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(dat, <span class="at">nfactors =</span> <span class="dv">6</span>, <span class="at">fm =</span> <span class="st">"ML"</span>, <span class="at">rotate =</span> <span class="st">"geominQ"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>要求されたパッケージ GPArotation をロード中です</code></pre>
+</div>
+</div>
+<p><code>psych</code>パッケージの<code>fa</code>関数は実に多くのオプションを持っているが，ここでは因子数(<code>nfactors</code>)，推定法(<code>fm</code>)，回転法(<code>rotate</code>)の3つを指定した。 因子数はすでに述べたので，推定法と回転法について解説する。</p>
+<p>推定法は，ここでは<strong>最尤法(<code>ML</code>)</strong>を指定した。サンプルサイズが200を超えるような大きなデータであれば，多変量正規分布のもとからデータが得られたと仮定して因子負荷量を推定するのが最も適切だろう。サンプルサイズが小さい場合は，<strong>最小二乗法系列(<code>ULS,OLS,WLS,GLS</code>など)</strong>の推定法を指定し，データとモデルのずれを最も小さくするような手法にするのが良い。特段の指定がなければ<strong>最小残差法(<code>minres</code>)</strong>が選ばれる。これは最小二乗法と同じだが，アルゴリズムが改善されていて収束しやすいという特徴がある。推定法として主成分解(<code>pa</code>)を選べば，残差を推定しないモデルとなる。アルゴリズムの違い，仮定の違いなどでいろいろ変えうるが，基本的にこれで大きく変化が出るようなものではない。</p>
+<p>回転法は因子負荷量を推定した後で，さらに解釈をしやすくするためのものである。因子分析や主成分分析は，データの持ってる空間的特徴の軸を見つけ直すという説明はすでにした通りだが，この軸は原点こそ決まっているが，線形代数的変換によって軸を任意の方向に回転させることができる。であれば最も解釈がやりやすい方向に回転させるのが実践上便利である。この解釈がやりやすい方向というのを数学的に言い換えるならば，一つは項目と因子の関係が<strong>単純構造</strong>にあることだろう。単純構造とは，ある項目が特定の因子に寄与しているのなら，そのほかの因子には寄与していないということである。例えば，外向性を測定する項目が第1因子に重く負荷しているのであれば，第2,3,4,5因子には負荷していないほうが解釈しやすい。因子はデータの空間的特徴を表す軸(次元)なのだから，事後的にその軸がの意味であったかを考察する必要があるので，「この因子はこの項目にもあの項目にも影響している」という状況は悩みの種だからである。</p>
+<p>この基本方針のもと，いくつかの計算法が考えられている。もっとも古典的なバリマックス回転は，因子負荷量の二乗和の分散が最大になるように回転角を定める。ほかにも，オブリミン回転やジオミン回転などさまざまな回転方法が考えられており，これらについて詳しくは <span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> などを参照されたい。 また，回転方法は大きく分けて<strong>斜交回転</strong>と<strong>直交回転</strong>とに分けられる。直交回転は回転後の軸が直交する，すなわち因子間相関を仮定しない方法であり，斜交回転は因子間相関を仮定する回転方法である。後者の方が数学的な仮定が緩いため，分析の手順としてはまず斜交回転を行い，因子間相関が十分にひくく直交をかていできるなら直交回転をやり直す，という方法をとるべきである。ちなみにここでは<code>geominQ</code>というジオミン回転の斜交版を適用して結果を出力している。</p>
+<p><span class="citation" data-cites="GPArotation">Bernaards and Jennrich (<a href="references.html#ref-GPArotation" role="doc-biblioref">2005</a>)</span> パッケージには多くの回転法が含まれており，回転法を<code>rotate</code>オプションで選択することができるので，ヘルプなどを見て理解を深めて欲しい。</p>
+<p>因子軸の回転についても，推定法と同じように絶対的な基準はなく，それぞれの考え方や仮定に基づくアルゴリズムの違いがあるだけである。推定法と違って，因子負荷量は異なる回転法を施すと大きく変わることがある。因子軸の回転は解釈を容易にするためのものであるから，分析者にとって都合の良い回転方法を指定していいが，その回転方法が何で，どういう仮定があるのかについては，自身の言葉で説明できるようになっていた方がいい。</p>
+</section>
+<section id="出力結果を確認する" class="level4" data-number="14.1.1.3">
+<h4 data-number="14.1.1.3" class="anchored" data-anchor-id="出力結果を確認する"><span class="header-section-number">14.1.1.3</span> 出力結果を確認する</h4>
+<p>推定法，回転法についての概略を踏まえた上で，結果を見てみよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result.fa, <span class="at">sort =</span> T, <span class="at">cut =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Factor Analysis using method =  ml
+Call: fa(r = dat, nfactors = 6, rotate = "geominQ", fm = "ML")
+Standardized loadings (pattern matrix) based upon correlation matrix
+   item   ML1   ML2   ML5   ML3   ML4   ML6   h2   u2 com
+E2   12  0.70                               0.55 0.45 1.0
+E1   11  0.58                               0.39 0.61 1.4
+N4   19  0.51  0.35                         0.48 0.52 2.0
+E4   14 -0.50                          0.33 0.56 0.44 2.2
+E5   15 -0.41                               0.40 0.60 2.8
+N2   17        0.84                         0.69 0.31 1.1
+N1   16        0.83                         0.71 0.29 1.1
+N3   18        0.61                         0.52 0.48 1.3
+N5   20  0.33  0.37                         0.34 0.66 2.8
+A2    2              0.70                   0.50 0.50 1.2
+A3    3              0.65                   0.51 0.49 1.1
+A1    1             -0.57              0.37 0.33 0.67 1.8
+A5    5              0.50                   0.48 0.52 1.7
+A4    4              0.42                   0.28 0.72 1.7
+C2    7                    0.67             0.50 0.50 1.2
+C4    9                   -0.60        0.35 0.55 0.45 1.9
+C3    8                    0.54             0.31 0.69 1.1
+C1    6                    0.53             0.35 0.65 1.4
+C5   10                   -0.51             0.43 0.57 1.8
+O3   23                          0.67       0.48 0.52 1.0
+O1   21                          0.58       0.34 0.66 1.1
+O5   25                         -0.49  0.41 0.37 0.63 2.0
+O2   22                         -0.40  0.34 0.29 0.71 2.3
+O4   24  0.40                    0.40       0.25 0.75 2.4
+E3   13                          0.38       0.48 0.52 3.0
+
+                       ML1  ML2  ML5  ML3  ML4  ML6
+SS loadings           2.34 2.25 2.00 1.89 1.77 0.82
+Proportion Var        0.09 0.09 0.08 0.08 0.07 0.03
+Cumulative Var        0.09 0.18 0.26 0.34 0.41 0.44
+Proportion Explained  0.21 0.20 0.18 0.17 0.16 0.07
+Cumulative Proportion 0.21 0.41 0.59 0.77 0.93 1.00
+
+ With factor correlations of 
+      ML1   ML2   ML5   ML3   ML4   ML6
+ML1  1.00  0.24 -0.36 -0.20 -0.28 -0.08
+ML2  0.24  1.00 -0.01 -0.12  0.05  0.25
+ML5 -0.36 -0.01  1.00  0.19  0.28  0.26
+ML3 -0.20 -0.12  0.19  1.00  0.14  0.04
+ML4 -0.28  0.05  0.28  0.14  1.00  0.11
+ML6 -0.08  0.25  0.26  0.04  0.11  1.00
+
+Mean item complexity =  1.7
+Test of the hypothesis that 6 factors are sufficient.
+
+df null model =  300  with the objective function =  7.23 with Chi Square =  20163.79
+df of  the model are 165  and the objective function was  0.36 
+
+The root mean square of the residuals (RMSR) is  0.02 
+The df corrected root mean square of the residuals is  0.03 
+
+The harmonic n.obs is  2762 with the empirical chi square  661.28  with prob &lt;  1.4e-60 
+The total n.obs was  2800  with Likelihood Chi Square =  1013.79  with prob &lt;  4.6e-122 
+
+Tucker Lewis Index of factoring reliability =  0.922
+RMSEA index =  0.043  and the 90 % confidence intervals are  0.04 0.045
+BIC =  -295.88
+Fit based upon off diagonal values = 0.99
+Measures of factor score adequacy             
+                                                   ML1  ML2  ML5  ML3  ML4  ML6
+Correlation of (regression) scores with factors   0.90 0.93 0.89 0.87 0.86 0.78
+Multiple R square of scores with factors          0.81 0.86 0.78 0.76 0.75 0.61
+Minimum correlation of possible factor scores     0.61 0.72 0.57 0.53 0.49 0.22</code></pre>
+</div>
+</div>
+<p>この出力では<code>sort</code>オプションと<code>cut</code>オプションを指定した。<code>sort</code>オプションは因子負荷量の大きい順に並べ替えてくれるものであり，<code>cut</code>オプションは因子負荷量の表示を抑制するものである。あくまで表示上のオプションであり，実際は各因子から各項目へのパス(<span class="math inline">\(5 \times 25\)</span>本)が計算されている。</p>
+<p>まず表示されているのが因子負荷行列であり，項目の因子ごとの負荷量に加え，共通性<span class="math inline">\(h_j^2\)</span>と独自性<span class="math inline">\(u_j^2=1-h_j^2\)</span>，複雑度complexityが示されている<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。なお，ここで表示されている因子負荷量などは回転後のパターン行列である<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
+<p>その下には負荷量の平方和SS loagingsがあり，これが説明する分散の大きさである。それを比率にしたもの(Proportion Var)，累積比率にしたもの(Cumulative Var)がある。今回は累積して44%の説明しかしていないことになるから，56%もの情報をカットしているので，情報圧縮の観点から言えば少し捨てすぎている危険性もある。</p>
+<p>続いて，回転行列に斜交回転を指定しているから，因子間相関が出力されている。これを見ると絶対値最大で-0.36がみられる。全ての因子間相関が<span class="math inline">\(\pm 0.3\)</span>に収まるようであれば，直交回転を考えても良い。</p>
+<p>その後に出力されているのは適合度に関する指標である。各指標に関する解説は割愛する。</p>
+</section>
+<section id="因子得点の推定" class="level4" data-number="14.1.1.4">
+<h4 data-number="14.1.1.4" class="anchored" data-anchor-id="因子得点の推定"><span class="header-section-number">14.1.1.4</span> 因子得点の推定</h4>
+<p>ここまでで因子と項目の関係を探索的に求める方法について見てきたが，心理学的な研究としては因子と回答者の関係についても興味関心をもつだろう。すなわち，「外向性が高い人は誰か」「情緒不安定性が低い人はどういう特徴を持つか」といった，人に対する理解を深めることである。</p>
+<p>数学的には，行列の固有値分解のときに固有値と同時にえらえる固有ベクトルが因子負荷量になる。この相関行列などを構成する時点で，すでに個人の相がもつ情報は要約されて欠落している。なので，因子の構造が明らかになってから，逆算的に個人の得点を考えることになる。因子分析のモデル式で見たように，因子得点は<span class="math inline">\(f_{i.}\)</span>であるが，右辺の因子負荷量がすでに定まっているのなら，左辺も実測値から与えられているので，方程式を解くように答えを求めることができるのである。</p>
+<p><code>psych::fa</code>関数はデフォルトで因子得点を返すようになっており，以下のコードで確認できる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result.fa<span class="sc">$</span>scores, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              ML1         ML2         ML5         ML3        ML4         ML6
+61617 -0.04010511 -0.13419381 -0.69145376 -1.29299334 -1.6430660 -0.12400705
+61618 -0.35267122  0.09080773 -0.04506789 -0.60267233 -0.0566277  0.39616337
+61620 -0.05290788  0.69698270 -0.68175428 -0.03704608  0.2334657  0.01280638
+61621  0.22194371 -0.07729865 -0.15482554 -0.90538802 -0.9125738  0.95278898
+61622 -0.39695952 -0.28825362 -0.61037363 -0.12382926 -0.5814368  0.21976607
+61623 -1.05223173  0.41585860  0.29450029  1.35906961  0.8457775  0.45985066
+61624 -0.43875292 -1.21974967  0.06875832  0.03201599  0.6001998 -0.69274350
+61629  1.42563085  0.35294078 -2.23058559 -0.99435391 -1.2166723 -1.00627947
+61630          NA          NA          NA          NA         NA          NA
+61633 -0.62399161  1.11010731  0.53805411  1.05139495  0.4870489  0.04325653</code></pre>
+</div>
+</div>
+<p>ここで一部<code>NA</code>が返されているところがある(例えばID 61630)，これは回答の中に欠測値が含まれていた場合におこる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      A1 A2 A3 A4 A5 C1 C2 C3 C4 C5 E1 E2 E3 E4 E5 N1 N2 N3 N4 N5 O1 O2 O3 O4
+61617  2  4  3  4  4  2  3  3  4  4  3  3  3  4  4  3  4  2  2  3  3  6  3  4
+61618  2  4  5  2  5  5  4  4  3  4  1  1  6  4  3  3  3  3  5  5  4  2  4  3
+61620  5  4  5  4  4  4  5  4  2  5  2  4  4  4  5  4  5  4  2  3  4  2  5  5
+61621  4  4  6  5  5  4  4  3  5  5  5  3  4  4  4  2  5  2  4  1  3  3  4  3
+61622  2  3  3  4  5  4  4  5  3  2  2  2  5  4  5  2  3  4  4  3  3  3  4  3
+61623  6  6  5  6  5  6  6  6  1  3  2  1  6  5  6  3  5  2  2  3  4  3  5  6
+61624  2  5  5  3  5  5  4  4  2  3  4  3  4  5  5  1  2  2  1  1  5  2  5  6
+61629  4  3  1  5  1  3  2  4  2  4  3  6  4  2  1  6  3  2  6  4  3  2  4  5
+61630  4  3  6  3  3  6  6  3  4  5  5  3 NA  4  3  5  5  2  3  3  6  6  6  6
+61633  2  5  6  6  5  6  5  6  2  1  2  2  4  5  5  5  5  5  2  4  5  1  5  5
+      O5
+61617  3
+61618  3
+61620  2
+61621  5
+61622  3
+61623  1
+61624  1
+61629  3
+61630  1
+61633  2</code></pre>
+</div>
+</div>
+<p>因子得点はモデル式から逆算的に推定するので，一箇所でも値が見つからなければ答えが出ないのである。 また，この推定法による因子得点は標準化されたスコアなので単位がなく，相対的に比較することしかできない。 加えて，推定された相対的なスコアであるから，以下の研究プロセスにおいて差の検定などをすることは不適切である，という考え方もある。</p>
+<p>実践的には簡便的因子得点と呼ばれる因子得点の計算方法がある。これは因子分析の結果，当該因子に関係する項目に着目し，その評定値を平均することで算出するものである。 先の具体的にみていこう。第一因子はE2,E1,N4,E4,E5から構成されていると考えたとする。ここでE4,E5は因子負荷量が負であるから，評定値を逆転して考える必要がある。これを踏まえて，たとえば以下のように計算する。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Fscore1.raw <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 第一因子に該当しそうな項目だけ抜き出す</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(E2, E1, N4, E4, E5) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 逆転項目の評定値を反転する</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">E4 =</span> <span class="dv">7</span> <span class="sc">-</span> E4,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">E5 =</span> <span class="dv">7</span> <span class="sc">-</span> E5</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 行ごとに欠損値を除いた平均値を計算する</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>Fscore1 <span class="ot">&lt;-</span> <span class="fu">apply</span>(Fscore1.raw, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Fscore1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   2.000   2.800   2.892   3.600   6.000 </code></pre>
+</div>
+</div>
+<p>ここでは6件法の評定値を逆転させるために，7から引くという操作をして，欠測を除いて平均するようにしている。 こうすることで，尺度値の持つ意味(中点以上が賛成，未満が反対といったような)を踏まえて考えることができるし，全てが欠測でない限りスコアの算出ができるという利点がある。</p>
+<p>ただしこの方法は，因子負荷量による項目ごとの重みづけを考えないこと，因子分析法によって除外したはずの誤差分散の情報を含んだスコアにしていること，といった短所をもつ。また，そもそも評定値が尺度構成法で正しくスコアリングされたものであるべきだが，実践的にそのような工夫をしている例はほとんど見られないため，非常に精度の低い，荒い推定値になっていると言わざるを得ない。</p>
+<p>とはいえ，推定法でもとめたものと簡便法で求めたものは，非常に高く相関するので，心理学のデータがそれほどの精度を持つものでないと割り切れるのであれば，勘弁法でも十分だろう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(result.fa<span class="sc">$</span>scores[, <span class="dv">1</span>], Fscore1, <span class="at">use =</span> <span class="st">"pairwise"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9595003</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.fa<span class="sc">$</span>scores[, <span class="dv">1</span>], Fscore1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter14_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="確認的因子分析" class="level3" data-number="14.1.2">
+<h3 data-number="14.1.2" class="anchored" data-anchor-id="確認的因子分析"><span class="header-section-number">14.1.2</span> 確認的因子分析</h3>
+<p>ここまで探索的因子分析について詳しく解説してきた。 そこでは因子数や因子負荷量は事前の情報がなく，データによって語らせる方法で後付け的に解釈を行なっていくのであった。数値例にもあるように，第一因子は主にE因子の項目(外向性,Extraversion)から構成されているが，中にはN因子(情緒不安定性,Neuroticism)の項目も一部含まれており(N4)，解釈に頭を悩ませることも少なくない。そもそもBig5の名前にあるように理論的には5因子なのだが，データは6因子を示す，ということもある。</p>
+<p>このように探索的因子分析はデータに沿った解釈をするしかないのだが，性格検査のような理論的背景や仮定があるのなら，そちらを重視したいということもあるだろう。 このような場合は，因子の構造や仮定を盛り込んだモデルをデータに当てはめるという，確認的因子分析(Confirmatory Factor Analysis, CFA)を用いる。これは構造方程式モデリング(Structural Equation Modeling)の枠組みで因子分析をとらえたものであり，項目と潜在変数の関係を方程式で表して推定する。</p>
+<p>構造方程式モデリングは，分散共分散構造/相関構造の要素に潜在変数を含んだ方程式を当てはめた時の係数を推定するモデルである。方程式はパス図と呼ばれる表現方法で図示されることが多い。パス図では相関的関係を双方向の矢印で，回帰的関係を単方向の矢印で表現し，観測変数を矩形で，潜在変数を楕円で表す。パス図の表現を使うと，因子分析と主成分分析の違いは一目瞭然である。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/14_fa_pca.png" class="img-fluid figure-img"></p>
+<figcaption>主成分分析(左)と因子分析(右)のパス図表現</figcaption>
+</figure>
+</div>
+<p>また，探索的因子分析と確認的因子分析の違いも明白である。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/14_efa_cfa.png" class="img-fluid figure-img"></p>
+<figcaption>EFA(左)とCFA(右)のパス図表現。簡略化するために誤差因子は描画しない。</figcaption>
+</figure>
+</div>
+<p>確認的因子分析では，どの因子がどの項目に影響しているかを個別に指定している。言い換えるなら，影響がないと仮定するパスの係数を<span class="math inline">\(0\)</span>に固定しているともいえる。この図では確認的因子分析モデルの因子間相関が<span class="math inline">\(0\)</span>であると仮定しているため，パスを引いていない(引くことももちろん可能である)。</p>
+<p>この方法ではモデルの方が先にあり，このモデルから考えられる分散共分散行列の式を実際の分さ共分散行列に当てはめることになる。当てはめる，すなわち係数を推定する方法は，大きく分けて最小二乗法，最尤法，ベイズ法であるが，実際は各種推定法のアルゴリズム名まで把握しておくといいだろう。さらに推定後，モデルと実際の分散共分散行列がどれほど一致しているか，即ち<strong>適合度</strong>Model Fit Indicesをみてその評価を行うことになる。適合度指標も複数あるため，それらを見ながら総合的に評価することになる。</p>
+<p>Rでの具体例を見ておこう。パッケージ<code>lavvaan</code>を用いて<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>以下のようにモデルを与える。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lavaan)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>This is lavaan 0.6-19
+lavaan is FREE software! Please report any bugs.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+次のパッケージを付け加えます: 'lavaan'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>以下のオブジェクトは 'package:psych' からマスクされています:
+
+    cor2cov</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># モデル指定</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">Neuroticism =~ N1 + N2 + N3 + N4 + N5</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="st">Agreeableness =~ A1 + A2 + A3 + A4 + A5</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="st">Extraversion =~ E1 + E2 + E3 + E4 + E5</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="st">Openness =~ O1 + O2 + O3 + O4 + O5</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="st">Conscientiousness =~ C1 + C2 + C3 + C4 + C5</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>ここで<code>model</code>オブジェクトは文字列として入力されていることに注意しよう。シングル，あるいはダブルクォーテーションでモデル記述を囲むのである。また，潜在変数名を左辺に置き，それを構成する観測変数を右辺に置く<strong>測定方程式</strong>は，<code>=~</code>という演算子で繋ぐ。変数同士の相関的関係は<code>~~</code>という演算子を，回帰的関係は<code>~</code>という演算子を用いる。特に潜在変数同士の関係を記述する方程式は<strong>構造方程式</strong>と呼ばれる。</p>
+<p>ここでは因子間相関に関する記述はないが，デフォルトで<span class="math inline">\(0\)</span>と指定しないところには相関のパスが仮定される。係数をゼロに指定したい場合は，<code>Neuroticism ~~ 0 * Openness</code>のように記述するといいだろう。</p>
+<p>さて，モデルの指定が終われば，データと推定法を指定して推定させよう。 ここでは推定法(estimator)オプションを最尤法(ML)とした。また，要約を出力するときに，適合度指標(fit.meassures)と標準化係数(standardized)も表示するよう指定してある。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># モデル推定</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>model.fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(model, <span class="at">estimator =</span> <span class="st">"ML"</span>, <span class="at">data =</span> dat)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.fit, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>, )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.6-19 ended normally after 55 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        60
+
+                                                  Used       Total
+  Number of observations                          2436        2800
+
+Model Test User Model:
+                                                      
+  Test statistic                              4165.467
+  Degrees of freedom                               265
+  P-value (Chi-square)                           0.000
+
+Model Test Baseline Model:
+
+  Test statistic                             18222.116
+  Degrees of freedom                               300
+  P-value                                        0.000
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.782
+  Tucker-Lewis Index (TLI)                       0.754
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -99840.238
+  Loglikelihood unrestricted model (H1)     -97757.504
+                                                      
+  Akaike (AIC)                              199800.476
+  Bayesian (BIC)                            200148.363
+  Sample-size adjusted Bayesian (SABIC)     199957.729
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.078
+  90 Percent confidence interval - lower         0.076
+  90 Percent confidence interval - upper         0.080
+  P-value H_0: RMSEA &lt;= 0.050                    0.000
+  P-value H_0: RMSEA &gt;= 0.080                    0.037
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.075
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+Latent Variables:
+                       Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  Neuroticism =~                                                            
+    N1                    1.000                               1.300    0.825
+    N2                    0.947    0.024   39.899    0.000    1.230    0.803
+    N3                    0.884    0.025   35.919    0.000    1.149    0.721
+    N4                    0.692    0.025   27.753    0.000    0.899    0.573
+    N5                    0.628    0.026   24.027    0.000    0.816    0.503
+  Agreeableness =~                                                          
+    A1                    1.000                               0.484    0.344
+    A2                   -1.579    0.108  -14.650    0.000   -0.764   -0.648
+    A3                   -2.030    0.134  -15.093    0.000   -0.983   -0.749
+    A4                   -1.564    0.115  -13.616    0.000   -0.757   -0.510
+    A5                   -1.804    0.121  -14.852    0.000   -0.873   -0.687
+  Extraversion =~                                                           
+    E1                    1.000                               0.920    0.564
+    E2                    1.226    0.051   23.899    0.000    1.128    0.699
+    E3                   -0.921    0.041  -22.431    0.000   -0.847   -0.627
+    E4                   -1.121    0.047  -23.977    0.000   -1.031   -0.703
+    E5                   -0.808    0.039  -20.648    0.000   -0.743   -0.553
+  Openness =~                                                               
+    O1                    1.000                               0.635    0.564
+    O2                   -1.020    0.068  -14.962    0.000   -0.648   -0.418
+    O3                    1.373    0.072   18.942    0.000    0.872    0.724
+    O4                    0.437    0.048    9.160    0.000    0.277    0.233
+    O5                   -0.960    0.060  -16.056    0.000   -0.610   -0.461
+  Conscientiousness =~                                                      
+    C1                    1.000                               0.680    0.551
+    C2                    1.148    0.057   20.152    0.000    0.781    0.592
+    C3                    1.036    0.054   19.172    0.000    0.705    0.546
+    C4                   -1.421    0.065  -21.924    0.000   -0.967   -0.702
+    C5                   -1.489    0.072  -20.694    0.000   -1.012   -0.620
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  Neuroticism ~~                                                        
+    Agreeableness     0.141    0.018    7.712    0.000    0.223    0.223
+    Extraversion      0.292    0.032    9.131    0.000    0.244    0.244
+    Openness         -0.093    0.022   -4.138    0.000   -0.112   -0.112
+    Conscientisnss   -0.250    0.025  -10.117    0.000   -0.283   -0.283
+  Agreeableness ~~                                                      
+    Extraversion      0.304    0.025   12.293    0.000    0.683    0.683
+    Openness         -0.093    0.011   -8.446    0.000   -0.303   -0.303
+    Conscientisnss   -0.110    0.012   -9.254    0.000   -0.334   -0.334
+  Extraversion ~~                                                       
+    Openness         -0.265    0.021  -12.347    0.000   -0.453   -0.453
+    Conscientisnss   -0.224    0.020  -11.121    0.000   -0.357   -0.357
+  Openness ~~                                                           
+    Conscientisnss    0.130    0.014    9.190    0.000    0.301    0.301
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .N1                0.793    0.037   21.575    0.000    0.793    0.320
+   .N2                0.836    0.036   23.458    0.000    0.836    0.356
+   .N3                1.222    0.043   28.271    0.000    1.222    0.481
+   .N4                1.654    0.052   31.977    0.000    1.654    0.672
+   .N5                1.969    0.060   32.889    0.000    1.969    0.747
+   .A1                1.745    0.052   33.725    0.000    1.745    0.882
+   .A2                0.807    0.028   28.396    0.000    0.807    0.580
+   .A3                0.754    0.032   23.339    0.000    0.754    0.438
+   .A4                1.632    0.051   31.796    0.000    1.632    0.740
+   .A5                0.852    0.032   26.800    0.000    0.852    0.528
+   .E1                1.814    0.058   31.047    0.000    1.814    0.682
+   .E2                1.332    0.049   26.928    0.000    1.332    0.512
+   .E3                1.108    0.038   29.522    0.000    1.108    0.607
+   .E4                1.088    0.041   26.732    0.000    1.088    0.506
+   .E5                1.251    0.040   31.258    0.000    1.251    0.694
+   .O1                0.865    0.032   27.216    0.000    0.865    0.682
+   .O2                1.990    0.063   31.618    0.000    1.990    0.826
+   .O3                0.691    0.039   17.717    0.000    0.691    0.476
+   .O4                1.346    0.040   34.036    0.000    1.346    0.946
+   .O5                1.380    0.045   30.662    0.000    1.380    0.788
+   .C1                1.063    0.035   30.073    0.000    1.063    0.697
+   .C2                1.130    0.039   28.890    0.000    1.130    0.650
+   .C3                1.170    0.039   30.194    0.000    1.170    0.702
+   .C4                0.960    0.040   24.016    0.000    0.960    0.507
+   .C5                1.640    0.059   27.907    0.000    1.640    0.615
+    Neuroticism       1.689    0.073   23.034    0.000    1.000    1.000
+    Agreeableness     0.234    0.030    7.839    0.000    1.000    1.000
+    Extraversion      0.846    0.062   13.693    0.000    1.000    1.000
+    Openness          0.404    0.033   12.156    0.000    1.000    1.000
+    Conscientisnss    0.463    0.036   12.810    0.000    1.000    1.000</code></pre>
+</div>
+</div>
+<p>出力として，まずモデルの要約(推定法など)が示され，続いて適合度指標(CFI, TFI, AIC, BIC, RMSEA, SRMR)などが表示される。これらの適合度指標は大きく3つのカテゴリーに分類できる：</p>
+<p>まずは，飽和モデルとヌルモデルの間の比較指標である。CFIやTFIがこれに該当する。ヌルモデルを0，飽和モデルを1としたとき，今回のモデルがどこに位置づくかを示す。ここで飽和モデルとはデータに完全に適合するモデルであり，すべての観測変数間にすべての可能なパスが引かれたものを指す。逆にヌルモデル(独立モデル)は観測変数間に関連性がまったくないと仮定する最も制約の強いモデルである。</p>
+<p>次に，尤度に基づく相対指標である。AIC，BIC，SABICがこれに該当する。尤度はデータが確率モデルにどれほど近いかを表したものであるから，データやモデルが異なれば比較はできない。当該データに対する相対比較として用いる。AIC(赤池情報量規準，Akaike Information Criterion)は対数尤度とパラメータの数で計算されており，対数尤度が大きくパラメータ数が少ない方が良いモデルだと考える規準である。-2LL + 2p(LLは対数尤度，pはパラメータ数)で算出され，小さければ小さいほど当てはまりが良いと判断する。BIC(ベイジアン情報量規準)は，AICよりもサンプルサイズに対して強いペナルティを与えている。SABICはサンプルサイズを調整したBICの亜形である。</p>
+<p>最後に，実データの分散説明量の残量に関する指標がある。RMSEAとSRMRがこれに該当する。RMSEA(Root Mean Square Error of Approximation)はモデルの近似誤差を評価しており，0.05未満が良好とされる。SRMR(Standardized Root Mean Square Residual)は実データと予測データの残差の標準化された平方根で， 0.08未満が良好とされる。</p>
+<p>モデル評価の際は、これらの指標を総合的に検討することが推奨される。単一の指標だけではなく、複数の指標を参照し、それらが一貫して良好な適合を示すかを確認することが重要である。</p>
+<p>続く出力で，推定値Estimator や検定統計量が表示される。心理学の場合は，全ての変数を標準化した推定値<code>Std.all</code>を参照することが多い<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>。ここでパス係数が小さかったり，統計的に有意にならないものを削除することでモデルの適合度は上げることができる。 ただし，適合度を上げることが研究の目的になってはならない。仮定を当てはめるのだから，適当とされる目安を達成できない場合は仮定を省みて改良することはあるだろうが，適合度を上げるために仮定に合わないパスを引くようなことは，「頑張って有意にする」のと同じQRPsである。</p>
+<p>ところで，パッケージを使えば，パス図も自動で描いてくれる。他にも，<code>lavaanExtra</code>や<code>tidySEM</code>，<code>lavaanPlot</code>,<code>lavaanPlot2</code>など開発中のものも含めて様々なものがあるが，ここでは古典的な<code>semPlot</code>パッケージによる出力例を示す。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semPlot)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(model.fit, <span class="at">what =</span> <span class="st">"stand"</span>, <span class="at">style =</span> <span class="st">"lisrel"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter14_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>以上が因子分析法の概略である。</p>
+<p>因子分析法は測定に関するモデルであり，心理尺度を作成する場合は非常によく用いられるものである。しかしあくまでもデータや項目間の相関関係から共通次元を見出すものであるから，構成概念を直接測定したとか，構成概念の存在が証明されたかのような利用・解釈は適切ではない。例えば，何らかの話題についての文言，極端な話「ラーメンに関する記述」を用意して，そこに量的な評価を加えれば，ラーメン因子だろうが豚骨因子だろうが，何らかの解釈ができる因子を抽出することはできる。そのことと，人が心理的に豚骨因子を内在化しているということにはならない。</p>
+<p>また構造方程式モデリングによって潜在変数間に回帰や相関のパスを仮定することはできるが，そのことが実際どのような形で顕現化するかについて考えておく必要がある。モデルが非常に適合していて，潜在変数間に強い影響関係があったとしても，測定方程式のパス係数が低かったりすると，結局一方の因子得点が1単位増えたことで，従属する潜在変数がどのように変化し，それがどのように行動・測定値に反映されるかを意識しよう。そのような実態的な影響がない，つまり妥当性のない統計モデルは机上の空論に過ぎないからである。</p>
+<p>測定とその実際的影響については，因子分析モデルの一種とも言える項目反応理論と問題意識を軌を一にする。</p>
+</section>
+</section>
+<section id="項目反応理論" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="項目反応理論"><span class="header-section-number">14.2</span> 項目反応理論</h2>
+</section>
+<section id="そのほかの分析1距離行列を用いるもの" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="そのほかの分析1距離行列を用いるもの"><span class="header-section-number">14.3</span> そのほかの分析1；距離行列を用いるもの</h2>
+</section>
+<section id="クラスター分析" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="クラスター分析"><span class="header-section-number">14.4</span> クラスター分析</h2>
+</section>
+<section id="多次元尺度構成法" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="多次元尺度構成法"><span class="header-section-number">14.5</span> 多次元尺度構成法</h2>
+</section>
+<section id="そのほかの分析2共頻行列を用いるもの" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="そのほかの分析2共頻行列を用いるもの"><span class="header-section-number">14.6</span> そのほかの分析2；共頻行列を用いるもの</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-GPArotation" class="csl-entry" role="listitem">
+Bernaards, Coen A., and Robert I. Jennrich. 2005. <span>“Gradient Projection Algorithms and Software for Arbitrary Rotation Criteria in Factor Analysis.”</span> <em>Educational and Psychological Measurement</em> 65: 676–96. <a href="https://doi.org/10.1177/0013164404272507">https://doi.org/10.1177/0013164404272507</a>.
+</div>
+<div id="ref-Network2024" class="csl-entry" role="listitem">
+アデラ＝マリアイスヴォラヌ, サシャエプスカンプ, ローレンスウォルドープ, and デニーボースブーム. (2022) 2024. <em>心理ネットワークアプローチ入門:行動科学者と社会科学者のためのガイド</em>. Translated by 樫原潤 and 小杉考司. 勁草書房.
+</div>
+<div id="ref-Miyagawa1997" class="csl-entry" role="listitem">
+宮川雅巳. 1997. <em>グラフィカルモデリング (統計ライブラリー)</em>. 朝倉書店.
+</div>
+<div id="ref-kosugi2018" class="csl-entry" role="listitem">
+小杉考司. 2018. <em>言葉と数式で理解する多変量解析入門</em>. 北大路書房. <a href="http://ci.nii.ac.jp/ncid/BB27527420">http://ci.nii.ac.jp/ncid/BB27527420</a>.
+</div>
+<div id="ref-Okada19940115" class="csl-entry" role="listitem">
+岡太彬訓, and 今泉忠. 1994. <em>パソコン多次元尺度構成法</em>. 共立出版.
+</div>
+<div id="ref-clusterAnalysis" class="csl-entry" role="listitem">
+新納浩幸. 2007. <em>Rで学ぶクラスタ解析</em>. オーム社.
+</div>
+<div id="ref-Nishisato2010" class="csl-entry" role="listitem">
+西里静彦. 2010. <em>行動科学のためのデータ解析–情報把握に適した方法の利用</em>. 培風館.
+</div>
+<div id="ref-Adachi200607" class="csl-entry" role="listitem">
+足立浩平. 2006. <em>多変量データ解析法: 心理・教育・社会系のための入門</em>. ナカニシヤ出版.
+</div>
+<div id="ref-Takane198002" class="csl-entry" role="listitem">
+高根芳雄. 1980. <em>多次元尺度法</em>. 東京大学出版会.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>これは因子の複雑さを表す指標で、各項目(変数)がどれだけ単純に(あるいは複雑に)因子に負荷しているかを表す指標である。値が1に近い場合，その項目は基本的に1つの因子にのみ強く負荷することあらわしている。値が大きくなるほど、その項目が複数の因子に分散して負荷していることになる。この値は，項目<span class="math inline">\(j\)</span>の因子<span class="math inline">\(k\)</span>に対する負荷量を<span class="math inline">\(a_{jk}\)</span>としたとき，<span class="math inline">\(\frac{(\sum_k a_{jk}^2)^2}{\sum_k a_{jk}^4}\)</span>で算出する。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>斜交回転の場合は，因子軸の負荷量をどう考えるかによって因子パターンと因子構造とに分かれる。因子パターンは変数を斜交座標系に直交に投影した影のようなものであり，変数から因子への直接的な効果を表すと考えられる。因子構造は因子構造は変数を各因子軸に平行に投影した影のようなものであり，変数と因子の間の単純相関を表している。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>らばーん，とは変な名前だと思われるかもしれないが，LAtent VAriable ANalysisすなわち潜在変数分析の意味である。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><code>Std.all</code>は観測変数も潜在変数もその分散を1に標準化したもの。<code>Std.lv</code>は潜在変数だけその分散を1に標準化したものである。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
