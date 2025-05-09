@@ -366,7 +366,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></h1>
 </div>
 
 
@@ -388,15 +388,12 @@ window.Quarto = {
 <h2 data-number="8.1" class="anchored" data-anchor-id="一標本検定"><span class="header-section-number">8.1</span> 一標本検定</h2>
 <p>まず配置標本検定の例から始める。母平均がわかっている，あるいは理論的に仮定される特定の値に対して，標本平均が統計的に有意に異なっていると言って良いかどうかの判断をするときに用いる。 たとえば7件法のデータを取ったときに，ある項目の平均が中点4より有意に離れていると言って良いかどうか，といった判定をするときに用いる。かりに，サンプルサイズ10で7件法のデータが得られたとしよう。ここでは平均4,SD1の正規乱数を10件生成することで表現する。実際にはこの値を，人に対する尺度カテゴリへの反応として得ているはずである。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">4</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> <span class="dv">1</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 2.984991 3.920363 3.767013 3.182732 4.772091 3.834388 4.972874 5.716534
  [9] 4.255237 4.366581</code></pre>
@@ -410,11 +407,8 @@ window.Quarto = {
 </ol>
 <p>このあと，検定統計量の計算と判定である。これをRは<code>t.test</code>関数で一気に処理できる。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X, <span class="at">mu =</span> mu)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
@@ -433,23 +427,17 @@ mean of x
 <p>レポートなどに記載するときは，これら実現値やp値を踏まえて「<span class="math inline">\(t(9)=0.66776,p=0.5151 ,n.s.\)</span>」などとする。ここでn.s.はnot significantの略である。</p>
 <p>さてこの例では，母平均4の正規乱数を生成し，その平均が4と異なるとはいえない，と結論づけた。これは一見，当たり前のことのようであり，無意味な行為におもえるかもしれない。しかし次の例を見てみよう。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">3</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">4</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> <span class="dv">1</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(X) <span class="sc">%&gt;%</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5.04</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X, <span class="at">mu =</span> mu)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
@@ -482,8 +470,6 @@ mean of x
 <p>これらの式はつまり，サンプルサイズの違いを考慮するため，一旦両群の標本分散に各サンプルサイズを掛け合わせ，プールした全体のサンプルサイズから各々<span class="math inline">\(-1\)</span>をすることで全体として不偏分散にしている。</p>
 <p>これを踏まえて，具体的な数字で見ていこう。 その上で乱数でデータを生成し，その標本平均を確認した上で，<code>t.test</code>関数によって検定を行っている。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
@@ -499,25 +485,18 @@ mean of x
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4.547</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>X2 <span class="sc">%&gt;%</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4.837</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Two Sample t-test
@@ -536,12 +515,9 @@ mean of x mean of y
 <p>今回の設定では母平均に差があるはず(<span class="math inline">\(4 \neq 4 + 1\)</span>)なのだから，これは誤った判断で，タイプ2エラーが生じているケースということになる。研究実践場面では，母平均やその差については知り得ないのだから，このような判断ミスが生じていたかどうかは分かり得ないことに留意しよう。</p>
 <p>なお，ここではわかりやすく2群であることを示すために<code>X1</code>,<code>X2</code>と2つのオブジェクトを用意したが，実践的にはデータフレームの中で群わけを示す変数があり，<code>formula</code>の形で次のように書くことが多いだろう。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n1), <span class="fu">rep</span>(<span class="dv">2</span>, n2)), <span class="at">value =</span> <span class="fu">c</span>(X1, X2)) <span class="sc">%&gt;%</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">as.factor</span>(group))</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Two Sample t-test
@@ -561,11 +537,8 @@ mean in group 1 mean in group 2
 <h2 data-number="8.3" class="anchored" data-anchor-id="二標本検定ウェルチの補正"><span class="header-section-number">8.3</span> 二標本検定(ウェルチの補正)</h2>
 <p>先ほどのt.test関数には，<code>var.equal = TRUE</code>というオプションが追加されていた。これは2群の分散が等しいと仮定した場合の検定になる。t検定は歴史的にこちらが先に登場しているが，2群の分散が等しいかどうかはいきなり前提できるものでもない。等分散性の検定は，Levene検定を行うのが一般的であり，R においては，<code>car</code>パッケージや<code>lawstat</code> パッケージが対応する関数を持っている。ここでは<code>car</code>パッケージの <code>leveneTest</code>関数を用いる例を示す。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(car)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">center =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = mean)
       Df F value Pr(&gt;F)
@@ -575,11 +548,8 @@ group  1  2.9405 0.1035
 </div>
 <p>この結果を見ると，p値から明らかなように，2群の分散が等しいという帰無仮説が棄却<strong>できなかった</strong>ので，等しいと考えてt検定に進むことができる。もしこれが棄却されてしまったら，2群の分散が等しいという帰無仮説が成り立たないのだから，等分散性の仮定を外す必要がある。実行は簡単で，<code>var.equal</code>を<code>FALSE</code>にすれば良い。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -614,11 +584,8 @@ mean in group 1 mean in group 2
 <p>今回2群の差のデータを作る時に，<span class="math inline">\(\sigma d\)</span> としたが，平均値差の効果量esは， <span class="math display">\[ es = \frac{\mu_1 - \mu_2}{\sigma} \]</span></p>
 <p>で表現されるから，<span class="math inline">\(d\)</span>が効果量を表していたのである。もちろん我々は母平均，母SDなどを知り得ないのでこれもデータから推定する他ない。幸いRには<code>effsize</code>パッケージなど，効果量を算出するものが用意されている。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(effsize)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Cohen's d
@@ -628,10 +595,7 @@ d estimate: -0.2232655 (small)
     lower     upper 
 -1.165749  0.719218 </code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Hedges's g
@@ -654,8 +618,6 @@ g estimate: -0.2138318 (small)
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="仮想データの組成"><span class="header-section-number">8.4.1</span> 仮想データの組成</h3>
 <p>仮想データを作って演習してみよう。データの組成については，2種類のアプローチで説明が可能である。ひとつは次のシミュレーションで表されるような形である。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
@@ -663,7 +625,6 @@ g estimate: -0.2138318 (small)
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu1, sigma)</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> X1 <span class="sc">+</span> sigma <span class="sc">*</span> d <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X1, X2, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
@@ -684,8 +645,6 @@ mean difference
 <p><span class="math display">\[\mathbf{\Sigma} = \begin{pmatrix} \sigma_1^2 &amp; \sigma_{12}\\ \sigma_{21} &amp; \sigma_2^2 \end{pmatrix} = \begin{pmatrix} \sigma_1^2 &amp; \rho_{12}\sigma_1\sigma_2 \\ \rho_{21}\sigma_2\sigma_1 &amp; \sigma_2^2 \end{pmatrix}\]</span></p>
 <p>共分散<span class="math inline">\(\sigma_{ij}\)</span>は相関係数<span class="math inline">\(\rho_{ij}\)</span>を用いて書けることからわかるように，変数間に相関があることを想定してデータを生成するのである。この組成に従った仮想データの作成は以下のとおりである。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS) <span class="co"># 多次正規乱数を生成するのに必要</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
@@ -696,7 +655,6 @@ mean difference
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>SIG <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sigma<span class="sc">^</span><span class="dv">2</span>, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, sigma<span class="sc">^</span><span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, mu, SIG)</span>
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
@@ -713,10 +671,7 @@ mean difference
 </div>
 <p>効果量については，対応のないt検定の場合と同じで良い。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Cohen's d
@@ -726,10 +681,7 @@ d estimate: -1.04088 (large)
       lower       upper 
 -2.04204357 -0.03971697 </code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Hedges's g
@@ -759,8 +711,6 @@ g estimate: -0.9968994 (large)
 <li><p>自由度が15のt分布において、有意水準5%の片側検定と両側検定の臨界値(検定の判断基準となる理論値)を求めてください。</p></li>
 </ol>
 
-
-<!-- -->
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-Toyoda2009" class="csl-entry" role="listitem">
@@ -847,57 +797,6 @@ g estimate: -0.9968994 (large)
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
-    }
-    const viewSource = window.document.getElementById('quarto-view-source') ||
-                       window.document.getElementById('quarto-code-tools-source');
-    if (viewSource) {
-      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-      viewSource.addEventListener("click", function(e) {
-        if (sourceUrl) {
-          // rstudio viewer pane
-          if (/\bcapabilities=\b/.test(window.location)) {
-            window.open(sourceUrl);
-          } else {
-            window.location.href = sourceUrl;
-          }
-        } else {
-          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-          modal.show();
-        }
-        return false;
-      });
-    }
-    function toggleCodeHandler(show) {
-      return function(e) {
-        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-        for (let i=0; i<detailsSrc.length; i++) {
-          const details = detailsSrc[i].parentElement;
-          if (show) {
-            details.open = true;
-          } else {
-            details.removeAttribute("open");
-          }
-        }
-        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-        const fromCls = show ? "hidden" : "unhidden";
-        const toCls = show ? "unhidden" : "hidden";
-        for (let i=0; i<cellCodeDivs.length; i++) {
-          const codeDiv = cellCodeDivs[i];
-          if (codeDiv.classList.contains(fromCls)) {
-            codeDiv.classList.remove(fromCls);
-            codeDiv.classList.add(toCls);
-          } 
-        }
-        return false;
-      }
-    }
-    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-    if (hideAllCode) {
-      hideAllCode.addEventListener("click", toggleCodeHandler(false));
-    }
-    const showAllCode = window.document.getElementById("quarto-show-all-code");
-    if (showAllCode) {
-      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -1239,390 +1138,7 @@ g estimate: -0.9968994 (large)
         <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb33" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 平均値差の検定</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>平均値差の検定は，実験計画の結論を出すために用いられる手段である。無作為割り当てによって個人差や背景要因が相殺され，平均的な因果効果を検証することができるからである。</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>その結果を一般化するためには，やはり推測統計学の知見が必要であり，サンプルサイズやタイプ1,2エラーが関わってくることに変わりはない。</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## 一標本検定</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>まず配置標本検定の例から始める。母平均がわかっている，あるいは理論的に仮定される特定の値に対して，標本平均が統計的に有意に異なっていると言って良いかどうかの判断をするときに用いる。</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>たとえば7件法のデータを取ったときに，ある項目の平均が中点4より有意に離れていると言って良いかどうか，といった判定をするときに用いる。かりに，サンプルサイズ10で7件法のデータが得られたとしよう。ここでは平均4,SD1の正規乱数を10件生成することで表現する。実際にはこの値を，人に対する尺度カテゴリへの反応として得ているはずである。</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,oneTsample}</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(X)</span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>今回，標本平均は<span class="in">`r round(mean(X),3)`</span>であり，これより極端な値が$\mu = 4$の母集団から得られるかどうかを検定する。帰無仮説検定の手順にそって進めていくと，以下のようになる。</span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>帰無仮説は母平均が理論的な値(ここでは尺度の中点4)であること，すなわち$\mu =4$であり，対立仮説は$\mu \neq 4$ である。</span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>検定統計量は，正規母集団から得られる標本平均が従う標本分布であり，母分散が未知の場合の区間推定に用いたT統計量になる。</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>判断基準は心理学の慣例に沿って5%とする。</span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>このあと，検定統計量の計算と判定である。これをRは<span class="in">`t.test`</span>関数で一気に処理できる。</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,Os.ttest}</span></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X, <span class="at">mu =</span> mu)</span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>結果として，今回の検定統計量の実現値は<span class="in">`r round(result$statistic,3)`</span>であり，自由度<span class="in">`r result$parameter`</span>のt分布からこれ以上の値が出てくる確率は，<span class="in">`r round(result$p.value,3)`</span>であることがわかる。これは5%水準と見比べてより大きいので，レアケースではないと判断できる。つまり，母平均4の正規母集団から，<span class="in">`r round(mean(X),3)`</span>の標本平均が得られることはそれほど珍しいものではなく，統計的に有意に異なっていると判断するには及ばない，ということである。</span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>レポートなどに記載するときは，これら実現値やp値を踏まえて「$t(9)=0.66776,p=0.5151 ,n.s.$」などとする。ここでn.s.はnot significantの略である。</span>
-<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>さてこの例では，母平均4の正規乱数を生成し，その平均が4と異なるとはいえない，と結論づけた。これは一見，当たり前のことのようであり，無意味な行為におもえるかもしれない。しかし次の例を見てみよう。</span>
-<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,Os.ttest2}</span></span>
-<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(X) <span class="sc">%&gt;%</span></span>
-<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span>
-<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X, <span class="at">mu =</span> mu)</span>
-<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span>
-<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>ここではサンプルサイズ$n=3$であり，標本平均が<span class="in">`r round(mean(X),3)`</span>であった。このときt値は5%臨界値を上回っており，「母平均4のところから得られる値にしては極端」であるから，統計的に有意に異なる，と判断することになる。乱数生成時は平均を確かに4に設定したが，母平均から取り出したごく一部が，そこから大きく離れてしまうことはあり得るのである。</span>
-<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## 二標本検定</span></span>
-<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a>続いて二標本の検定について考えよう。実験群と統制群のように，無作為割り当てをすることで平均因果効果をみる際に行われるのが，この検定である。帰無仮説は「群間差はない」であり，対立仮説はその否定である。また，正規母集団からの標本を仮定するので，検定統計量はここでもt分布に従う値になる。帰無仮説検定の手順に沿って，改めて確認しておこう。</span>
-<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-56"><a href="#cb33-56" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>帰無仮説は「二群の母平均に差がない」である。二群の母平均をそれぞれ$\mu_1,\mu_2$とすると，帰無仮説は$\mu_1 = \mu_2$，あるいは$\mu_1 - \mu_2 = 0$と表される。対立仮説は$\mu_1 \neq \mu_2$あるいは$\mu_1-\mu_2 \neq 0$である。</span>
-<span id="cb33-57"><a href="#cb33-57" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>検定統計量は，正規母集団から得られる標本平均が従う標本分布であり，母分散が未知の場合の区間推定に用いたT統計量になる。</span>
-<span id="cb33-58"><a href="#cb33-58" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>判断基準は心理学の慣例に沿って5%とする。</span>
-<span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a>これを検証するために，サンプルデータを乱数で生成しよう。</span>
-<span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a>まず，各群のサンプルサイズを<span class="in">`n1,n2`</span>とする。ここでは話を簡単にするため，サンプルサイズは両群ともに<span class="in">`10`</span>とした。つぎに両群の母平均だが，群1の母平均を$\mu_1$，群2の母平均を$\mu_2 = \mu_1 + \delta$で表現した。この$\delta$は差分であり，これが$\delta=0$であれば母平均が等しいこと，$\delta \neq 0$であれば母平均が異なることになる。最後に両群の母SDを設定した。</span>
-<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-63"><a href="#cb33-63" aria-hidden="true" tabindex="-1"></a>ここでの検定は，この差分$d$が母平均0の母集団から得られたと判断して良いかどうか，という形で行われる。検定統計量$T$は，次式で算出されるものである。</span>
-<span id="cb33-64"><a href="#cb33-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-65"><a href="#cb33-65" aria-hidden="true" tabindex="-1"></a>$$ T = \frac{d - \mu_0}{\sqrt{U^2_p/\frac{n_1n_2}{n_1+n_2}}}$$</span>
-<span id="cb33-66"><a href="#cb33-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-67"><a href="#cb33-67" aria-hidden="true" tabindex="-1"></a>ここで$d$は二群の標本平均の差であり，$U^2_p$はプールされた不偏分散と呼ばれ，二群を合わせて計算された全体の母分散推定量である。各群の標本分散をそれぞれ$S^2_1, S^2_2$とすると，次式で算出される。</span>
-<span id="cb33-68"><a href="#cb33-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-69"><a href="#cb33-69" aria-hidden="true" tabindex="-1"></a>$$ U^2_p = \frac{n_1S^2_1+ n_2S^2_2}{n_1 + n_2 -2} $$</span>
-<span id="cb33-70"><a href="#cb33-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-71"><a href="#cb33-71" aria-hidden="true" tabindex="-1"></a>これらの式はつまり，サンプルサイズの違いを考慮するため，一旦両群の標本分散に各サンプルサイズを掛け合わせ，プールした全体のサンプルサイズから各々$-1$をすることで全体として不偏分散にしている。</span>
-<span id="cb33-72"><a href="#cb33-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-73"><a href="#cb33-73" aria-hidden="true" tabindex="-1"></a>これを踏まえて，具体的な数字で見ていこう。</span>
-<span id="cb33-74"><a href="#cb33-74" aria-hidden="true" tabindex="-1"></a>その上で乱数でデータを生成し，その標本平均を確認した上で，<span class="in">`t.test`</span>関数によって検定を行っている。</span>
-<span id="cb33-75"><a href="#cb33-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-76"><a href="#cb33-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,Ts.ttest}</span></span>
-<span id="cb33-77"><a href="#cb33-77" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb33-78"><a href="#cb33-78" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb33-79"><a href="#cb33-79" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb33-80"><a href="#cb33-80" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb33-81"><a href="#cb33-81" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb33-82"><a href="#cb33-82" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> mu1 <span class="sc">+</span> (sigma <span class="sc">*</span> delta)</span>
-<span id="cb33-83"><a href="#cb33-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-84"><a href="#cb33-84" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb33-85"><a href="#cb33-85" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, <span class="at">mean =</span> mu1, <span class="at">sd =</span> sigma)</span>
-<span id="cb33-86"><a href="#cb33-86" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, <span class="at">mean =</span> mu2, <span class="at">sd =</span> sigma)</span>
-<span id="cb33-87"><a href="#cb33-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-88"><a href="#cb33-88" aria-hidden="true" tabindex="-1"></a>X1 <span class="sc">%&gt;%</span></span>
-<span id="cb33-89"><a href="#cb33-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb33-90"><a href="#cb33-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-91"><a href="#cb33-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span>
-<span id="cb33-92"><a href="#cb33-92" aria-hidden="true" tabindex="-1"></a>X2 <span class="sc">%&gt;%</span></span>
-<span id="cb33-93"><a href="#cb33-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb33-94"><a href="#cb33-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-95"><a href="#cb33-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span>
-<span id="cb33-96"><a href="#cb33-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-97"><a href="#cb33-97" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(X1, X2, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-98"><a href="#cb33-98" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span>
-<span id="cb33-99"><a href="#cb33-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-100"><a href="#cb33-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-101"><a href="#cb33-101" aria-hidden="true" tabindex="-1"></a>今回の母平均は$\mu_1 = 4, \mu_2 = 4+1$にしているが，標本平均は<span class="in">`r round(mean(X1),3)`</span>と<span class="in">`r round(mean(X2),3)`</span>であり，標本上では大きな差が見られなかった。結果として，t値は<span class="in">`r abs(result$statistic)`</span>であり，自由度<span class="in">`r result$parameter`</span>のもとでのp値は<span class="in">`r result$p.value`</span>である。5%水準を上回る値であるから，結論としては対立仮説を採択するには至らない，差があるとはいえない，である。</span>
-<span id="cb33-102"><a href="#cb33-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-103"><a href="#cb33-103" aria-hidden="true" tabindex="-1"></a>今回の設定では母平均に差があるはず($4 \neq 4 + 1$)なのだから，これは誤った判断で，タイプ2エラーが生じているケースということになる。研究実践場面では，母平均やその差については知り得ないのだから，このような判断ミスが生じていたかどうかは分かり得ないことに留意しよう。</span>
-<span id="cb33-104"><a href="#cb33-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-105"><a href="#cb33-105" aria-hidden="true" tabindex="-1"></a>なお，ここではわかりやすく2群であることを示すために<span class="in">`X1`</span>,<span class="in">`X2`</span>と2つのオブジェクトを用意したが，実践的にはデータフレームの中で群わけを示す変数があり，<span class="in">`formula`</span>の形で次のように書くことが多いだろう。</span>
-<span id="cb33-106"><a href="#cb33-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-109"><a href="#cb33-109" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-110"><a href="#cb33-110" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n1), <span class="fu">rep</span>(<span class="dv">2</span>, n2)), <span class="at">value =</span> <span class="fu">c</span>(X1, X2)) <span class="sc">%&gt;%</span></span>
-<span id="cb33-111"><a href="#cb33-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">as.factor</span>(group))</span>
-<span id="cb33-112"><a href="#cb33-112" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-113"><a href="#cb33-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-114"><a href="#cb33-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-115"><a href="#cb33-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-116"><a href="#cb33-116" aria-hidden="true" tabindex="-1"></a><span class="fu">## 二標本検定(ウェルチの補正)</span></span>
-<span id="cb33-117"><a href="#cb33-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-118"><a href="#cb33-118" aria-hidden="true" tabindex="-1"></a>先ほどのt.test関数には，<span class="in">`var.equal = TRUE`</span>というオプションが追加されていた。これは2群の分散が等しいと仮定した場合の検定になる。t検定は歴史的にこちらが先に登場しているが，2群の分散が等しいかどうかはいきなり前提できるものでもない。等分散性の検定は，Levene検定を行うのが一般的であり，R においては，<span class="in">`car`</span>パッケージや<span class="in">`lawstat`</span> パッケージが対応する関数を持っている。ここでは<span class="in">`car`</span>パッケージの <span class="in">`leveneTest`</span>関数を用いる例を示す。</span>
-<span id="cb33-119"><a href="#cb33-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-122"><a href="#cb33-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-123"><a href="#cb33-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
-<span id="cb33-124"><a href="#cb33-124" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(car)</span>
-<span id="cb33-125"><a href="#cb33-125" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">center =</span> mean)</span>
-<span id="cb33-126"><a href="#cb33-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-127"><a href="#cb33-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-128"><a href="#cb33-128" aria-hidden="true" tabindex="-1"></a>この結果を見ると，p値から明らかなように，2群の分散が等しいという帰無仮説が棄却**できなかった**ので，等しいと考えてt検定に進むことができる。もしこれが棄却されてしまったら，2群の分散が等しいという帰無仮説が成り立たないのだから，等分散性の仮定を外す必要がある。実行は簡単で，<span class="in">`var.equal`</span>を<span class="in">`FALSE`</span>にすれば良い。</span>
-<span id="cb33-129"><a href="#cb33-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-132"><a href="#cb33-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-133"><a href="#cb33-133" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-134"><a href="#cb33-134" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result2)</span>
-<span id="cb33-135"><a href="#cb33-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-136"><a href="#cb33-136" aria-hidden="true" tabindex="-1"></a>よく見ると，タイトルがWelch Two Sample t-testに変わっている。Welchの補正が入ったt検定という意味である。また自由度が実数(<span class="in">`r round(result2$parameter,3)`</span>)になっているが，このようにt分布の自由度を調整することで等分散性の仮定から逸脱した場合の補正となる。もちろん報告する際は「$t($ <span class="in">`r round(result2$parameter,3)`</span> $)=$ <span class="in">`r round(result2$statistic,3)`</span>, $p=$ <span class="in">`r round(result2$p.value,3) `</span>」のように書くことになるから，自由度が実数であれば補正済みであると考えられるだろう。</span>
-<span id="cb33-137"><a href="#cb33-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-138"><a href="#cb33-138" aria-hidden="true" tabindex="-1"></a>しかし，分散が等しいという仮定は，等しくない場合の特殊な場合であるから，最初からWelchの補正がはいった検定だけで十分である。このような考え方から，Rにおける<span class="in">`t.test`</span> 関数のデフォルトでは<span class="in">`var.equal = FALSE`</span>となっており，特段の指定をしなければ等分散性の仮定をしない。こちらの方が検定を重ねることがないので，より望ましい。</span>
-<span id="cb33-139"><a href="#cb33-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-140"><a href="#cb33-140" aria-hidden="true" tabindex="-1"></a><span class="fu">### 効果量の算出</span></span>
-<span id="cb33-141"><a href="#cb33-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-142"><a href="#cb33-142" aria-hidden="true" tabindex="-1"></a>今回の例は，仮想データとして$\mu_1 = 4,\mu_2 = \mu_1 + \sigma d$であり，明らかに$\mu_1 \neq \mu_2$なのだが，有意差を検出するには至らなかった。統計的な有意差はあくまでも「統計的な」観点からのものであり，我々が現実に検証したいのは本当に差があるかどうか，いわば「実質的な差」があるかどうかであるのだから，統計的な有意差を得ることを目的にするのははっきりと不適切な目標設定であると言えるだろう<span class="ot">[^8.1]</span>。</span>
-<span id="cb33-143"><a href="#cb33-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-144"><a href="#cb33-144" aria-hidden="true" tabindex="-1"></a><span class="ot">[^8.1]: </span>たとえば物理学などのシーンでは，測定の精度が高く，単一の物理世界を対象にした検証を行うのだから，予測が真であるか偽であるかを確率的に考えるような必要はない。そのような世界における検証--あえて理論的な正しさが明確な世界，と表現するが--であれば，統計的な差があるかどうかの情報はあくまでも理論を支持するおまけ情報にすぎない。いわば統計的検定の結果を報告するのは，論文を書くためのレトリックである。例えば，ニュートンの運動法則やアインシュタインの相対性理論などの物理法則の検証では，測定誤差の範囲内で理論値と実験値が一致するかどうかが重要であり，統計的な有意性は二次的な情報に過ぎない。翻って，人間を対象にした小サンプルの科学である心理学は，統計的な判断に頼らざるを得ないという側面はあるだろう。しかしだからと言って，実質的な差が本質的であることを忘れてしまっては本末転倒である。</span>
-<span id="cb33-145"><a href="#cb33-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-146"><a href="#cb33-146" aria-hidden="true" tabindex="-1"></a>ところで，統計的に差があるとはっきり言えるのはどのような時だろうか。これは次の4つのデータの分布を見てもらうとわかりやすい。</span>
-<span id="cb33-147"><a href="#cb33-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-148"><a href="#cb33-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-151"><a href="#cb33-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-152"><a href="#cb33-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
-<span id="cb33-153"><a href="#cb33-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
-<span id="cb33-154"><a href="#cb33-154" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
-<span id="cb33-155"><a href="#cb33-155" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(ggplot2)</span>
-<span id="cb33-156"><a href="#cb33-156" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(gridExtra)</span>
-<span id="cb33-157"><a href="#cb33-157" aria-hidden="true" tabindex="-1"></a>dL <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb33-158"><a href="#cb33-158" aria-hidden="true" tabindex="-1"></a>dS <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
-<span id="cb33-159"><a href="#cb33-159" aria-hidden="true" tabindex="-1"></a>sL <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb33-160"><a href="#cb33-160" aria-hidden="true" tabindex="-1"></a>sS <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
-<span id="cb33-161"><a href="#cb33-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-162"><a href="#cb33-162" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>)), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb33-163"><a href="#cb33-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> dL, <span class="at">sd =</span> sS), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb33-164"><a href="#cb33-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">-</span>dL, <span class="at">sd =</span> sS), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb33-165"><a href="#cb33-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-166"><a href="#cb33-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-167"><a href="#cb33-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb33-168"><a href="#cb33-168" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>)), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb33-169"><a href="#cb33-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> dS, <span class="at">sd =</span> sS), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb33-170"><a href="#cb33-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">-</span>dS, <span class="at">sd =</span> sS), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb33-171"><a href="#cb33-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-172"><a href="#cb33-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-173"><a href="#cb33-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb33-174"><a href="#cb33-174" aria-hidden="true" tabindex="-1"></a>g3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>)), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb33-175"><a href="#cb33-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> dL, <span class="at">sd =</span> sL), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb33-176"><a href="#cb33-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">-</span>dL, <span class="at">sd =</span> sL), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb33-177"><a href="#cb33-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-178"><a href="#cb33-178" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-179"><a href="#cb33-179" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb33-180"><a href="#cb33-180" aria-hidden="true" tabindex="-1"></a>g4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>)), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb33-181"><a href="#cb33-181" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> dS, <span class="at">sd =</span> sL), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb33-182"><a href="#cb33-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="sc">-</span>dS, <span class="at">sd =</span> sL), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb33-183"><a href="#cb33-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-184"><a href="#cb33-184" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb33-185"><a href="#cb33-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb33-186"><a href="#cb33-186" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">grid.arrange</span>(g1, g2, g3, g4)</span>
-<span id="cb33-187"><a href="#cb33-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-188"><a href="#cb33-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-189"><a href="#cb33-189" aria-hidden="true" tabindex="-1"></a>左列は平均差が大きいデータ，右列は小さいデータである。</span>
-<span id="cb33-190"><a href="#cb33-190" aria-hidden="true" tabindex="-1"></a>上段は分散が小さいデータ，下段は大きいデータである。</span>
-<span id="cb33-191"><a href="#cb33-191" aria-hidden="true" tabindex="-1"></a>この4つそれぞれのシーンにおいて，「差がある」と判断しやすいのはどれかを考えてみるとよい。当然，左上のシーンが最も明確に差があると言えるであろう。なぜなら，両群が明確に分かれており，群間の重複がないからである。左下は同じ平均値差であっても，群内の広がりが大きいから群間の重複がみられるため，「差がある」という判断を受けても各群の中には該当しないケースがちらほらみられることだろう。右上パネルのようなケースでは，重複は少ないが差が小さいため，「差がある」と判断できるかどうかが微妙である。右下に至っては，差も小さく分布の重複も大きいから，「差がある」と判断しても該当しないケースが多くなる。たとえば「男性は女性よりも力が強い(体力・筋力に差がある)」というデータがあったとしても，「女性より非力な男性」もかなり多く存在するだろう。そういう反例が多くみられるような場合，統計的に差があるという結果が示されたとしても，受け入れられないのではないだろうか。</span>
-<span id="cb33-192"><a href="#cb33-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-193"><a href="#cb33-193" aria-hidden="true" tabindex="-1"></a>ここから明らかなように，差の判断には平均値差だけでなく分散も関わってくる。そこで平均値差を標準偏差で割った，**標準化された差**が重要になってくるのであり，これが**効果量**と呼ばれるものである<span class="ot">[^8.2]</span>。</span>
-<span id="cb33-194"><a href="#cb33-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-195"><a href="#cb33-195" aria-hidden="true" tabindex="-1"></a><span class="ot">[^8.2]: </span>統計的な有意差よりも効果量，効果量よりも実質的な差のほうが意味のある差であることを忘れてはならない。詳しくは @Toyoda2009 を参照。</span>
-<span id="cb33-196"><a href="#cb33-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-197"><a href="#cb33-197" aria-hidden="true" tabindex="-1"></a>今回2群の差のデータを作る時に，$\sigma d$ としたが，平均値差の効果量esは，</span>
-<span id="cb33-198"><a href="#cb33-198" aria-hidden="true" tabindex="-1"></a>$$ es = \frac{\mu_1 - \mu_2}{\sigma} $$</span>
-<span id="cb33-199"><a href="#cb33-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-200"><a href="#cb33-200" aria-hidden="true" tabindex="-1"></a>で表現されるから，$d$が効果量を表していたのである。もちろん我々は母平均，母SDなどを知り得ないのでこれもデータから推定する他ない。幸いRには<span class="in">`effsize`</span>パッケージなど，効果量を算出するものが用意されている。</span>
-<span id="cb33-201"><a href="#cb33-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-204"><a href="#cb33-204" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-205"><a href="#cb33-205" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(effsize)</span>
-<span id="cb33-206"><a href="#cb33-206" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet)</span>
-<span id="cb33-207"><a href="#cb33-207" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-208"><a href="#cb33-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-209"><a href="#cb33-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-210"><a href="#cb33-210" aria-hidden="true" tabindex="-1"></a>平均値差の検定の後は，ここに示したCohenのdやHedgesのgといった効果量を添えて報告することが一般的である。</span>
-<span id="cb33-211"><a href="#cb33-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-212"><a href="#cb33-212" aria-hidden="true" tabindex="-1"></a><span class="fu">## 対応のある二標本検定</span></span>
-<span id="cb33-213"><a href="#cb33-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-214"><a href="#cb33-214" aria-hidden="true" tabindex="-1"></a>実験群と統制群のように異なる2群ではなく，プレポスト実験のように対応がある2群の場合は，t検定の定式化が異なる。対応がないt検定の場合は，群平均の差$\mu_1 - \mu_2$の分布を考えたが，対応がある場合は個々の測定の差，つまり$X_{i1} - X_{i2} = D_i$を考える。この一つの標本統計量を検定するのだから，一標本検定の一種であるとも言える。またこのDの分布の標準誤差は，標本標準誤差$U_D$を使った$U_D/\sqrt{n}$を使って推定する<span class="ot">[^8.3]</span>。検定統計量$T$は，次式で算出される。</span>
-<span id="cb33-215"><a href="#cb33-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-216"><a href="#cb33-216" aria-hidden="true" tabindex="-1"></a>$$ T = \frac{\bar{D}}{U_D/\sqrt{n}} = \frac{\sum D_i/n}{\sqrt{\frac{\frac{1}{n-1}\sum(D_i-\bar{D})^2}{n}}}$$</span>
-<span id="cb33-217"><a href="#cb33-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-218"><a href="#cb33-218" aria-hidden="true" tabindex="-1"></a><span class="ot">[^8.3]: </span>対応があるケースを考えているので，当然$n$は前後の群で同数である。</span>
-<span id="cb33-219"><a href="#cb33-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-220"><a href="#cb33-220" aria-hidden="true" tabindex="-1"></a>検定にあたっては，<span class="in">`t.test`</span>関数の引数<span class="in">`paired`</span>を<span class="in">`TRUE`</span>にするだけで良い。</span>
-<span id="cb33-221"><a href="#cb33-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-222"><a href="#cb33-222" aria-hidden="true" tabindex="-1"></a><span class="fu">### 仮想データの組成</span></span>
-<span id="cb33-223"><a href="#cb33-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-224"><a href="#cb33-224" aria-hidden="true" tabindex="-1"></a>仮想データを作って演習してみよう。データの組成については，2種類のアプローチで説明が可能である。ひとつは次のシミュレーションで表されるような形である。</span>
-<span id="cb33-227"><a href="#cb33-227" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-228"><a href="#cb33-228" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb33-229"><a href="#cb33-229" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb33-230"><a href="#cb33-230" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb33-231"><a href="#cb33-231" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb33-232"><a href="#cb33-232" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu1, sigma)</span>
-<span id="cb33-233"><a href="#cb33-233" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> X1 <span class="sc">+</span> sigma <span class="sc">*</span> d <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
-<span id="cb33-234"><a href="#cb33-234" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X1, X2, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-235"><a href="#cb33-235" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-236"><a href="#cb33-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-237"><a href="#cb33-237" aria-hidden="true" tabindex="-1"></a>すなわち，第一の群が$\mu_1$を平均にばらついた実現値として得られ，第二の群はその実現値に一定の効果$\sigma *d$が加わり，その測定にさらに誤差がつく形である。この方法は具体的なデータ生成プロセスをそのまま模したような形でデータを作っているが，測定誤差を二重に計上している点が気になるかもしれない。</span>
-<span id="cb33-238"><a href="#cb33-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-239"><a href="#cb33-239" aria-hidden="true" tabindex="-1"></a>もう一つの考え方は，プレポスト型のデータに限らず，何らかの形で「対応がある」ことも表現できるものである。対応があるということは，2つのデータがそれぞれ独立した一変数正規分布から得られているのではなく，二変数正規分布から得られると考えるのである。二変数正規分布は，それぞれの変数は正規分布しているが，両者の間に相関があると考えるものである。変数が一つだけの正規分布は</span>
-<span id="cb33-240"><a href="#cb33-240" aria-hidden="true" tabindex="-1"></a>$$X \sim N(\mu,\sigma)$$</span>
-<span id="cb33-241"><a href="#cb33-241" aria-hidden="true" tabindex="-1"></a>で表現されているのに対し，複数の変数を同時に生成する多変数(多次元)正規分布Multivariate Normal Distributionは，以下のように表現される。</span>
-<span id="cb33-242"><a href="#cb33-242" aria-hidden="true" tabindex="-1"></a>$$ \mathbf{X} \sim MVN(\mathbf{\mu},\mathbf{\Sigma})$$</span>
-<span id="cb33-243"><a href="#cb33-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-244"><a href="#cb33-244" aria-hidden="true" tabindex="-1"></a>ここで$\mathbf{X}$や$\mathbf{\mu}$は$n$次元ベクトルであり，$\mathbf{\Sigma}$は分散共分散行列を表している。二変数の場合は以下のように書くことができる。</span>
-<span id="cb33-245"><a href="#cb33-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-246"><a href="#cb33-246" aria-hidden="true" tabindex="-1"></a>$$\mathbf{\Sigma} = \begin{pmatrix} \sigma_1^2 &amp; \sigma_{12}<span class="sc">\\</span> \sigma_{21} &amp; \sigma_2^2 \end{pmatrix} = \begin{pmatrix} \sigma_1^2 &amp; \rho_{12}\sigma_1\sigma_2 <span class="sc">\\</span> \rho_{21}\sigma_2\sigma_1 &amp; \sigma_2^2 \end{pmatrix}$$</span>
-<span id="cb33-247"><a href="#cb33-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-248"><a href="#cb33-248" aria-hidden="true" tabindex="-1"></a>共分散$\sigma_{ij}$は相関係数$\rho_{ij}$を用いて書けることからわかるように，変数間に相関があることを想定してデータを生成するのである。この組成に従った仮想データの作成は以下のとおりである。</span>
-<span id="cb33-249"><a href="#cb33-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-252"><a href="#cb33-252" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-253"><a href="#cb33-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
-<span id="cb33-254"><a href="#cb33-254" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS) <span class="co"># 多次正規乱数を生成するのに必要</span></span>
-<span id="cb33-255"><a href="#cb33-255" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb33-256"><a href="#cb33-256" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb33-257"><a href="#cb33-257" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb33-258"><a href="#cb33-258" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb33-259"><a href="#cb33-259" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(mu1, mu1 <span class="sc">+</span> sigma <span class="sc">*</span> d)</span>
-<span id="cb33-260"><a href="#cb33-260" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
-<span id="cb33-261"><a href="#cb33-261" aria-hidden="true" tabindex="-1"></a>SIG <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sigma<span class="sc">^</span><span class="dv">2</span>, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, sigma<span class="sc">^</span><span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb33-262"><a href="#cb33-262" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, mu, SIG)</span>
-<span id="cb33-263"><a href="#cb33-263" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-264"><a href="#cb33-264" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-265"><a href="#cb33-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-266"><a href="#cb33-266" aria-hidden="true" tabindex="-1"></a>効果量については，対応のないt検定の場合と同じで良い。</span>
-<span id="cb33-267"><a href="#cb33-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-270"><a href="#cb33-270" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-271"><a href="#cb33-271" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>])</span>
-<span id="cb33-272"><a href="#cb33-272" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-273"><a href="#cb33-273" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb33-274"><a href="#cb33-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-275"><a href="#cb33-275" aria-hidden="true" tabindex="-1"></a><span class="fu">### 検定の方向性</span></span>
-<span id="cb33-276"><a href="#cb33-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-277"><a href="#cb33-277" aria-hidden="true" tabindex="-1"></a>ここまでの検定では，主に「差があるかどうか」といった仮説に対応するものを扱ってきた。差があるかどうか，というのはその差がプラスの方向にでているのか，マイナスの方向に出ているのかといったことを問題にしていない。そこで検定統計量の分布についても，分布の両裾を考えて有意水準を設定していた。</span>
-<span id="cb33-278"><a href="#cb33-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-279"><a href="#cb33-279" aria-hidden="true" tabindex="-1"></a>しかしプレポスト実験などでは，効果が「上がった」のか「下がった」のか，ということが大きな関心時でもあることが多いだろう。効果がある，ただし逆効果である，というのでは意味がないからである。このように方向性をもった仮説を検証する場合は，検定統計量の分布も一方向だけ考えればよく，<span class="in">`t.test`</span>関数には<span class="in">`alternative`</span>オプションをつかって表現する。</span>
-<span id="cb33-280"><a href="#cb33-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-281"><a href="#cb33-281" aria-hidden="true" tabindex="-1"></a><span class="in">`t.test(x,y,alternatives = "less")`</span> とすると$x &lt; y$の帰無仮説を検証することになるし，<span class="in">`alternatives = "greater"`</span>とすると$x &gt; y$の帰無仮説を検証することになる。デフォルトでは<span class="in">`alternatives = "two.sided"`</span>であり，両側検定が選ばれている。</span>
-<span id="cb33-282"><a href="#cb33-282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-283"><a href="#cb33-283" aria-hidden="true" tabindex="-1"></a>ただし，両裾から片裾にかわるということは，検定統計量が超えるかどうかの判断をする**臨界値**が小さくなることでもある。必然的に，片裾(片側検定)のほうが緩やかな基準で検定をしていることにもなる。デフォルトで普段から厳しく検定しているから大丈夫だろう，というのも一つの考え方だが，やはり本来の研究仮説に適した帰無仮説の設定をするべきだろう。</span>
-<span id="cb33-284"><a href="#cb33-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-285"><a href="#cb33-285" aria-hidden="true" tabindex="-1"></a><span class="fu">## 課題</span></span>
-<span id="cb33-286"><a href="#cb33-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-287"><a href="#cb33-287" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>平均が50、標準偏差が10の正規分布からランダムに選んだ30個のサンプルを用意し，このサンプルの平均が母集団の平均と異なるかどうかを検定してください。検定結果を，心理学のフォーマット(心理学会編「論文執筆投稿の手引き」)に準拠した書き方で，結果を記述してください。</span>
-<span id="cb33-288"><a href="#cb33-288" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>以下のデータセットを使用して，2つの独立した群の平均に差があるかどうかをt検定してください。検定結果を，心理学のフォーマット(心理学会編「論文執筆投稿の手引き」)に準拠した書き方で，結果を記述してください。</span>
-<span id="cb33-289"><a href="#cb33-289" aria-hidden="true" tabindex="-1"></a>$$ group1 =<span class="sc">\{</span>45, 50, 55, 60, 65 <span class="sc">\}</span> $$</span>
-<span id="cb33-290"><a href="#cb33-290" aria-hidden="true" tabindex="-1"></a>$$ group2 = <span class="sc">\{</span>57, 60, 62, 77, 75 <span class="sc">\}</span> $$</span>
-<span id="cb33-291"><a href="#cb33-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-292"><a href="#cb33-292" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>多次元正規分布を用いた仮想データ生成方で，対応のあるt検定の練習をしましょう。サンプルサイズを$n=20$とし, 平均ベクトル$\mu = (12, 15)$, 分散共分散行列$\Sigma = \begin{pmatrix} 4 &amp; 2.8 <span class="sc">\\</span> 2.8 &amp; 4\end{pmatrix}$の多次元正規分布から作られた乱数を使って，対応のあるt検定をしてください。検定結果を，心理学のフォーマット(心理学会編「論文執筆投稿の手引き」)に準拠した書き方で，結果を記述してください。</span>
-<span id="cb33-293"><a href="#cb33-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-294"><a href="#cb33-294" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>自由度が10, 20, 30のt分布のグラフを，標準正規分布のグラフとともに描画してください。自由度が増えるとt分布がどのように変化するでしょうか。</span>
-<span id="cb33-295"><a href="#cb33-295" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>自由度が15のt分布において、有意水準5%の片側検定と両側検定の臨界値(検定の判断基準となる理論値)を求めてください。</span>
-<span id="cb33-296"><a href="#cb33-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-299"><a href="#cb33-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb33-300"><a href="#cb33-300" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
-<span id="cb33-301"><a href="#cb33-301" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: FALSE</span></span>
-<span id="cb33-302"><a href="#cb33-302" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: FALSE</span></span>
-<span id="cb33-303"><a href="#cb33-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-304"><a href="#cb33-304" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
-<span id="cb33-305"><a href="#cb33-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-306"><a href="#cb33-306" aria-hidden="true" tabindex="-1"></a><span class="co"># 課題1</span></span>
-<span id="cb33-307"><a href="#cb33-307" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb33-308"><a href="#cb33-308" aria-hidden="true" tabindex="-1"></a>sample_data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb33-309"><a href="#cb33-309" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-310"><a href="#cb33-310" aria-hidden="true" tabindex="-1"></a><span class="co"># t検定の実行</span></span>
-<span id="cb33-311"><a href="#cb33-311" aria-hidden="true" tabindex="-1"></a>t_test_result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(sample_data, <span class="at">mu =</span> <span class="dv">50</span>)</span>
-<span id="cb33-312"><a href="#cb33-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-313"><a href="#cb33-313" aria-hidden="true" tabindex="-1"></a><span class="co"># 検定結果の表示</span></span>
-<span id="cb33-314"><a href="#cb33-314" aria-hidden="true" tabindex="-1"></a>t_test_result</span>
-<span id="cb33-315"><a href="#cb33-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-316"><a href="#cb33-316" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の記述</span></span>
-<span id="cb33-317"><a href="#cb33-317" aria-hidden="true" tabindex="-1"></a><span class="co"># t(29) = t値, p = p値</span></span>
-<span id="cb33-318"><a href="#cb33-318" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"t("</span>, t_test_result<span class="sc">$</span>parameter, <span class="st">") = "</span>, t_test_result<span class="sc">$</span>statistic, <span class="st">", p = "</span>, t_test_result<span class="sc">$</span>p.value, <span class="at">sep =</span> <span class="st">""</span>)</span>
-<span id="cb33-319"><a href="#cb33-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-320"><a href="#cb33-320" aria-hidden="true" tabindex="-1"></a><span class="co"># 平均が50、標準偏差が10の正規分布からランダムに選んだ30個のサンプルの平均が母集団の平均50と</span></span>
-<span id="cb33-321"><a href="#cb33-321" aria-hidden="true" tabindex="-1"></a><span class="co"># 異なるかを検定した結果、有意な差は見られなかった（t(29) = -0.195, p = 0.847）。</span></span>
-<span id="cb33-322"><a href="#cb33-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-323"><a href="#cb33-323" aria-hidden="true" tabindex="-1"></a><span class="co"># 課題2</span></span>
-<span id="cb33-324"><a href="#cb33-324" aria-hidden="true" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">45</span>, <span class="dv">50</span>, <span class="dv">55</span>, <span class="dv">60</span>, <span class="dv">65</span>)</span>
-<span id="cb33-325"><a href="#cb33-325" aria-hidden="true" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">57</span>, <span class="dv">60</span>, <span class="dv">62</span>, <span class="dv">77</span>, <span class="dv">75</span>)</span>
-<span id="cb33-326"><a href="#cb33-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-327"><a href="#cb33-327" aria-hidden="true" tabindex="-1"></a><span class="co"># t検定の実行</span></span>
-<span id="cb33-328"><a href="#cb33-328" aria-hidden="true" tabindex="-1"></a>t_test_result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(group1, group2, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-329"><a href="#cb33-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-330"><a href="#cb33-330" aria-hidden="true" tabindex="-1"></a><span class="co"># 検定結果の表示</span></span>
-<span id="cb33-331"><a href="#cb33-331" aria-hidden="true" tabindex="-1"></a>t_test_result</span>
-<span id="cb33-332"><a href="#cb33-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-333"><a href="#cb33-333" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の記述</span></span>
-<span id="cb33-334"><a href="#cb33-334" aria-hidden="true" tabindex="-1"></a><span class="co"># t(df) = t値, p = p値</span></span>
-<span id="cb33-335"><a href="#cb33-335" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"t("</span>, t_test_result<span class="sc">$</span>parameter, <span class="st">") = "</span>, t_test_result<span class="sc">$</span>statistic, <span class="st">", p = "</span>, t_test_result<span class="sc">$</span>p.value, <span class="at">sep =</span> <span class="st">""</span>)</span>
-<span id="cb33-336"><a href="#cb33-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-337"><a href="#cb33-337" aria-hidden="true" tabindex="-1"></a><span class="co"># 2つの独立した群の平均に差があるかを検定した結果、有意な差が見られた（t(8) = -2.838, p = 0.022）。</span></span>
-<span id="cb33-338"><a href="#cb33-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-339"><a href="#cb33-339" aria-hidden="true" tabindex="-1"></a><span class="co"># 課題3</span></span>
-<span id="cb33-340"><a href="#cb33-340" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
-<span id="cb33-341"><a href="#cb33-341" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-342"><a href="#cb33-342" aria-hidden="true" tabindex="-1"></a><span class="co"># 多次元正規分布からデータ生成</span></span>
-<span id="cb33-343"><a href="#cb33-343" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb33-344"><a href="#cb33-344" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb33-345"><a href="#cb33-345" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>)</span>
-<span id="cb33-346"><a href="#cb33-346" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">2.8</span>, <span class="fl">2.8</span>, <span class="dv">4</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb33-347"><a href="#cb33-347" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="at">mu =</span> mu, <span class="at">Sigma =</span> Sigma)</span>
-<span id="cb33-348"><a href="#cb33-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-349"><a href="#cb33-349" aria-hidden="true" tabindex="-1"></a><span class="co"># 対応のあるt検定の実行</span></span>
-<span id="cb33-350"><a href="#cb33-350" aria-hidden="true" tabindex="-1"></a>t_test_result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(data[, <span class="dv">1</span>], data[, <span class="dv">2</span>], <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-351"><a href="#cb33-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-352"><a href="#cb33-352" aria-hidden="true" tabindex="-1"></a><span class="co"># 検定結果の表示</span></span>
-<span id="cb33-353"><a href="#cb33-353" aria-hidden="true" tabindex="-1"></a>t_test_result</span>
-<span id="cb33-354"><a href="#cb33-354" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-355"><a href="#cb33-355" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の記述</span></span>
-<span id="cb33-356"><a href="#cb33-356" aria-hidden="true" tabindex="-1"></a><span class="co"># t(df) = t値, p = p値</span></span>
-<span id="cb33-357"><a href="#cb33-357" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"t("</span>, t_test_result<span class="sc">$</span>parameter, <span class="st">") = "</span>, t_test_result<span class="sc">$</span>statistic, <span class="st">", p = "</span>, t_test_result<span class="sc">$</span>p.value, <span class="at">sep =</span> <span class="st">""</span>)</span>
-<span id="cb33-358"><a href="#cb33-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-359"><a href="#cb33-359" aria-hidden="true" tabindex="-1"></a><span class="co"># 対応のあるt検定を行った結果、有意な差が見られた（t(19) = -9.256, p &lt; 0.001）。</span></span>
-<span id="cb33-360"><a href="#cb33-360" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-361"><a href="#cb33-361" aria-hidden="true" tabindex="-1"></a><span class="co"># 課題4</span></span>
-<span id="cb33-362"><a href="#cb33-362" aria-hidden="true" tabindex="-1"></a><span class="co"># データの作成</span></span>
-<span id="cb33-363"><a href="#cb33-363" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length =</span> <span class="dv">1000</span>)</span>
-<span id="cb33-364"><a href="#cb33-364" aria-hidden="true" tabindex="-1"></a>df_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
-<span id="cb33-365"><a href="#cb33-365" aria-hidden="true" tabindex="-1"></a>norm_density <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x)</span>
-<span id="cb33-366"><a href="#cb33-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-367"><a href="#cb33-367" aria-hidden="true" tabindex="-1"></a><span class="co"># データフレームの作成</span></span>
-<span id="cb33-368"><a href="#cb33-368" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">norm =</span> norm_density)</span>
-<span id="cb33-369"><a href="#cb33-369" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (df_val <span class="cf">in</span> df_values) {</span>
-<span id="cb33-370"><a href="#cb33-370" aria-hidden="true" tabindex="-1"></a>  df[<span class="fu">paste</span>(<span class="st">"t_df"</span>, df_val, <span class="at">sep =</span> <span class="st">"_"</span>)] <span class="ot">&lt;-</span> <span class="fu">dt</span>(x, <span class="at">df =</span> df_val)</span>
-<span id="cb33-371"><a href="#cb33-371" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb33-372"><a href="#cb33-372" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-373"><a href="#cb33-373" aria-hidden="true" tabindex="-1"></a><span class="co"># データの整形</span></span>
-<span id="cb33-374"><a href="#cb33-374" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> <span class="fu">gather</span>(df, <span class="at">key =</span> <span class="st">"distribution"</span>, <span class="at">value =</span> <span class="st">"density"</span>, <span class="sc">-</span>x)</span>
-<span id="cb33-375"><a href="#cb33-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-376"><a href="#cb33-376" aria-hidden="true" tabindex="-1"></a><span class="co"># グラフの描画</span></span>
-<span id="cb33-377"><a href="#cb33-377" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> density, <span class="at">color =</span> distribution)) <span class="sc">+</span></span>
-<span id="cb33-378"><a href="#cb33-378" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb33-379"><a href="#cb33-379" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb33-380"><a href="#cb33-380" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"t-Distributions with Different Degrees of Freedom and Normal Distribution"</span>,</span>
-<span id="cb33-381"><a href="#cb33-381" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"x"</span>, <span class="at">y =</span> <span class="st">"Density"</span></span>
-<span id="cb33-382"><a href="#cb33-382" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb33-383"><a href="#cb33-383" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb33-384"><a href="#cb33-384" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>),</span>
-<span id="cb33-385"><a href="#cb33-385" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Normal"</span>, <span class="st">"t (df = 10)"</span>, <span class="st">"t (df = 20)"</span>, <span class="st">"t (df = 30)"</span>)</span>
-<span id="cb33-386"><a href="#cb33-386" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb33-387"><a href="#cb33-387" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
-<span id="cb33-388"><a href="#cb33-388" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-389"><a href="#cb33-389" aria-hidden="true" tabindex="-1"></a><span class="co"># 課題5</span></span>
-<span id="cb33-390"><a href="#cb33-390" aria-hidden="true" tabindex="-1"></a><span class="co"># 片側検定の臨界値</span></span>
-<span id="cb33-391"><a href="#cb33-391" aria-hidden="true" tabindex="-1"></a>critical_value_one_sided <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.95</span>, <span class="at">df =</span> <span class="dv">15</span>)</span>
-<span id="cb33-392"><a href="#cb33-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-393"><a href="#cb33-393" aria-hidden="true" tabindex="-1"></a><span class="co"># 両側検定の臨界値</span></span>
-<span id="cb33-394"><a href="#cb33-394" aria-hidden="true" tabindex="-1"></a>critical_value_two_sided <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="dv">15</span>)</span>
-<span id="cb33-395"><a href="#cb33-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-396"><a href="#cb33-396" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の表示</span></span>
-<span id="cb33-397"><a href="#cb33-397" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"片側検定の臨界値: "</span>, critical_value_one_sided, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb33-398"><a href="#cb33-398" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"両側検定の臨界値: "</span>, critical_value_two_sided, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb33-399"><a href="#cb33-399" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
-</div></div></div></div></div>
+</nav>
 </div> <!-- /content -->
 
 

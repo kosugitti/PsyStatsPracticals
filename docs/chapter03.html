@@ -367,7 +367,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></h1>
 </div>
 
 
@@ -389,10 +389,7 @@ window.Quarto = {
 <h2 data-number="3.1" class="anchored" data-anchor-id="tidyverseの導入"><span class="header-section-number">3.1</span> tidyverseの導入</h2>
 <p>本講義では<code>tidyverse</code>をつかったデータハンドリングを扱う。<code>tidyverse</code>は，データに対する統一的な設計方針を表す概念でもあり，具体的にはそれを実装したパッケージ名でもある。まずは<code>tidyverse</code>パッケージをインストール(ダウンロード)し，次のコードでRに読み込んでおく。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>Attaching core tidyverse packages,と表示され，複数のパッケージ名にチェックマークが入っていたものが表示されただろう。<code>tidyverse</code>パッケージはこれらの下位パッケージを含むパッケージ群である。これに含まれる<code>dplyr</code>,<code>tidyr</code>パッケージはデータの整形に，<code>readr</code>はファイルの読み込みに，<code>forcats</code>はFactor型変数の操作に，<code>stringr</code>は文字型変数の操作に，<code>lubridate</code>は日付型変数の操作に，<code>tibble</code>はデータフレーム型オブジェクトの操作に，<code>purrr</code>はデータに適用する関数に，<code>ggplot2</code>は可視化に特化したパッケージである。</p>
 <p>続いてConflictsについての言及がある。<code>tidyverse</code>パッケージに限らず，パッケージを読み込むと表示されることのあるこの警告は，「関数名の衝突」を意味している。ここまで，Rを起動するだけで，<code>sqrt</code>,<code>mean</code>などの関数が利用できた。これはRの基本関数であるが，具体的には<code>base</code>パッケージに含まれた関数である。Rは起動時に<code>base</code>などいくつかのパッケージを自動的に読み込んでいるのである。これに別途パッケージを読み込むとき，あとで読み込まれたパッケージが同名の関数を使っていることがある。このとき，関数名は後から読み込んだもので上書きされる。そのことについての警告が表示されているのである。具体的にみると，<code>dplyr::filter() masks stats::filter()</code>とあるのは，最初に読み込んでいた<code>stats</code>パッケージの<code>filter</code>関数は，(<code>tidyverse</code>パッケージに含まれる)<code>dplyr</code>パッケージのもつ同名の関数で上書きされ，今後はこちらが優先的に利用されるよ，ということを示している。</p>
@@ -403,21 +400,16 @@ window.Quarto = {
 <p>続いてパイプ演算子について解説する。パイプ演算子は<code>tidyverse</code>パッケージに含まれていた<code>magrittr</code>パッケージで導入されたもので，これによってデータハンドリングの利便性が一気に向上した。そこでRもver 4.2からこの演算子を導入し，特段パッケージのインストールを必要としなくとも使えるようになった。このR本体のパイプ演算子のことを，<code>tidyverse</code>のそれと区別して，ネイティブパイプと呼ぶこともある。</p>
 <p>ともあれこのパイプ演算子がいかに優れたものであるかを解説しよう。次のスクリプトは，あるデータセットの標準偏差を計算するものである<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。数式で表現すると次の通り。ここで<span class="math inline">\(\bar{x}\)</span>はデータベクトル<span class="math inline">\(x\)</span>の算術平均。 <span class="math display">\[v = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">14</span>) <span class="co"># データ</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">mean</span>(dat) <span class="co"># 平均</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dev <span class="ot">&lt;-</span> dat <span class="sc">-</span> M <span class="co"># 平均偏差</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>pow <span class="ot">&lt;-</span> dev<span class="sc">^</span><span class="dv">2</span> <span class="co"># 平均偏差の2乗</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(pow) <span class="co"># 平均偏差の2乗の平均が分散</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(variance) <span class="co"># 分散の正の平方根が標準偏差</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>ここでは，標準偏差オブジェクト<code>standardDev</code>を作るまでに平均オブジェクト<code>M</code>，平均偏差ベクトル<code>dev</code>，その2乗したもの<code>pow</code>，分散<code>variance</code>と4つものオブジェクトを作って答えに到達している。また，作られるオブジェクトが左側にあり，その右側にどのような演算をしているかが記述されているため，頭の中では「オブジェクトを作る，次の計算で」と読んでいったことだろう。</p>
 <p>パイプ演算子はこの思考の流れをそのまま具現化する。パイプ演算子は<code>%&gt;%</code>と書き，左側の演算結果をパイプ演算子の右側に来る関数の第一引数として右側に渡す役目をする。これを踏まえて上のスクリプトを書き直してみよう。ちなみにパイプ演算子はショートカット<code>Ctrl(Cmd)+Shift+M</code>で入力できる。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">14</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  {</span>
@@ -428,16 +420,12 @@ window.Quarto = {
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  } <span class="sc">%&gt;%</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>ここでピリオド(<code>.</code>)は，前の関数から引き継いだもの(プレイスホルダー)であり，二行目は<code>{dat - mean(dat)}</code>，すなわち平均偏差の計算を意味している。それを次のパイプで二乗し，平均し，平方根を取っている。平均や平方根を取るときにプレイスホルダーが明示されていないのは，引き受けた引数がどこに入るかが明らかなので省略しているからである。</p>
 <p>この例に見るように，パイプ演算子を使うと，データ<span class="math inline">\(\to\)</span>平均偏差$<span class="math inline">\(2乗\)</span><span class="math inline">\(平均\)</span>$平方根，という計算の流れと，スクリプトの流れが一致しているため，理解しやすくなったのではないだろうか。</p>
 <p>また，ここでの計算は，次のように書くこともできる。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((dat <span class="sc">-</span> <span class="fu">mean</span>(dat))<span class="sc">^</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>この書き方は，関数の中に関数がある入れ子状態になっており，<span class="math inline">\(y = h(g(f(x)))\)</span>のような形式である。これも対応するカッコの内側から読み解いていく必要があり，思考の流れと逆転しているため理解が難しい。パイプ演算子を使うと，<code>x %&gt;% f() %&gt;% g() %&gt;% h() -&gt; y</code>のように記述できるため，苦労せずに読むことができる。</p>
 <p>以下はこのパイプ演算子を使った記述で進めていくので，この表記法(およびショートカット)に慣れていこう。</p>
@@ -460,11 +448,8 @@ window.Quarto = {
 <p>列選択は<code>select</code>関数である。これは<code>tidyverse</code>パッケージ内の<code>dplyr</code>パッケージに含まれている。 <code>select</code>関数は<code>MASS</code>パッケージなど，他のパッケージに同名の関数が含まれることが多いので注意が必要である。</p>
 <p>例示のために，Rがデフォルトで持つサンプルデータ，<code>iris</code>を用いる。なお，<code>iris</code>データは150行あるので，以下ではデータセットの冒頭を表示する<code>head</code>関数を用いているが，演習の際には<code>head</code>を用いなくても良い。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># irisデータの確認</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 1          5.1         3.5          1.4         0.2  setosa
@@ -474,13 +459,10 @@ window.Quarto = {
 5          5.0         3.6          1.4         0.2  setosa
 6          5.4         3.9          1.7         0.4  setosa</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 一部の変数を抜き出す</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length, Species) <span class="sc">%&gt;%</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Species
 1          5.1  setosa
@@ -493,12 +475,9 @@ window.Quarto = {
 </div>
 <p>逆に，一部の変数を除外したい場合はマイナスをつける。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Species) <span class="sc">%&gt;%</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width
 1          5.1         3.5          1.4         0.2
@@ -508,13 +487,10 @@ window.Quarto = {
 5          5.0         3.6          1.4         0.2
 6          5.4         3.9          1.7         0.4</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 複数変数の除外</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Petal.Length, Petal.Width)) <span class="sc">%&gt;%</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Species
 1          5.1         3.5  setosa
@@ -534,13 +510,10 @@ window.Quarto = {
 </ul>
 <p>使用例を以下に挙げる。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># starts_withで特定の文字から始まる変数を抜き出す</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"Petal"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Petal.Length Petal.Width
 1          1.4         0.2
@@ -550,13 +523,10 @@ window.Quarto = {
 5          1.4         0.2
 6          1.7         0.4</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ends_withで特定の文字で終わる変数を抜き出す</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"Length"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Petal.Length
 1          5.1          1.4
@@ -566,13 +536,10 @@ window.Quarto = {
 5          5.0          1.4
 6          5.4          1.7</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># containsで部分一致する変数を取り出す</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"etal"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Petal.Length Petal.Width
 1          1.4         0.2
@@ -582,13 +549,10 @@ window.Quarto = {
 5          1.4         0.2
 6          1.7         0.4</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matchesで正規表現による選択をする</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">".t."</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width
 1          5.1         3.5          1.4         0.2
@@ -605,13 +569,10 @@ window.Quarto = {
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="行選択"><span class="header-section-number">3.4.2</span> 行選択</h3>
 <p>一般にデータフレームは列に変数が並んでいるので，<code>select</code>関数による列選択とは変数選択とも言える。 これに対し，行方向にはオブザベーションが並んでいるので，行選択とはオブザベーション(ケース，個体)の選択である。行選択には<code>dplyr</code>の<code>filter</code>関数を使う。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sepal.Length変数が6以上のケースを抜き出す</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Sepal.Length <span class="sc">&gt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 1          7.0         3.2          4.7         1.4 versicolor
@@ -621,13 +582,10 @@ window.Quarto = {
 5          6.3         3.3          4.7         1.6 versicolor
 6          6.6         2.9          4.6         1.3 versicolor</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 特定の種別だけ抜き出す</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">"versicolor"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 1          7.0         3.2          4.7         1.4 versicolor
@@ -637,13 +595,10 @@ window.Quarto = {
 5          6.5         2.8          4.6         1.5 versicolor
 6          5.7         2.8          4.5         1.3 versicolor</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 複数指定の例</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">!=</span> <span class="st">"versicolor"</span>, Sepal.Length <span class="sc">&gt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
 1          6.3         3.3          6.0         2.5 virginica
@@ -661,10 +616,7 @@ window.Quarto = {
 <h2 data-number="3.5" class="anchored" data-anchor-id="変数を作る再割り当てする"><span class="header-section-number">3.5</span> 変数を作る・再割り当てする</h2>
 <p>既存の変数から別の変数を作る，あるいは値の再割り当ては，データハンドリング時に最もよく行う操作のひとつである。たとえば連続変数をある値を境に「高群・低群」というカテゴリカルな変数に作り変えたり，単位を変換するために線形変換したりすることがあるだろう。このように，変数を操作するときに「既存の変数を加工して特徴量を作りだす」というときの操作は，基本的に<code>dplyr</code>の<code>mutate</code>関数を用いる。次の例をみてみよう。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(iris, <span class="at">Twice =</span> Sepal.Length <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species Twice
 1          5.1         3.5          1.4         0.2  setosa  10.2
@@ -677,14 +629,11 @@ window.Quarto = {
 </div>
 <p>新しく<code>Twice</code>変数ができたのが確認できるだろう。この関数はパイプ演算子の中で使うことができる(というかその方が主な使い方である)。次の例は，<code>Sepal.Length</code>変数を高群と低群の2群に分けるものである。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length) <span class="sc">%&gt;%</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.HL =</span> <span class="fu">ifelse</span>(Sepal.Length <span class="sc">&gt;</span> <span class="fu">mean</span>(Sepal.Length), <span class="dv">1</span>, <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.HL =</span> <span class="fu">factor</span>(Sepal.HL, <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"High"</span>, <span class="st">"Low"</span>))) <span class="sc">%&gt;%</span></span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.HL
 1          5.1      Low
@@ -852,10 +801,7 @@ window.Quarto = {
 <p>ロング型データにする利点のひとつは，欠測値の扱いである。ワイド型データで欠測値が含まれる場合，その行あるいは列全体を削除するのは無駄が多く，かと言って行・列両方を特定するのは技術的にも面倒である。これに対しロング型データの場合は，当該行を絞り込んで削除するだけで良い。</p>
 <p><code>tidyverse</code>には(正確には<code>tidyr</code>には)，このようなロング型データ，ワイド型データの変換関数が用意されている。 実例とともに見てみよう。まずはワイド型データをロング型に変換する<code>pivot_longer</code>である。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="sc">-</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 600 × 3
    Species name         value
@@ -876,14 +822,11 @@ window.Quarto = {
 <p>ここでは元の<code>iris</code>データについて，<code>Species</code>セルを軸として，それ以外の変数名と値を<code>name</code>,<code>value</code>に割り当てて縦持ちにしている。</p>
 <p>逆に，ロング型のデータをワイド型に持ち替えるには，<code>pivot_wider</code>を使う。 実例は以下の通りである。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Species) <span class="sc">%&gt;%</span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> ID, <span class="at">names_from =</span> name, <span class="at">values_from =</span> value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 150 × 5
       ID Sepal.Length Sepal.Width Petal.Length Petal.Width
@@ -907,10 +850,7 @@ window.Quarto = {
 <h2 data-number="3.8" class="anchored" data-anchor-id="グループ化と要約統計量"><span class="header-section-number">3.8</span> グループ化と要約統計量</h2>
 <p>データをロング型にすることで，変数やケースの絞り込みが容易になる。その上で，ある群ごとに要約した統計量を算出したい場合は，<code>group_by</code>変数によるグループ化と，<code>summarise</code>あるいは<code>reframe</code>がある。実例を通して確認しよう。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 150 × 5
 # Groups:   Species [3]
@@ -931,8 +871,6 @@ window.Quarto = {
 </div>
 <p>上のコードでは，一見したところ表示されたデータに違いがないように見えるが，出力時に<code>Species[3]</code>と表示されていることがわかる。ここで，Species変数の3水準で群分けされていることが示されている。これを踏まえて，<code>summarise</code>してみよう。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -941,7 +879,6 @@ window.Quarto = {
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(Sepal.Length),</span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">IQR =</span> <span class="fu">IQR</span>(Sepal.Length)</span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 5
   Species        n  Mean   Max   IQR
@@ -954,15 +891,12 @@ window.Quarto = {
 <p>ここではケース数(<code>n</code>)，平均(<code>mean</code>)，最大値(<code>max</code>)，四分位範囲(<code>IQR</code>)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>を算出した。</p>
 <p>また，ここでは<code>Sepal.Length</code>についてのみ算出したが，他の数値型変数に対しても同様の計算がしたい場合は，<code>across</code>関数を使うことができる。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(Sepal.Length, Sepal.Width, Petal.Length),</span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">mean</span>(.x)</span>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 4
   Species    Sepal.Length Sepal.Width Petal.Length
@@ -974,8 +908,6 @@ window.Quarto = {
 </div>
 <p>ここで，<code>~mean(.x)</code>の書き方について言及しておく。チルダ(tilda,<code>~</code>)で始まるこの式を，Rでは特にラムダ関数とかラムダ式と呼ぶ。これはこの場で使う即席関数の作り方である。別の方法として，正式に関数を作る関数<code>function</code>を使って次のように書くこともできる。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
@@ -984,7 +916,6 @@ window.Quarto = {
 <span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(x)</span>
 <span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 4
   Species    Sepal.Length Sepal.Width Petal.Length
@@ -996,8 +927,6 @@ window.Quarto = {
 </div>
 <p>ラムダ関数や自作関数の作り方については，後ほどあらためて触れるとして，ここでは複数の変数に関数をあてがう方法を確認して欲しい。<code>across</code>関数で変数を選ぶ際は，<code>select</code>関数の時に紹介した<code>starts_with</code>なども利用できる。次に示す例は，複数の変数を選択し，かつ，複数の関数を適用する例である。複数の関数を適用するために，ラムダ関数をリストで与えることができる。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"Sepal"</span>),</span>
@@ -1007,7 +936,6 @@ window.Quarto = {
 <span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">Q3 =</span> <span class="sc">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.75</span>)</span>
 <span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 7
   Species    Sepal.Length_M Sepal.Length_Q1 Sepal.Length_Q3 Sepal.Width_M
@@ -1029,8 +957,6 @@ window.Quarto = {
 <li>ワイド型になったデータを、<code>Year</code>変数をキーにして<code>pivot_longer</code>でロング型データに変えてみましょう。</li>
 </ul>
 
-
-<!-- -->
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-Hadley2014" class="csl-entry" role="listitem">
@@ -1120,57 +1046,6 @@ Hadley, Wickham. 2014. <span>“Tidy Data.”</span> <em>Journal of Statistical 
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
-    }
-    const viewSource = window.document.getElementById('quarto-view-source') ||
-                       window.document.getElementById('quarto-code-tools-source');
-    if (viewSource) {
-      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-      viewSource.addEventListener("click", function(e) {
-        if (sourceUrl) {
-          // rstudio viewer pane
-          if (/\bcapabilities=\b/.test(window.location)) {
-            window.open(sourceUrl);
-          } else {
-            window.location.href = sourceUrl;
-          }
-        } else {
-          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-          modal.show();
-        }
-        return false;
-      });
-    }
-    function toggleCodeHandler(show) {
-      return function(e) {
-        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-        for (let i=0; i<detailsSrc.length; i++) {
-          const details = detailsSrc[i].parentElement;
-          if (show) {
-            details.open = true;
-          } else {
-            details.removeAttribute("open");
-          }
-        }
-        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-        const fromCls = show ? "hidden" : "unhidden";
-        const toCls = show ? "unhidden" : "hidden";
-        for (let i=0; i<cellCodeDivs.length; i++) {
-          const codeDiv = cellCodeDivs[i];
-          if (codeDiv.classList.contains(fromCls)) {
-            codeDiv.classList.remove(fromCls);
-            codeDiv.classList.add(toCls);
-          } 
-        }
-        return false;
-      }
-    }
-    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-    if (hideAllCode) {
-      hideAllCode.addEventListener("click", toggleCodeHandler(false));
-    }
-    const showAllCode = window.document.getElementById("quarto-show-all-code");
-    if (showAllCode) {
-      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -1512,359 +1387,7 @@ Hadley, Wickham. 2014. <span>“Tidy Data.”</span> <em>Journal of Statistical 
         <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Rによるレポートの作成</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb45" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Rによるデータハンドリング</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>心理学を始め，データを扱うサイエンスでは，データ収集の計画，実行と，データに基づいた解析結果，それを踏まえてのコミュニケーションとの間に，「データをわかりやすい形に加工し，可視化し，分析する」という手順がある。このデータの加工を**データハンドリング**という。統計といえば「分析」に注目されがちだが，実際にはデータハンドリングと可視化のステップが最も時間を必要とし，重要なプロセスである。</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">## tidyverseの導入</span></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>本講義では<span class="in">`tidyverse`</span>をつかったデータハンドリングを扱う。<span class="in">`tidyverse`</span>は，データに対する統一的な設計方針を表す概念でもあり，具体的にはそれを実装したパッケージ名でもある。まずは<span class="in">`tidyverse`</span>パッケージをインストール(ダウンロード)し，次のコードでRに読み込んでおく。</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>Attaching core tidyverse packages,と表示され，複数のパッケージ名にチェックマークが入っていたものが表示されただろう。<span class="in">`tidyverse`</span>パッケージはこれらの下位パッケージを含むパッケージ群である。これに含まれる<span class="in">`dplyr`</span>,<span class="in">`tidyr`</span>パッケージはデータの整形に，<span class="in">`readr`</span>はファイルの読み込みに，<span class="in">`forcats`</span>はFactor型変数の操作に，<span class="in">`stringr`</span>は文字型変数の操作に，<span class="in">`lubridate`</span>は日付型変数の操作に，<span class="in">`tibble`</span>はデータフレーム型オブジェクトの操作に，<span class="in">`purrr`</span>はデータに適用する関数に，<span class="in">`ggplot2`</span>は可視化に特化したパッケージである。</span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>続いてConflictsについての言及がある。<span class="in">`tidyverse`</span>パッケージに限らず，パッケージを読み込むと表示されることのあるこの警告は，「関数名の衝突」を意味している。ここまで，Rを起動するだけで，<span class="in">`sqrt`</span>,<span class="in">`mean`</span>などの関数が利用できた。これはRの基本関数であるが，具体的には<span class="in">`base`</span>パッケージに含まれた関数である。Rは起動時に<span class="in">`base`</span>などいくつかのパッケージを自動的に読み込んでいるのである。これに別途パッケージを読み込むとき，あとで読み込まれたパッケージが同名の関数を使っていることがある。このとき，関数名は後から読み込んだもので上書きされる。そのことについての警告が表示されているのである。具体的にみると，<span class="in">`dplyr::filter() masks stats::filter()`</span>とあるのは，最初に読み込んでいた<span class="in">`stats`</span>パッケージの<span class="in">`filter`</span>関数は，(<span class="in">`tidyverse`</span>パッケージに含まれる)<span class="in">`dplyr`</span>パッケージのもつ同名の関数で上書きされ，今後はこちらが優先的に利用されるよ，ということを示している。</span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>このような同音異字関数は，関数を特定するときに混乱を招くかもしれない。あるパッケージの関数であることを明示したい場合は，この警告文にあるように，パッケージ名<span class="in">`::`</span>関数名，という書き方にすると良い。</span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## パイプ演算子</span></span>
-<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>続いてパイプ演算子について解説する。パイプ演算子は<span class="in">`tidyverse`</span>パッケージに含まれていた<span class="in">`magrittr`</span>パッケージで導入されたもので，これによってデータハンドリングの利便性が一気に向上した。そこでRもver 4.2からこの演算子を導入し，特段パッケージのインストールを必要としなくとも使えるようになった。このR本体のパイプ演算子のことを，<span class="in">`tidyverse`</span>のそれと区別して，ネイティブパイプと呼ぶこともある。</span>
-<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>ともあれこのパイプ演算子がいかに優れたものであるかを解説しよう。次のスクリプトは，あるデータセットの標準偏差を計算するものである<span class="ot">[^3.1]</span>。数式で表現すると次の通り。ここで$\bar{x}$はデータベクトル$x$の算術平均。</span>
-<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>$$v = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2}$$</span>
-<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3.1]: </span>もちろん<span class="in">`sd(dat)`</span> の一行で済む話だが，ここでは説明のために各ステップを書き下している。もっとも，<span class="in">`sd`</span>関数で計算されるのは$n-1$で割った不偏分散の平方根であり，標本標準偏差とは異なるものである。</span>
-<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-33"><a href="#cb45-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-34"><a href="#cb45-34" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">14</span>) <span class="co"># データ</span></span>
-<span id="cb45-35"><a href="#cb45-35" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">mean</span>(dat) <span class="co"># 平均</span></span>
-<span id="cb45-36"><a href="#cb45-36" aria-hidden="true" tabindex="-1"></a>dev <span class="ot">&lt;-</span> dat <span class="sc">-</span> M <span class="co"># 平均偏差</span></span>
-<span id="cb45-37"><a href="#cb45-37" aria-hidden="true" tabindex="-1"></a>pow <span class="ot">&lt;-</span> dev<span class="sc">^</span><span class="dv">2</span> <span class="co"># 平均偏差の2乗</span></span>
-<span id="cb45-38"><a href="#cb45-38" aria-hidden="true" tabindex="-1"></a>variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(pow) <span class="co"># 平均偏差の2乗の平均が分散</span></span>
-<span id="cb45-39"><a href="#cb45-39" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(variance) <span class="co"># 分散の正の平方根が標準偏差</span></span>
-<span id="cb45-40"><a href="#cb45-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-41"><a href="#cb45-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-42"><a href="#cb45-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-43"><a href="#cb45-43" aria-hidden="true" tabindex="-1"></a>ここでは，標準偏差オブジェクト<span class="in">`standardDev`</span>を作るまでに平均オブジェクト<span class="in">`M`</span>，平均偏差ベクトル<span class="in">`dev`</span>，その2乗したもの<span class="in">`pow`</span>，分散<span class="in">`variance`</span>と4つものオブジェクトを作って答えに到達している。また，作られるオブジェクトが左側にあり，その右側にどのような演算をしているかが記述されているため，頭の中では「オブジェクトを作る，次の計算で」と読んでいったことだろう。</span>
-<span id="cb45-44"><a href="#cb45-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-45"><a href="#cb45-45" aria-hidden="true" tabindex="-1"></a>パイプ演算子はこの思考の流れをそのまま具現化する。パイプ演算子は<span class="in">`%&gt;%`</span>と書き，左側の演算結果をパイプ演算子の右側に来る関数の第一引数として右側に渡す役目をする。これを踏まえて上のスクリプトを書き直してみよう。ちなみにパイプ演算子はショートカット<span class="in">`Ctrl(Cmd)+Shift+M`</span>で入力できる。</span>
-<span id="cb45-46"><a href="#cb45-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-49"><a href="#cb45-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-50"><a href="#cb45-50" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">14</span>)</span>
-<span id="cb45-51"><a href="#cb45-51" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
-<span id="cb45-52"><a href="#cb45-52" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb45-53"><a href="#cb45-53" aria-hidden="true" tabindex="-1"></a>    . <span class="sc">-</span> <span class="fu">mean</span>(.)</span>
-<span id="cb45-54"><a href="#cb45-54" aria-hidden="true" tabindex="-1"></a>  } <span class="sc">%&gt;%</span></span>
-<span id="cb45-55"><a href="#cb45-55" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb45-56"><a href="#cb45-56" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb45-57"><a href="#cb45-57" aria-hidden="true" tabindex="-1"></a>  } <span class="sc">%&gt;%</span></span>
-<span id="cb45-58"><a href="#cb45-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb45-59"><a href="#cb45-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>()</span>
-<span id="cb45-60"><a href="#cb45-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-61"><a href="#cb45-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-62"><a href="#cb45-62" aria-hidden="true" tabindex="-1"></a>ここでピリオド(<span class="in">`.`</span>)は，前の関数から引き継いだもの(プレイスホルダー)であり，二行目は<span class="in">`{dat - mean(dat)}`</span>，すなわち平均偏差の計算を意味している。それを次のパイプで二乗し，平均し，平方根を取っている。平均や平方根を取るときにプレイスホルダーが明示されていないのは，引き受けた引数がどこに入るかが明らかなので省略しているからである。</span>
-<span id="cb45-63"><a href="#cb45-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-64"><a href="#cb45-64" aria-hidden="true" tabindex="-1"></a>この例に見るように，パイプ演算子を使うと，データ$\to$平均偏差$\to$2乗$\to$平均$\to$平方根，という計算の流れと，スクリプトの流れが一致しているため，理解しやすくなったのではないだろうか。</span>
-<span id="cb45-65"><a href="#cb45-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-66"><a href="#cb45-66" aria-hidden="true" tabindex="-1"></a>また，ここでの計算は，次のように書くこともできる。</span>
-<span id="cb45-67"><a href="#cb45-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-70"><a href="#cb45-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-71"><a href="#cb45-71" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((dat <span class="sc">-</span> <span class="fu">mean</span>(dat))<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb45-72"><a href="#cb45-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-73"><a href="#cb45-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-74"><a href="#cb45-74" aria-hidden="true" tabindex="-1"></a>この書き方は，関数の中に関数がある入れ子状態になっており，$y = h(g(f(x)))$のような形式である。これも対応するカッコの内側から読み解いていく必要があり，思考の流れと逆転しているため理解が難しい。パイプ演算子を使うと，<span class="in">`x %&gt;% f() %&gt;% g() %&gt;% h() -&gt; y`</span>のように記述できるため，苦労せずに読むことができる。</span>
-<span id="cb45-75"><a href="#cb45-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-76"><a href="#cb45-76" aria-hidden="true" tabindex="-1"></a>以下はこのパイプ演算子を使った記述で進めていくので，この表記法(およびショートカット)に慣れていこう。</span>
-<span id="cb45-77"><a href="#cb45-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-78"><a href="#cb45-78" aria-hidden="true" tabindex="-1"></a><span class="fu">## 課題1.パイプ演算子</span></span>
-<span id="cb45-79"><a href="#cb45-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-80"><a href="#cb45-80" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`sqrt`</span>,<span class="in">`mean`</span>関数が<span class="in">`base`</span>パッケージに含まれることをヘルプで確認してみましょう。どこを見れば良いでしょうか。<span class="in">`filter`</span>,<span class="in">`lag`</span>関数はどうでしょうか。</span>
-<span id="cb45-81"><a href="#cb45-81" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`tidyverse`</span>パッケージを読み込んだことで，<span class="in">`filter`</span>関数は<span class="in">`dplyr`</span>パッケージのものが優先されることになりました。<span class="in">`dplyr`</span>パッケージの<span class="in">`filter`</span>関数をヘルプで見てみましょう。</span>
-<span id="cb45-82"><a href="#cb45-82" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>上書きされる前の<span class="in">`stats`</span>パッケージの<span class="in">`filter`</span>関数に関するヘルプを見てみましょう。</span>
-<span id="cb45-83"><a href="#cb45-83" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>先ほどのデータを使って，平均値絶対偏差(MeanAD)および中央絶対偏差(MAD)をパイプ演算子を使って算出してみましょう。なお平均値絶対偏差，中央値絶対偏差は次のように定義されるものです。また絶対値を計算するR関数は<span class="in">`abs`</span>です。</span>
-<span id="cb45-84"><a href="#cb45-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-85"><a href="#cb45-85" aria-hidden="true" tabindex="-1"></a>$$MeanAD = \frac{1}{n}\sum_{i=1}^n|x_i - \bar{x}|$$</span>
-<span id="cb45-86"><a href="#cb45-86" aria-hidden="true" tabindex="-1"></a>$$MAD = median(|x_1-median(x)|,\cdots,|x_n-median(x)|)$$</span>
-<span id="cb45-87"><a href="#cb45-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-88"><a href="#cb45-88" aria-hidden="true" tabindex="-1"></a><span class="fu">## 列選択と行選択</span></span>
-<span id="cb45-89"><a href="#cb45-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-90"><a href="#cb45-90" aria-hidden="true" tabindex="-1"></a>ここからは<span class="in">`tidyverse`</span>を使ったより具体的なデータハンドリングについて言及する。</span>
-<span id="cb45-91"><a href="#cb45-91" aria-hidden="true" tabindex="-1"></a>まずは特定の列および行だけを抜き出すことを考える。データの一部にのみ処理を加えたい場合に重宝する。</span>
-<span id="cb45-92"><a href="#cb45-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-93"><a href="#cb45-93" aria-hidden="true" tabindex="-1"></a><span class="fu">### 列選択</span></span>
-<span id="cb45-94"><a href="#cb45-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-95"><a href="#cb45-95" aria-hidden="true" tabindex="-1"></a>列選択は<span class="in">`select`</span>関数である。これは<span class="in">`tidyverse`</span>パッケージ内の<span class="in">`dplyr`</span>パッケージに含まれている。</span>
-<span id="cb45-96"><a href="#cb45-96" aria-hidden="true" tabindex="-1"></a><span class="in">`select`</span>関数は<span class="in">`MASS`</span>パッケージなど，他のパッケージに同名の関数が含まれることが多いので注意が必要である。</span>
-<span id="cb45-97"><a href="#cb45-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-98"><a href="#cb45-98" aria-hidden="true" tabindex="-1"></a>例示のために，Rがデフォルトで持つサンプルデータ，<span class="in">`iris`</span>を用いる。なお，<span class="in">`iris`</span>データは150行あるので，以下ではデータセットの冒頭を表示する<span class="in">`head`</span>関数を用いているが，演習の際には<span class="in">`head`</span>を用いなくても良い。</span>
-<span id="cb45-101"><a href="#cb45-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-102"><a href="#cb45-102" aria-hidden="true" tabindex="-1"></a><span class="co"># irisデータの確認</span></span>
-<span id="cb45-103"><a href="#cb45-103" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
-<span id="cb45-104"><a href="#cb45-104" aria-hidden="true" tabindex="-1"></a><span class="co"># 一部の変数を抜き出す</span></span>
-<span id="cb45-105"><a href="#cb45-105" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-106"><a href="#cb45-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length, Species) <span class="sc">%&gt;%</span></span>
-<span id="cb45-107"><a href="#cb45-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-108"><a href="#cb45-108" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-109"><a href="#cb45-109" aria-hidden="true" tabindex="-1"></a>逆に，一部の変数を除外したい場合はマイナスをつける。</span>
-<span id="cb45-112"><a href="#cb45-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-113"><a href="#cb45-113" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-114"><a href="#cb45-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Species) <span class="sc">%&gt;%</span></span>
-<span id="cb45-115"><a href="#cb45-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-116"><a href="#cb45-116" aria-hidden="true" tabindex="-1"></a><span class="co"># 複数変数の除外</span></span>
-<span id="cb45-117"><a href="#cb45-117" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-118"><a href="#cb45-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Petal.Length, Petal.Width)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-119"><a href="#cb45-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-120"><a href="#cb45-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-121"><a href="#cb45-121" aria-hidden="true" tabindex="-1"></a>これだけでも便利だが，<span class="in">`select`</span>関数は適用時に抜き出す条件を指定してやればよく，そのために便利な以下のような関数がある。</span>
-<span id="cb45-122"><a href="#cb45-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-123"><a href="#cb45-123" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`starts_with()`</span></span>
-<span id="cb45-124"><a href="#cb45-124" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`ends_with()`</span></span>
-<span id="cb45-125"><a href="#cb45-125" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`contains()`</span></span>
-<span id="cb45-126"><a href="#cb45-126" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`matches()`</span></span>
-<span id="cb45-127"><a href="#cb45-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-128"><a href="#cb45-128" aria-hidden="true" tabindex="-1"></a>使用例を以下に挙げる。</span>
-<span id="cb45-131"><a href="#cb45-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-132"><a href="#cb45-132" aria-hidden="true" tabindex="-1"></a><span class="co"># starts_withで特定の文字から始まる変数を抜き出す</span></span>
-<span id="cb45-133"><a href="#cb45-133" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-134"><a href="#cb45-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"Petal"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-135"><a href="#cb45-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-136"><a href="#cb45-136" aria-hidden="true" tabindex="-1"></a><span class="co"># ends_withで特定の文字で終わる変数を抜き出す</span></span>
-<span id="cb45-137"><a href="#cb45-137" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-138"><a href="#cb45-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"Length"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-139"><a href="#cb45-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-140"><a href="#cb45-140" aria-hidden="true" tabindex="-1"></a><span class="co"># containsで部分一致する変数を取り出す</span></span>
-<span id="cb45-141"><a href="#cb45-141" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-142"><a href="#cb45-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"etal"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-143"><a href="#cb45-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-144"><a href="#cb45-144" aria-hidden="true" tabindex="-1"></a><span class="co"># matchesで正規表現による選択をする</span></span>
-<span id="cb45-145"><a href="#cb45-145" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-146"><a href="#cb45-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">".t."</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-147"><a href="#cb45-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-148"><a href="#cb45-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-149"><a href="#cb45-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-150"><a href="#cb45-150" aria-hidden="true" tabindex="-1"></a>ここで触れた**正規表現**とは，文字列を特定するためのパターンを指定する表記ルールであり，R言語に限らずプログラミング言語一般で用いられるものである。書誌検索などでも用いられることがあり，任意の文字列や先頭・末尾の語などを記号(メタ文字)を使って表現するものである。詳しくは正規表現で検索すると良い(たとえば<span class="co">[</span><span class="ot">こちらのサイト</span><span class="co">](https://userweb.mnet.ne.jp/nakama/)</span>などがわかりやすい。)</span>
-<span id="cb45-151"><a href="#cb45-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-152"><a href="#cb45-152" aria-hidden="true" tabindex="-1"></a><span class="fu">### 行選択</span></span>
-<span id="cb45-153"><a href="#cb45-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-154"><a href="#cb45-154" aria-hidden="true" tabindex="-1"></a>一般にデータフレームは列に変数が並んでいるので，<span class="in">`select`</span>関数による列選択とは変数選択とも言える。</span>
-<span id="cb45-155"><a href="#cb45-155" aria-hidden="true" tabindex="-1"></a>これに対し，行方向にはオブザベーションが並んでいるので，行選択とはオブザベーション(ケース，個体)の選択である。行選択には<span class="in">`dplyr`</span>の<span class="in">`filter`</span>関数を使う。</span>
-<span id="cb45-156"><a href="#cb45-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-159"><a href="#cb45-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-160"><a href="#cb45-160" aria-hidden="true" tabindex="-1"></a><span class="co"># Sepal.Length変数が6以上のケースを抜き出す</span></span>
-<span id="cb45-161"><a href="#cb45-161" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-162"><a href="#cb45-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Sepal.Length <span class="sc">&gt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb45-163"><a href="#cb45-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-164"><a href="#cb45-164" aria-hidden="true" tabindex="-1"></a><span class="co"># 特定の種別だけ抜き出す</span></span>
-<span id="cb45-165"><a href="#cb45-165" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-166"><a href="#cb45-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">"versicolor"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb45-167"><a href="#cb45-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-168"><a href="#cb45-168" aria-hidden="true" tabindex="-1"></a><span class="co"># 複数指定の例</span></span>
-<span id="cb45-169"><a href="#cb45-169" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-170"><a href="#cb45-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">!=</span> <span class="st">"versicolor"</span>, Sepal.Length <span class="sc">&gt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb45-171"><a href="#cb45-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-172"><a href="#cb45-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-173"><a href="#cb45-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-174"><a href="#cb45-174" aria-hidden="true" tabindex="-1"></a>ここで<span class="in">`==`</span>とあるのは一致しているかどうかの判別をするための演算子である。<span class="in">`=`</span>ひとつだと「オブジェクトへの代入」と同じになるので，判別条件の時には重ねて表記する。同様に，<span class="in">`!=`</span>とあるのはnot equal，つまり不一致のとき真になる演算子である。</span>
-<span id="cb45-175"><a href="#cb45-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-176"><a href="#cb45-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## 変数を作る・再割り当てする</span></span>
-<span id="cb45-177"><a href="#cb45-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-178"><a href="#cb45-178" aria-hidden="true" tabindex="-1"></a>既存の変数から別の変数を作る，あるいは値の再割り当ては，データハンドリング時に最もよく行う操作のひとつである。たとえば連続変数をある値を境に「高群・低群」というカテゴリカルな変数に作り変えたり，単位を変換するために線形変換したりすることがあるだろう。このように，変数を操作するときに「既存の変数を加工して特徴量を作りだす」というときの操作は，基本的に<span class="in">`dplyr`</span>の<span class="in">`mutate`</span>関数を用いる。次の例をみてみよう。</span>
-<span id="cb45-179"><a href="#cb45-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-182"><a href="#cb45-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-183"><a href="#cb45-183" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(iris, <span class="at">Twice =</span> Sepal.Length <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
-<span id="cb45-184"><a href="#cb45-184" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-185"><a href="#cb45-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-186"><a href="#cb45-186" aria-hidden="true" tabindex="-1"></a>新しく<span class="in">`Twice`</span>変数ができたのが確認できるだろう。この関数はパイプ演算子の中で使うことができる(というかその方が主な使い方である)。次の例は，<span class="in">`Sepal.Length`</span>変数を高群と低群の2群に分けるものである。</span>
-<span id="cb45-187"><a href="#cb45-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-190"><a href="#cb45-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-191"><a href="#cb45-191" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-192"><a href="#cb45-192" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length) <span class="sc">%&gt;%</span></span>
-<span id="cb45-193"><a href="#cb45-193" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.HL =</span> <span class="fu">ifelse</span>(Sepal.Length <span class="sc">&gt;</span> <span class="fu">mean</span>(Sepal.Length), <span class="dv">1</span>, <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-194"><a href="#cb45-194" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.HL =</span> <span class="fu">factor</span>(Sepal.HL, <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"High"</span>, <span class="st">"Low"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb45-195"><a href="#cb45-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
-<span id="cb45-196"><a href="#cb45-196" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-197"><a href="#cb45-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-198"><a href="#cb45-198" aria-hidden="true" tabindex="-1"></a>ここでもちいた<span class="in">`ifelse`</span>関数は，<span class="in">`if(条件判断,真のときの処理,偽のときの処理)`</span>という形でもちいる条件分岐関数であり，ここでは平均より大きければ1，そうでなければ2を返すようになっている。<span class="in">`mutate`</span>関数でこの結果をSepal.HL変数に代入(生成)し，次の<span class="in">`mutate`</span>関数では今作ったSepal.HL変数をFactor型に変換して，その結果をまたSepal.HL変数に代入(上書き)している。このように，変数の生成先を生成元と同じにしておくと上書きされるため，たとえば変数の型変換(文字型から数値型へ，数値型からFactor型へ，など)にも用いることができる。</span>
-<span id="cb45-199"><a href="#cb45-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-200"><a href="#cb45-200" aria-hidden="true" tabindex="-1"></a><span class="fu">## 課題2.select, filter, mutate</span></span>
-<span id="cb45-201"><a href="#cb45-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-202"><a href="#cb45-202" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`Baseball.csv`</span>を読み込んで、データフレーム<span class="in">`df`</span>に代入しましょう。</span>
-<span id="cb45-203"><a href="#cb45-203" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`df`</span>には複数の変数が含まれています。変数名の一覧は<span class="in">`names`</span>関数で確認できます。<span class="in">`df`</span>オブジェクトに含まれる変数名を確認しましょう。</span>
-<span id="cb45-204"><a href="#cb45-204" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`df`</span>には多くの変数がありますが、必要なのは年度(Year)、選手名(Name)、所属球団(team)、身長(height)、体重(weight)、年俸(salary)、守備位置(position)だけです。これらの変数だけを選択して、<span class="in">`df2`</span>オブジェクトを作成しましょう。</span>
-<span id="cb45-205"><a href="#cb45-205" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span><span class="in">`df2`</span>には数年分のデータが含まれています。<span class="in">`2020年度`</span>のデータだけを分析したいので、選別してみましょう。</span>
-<span id="cb45-206"><a href="#cb45-206" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>同じく、<span class="in">`2020年度`</span>の<span class="in">`阪神タイガース`</span>に関するデータだけを選別してみましょう。</span>
-<span id="cb45-207"><a href="#cb45-207" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>同じく、<span class="in">`2020年度`</span>の<span class="in">`阪神タイガース`</span>以外のデータセットはどのようにして選別できるでしょうか。</span>
-<span id="cb45-208"><a href="#cb45-208" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>選手の身体的特徴を表すBMI変数を作成しましょう。なお、BMIは体重(kg)を身長(m)の二乗で除したものです。変数<span class="in">`height`</span>の単位がcmであることに注意しましょう。</span>
-<span id="cb45-209"><a href="#cb45-209" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>投手と野手を区別する新しい変数<span class="in">`position2`</span>を作成しましょう。これはFactor型にします。なお、野手は投手でないもの、すなわち内野手、外野手、捕手のいずれかです。</span>
-<span id="cb45-210"><a href="#cb45-210" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>日本プロ野球界は大きく分けてセリーグ(Central League)とパリーグ(Pacific League)に分かれています。セリーグに所属する球団はGiants, Carp, Tigers, Swallows, Dragons, DeNAであり、パ・リーグはそれ以外です。<span class="in">`df2`</span>を加工して、所属するリーグの変数<span class="in">`League`</span>を作成しましょう。この変数もFactor型にしておきましょう。</span>
-<span id="cb45-211"><a href="#cb45-211" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>変数<span class="in">`Year`</span>は語尾に「年度」という文字が入っているため文字列型になっています。実際に使うときは不便なので、「年度」という文字を除外し、数値型変数に変換しましょう。</span>
-<span id="cb45-212"><a href="#cb45-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-213"><a href="#cb45-213" aria-hidden="true" tabindex="-1"></a><span class="fu">## ロング型とワイド型 {#sec-Long_and_Wide}</span></span>
-<span id="cb45-214"><a href="#cb45-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-215"><a href="#cb45-215" aria-hidden="true" tabindex="-1"></a>ここまでみてきたデータは行列の2次元に，ケース$\times$変数の形で格納されていた。この形式は，人間が見て管理するときにわかりやすい形式をしているが，計算機にとっては必ずしもそうではない。たとえば「神エクセル」と揶揄されることがあるように，稀に表計算ソフトを方眼紙ソフトあるいは原稿用紙ソフトと勘違いしたかのような使い方がなされる場合がある。人間にとってはわかりやすい(見て把握しやすい)かもしれないが，計算機にとって構造が把握できないため，データ解析に不向きである。巷には，こうした分析しにくい電子データがまだまだたくさん存在する。</span>
-<span id="cb45-216"><a href="#cb45-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-217"><a href="#cb45-217" aria-hidden="true" tabindex="-1"></a>これをうけて2020年12月，総務省により機械判読可能なデータの表記方法の統一ルールが策定された<span class="co">[</span><span class="ot">@soumu</span><span class="co">]</span>。それには次のようなチェック項目が含まれている。</span>
-<span id="cb45-218"><a href="#cb45-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-219"><a href="#cb45-219" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>ファイル形式はExcelかCSVとなっているか</span>
-<span id="cb45-220"><a href="#cb45-220" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>1セル1データとなっているか</span>
-<span id="cb45-221"><a href="#cb45-221" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>数値データは数値属性とし，文字列を含まないこと</span>
-<span id="cb45-222"><a href="#cb45-222" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>セルの結合をしていないか</span>
-<span id="cb45-223"><a href="#cb45-223" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>スペースや改行等で体裁を整えていないか</span>
-<span id="cb45-224"><a href="#cb45-224" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>項目名を省略していないか</span>
-<span id="cb45-225"><a href="#cb45-225" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>数式を使用している場合は，数値データに修正しているか</span>
-<span id="cb45-226"><a href="#cb45-226" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>オブジェクトを使用していないか</span>
-<span id="cb45-227"><a href="#cb45-227" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>データの単位を記載しているか</span>
-<span id="cb45-228"><a href="#cb45-228" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>機種依存文字を使用していないか</span>
-<span id="cb45-229"><a href="#cb45-229" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>データが分断されていないか</span>
-<span id="cb45-230"><a href="#cb45-230" aria-hidden="true" tabindex="-1"></a><span class="ss">+   </span>1シートに複数の表が掲載されていないか</span>
-<span id="cb45-231"><a href="#cb45-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-232"><a href="#cb45-232" aria-hidden="true" tabindex="-1"></a>データの入力の基本は，**1行に1ケースの情報が入っている，過不足のない1つのデータセットを作ること**といえるだろう。</span>
-<span id="cb45-233"><a href="#cb45-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-234"><a href="#cb45-234" aria-hidden="true" tabindex="-1"></a>同様に，計算機にとって分析しやすいデータの形について，@Hadley2014 が提唱したのが**整然データ(Tidy Data)**という考え方である。整然データとは，次の4つの特徴を持ったデータ形式のことを指す。</span>
-<span id="cb45-235"><a href="#cb45-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-236"><a href="#cb45-236" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>個々の変数(variable)が1つの列(column)をなす。</span>
-<span id="cb45-237"><a href="#cb45-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>個々の観測(observation)が1つの行(row)をなす。</span>
-<span id="cb45-238"><a href="#cb45-238" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>個々の観測の構成単位の類型(type of observational unit)が1つの表(table)をなす。</span>
-<span id="cb45-239"><a href="#cb45-239" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>個々の値(value)が1つのセル(cell)をなす。</span>
-<span id="cb45-240"><a href="#cb45-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-241"><a href="#cb45-241" aria-hidden="true" tabindex="-1"></a>この形式のデータであれば，計算機が変数と値の対応構造を把握しやすく，分析しやすいデータになる。データハンドリングの目的は，混乱している雑多なデータを，利用しやすい整然データの形に整えることであると言っても過言ではない。</span>
-<span id="cb45-242"><a href="#cb45-242" aria-hidden="true" tabindex="-1"></a>さて，ここでよく考えてみると，変数名も一つの変数だと考えることに気づく。一般に，行列型のデータは次のような書式になっている。</span>
-<span id="cb45-243"><a href="#cb45-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-244"><a href="#cb45-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-245"><a href="#cb45-245" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span>      <span class="pp">|</span> 午前 <span class="pp">|</span> 午後 <span class="pp">|</span> 夕方 <span class="pp">|</span> 深夜 <span class="pp">|</span></span>
-<span id="cb45-246"><a href="#cb45-246" aria-hidden="true" tabindex="-1"></a><span class="pp">|------|------|------|------|------|</span></span>
-<span id="cb45-247"><a href="#cb45-247" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 東京 <span class="pp">|</span> 晴   <span class="pp">|</span> 晴   <span class="pp">|</span> 雨   <span class="pp">|</span> 雨   <span class="pp">|</span></span>
-<span id="cb45-248"><a href="#cb45-248" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 大阪 <span class="pp">|</span> 晴   <span class="pp">|</span> 曇   <span class="pp">|</span> 晴   <span class="pp">|</span> 晴   <span class="pp">|</span></span>
-<span id="cb45-249"><a href="#cb45-249" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 福岡 <span class="pp">|</span> 晴   <span class="pp">|</span> 曇   <span class="pp">|</span> 曇   <span class="pp">|</span> 雨   <span class="pp">|</span></span>
-<span id="cb45-250"><a href="#cb45-250" aria-hidden="true" tabindex="-1"></a>: ワイド型データ</span>
-<span id="cb45-251"><a href="#cb45-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-252"><a href="#cb45-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-253"><a href="#cb45-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-254"><a href="#cb45-254" aria-hidden="true" tabindex="-1"></a>ここで，たとえば大阪の夕方の天気を見ようとすると「晴れ」であることは明らかだが，この時の視線の動きは大阪行の，夕方列，という参照の仕方である。言い方を変えると，大阪・夕方の「晴れ」を参照するときに，行と列の両方のラベルを参照する必要がある。</span>
-<span id="cb45-255"><a href="#cb45-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-256"><a href="#cb45-256" aria-hidden="true" tabindex="-1"></a>ここで同じデータを次のように並べ替えてみよう。</span>
-<span id="cb45-257"><a href="#cb45-257" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-258"><a href="#cb45-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-259"><a href="#cb45-259" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 地域 <span class="pp">|</span> 時間帯 <span class="pp">|</span> 天候 <span class="pp">|</span></span>
-<span id="cb45-260"><a href="#cb45-260" aria-hidden="true" tabindex="-1"></a><span class="pp">|------|--------|------|</span></span>
-<span id="cb45-261"><a href="#cb45-261" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 東京 <span class="pp">|</span> 午前   <span class="pp">|</span> 晴   <span class="pp">|</span></span>
-<span id="cb45-262"><a href="#cb45-262" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 東京 <span class="pp">|</span> 午後   <span class="pp">|</span> 晴   <span class="pp">|</span></span>
-<span id="cb45-263"><a href="#cb45-263" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 東京 <span class="pp">|</span> 夕方   <span class="pp">|</span> 雨   <span class="pp">|</span></span>
-<span id="cb45-264"><a href="#cb45-264" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 東京 <span class="pp">|</span> 深夜   <span class="pp">|</span> 雨   <span class="pp">|</span></span>
-<span id="cb45-265"><a href="#cb45-265" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 大阪 <span class="pp">|</span> 午前   <span class="pp">|</span> 晴   <span class="pp">|</span></span>
-<span id="cb45-266"><a href="#cb45-266" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 大阪 <span class="pp">|</span> 午後   <span class="pp">|</span> 曇   <span class="pp">|</span></span>
-<span id="cb45-267"><a href="#cb45-267" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 大阪 <span class="pp">|</span> 夕方   <span class="pp">|</span> 晴   <span class="pp">|</span></span>
-<span id="cb45-268"><a href="#cb45-268" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 大阪 <span class="pp">|</span> 深夜   <span class="pp">|</span> 晴   <span class="pp">|</span></span>
-<span id="cb45-269"><a href="#cb45-269" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 福岡 <span class="pp">|</span> 午前   <span class="pp">|</span> 晴   <span class="pp">|</span></span>
-<span id="cb45-270"><a href="#cb45-270" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 福岡 <span class="pp">|</span> 午後   <span class="pp">|</span> 曇   <span class="pp">|</span></span>
-<span id="cb45-271"><a href="#cb45-271" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 福岡 <span class="pp">|</span> 夕方   <span class="pp">|</span> 曇   <span class="pp">|</span></span>
-<span id="cb45-272"><a href="#cb45-272" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 福岡 <span class="pp">|</span> 深夜   <span class="pp">|</span> 雨   <span class="pp">|</span></span>
-<span id="cb45-273"><a href="#cb45-273" aria-hidden="true" tabindex="-1"></a>: ロング型データ</span>
-<span id="cb45-274"><a href="#cb45-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-275"><a href="#cb45-275" aria-hidden="true" tabindex="-1"></a>このデータが表す情報は同じだが，大阪・夕方の条件を絞り込むことは行選択だけでよく，計算機にとって使いやすい。この形式をロング型データ，あるいは「縦持ち」データという。これに対して前者の形式をワイド型データ，あるいは「横持ち」データという。</span>
-<span id="cb45-276"><a href="#cb45-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-277"><a href="#cb45-277" aria-hidden="true" tabindex="-1"></a>ロング型データにする利点のひとつは，欠測値の扱いである。ワイド型データで欠測値が含まれる場合，その行あるいは列全体を削除するのは無駄が多く，かと言って行・列両方を特定するのは技術的にも面倒である。これに対しロング型データの場合は，当該行を絞り込んで削除するだけで良い。</span>
-<span id="cb45-278"><a href="#cb45-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-279"><a href="#cb45-279" aria-hidden="true" tabindex="-1"></a><span class="in">`tidyverse`</span>には(正確には<span class="in">`tidyr`</span>には)，このようなロング型データ，ワイド型データの変換関数が用意されている。</span>
-<span id="cb45-280"><a href="#cb45-280" aria-hidden="true" tabindex="-1"></a>実例とともに見てみよう。まずはワイド型データをロング型に変換する<span class="in">`pivot_longer`</span>である。</span>
-<span id="cb45-281"><a href="#cb45-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-284"><a href="#cb45-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-285"><a href="#cb45-285" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="sc">-</span>Species)</span>
-<span id="cb45-286"><a href="#cb45-286" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-287"><a href="#cb45-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-288"><a href="#cb45-288" aria-hidden="true" tabindex="-1"></a>ここでは元の<span class="in">`iris`</span>データについて，<span class="in">`Species`</span>セルを軸として，それ以外の変数名と値を<span class="in">`name`</span>,<span class="in">`value`</span>に割り当てて縦持ちにしている。</span>
-<span id="cb45-289"><a href="#cb45-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-290"><a href="#cb45-290" aria-hidden="true" tabindex="-1"></a>逆に，ロング型のデータをワイド型に持ち替えるには，<span class="in">`pivot_wider`</span>を使う。</span>
-<span id="cb45-291"><a href="#cb45-291" aria-hidden="true" tabindex="-1"></a>実例は以下の通りである。</span>
-<span id="cb45-294"><a href="#cb45-294" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-295"><a href="#cb45-295" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-296"><a href="#cb45-296" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Species) <span class="sc">%&gt;%</span></span>
-<span id="cb45-297"><a href="#cb45-297" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb45-298"><a href="#cb45-298" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
-<span id="cb45-299"><a href="#cb45-299" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> ID, <span class="at">names_from =</span> name, <span class="at">values_from =</span> value)</span>
-<span id="cb45-300"><a href="#cb45-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-301"><a href="#cb45-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-302"><a href="#cb45-302" aria-hidden="true" tabindex="-1"></a>今回は<span class="in">`Species`</span>変数を除外し，別途<span class="in">`ID`</span>変数として行番号を変数に付与した。この行番号をキーに，変数名は<span class="in">`names`</span>列から，その値は<span class="in">`value`</span>列から持ってくることでロング型をワイド型に変えている<span class="ot">[^3.2]</span>。</span>
-<span id="cb45-303"><a href="#cb45-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-304"><a href="#cb45-304" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3.2]: </span><span class="in">`Species`</span>変数を除外したのは，これをキーにしたロング型をワイド型に変えることができない(Speciesは3水準しかない)からで，個体を識別するIDが別途必要だったからである。Species情報が欠落することになったが，これはロング型データの<span class="in">`value`</span>列が<span class="in">`char`</span>型と<span class="in">`double`</span>型の両方を同時に持てないからである。この問題を回避するためには，Factor型のデータを<span class="in">`as.numeric()`</span>関数で数値化することなどが考えられる。</span>
-<span id="cb45-305"><a href="#cb45-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-306"><a href="#cb45-306" aria-hidden="true" tabindex="-1"></a><span class="fu">## グループ化と要約統計量</span></span>
-<span id="cb45-307"><a href="#cb45-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-308"><a href="#cb45-308" aria-hidden="true" tabindex="-1"></a>データをロング型にすることで，変数やケースの絞り込みが容易になる。その上で，ある群ごとに要約した統計量を算出したい場合は，<span class="in">`group_by`</span>変数によるグループ化と，<span class="in">`summarise`</span>あるいは<span class="in">`reframe`</span>がある。実例を通して確認しよう。</span>
-<span id="cb45-309"><a href="#cb45-309" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-312"><a href="#cb45-312" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-313"><a href="#cb45-313" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Species)</span>
-<span id="cb45-314"><a href="#cb45-314" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-315"><a href="#cb45-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-316"><a href="#cb45-316" aria-hidden="true" tabindex="-1"></a>上のコードでは，一見したところ表示されたデータに違いがないように見えるが，出力時に<span class="in">`Species[3]`</span>と表示されていることがわかる。ここで，Species変数の3水準で群分けされていることが示されている。これを踏まえて，<span class="in">`summarise`</span>してみよう。</span>
-<span id="cb45-317"><a href="#cb45-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-320"><a href="#cb45-320" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-321"><a href="#cb45-321" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-322"><a href="#cb45-322" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb45-323"><a href="#cb45-323" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb45-324"><a href="#cb45-324" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb45-325"><a href="#cb45-325" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(Sepal.Length),</span>
-<span id="cb45-326"><a href="#cb45-326" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(Sepal.Length),</span>
-<span id="cb45-327"><a href="#cb45-327" aria-hidden="true" tabindex="-1"></a>    <span class="at">IQR =</span> <span class="fu">IQR</span>(Sepal.Length)</span>
-<span id="cb45-328"><a href="#cb45-328" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb45-329"><a href="#cb45-329" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-330"><a href="#cb45-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-331"><a href="#cb45-331" aria-hidden="true" tabindex="-1"></a>ここではケース数(<span class="in">`n`</span>)，平均(<span class="in">`mean`</span>)，最大値(<span class="in">`max`</span>)，四分位範囲(<span class="in">`IQR`</span>)<span class="ot">[^3.3]</span>を算出した。</span>
-<span id="cb45-332"><a href="#cb45-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-333"><a href="#cb45-333" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3.3]: </span>四分位範囲(Inter Quantaile Range)とは，データを値の順に4分割した時の上位1/4の値から，上位3/4の値を引いた範囲である。</span>
-<span id="cb45-334"><a href="#cb45-334" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-335"><a href="#cb45-335" aria-hidden="true" tabindex="-1"></a>また，ここでは<span class="in">`Sepal.Length`</span>についてのみ算出したが，他の数値型変数に対しても同様の計算がしたい場合は，<span class="in">`across`</span>関数を使うことができる。</span>
-<span id="cb45-336"><a href="#cb45-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-339"><a href="#cb45-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-340"><a href="#cb45-340" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-341"><a href="#cb45-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb45-342"><a href="#cb45-342" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
-<span id="cb45-343"><a href="#cb45-343" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(Sepal.Length, Sepal.Width, Petal.Length),</span>
-<span id="cb45-344"><a href="#cb45-344" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">mean</span>(.x)</span>
-<span id="cb45-345"><a href="#cb45-345" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb45-346"><a href="#cb45-346" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-347"><a href="#cb45-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-348"><a href="#cb45-348" aria-hidden="true" tabindex="-1"></a>ここで，<span class="in">`~mean(.x)`</span>の書き方について言及しておく。チルダ(tilda,<span class="in">`~`</span>)で始まるこの式を，Rでは特にラムダ関数とかラムダ式と呼ぶ。これはこの場で使う即席関数の作り方である。別の方法として，正式に関数を作る関数<span class="in">`function`</span>を使って次のように書くこともできる。</span>
-<span id="cb45-351"><a href="#cb45-351" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-352"><a href="#cb45-352" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-353"><a href="#cb45-353" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb45-354"><a href="#cb45-354" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
-<span id="cb45-355"><a href="#cb45-355" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(Sepal.Length, Sepal.Width, Petal.Length),</span>
-<span id="cb45-356"><a href="#cb45-356" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x) {</span>
-<span id="cb45-357"><a href="#cb45-357" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(x)</span>
-<span id="cb45-358"><a href="#cb45-358" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb45-359"><a href="#cb45-359" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb45-360"><a href="#cb45-360" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-361"><a href="#cb45-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-362"><a href="#cb45-362" aria-hidden="true" tabindex="-1"></a>ラムダ関数や自作関数の作り方については，後ほどあらためて触れるとして，ここでは複数の変数に関数をあてがう方法を確認して欲しい。<span class="in">`across`</span>関数で変数を選ぶ際は，<span class="in">`select`</span>関数の時に紹介した<span class="in">`starts_with`</span>なども利用できる。次に示す例は，複数の変数を選択し，かつ，複数の関数を適用する例である。複数の関数を適用するために，ラムダ関数をリストで与えることができる。</span>
-<span id="cb45-363"><a href="#cb45-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-366"><a href="#cb45-366" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-367"><a href="#cb45-367" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb45-368"><a href="#cb45-368" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb45-369"><a href="#cb45-369" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"Sepal"</span>),</span>
-<span id="cb45-370"><a href="#cb45-370" aria-hidden="true" tabindex="-1"></a>    <span class="at">.fns =</span> <span class="fu">list</span>(</span>
-<span id="cb45-371"><a href="#cb45-371" aria-hidden="true" tabindex="-1"></a>      <span class="at">M =</span> <span class="sc">~</span> <span class="fu">mean</span>(.x),</span>
-<span id="cb45-372"><a href="#cb45-372" aria-hidden="true" tabindex="-1"></a>      <span class="at">Q1 =</span> <span class="sc">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.25</span>),</span>
-<span id="cb45-373"><a href="#cb45-373" aria-hidden="true" tabindex="-1"></a>      <span class="at">Q3 =</span> <span class="sc">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.75</span>)</span>
-<span id="cb45-374"><a href="#cb45-374" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb45-375"><a href="#cb45-375" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb45-376"><a href="#cb45-376" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-377"><a href="#cb45-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-378"><a href="#cb45-378" aria-hidden="true" tabindex="-1"></a><span class="fu">## 課題3.データの整形</span></span>
-<span id="cb45-379"><a href="#cb45-379" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-380"><a href="#cb45-380" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>上で作った<span class="in">`df2`</span>オブジェクトを利用します。環境に<span class="in">`df2`</span>オブジェクトが残っていない場合は、もう一度上の課題に戻って作り直しておきましょう。</span>
-<span id="cb45-381"><a href="#cb45-381" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>年度(Year)でグルーピングし、年度ごとの登録選手数(データの数)、平均年俸を見てみましょう。</span>
-<span id="cb45-382"><a href="#cb45-382" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>年度(Year)とチーム(team)でグルーピングし、同じく年度ごとの登録選手数(データの数)、平均年俸を見てみましょう。</span>
-<span id="cb45-383"><a href="#cb45-383" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>続いて、一行に1年度分、列に各チームと変数の組み合わせが入った、ワイド型データを作りたいと思います。<span class="in">`pivot_wider`</span>を使って上のオブジェクトをワイド型にしてみましょう。</span>
-<span id="cb45-384"><a href="#cb45-384" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>ワイド型になったデータを、<span class="in">`Year`</span>変数をキーにして<span class="in">`pivot_longer`</span>でロング型データに変えてみましょう。</span>
-</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
-</div></div></div></div></div>
+</nav>
 </div> <!-- /content -->
 
 
