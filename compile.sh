@@ -1,6 +1,9 @@
 #!/usr/bin/bash
 source myenv/bin/activate
 
+# 古いdocsディレクトリを削除
+rm -rf docs
+
 # Quarto
 cd jp
 echo '日本語版レンダリングします'
