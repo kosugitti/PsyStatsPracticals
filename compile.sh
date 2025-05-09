@@ -9,9 +9,12 @@ cd jp
 echo '日本語版レンダリングします'
 quarto render
 cd ..
-shopt -s dotglob
-mv jp/docs/* docs/
-shopt -u dotglob
+
+# jp/docsディレクトリを一つ上の階層に移動
+mv jp/docs docs
+
+# styles.cssをjpディレクトリに戻す
+cp docs/styles.css jp/styles.css
 
 today=$(LANG="ja_JP.UTF-8" date)
 git add --all
