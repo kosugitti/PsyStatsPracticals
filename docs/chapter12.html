@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.29">
+<meta name="generator" content="quarto-1.7.30">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -93,10 +93,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-231ef2f9d4ce3268f31ef752336c15d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -155,6 +155,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -371,7 +372,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -445,7 +446,10 @@ P(\theta|D) = \frac{P(D|\theta)P(\theta)}{P(D)}
 <p><code>CmdStanR</code>はstan言語で書いた確率モデルを実行し，計算機内部で事後分布を作ってその代表値(MCMCサンプル)を出力させることができる。自ら確率モデルを書くことができるので自由度が高いが，線形モデルに限定して実行するのであれば，Stanを開発しているのと同じチームが提供する<code>brms</code>パッケージが便利である。</p>
 <p><code>brms</code>パッケージを用いれば，Rの<code>formula</code>の指定の仕方で一般化混合線形モデル，階層線形モデルなどが表現できる。これらの非ベイズ推定版である<code>lmer</code>パッケージとその書式が同じなので，非常に使いやすい。このパッケージの導入は，一般的な<code>CRAN</code>からのインストールでも可能である。詳しくは<a href="https://github.com/paul-buerkner/brms">brmsのサイト</a>を参照してほしい。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"brms"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>これらの環境の準備ができたものとして，使い方を見ていこう。</p>
 </section>
@@ -456,6 +460,8 @@ P(\theta|D) = \frac{P(D|\theta)P(\theta)}{P(D)}
 <p>前回に倣って，回帰分析のモデル式にそってデータを生成し，分析によってパラメータリカバリを行ってみよう。</p>
 <p>説明変数については制約がないので一様乱数から生成し，平均0，標準偏差<span class="math inline">\(\sigma\)</span>の誤差とともに被説明変数を作り，従来のやり方で推定してみよう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
@@ -470,6 +476,7 @@ P(\theta|D) = \frac{P(D|\theta)P(\theta)}{P(D)}
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -494,8 +501,11 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>結果は切片2.0219277，傾き3.0021943であるから，設定した<span class="math inline">\(\beta_0 = 2,\beta_1 = 3\)</span>が正しく復元できた，という話であった。</p>
 <p>これは最尤法による推定であったが，<code>brms</code>パッケージを使ってベイズ推定に変えてみよう。 方法は次のとおりである。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(brms)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>result.bayes <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Compiling Stan program...</code></pre>
 </div>
@@ -506,8 +516,8 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 1.6e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.16 seconds.
+Chain 1: Gradient evaluation took 1.5e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.15 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -525,8 +535,8 @@ Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
 Chain 1:  Elapsed Time: 0.011 seconds (Warm-up)
-Chain 1:                0.01 seconds (Sampling)
-Chain 1:                0.021 seconds (Total)
+Chain 1:                0.009 seconds (Sampling)
+Chain 1:                0.02 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -550,8 +560,8 @@ Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 2: 
 Chain 2:  Elapsed Time: 0.012 seconds (Warm-up)
-Chain 2:                0.01 seconds (Sampling)
-Chain 2:                0.022 seconds (Total)
+Chain 2:                0.009 seconds (Sampling)
+Chain 2:                0.021 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -574,15 +584,15 @@ Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 0.011 seconds (Warm-up)
-Chain 3:                0.009 seconds (Sampling)
-Chain 3:                0.02 seconds (Total)
+Chain 3:  Elapsed Time: 0.01 seconds (Warm-up)
+Chain 3:                0.008 seconds (Sampling)
+Chain 3:                0.018 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 Chain 4: 
-Chain 4: Gradient evaluation took 2e-06 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+Chain 4: Gradient evaluation took 1e-06 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 Chain 4: Adjust your expectations accordingly!
 Chain 4: 
 Chain 4: 
@@ -600,15 +610,18 @@ Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 4: 
 Chain 4:  Elapsed Time: 0.011 seconds (Warm-up)
-Chain 4:                0.01 seconds (Sampling)
-Chain 4:                0.021 seconds (Total)
+Chain 4:                0.009 seconds (Sampling)
+Chain 4:                0.02 seconds (Total)
 Chain 4: </code></pre>
 </div>
 </div>
 <p>実行に際して，<code>Compiling Stan program...</code>との文字が表示されるが，これは<code>brms</code>パッケージが内部でstan言語を書き，それをC言語に書き換えてコンパイルしていることを意味する。他にもいろいろ出力されているが解説は後述する。簡単なモデルなので，すぐにプロンプトが待機状態に戻るはずである。</p>
 <p>さて，<code>summary</code>関数で結果の要約を見てみよう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: gaussian 
   Links: mu = identity; sigma = identity 
@@ -650,7 +663,10 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <h3 data-number="12.4.3" class="anchored" data-anchor-id="可視化してモデルの評価をみる"><span class="header-section-number">12.4.3</span> 可視化してモデルの評価をみる</h3>
 <p>結果を可視化してみるとわかりやすい。次のコードは，推定されたパラメータの事後分布のヒストグラムと，トレースプロットと呼ばれるものを描画する。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.bayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -665,10 +681,13 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <h3 data-number="12.4.4" class="anchored" data-anchor-id="mcmcサンプルを確認する"><span class="header-section-number">12.4.4</span> MCMCサンプルを確認する</h3>
 <p>これら今回の出力はすでに要約されたものになっているが，具体的にどのようなMCMCサンプルが得られているか確認してみよう。結果オブジェクトから，<code>brms</code>パッケージに含まれる<code>as_draws_df</code>関数を用いて，MCMCサンプルをデータフレームとして取り出すことができる。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mcmc_samples <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">as_draws_df</span>(result.bayes)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mcmc_samples <span class="sc">%&gt;%</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  b_Intercept      b_x     sigma Intercept    lprior      lp__ .chain
 1    2.005643 3.007028 0.9670094  1.722002 -7.430387 -720.0947      1
@@ -692,6 +711,8 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p><code>lprior</code>はLog Priorの略で，パラメータの事前分布の対数を表している。<code>lp__</code>はLog Posteriorの略で，パラメータの事後分布の対数を表している。いずれも，モデルの推定に関係する情報として提供されているが，今ここは気にしなくてもいいだろう。</p>
 <p>次のコードは，MCMCサンプルの要約統計量を使って事後分布を記述したものである。MAP推定値については，Rの<code>density</code>関数を使って，観測データからカーネル密度推定（Kernel Density Estimation, KDE）を計算し，そのピークの度数を取ることで，MAP推定値を算出している。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MAP推定用の関数を定義</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>find_map <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  density_obj <span class="ot">&lt;-</span> <span class="fu">density</span>(x)</span>
@@ -713,6 +734,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">U95 =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> <span class="fl">0.975</span>),</span>
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 7
   name          EAP   MAD   MAP      SD   L95   U95
@@ -728,7 +750,10 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <h3 data-number="12.4.5" class="anchored" data-anchor-id="brmsパッケージのオプション"><span class="header-section-number">12.4.5</span> brmsパッケージのオプション</h3>
 <p>ベイズ推定には事前分布が必要である。しかし<code>brm</code>関数を実行した時に，事前分布は特段指定しなかった。これはパッケージがデフォルトで用意した事前分布を用いたからである。 どのような事前分布が用いられたかを確認するには，以下のようにする。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(result.bayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   prior     class coef group resp dpar nlpar lb ub
                   (flat)         b                                 
@@ -745,6 +770,8 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>これをみると，回帰係数にはflatな事前分布が用いられていることがわかる。これはデータから考えられた取りうる範囲が全て等確率な，一様分布を次全部ぷとしたことを表している。これは無情報時全部分布と呼ばれる。</p>
 <p>残差の分散<span class="math inline">\(\sigma\)</span>については，<code>student_t(3, 0, 21.3)</code>，すなわちt分布が使われていることがわかる。具体的にこの分布がどのような形状か，描いてみてみよう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">3</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">0</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">21.3</span></span>
@@ -754,6 +781,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Half-Student-t Distribution"</span>,</span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"sigma"</span>, <span class="at">ylab =</span> <span class="st">"Density"</span></span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -768,6 +796,8 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <h3 data-number="12.4.6" class="anchored" data-anchor-id="mcmcサンプリングの設定"><span class="header-section-number">12.4.6</span> MCMCサンプリングの設定</h3>
 <p><code>brms</code>パッケージでは，MCMCサンプリングの設定もできる。例えばチェインの数を増やすとか，warmup期間を変えるとか，間引きを変えるとか，いろいろな設定が可能である。また，再現性を確保するために乱数のシードを固定することもできる。これらの設定をしたコードの例を示す。必要に応じて，いろいろな設定を試してみるといいだろう。特に事前分布については，いろいろ変えても結果が大きく変わらない方が，推定値の信頼性も高まると考えられる。事前分布の変更によって，事後分布がどの程度影響されるかを分析することを感度分析というが，このためにも事前分布をデフォルトに任せず設定したり，デフォルトを利用したとしてもどの設定にしているのかを確認できるようになっておこう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 事前分布の設定</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"uniform(0, 100)"</span>, <span class="at">class =</span> <span class="st">"Intercept"</span>), <span class="co"># 切片: 一様分布(0, 100)</span></span>
@@ -783,6 +813,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">3</span>,</span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">12345</span>,</span>
 <span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>
@@ -838,8 +869,8 @@ model <- brm(
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 1.4e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+Chain 1: Gradient evaluation took 1.6e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.16 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -857,8 +888,8 @@ Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
 Chain 1:  Elapsed Time: 0.009 seconds (Warm-up)
-Chain 1:                0.008 seconds (Sampling)
-Chain 1:                0.017 seconds (Total)
+Chain 1:                0.009 seconds (Sampling)
+Chain 1:                0.018 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -881,9 +912,9 @@ Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 2: 
-Chain 2:  Elapsed Time: 0.009 seconds (Warm-up)
-Chain 2:                0.007 seconds (Sampling)
-Chain 2:                0.016 seconds (Total)
+Chain 2:  Elapsed Time: 0.01 seconds (Warm-up)
+Chain 2:                0.008 seconds (Sampling)
+Chain 2:                0.018 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -906,15 +937,15 @@ Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 0.009 seconds (Warm-up)
-Chain 3:                0.006 seconds (Sampling)
-Chain 3:                0.015 seconds (Total)
+Chain 3:  Elapsed Time: 0.01 seconds (Warm-up)
+Chain 3:                0.007 seconds (Sampling)
+Chain 3:                0.017 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 Chain 4: 
-Chain 4: Gradient evaluation took 0 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Chain 4: Gradient evaluation took 2e-06 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
 Chain 4: Adjust your expectations accordingly!
 Chain 4: 
 Chain 4: 
@@ -1077,6 +1108,8 @@ mcmc_summary
    - これらの区間は真の値を含んでおり、モデルの推定精度が良好であることを示しています -->
 
 
+<!-- -->
+
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-mcgrayne2011theory" class="csl-entry" role="listitem">
 シャロン・バーチュ・マグレイン. (2011) 2018. <em>異端の統計学ベイズ</em>. Translated by 冨永星. 草思社.
@@ -1154,6 +1187,57 @@ mcmc_summary
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -1495,7 +1579,396 @@ mcmc_summary
         <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb20" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># ベイズ統計の活用</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>ここまで心理統計の基本的な話題をRで実践しながら見てきたが，ここでベイズ統計の話題を導入しよう。</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>わざわざこのように断る理由は，ベイズ統計学が推測統計学の枠組みの一種であるにもかかわらず，その歴史や解釈によって様々な誤解が生じているからである。一説にはベイズ統計学には100を超える派閥・解釈のスタイルがあるとも言われており，迂闊に議論をすることが憚られるような言説が交わされることも少なくない。</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>筆者はファッションベイジアンを自認しており，主義主張を戦わせることはあまり好ましいことではないと考えている。そのような調子の良い立場の人間が語ることである，という事前情報を十分理解した上で，以下の解説を読んでほしい。</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">## ベイズ統計の位置付け</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>ベイズ統計学の生まれは古く，ベイズの定理にまで遡れば実に300年近く前になる。ベイズの定理を見出したとされるトーマス・ベイズは，18世紀の牧師であり，1763年に死んでいる。その古い人物の名を冠した定理が，現在は「ベイズ統計学」と学問全体を覆うほどになっているのは，それがこれまで紹介してきた統計モデルと考え方や解釈の仕方を大幅に変えているからである。</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>また，ベイズ統計学はその長い歴史に対して，応用的な価値が見出されたのが比較的最近である。筆者の感覚で言えば，2010年以降になって，ベイズ統計学の応用が急速に広まったように思う。古くから知られていた理論が長らくその名をひそめていたのは，ベイズ統計学を応用できるシーンが限定的であったこと，その研究が軍事的な機密を含むことで公開されることが少なかったこと，そして冗談のように聞こえるかもしれないが，アメリカ統計学会の重鎮がベイズ統計学を嫌っていたこと，がその理由と考えられる。このあたりの事情については<span class="co">[</span><span class="ot">@mcgrayne2011theory</span><span class="co">]</span>を参考にしてほしい。</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>そして近年になって改めてベイズ統計学が注目されるようになったのには，2つの理由がある。第一は社会心理学における再現性の危機に対する対応として，従来の統計学ではない新しいアプローチとして期待されたこと。第二は計算機科学の発展により，非常にパワフルな推定方法が開発され，統計モデルを非常に柔軟に扱うことができるようになったこと，である。</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>再現性の危機に対する対応としてのベイズ統計学は，従来の統計学を「頻度主義的」なものとして，ベイズ統計学を「ベイズ主義的」なものとして区別することで，その違いを強調するきらいがある。しかし，頻度主義的な方法に問題があるからという単純な理由でベイズ主義的な方法に乗り換えると，そもそもの問題であった統計法の悪用や誤用の種類が変わるだけに過ぎない。</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>筆者は教育的観点から，ベイズ主義的な統計学の方が初学者には優しく，より理解しやすいのではないかと考えている。しかし，心理学のこの100年の歴史の中で積み重ねられてきた「頻度主義的」な研究のお作法は，誤用悪用を招く恐れもあるとは言え，非常にリッチな教育コンテンツ，分析ツールを提供してきた。またこれまでの心理学的文献が「頻度主義的」なものであったことを考えると，これらを捨て去って心機一転，一気にベイズに乗り換えようというのは現実的ではない。ベイズ統計学の弱点としては，教育コンテンツ，分析ツール，そしてベイズ統計学の教育者がそもそも少ないこと，が挙げられる。もちろんこれらの問題点が，近い将来のうちに解決されることを望むものである。</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>第二の理由はベイズ統計学のポジティブな未来を予感させる。統計モデルが複雑になるにつれ，最尤推定法は実質的な限界を迎えるときでも，ベイズ推定の新しいアプローチは対応できる。これは，ベイズ統計学のパワーを具現化する計算機手法，すなわちMCMC法の発展によるところが大きい。統計モデルを非常に柔軟に，自らの研究データにカスタマイズした分析モデルを構築でき，その他のモデルともベイズファクターという一元的な指標で評価できることは，ベイズ統計学の大きな魅力である。しかし反面，細かく統計モデルをカスタマイズできるということは，研究者にプログラマとしての技量を要求することになる。心理学者はあくまでも統計をツールとして使いたいユーザなのだから，ソフトウェア的なエンジニアリングにあまりエフォートをかけていられないということもあるだろう。しかし，平均値の差の検定や要因計画にとらわれない，自由なモデリングができる魅力はおおきく，心理学の中でも統計モデリングによるアプローチをとる人も年々増加傾向にある。</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## MCMC法</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>ベイズ統計を広く応用できるようにした，革新的な技術であるMCMC法についてみていこう。その前に，ベイズの定理を使った考え方について基本的な説明をしておく。</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="fu">### ベイズの定理</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>ベイズの定理は，条件付き確率の定理である。ある事象$A$が起きたときに，事象$B$が起きる確率を$P(B|A)$と表すと，ベイズの定理は以下のように表される。</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>P(B|A) = \frac{P(A|B)P(B)}{P(A)}</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>$$  </span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>ここで，$P(A)$は事象$A$が起きる確率，$P(B)$は事象$B$が起きる確率，$P(A|B)$は事象$B$が起きたときに事象$A$が起きる確率，$P(B|A)$は事象$A$が起きたときに事象$B$が起きる確率を表す。ここでの重要な点は，この式の右辺と左辺とで，条件付き確率の位置が変わっていることである。</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>この式は，事象$A$が起きたときに事象$B$が起きる確率$P(B|A)$を，事象$B$が起きたときに事象$A$が起きる確率$P(A|B)$と，事象$B$が起きる確率$P(B)$と，事象$A$が起きる確率$P(A)$を用いて表している。ここで$A$をデータ，$B$をモデルのパラメータと考えると，ベイズの定理は以下のように表される。</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>P(\theta|D) = \frac{P(D|\theta)P(\theta)}{P(D)}</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>この式の左辺にあるのは，データ$D$が与えられた時のパラメータ$\theta$が得られる確率であり，データに基づいてパラメータを推論するという推測統計学の基本的な考え方である。これを構成する右辺は，$P(D|\theta)$はパラメータ$\theta$が与えられた時のデータ$D$が得られる確率，$P(\theta)$はパラメータ$\theta$が得られる確率と言える。パラメータ$\theta$がある値になったときに，データ$D$が得られる確率$P(D|\theta)$は尤度と考えることができる。それにかけられる$P(\theta)$は，パラメータ$\theta$の事前確率と呼ばれるが，これがあることによってベイズ統計学の特徴がより鮮明になる。</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>データを取る前にパラメータがどのようにあるのか，この不確実さをベイズ統計学では事前確率，あるいは一般に事前分布として表現する。それと尤度を掛け合わせたものが(周辺尤度$P(D)$で除されるとは言え)統計的な推測の結果である事後確率，事後分布$P(\theta|D)$となっている。</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>古典的には，データを取る前にパラメータのあり方を想定するのは，科学的な態度として不適切であるとして，ベイズ統計学は批判されてきた。この点を認めたとして，改めて式を見てみると，確率分布とデータの関係を表す尤度に，事前分布と周辺尤度の比をかけた結果，事後分布が得られていることになる。尤度を計算してその最も高い値を持つパラメータを推定値としよう，というのが最尤推定法だったわけだが，ベイズ推定はその拡張で，尤度から得られる結果を分布として考えるために事前分布と周辺尤度の比を掛け合わせた，とも言える。尤度関数は確率関数ではないので，そのピークになるところを推定値として用いることしかできなかったが，ベイズの定理を経由すると結果的に得られるのが確率分布になるのだから，パラメータがどのあたりにありそうか，その分布として定量的に評価することも可能である。</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### ベイズの定理の実践史</span></span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>ベイズ統計学では，未知なるものを確率で表現する。心理統計では平均値パラメータや，複数の平均値パラメータ間の差をすることが目的であり，データを取っただけでは母数が未知なものだったわけだから，これを確率分布として表現することがベイズ統計の最初のステップである。</span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>ベイズ統計は，「未知なるパラメータを確率で表現する（事前分布）」「データによって事前分布を事後分布にアップデートする」というたった2つのステップを繰り返すだけである。事前分布も，データの得られた状況に応じて適切に選択することができる。例えば男性と女性の平均身長の差を知りたい，という状況を考えてみよう。男性の身長の平均値，女性の身長の平均値が未知なるパラメータであるが，長さであること，人間であることを考えると，どれほど低く見積もっても100cm，どれほど高く見積もっても300cmという幅で考えていれば十分であろう。ならば，この区間のどこかにピークが来るような広い正規分布(例えば平均100，標準偏差10)を事前分布として用いれば十分である。</span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>尤度，すなわちデータが得られるメカニズムとして，確率分布としての正規分布を考えたとしよう。このとき，ベイズの定理の分子に乗るのはいずれも正規分布であるから，正規分布と正規分布の組み合わせから得られる事後分布の形は正規分布になる。</span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>このように，事後分布の形が明確であれば，ベイズ統計学は従来の統計学と同じように，パラメータの推定値を求めることができる。しかし問題は，このように事後分布の形が明確でないことが少なくない，ということである。複雑なモデルになればなるほど，複数の確率分布がいろいろ組み合わさった形になり，結果的に事後分布がどのような確率分布になるのか，その形がわからないということになる。</span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>これまでのベイズ統計学は，事後分布の形がわかるような，あるいは計算しやすい形になるような(分子の)確率分布の組み合わせを見出す，というのが中心的な問題であった。非常に限定的なものに感じられるかもしれない。まさにその理由で，ベイズ統計学は絵に描いた餅だったのである。</span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>計算機科学が発達するにつれて，複雑怪奇な事後分布の形であっても，そのピークを探索する方法が考えられた。これは確率分布のパラメータを少しずつ変えていくことで，事後分布の確率密度がより高い位置に動くように変化させていく，つまりあらゆる組み合わせを考えていくグリッドサーチの方法である。グリッドサーチは計算量が膨大になるが，頑張ればなんとかなる。その意味で，ベイズ統計学が少しは実用的になってきた。</span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>しかしもちろん，まだまだ普段使いできるほどのレベルではない。そのレベルにまで達したのがMCMCという技術である。</span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a><span class="fu">### Markov Chain Monte Carlo法</span></span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>MCMC法は，マルコフ連鎖モンテカルロ法の略で，マルコフ連鎖とモンテカルロ法という2つの技術を合わせたものである。前者は確率過程のモデル，後者はシミュレーションによる確率分布のサンプリングを行う方法である。一言で言ってしまえば，マルコフ連鎖によってどんな形の確率分布でも機械の中に作り出すことができるようになり，モンテカルロ法によってその確率分布から乱数を取り出すことができるようになったのである。</span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>確率分布と乱数の関係はこれまでに見てきた通りで，乱数ひとつひとつは確率分布の実現値であり，ありえる状態の一つでしかないが，これが大量になってくると全体的な傾向，すなわち確率分布の形状を目に見える形にしてくれるのである。数式では表現できない，複雑な事後分布の形であっても，そこから乱数を生成することはできる。そしてその乱数が大量に集まり、ヒストグラムをかいて稜線を眺めてみれば，それが事後分布の形である，と考えることができる。</span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>この方法の第1の利点は，確率の計算を集計の問題に置き換えるところである。計算機能力の発達によって，数千，数万程度のデータの集計は一瞬でできるようになった昨今，パラメータについて数千の代表値を得て，その平均値を計算するのは容易いことである。確率分布による平均値，すなわち期待値の近似値として，この平均値を用いることができる。その近似値の精度はMCMCのサンプルサイズに依存するが，サンプルを一桁上げるとその精度も一桁上がるわけだから，乱数を大量に作ることでその精度は一気に向上させられる。</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>この方法の第2の利点は，積分計算が容易になることである。複数のパラメータを持つ確率分布は，多次元空間における確率分布である。そのなかで特定のパラメータに注目する場合，それパラメータ以外のパラメータは不要なので積分によって周辺化する必要がある。数式でこれを行うと，多重積分になって非常に面倒が生じるが，乱数生成アプローチの場合は当該パラメータについてのみ代表値を計上すれば良いので，非常に簡単である。</span>
+<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a>あくまでも近似に過ぎないと言われればそうだが，この方法はかなり強力で，事前分布や尤度など考えるべき確率分布とその組み合わせ方を適切に設定すれば，事後分布の形を計算できなくても事後分布からの乱数は得られるのである。この組み合わせの設定は，確率型プログラミング言語によって実装される。確率型プログラミング言語では，事前分布と尤度(データがどの確率分布から出てきているか)を記述するだけで，そのまま事後分布からの乱数を生成することができる。ユーザは自分の好きな確率分布を好きな形で組み合わせることができるから，モデルの表現力が飛躍的に上がったのである。</span>
+<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a>確率型プログラミング言語として，代表的なものはJAGSとStanである。現在はStanが主流である。StanはRだけでなく，Pythonなど他の言語からも利用可能である。RでStanを利用するには，パッケージとして<span class="in">`cmdstanr`</span>を用いるのが一般的である。このパッケージを導入するにあたっては，<span class="in">`cmdstanr`</span>の<span class="co">[</span><span class="ot">ホームページ</span><span class="co">](https://mc-stan.org/cmdstanr/)</span>を参照してほしい。</span>
+<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a><span class="fu">## ツールの導入；Stanとbrms</span></span>
+<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a>Stanの導入には，環境によって若干の違いがあるので，公式の<span class="co">[</span><span class="ot">ホームページ</span><span class="co">](https://mc-stan.org/)</span>を参照してほしい。2025年3月現在公式ページから<span class="co">[</span><span class="ot">Get Started</span><span class="co">](https://mc-stan.org/install/)</span>へと進むと，OSとインターフェイス，インストーラをどこにするかを選択すると，導入に必要なもの(Requirements)と導入方法が表示される。</span>
+<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/12_stan_install.png)</span></span>
+<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a>画面ではOSとしてMacOSを選んでいるが，ここは各自の環境に合わせてもらいたい。インターフェイスは<span class="in">`CmdStanR`</span>を選択して欲しい。Stanを実行するにはCコンパイラが必要であり，また<span class="in">`CmdStanR`</span>はコマンドラインからStanを実行してRに繋げるという代物で，<span class="in">`cmdstanr::install_cmdstan`</span>関数を実行した後，インストール先のパスを設定する必要がある。</span>
+<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a><span class="in">`CmdStanR`</span>はstan言語で書いた確率モデルを実行し，計算機内部で事後分布を作ってその代表値(MCMCサンプル)を出力させることができる。自ら確率モデルを書くことができるので自由度が高いが，線形モデルに限定して実行するのであれば，Stanを開発しているのと同じチームが提供する<span class="in">`brms`</span>パッケージが便利である。</span>
+<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a><span class="in">`brms`</span>パッケージを用いれば，Rの<span class="in">`formula`</span>の指定の仕方で一般化混合線形モデル，階層線形モデルなどが表現できる。これらの非ベイズ推定版である<span class="in">`lmer`</span>パッケージとその書式が同じなので，非常に使いやすい。このパッケージの導入は，一般的な<span class="in">`CRAN`</span>からのインストールでも可能である。詳しくは<span class="co">[</span><span class="ot">brmsのサイト</span><span class="co">](https://github.com/paul-buerkner/brms)</span>を参照してほしい。</span>
+<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"brms"</span>)</span>
+<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a>これらの環境の準備ができたものとして，使い方を見ていこう。</span>
+<span id="cb20-98"><a href="#cb20-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-99"><a href="#cb20-99" aria-hidden="true" tabindex="-1"></a><span class="fu">## ベイズ法による推定の例</span></span>
+<span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a><span class="fu">### パラメータリカバリによる確認と結果の読み取り</span></span>
+<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a>前回に倣って，回帰分析のモデル式にそってデータを生成し，分析によってパラメータリカバリを行ってみよう。</span>
+<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a>説明変数については制約がないので一様乱数から生成し，平均0，標準偏差$\sigma$の誤差とともに被説明変数を作り，従来のやり方で推定してみよう。</span>
+<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-109"><a href="#cb20-109" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
+<span id="cb20-110"><a href="#cb20-110" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
+<span id="cb20-111"><a href="#cb20-111" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb20-112"><a href="#cb20-112" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb20-113"><a href="#cb20-113" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb20-114"><a href="#cb20-114" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb20-115"><a href="#cb20-115" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb20-116"><a href="#cb20-116" aria-hidden="true" tabindex="-1"></a><span class="co"># データの生成</span></span>
+<span id="cb20-117"><a href="#cb20-117" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb20-118"><a href="#cb20-118" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb20-119"><a href="#cb20-119" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x <span class="sc">+</span> e</span>
+<span id="cb20-120"><a href="#cb20-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-121"><a href="#cb20-121" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb20-122"><a href="#cb20-122" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)</span>
+<span id="cb20-123"><a href="#cb20-123" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span>
+<span id="cb20-124"><a href="#cb20-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-125"><a href="#cb20-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-126"><a href="#cb20-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-127"><a href="#cb20-127" aria-hidden="true" tabindex="-1"></a>結果は切片<span class="in">`r coef(result.lm)[1]`</span>，傾き<span class="in">`r coef(result.lm)[2]`</span>であるから，設定した$\beta_0 = 2,\beta_1 = 3$が正しく復元できた，という話であった。</span>
+<span id="cb20-128"><a href="#cb20-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-129"><a href="#cb20-129" aria-hidden="true" tabindex="-1"></a>これは最尤法による推定であったが，<span class="in">`brms`</span>パッケージを使ってベイズ推定に変えてみよう。</span>
+<span id="cb20-130"><a href="#cb20-130" aria-hidden="true" tabindex="-1"></a>方法は次のとおりである。</span>
+<span id="cb20-131"><a href="#cb20-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-134"><a href="#cb20-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-135"><a href="#cb20-135" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(brms)</span>
+<span id="cb20-136"><a href="#cb20-136" aria-hidden="true" tabindex="-1"></a>result.bayes <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)</span>
+<span id="cb20-137"><a href="#cb20-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-138"><a href="#cb20-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-139"><a href="#cb20-139" aria-hidden="true" tabindex="-1"></a>実行に際して，<span class="in">`Compiling Stan program...`</span>との文字が表示されるが，これは<span class="in">`brms`</span>パッケージが内部でstan言語を書き，それをC言語に書き換えてコンパイルしていることを意味する。他にもいろいろ出力されているが解説は後述する。簡単なモデルなので，すぐにプロンプトが待機状態に戻るはずである。</span>
+<span id="cb20-140"><a href="#cb20-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-141"><a href="#cb20-141" aria-hidden="true" tabindex="-1"></a>さて，<span class="in">`summary`</span>関数で結果の要約を見てみよう。</span>
+<span id="cb20-144"><a href="#cb20-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-145"><a href="#cb20-145" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes)</span>
+<span id="cb20-146"><a href="#cb20-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-147"><a href="#cb20-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-148"><a href="#cb20-148" aria-hidden="true" tabindex="-1"></a>まず<span class="in">`Regression Coefficients`</span>のところを見てみよう。とりあえずリカバリーが上手くいってるか見てみたいからだ。推定値<span class="in">`Estimate`</span>のところに，<span class="in">`r fixef(result.bayes)[1,1]`</span>と<span class="in">`r fixef(result.bayes)[2,1]`</span>とあるから，なるほど正しく推定できているようである。その後に標準誤差(SE)があるのはいいとして，その次にあるのが<span class="in">`l-95%CI`</span>と<span class="in">`u-95%CI`</span>，すなわちlower-upperで表される区間である。</span>
+<span id="cb20-149"><a href="#cb20-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-150"><a href="#cb20-150" aria-hidden="true" tabindex="-1"></a>ベイズ統計学ではわからないものを確率分布として表現する。今回わからなかったものは回帰係数だから，切片$\beta_0$と傾き$\beta_1$はそれぞれ確率として表現され，結果も確率分布(事後分布)として得られている。つまり，ここに表されているのは事後分布の95%区間であり，$\beta_0$は<span class="in">`r fixef(result.bayes)[1,3:4]`</span>の間に分布しているもの，という結果になっている。</span>
+<span id="cb20-151"><a href="#cb20-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-152"><a href="#cb20-152" aria-hidden="true" tabindex="-1"></a>最尤推定が点推定であったのに対し，ベイズ推定はこのように分布で表現されるから，表示されている推定値もその代表値である。代表値の取り方はご存知の通り，平均値，最頻値，中央値などが考えられ，そのいずれもが推定値として用いられる。平均値による代表値はExpectation A Posteriori，EAP推定値と呼ばれる。中央値による代表値はMEDian A Posteriori，そして最頻値というより分布のピークを取る推定値のことをMaximum A Posteriori，MAP推定値という。ここで得られた事後分布は分布の関数形によるものではなく，事後分布の代表値の集積による稜線で形を見ているに過ぎないから，MAP推定値を得る方法は1.ヒストグラムを書いてその最頻値である級数の平均値をとる，2.ヒストグラムにフィットする関数を近似し，そのピークを算出する，といった方法が考えられる。計算そのものはパッケージに含まれる関数を利用すれば良い。ここで大事なことは，分布の形状に応じてその代表値を選ぶことである。すなわち，正規分布のような左右対称の分布であれば，平均値，中央値，最頻値は同じ値になるが，ここが異なるようであれば歪んだ分布をしていることが考えられるから，事後分布のヒストグラムを描いて確認した上で，中央値やMAP推定値などを用いるといいだろう。</span>
+<span id="cb20-153"><a href="#cb20-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-154"><a href="#cb20-154" aria-hidden="true" tabindex="-1"></a><span class="fu">### MCMCを評価する</span></span>
+<span id="cb20-155"><a href="#cb20-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-156"><a href="#cb20-156" aria-hidden="true" tabindex="-1"></a>結果はその他にもいろいろな情報を提供してくれているので，見ていこう。<span class="in">`summary`</span>関数によって表示された出力の5行目，<span class="in">`Draws`</span>のところにMCMCサンプリングの情報が表示されている。これによると，4つのチェインがあり，そのそれぞれが2000回反復(<span class="in">`iter`</span>)されたこと，そのうちの最初の1000回は<span class="in">`warmup`</span>と呼ばれるステップであったこと，最後に<span class="in">`thin`</span>というのがあるが，これはMCMCサンプルを間引きするためのもので，ここでは1回毎にサンプルを取っている，すなわち毎回のサンプルを用いたことがわかる。</span>
+<span id="cb20-157"><a href="#cb20-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-158"><a href="#cb20-158" aria-hidden="true" tabindex="-1"></a>MCMCは事後分布を作り，そこから乱数を取り出すステップであったこをと思い出そう。乱数を取り出すステップは，まず適当な初期値から始め，次に高次元同時確率空間の中である方向に移動する。その場所からまた次の場所を選ぶ，と次々とステップを進めていく形で事後分布の代表値を拾い集めてゆく。今回の例で言うと，$\beta_0,\beta_1,\sigma$という3つのパラメータを推定しているので3次元空間を探索する。この空間のある座標は，この3つのパラメータが取りうる可能性のある値の組み合わせである。この空間で，初期値$t_0$の座標に立ち，近傍の別の座標$t_1$に移動する。この$t_1$の座標も，この3つのパラメータが取りうる別の可能性の組み合わせである。同様に$t_1$の近傍$t_2$,$t_2$の近傍$t_3$，とステップを踏むことで，それぞれのステップがMCMCサンプルの1つとして記録されていく。この記録の集約が事後分布の近似になる。</span>
+<span id="cb20-159"><a href="#cb20-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-160"><a href="#cb20-160" aria-hidden="true" tabindex="-1"></a>このような形でサンプリングが進むことを考えると，まず懸念されるのが「初期値によって結果が変わるのではないか」ということである。実際，初期値によっては，サンプリングがうまくいかないことはある。うまく推定できるときは，どんな初期値から発生しても，事後分布が作る空間の密度の濃いところからサンプリングが進むので，同じような値を集めてくることができるだろう。</span>
+<span id="cb20-161"><a href="#cb20-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-162"><a href="#cb20-162" aria-hidden="true" tabindex="-1"></a>MCMCがうまくいってるかどうかを評価するために，MCMCでは一般的に複数の初期値から始め，別々のステップを踏んでログを取る。このステップのログをチェインと呼ぶ。つまり，それぞれのチェインは異なる初期値から始まる一連の代表値の連なりなのである。今回の結果では，4つのチェイン，つまり4つの初期値から始まったことがわかる。</span>
+<span id="cb20-163"><a href="#cb20-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-164"><a href="#cb20-164" aria-hidden="true" tabindex="-1"></a>さて，もう一度サンプリングの進み方を思い返してみよう。初期値から始めてステップしている最初のうちは，最終的に目的としている事後分布の代表値からは大きく外れているかもしれない。ステップを繰り返すことで，より事後分布の密度の濃いところに近づいていくのだから，最初のうちはうまくいってなくても当然である。この最初のうちのステップは代表値として信用できないので，「バーンインburn in期間だった」ということで切り捨てることが一般的である。<span class="in">`brms`</span> が採用しているMCMCアルゴリズムのstanは，この初期の探索時に，効率よくサンプリングできるようにステップサイズ(どれぐらい遠くの近傍まで考えるか)等アルゴリズムを自動で調整する期間を設定している。これを特にウォームアップ期間という。</span>
+<span id="cb20-165"><a href="#cb20-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-166"><a href="#cb20-166" aria-hidden="true" tabindex="-1"></a>結果に戻ってみてみると，4つのチェインで2000ステップ(<span class="in">`iter`</span>)を踏んでいるが，ウォームアップ期間が1000あるので，実際にサンプリングが行われたのは1000ステップ以降である。なので<span class="in">`total post-warmup draws =4000`</span>となっている。</span>
+<span id="cb20-167"><a href="#cb20-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-168"><a href="#cb20-168" aria-hidden="true" tabindex="-1"></a><span class="in">`thin`</span>は，サンプリングの間引き間隔を指定するものであった。ステップ毎に代表値のログを取っていくとしたが，原理的にはそれぞれのステップ・代表値は事後分布から独立にサンプリングされたものであるはずだ。MCMCの結果を見て，ステップ毎の自己相関を確認し，もし$t-1$時点の代表値が$t$時点の代表値に影響を与えているようであればよろしくない。そこで間引きをすることで，そのような影響を与えるようなステップを省略することで，より独立性の高いサンプルを得ることができる，と考えるのである。間引きをすると事後分布からのサンプルの数が減ることになる。また，自己相関が高いようなMCMCサンプルしか得られないのは，モデルやパラメタライゼーションが不適切である場合が多く，<span class="in">`thin`</span>オプションを使うのは結果オブジェクトのサイズを減らす目的である，と考えた方がいいだろう。</span>
+<span id="cb20-169"><a href="#cb20-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-170"><a href="#cb20-170" aria-hidden="true" tabindex="-1"></a>推定値の出力結果に，<span class="in">`Rhat`</span>と<span class="in">`Bulk-ESS`</span>という指標がある。<span class="in">`Rhat`</span>は，チェイン間の自己相関を表す指標で，1に近いほどよいとされる。基準として，全てのパラメータにおける<span class="in">`Rhat`</span>が1.1未満であれば，複数のチェインが絡み合った，良いサンプリングであったと評価される。逆に，<span class="in">`Rhat`</span>が1.1以上であれば，初期値によって異なるパラメータ空間を探索していたことになり，事後分布からの適切な代表値ではない可能性があるので，モデルの見直しなどが必要になる。<span class="in">`Bulk-ESS`</span>は，有効サンプルサイズEffective Sample Sizeの略であり，実際に独立したサンプルが何個分の情報を持っているかを推定する指標である。これの量的目安は大まかにいって，3桁以上の数字があれば良いと言われる。逆に1，2桁の数字しか示されないのであれば，有効なサンプリングができていないと考えて，モデルの見直しなどが必要になる。</span>
+<span id="cb20-171"><a href="#cb20-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-172"><a href="#cb20-172" aria-hidden="true" tabindex="-1"></a><span class="fu">### 可視化してモデルの評価をみる</span></span>
+<span id="cb20-173"><a href="#cb20-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-174"><a href="#cb20-174" aria-hidden="true" tabindex="-1"></a>結果を可視化してみるとわかりやすい。次のコードは，推定されたパラメータの事後分布のヒストグラムと，トレースプロットと呼ばれるものを描画する。</span>
+<span id="cb20-177"><a href="#cb20-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-178"><a href="#cb20-178" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.bayes)</span>
+<span id="cb20-179"><a href="#cb20-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-180"><a href="#cb20-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-181"><a href="#cb20-181" aria-hidden="true" tabindex="-1"></a>トレースプロットとは，チェイン毎のステップログを描画したものである。チェインがうまく混合しているかどうかを確認するためのものであり，今回は4つのチェインが混じり合った状態であるから，事後分布からのサンプリングとしてはうまくいっていると考えられる。</span>
+<span id="cb20-182"><a href="#cb20-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-183"><a href="#cb20-183" aria-hidden="true" tabindex="-1"></a><span class="fu">### MCMCサンプルを確認する</span></span>
+<span id="cb20-184"><a href="#cb20-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-185"><a href="#cb20-185" aria-hidden="true" tabindex="-1"></a>これら今回の出力はすでに要約されたものになっているが，具体的にどのようなMCMCサンプルが得られているか確認してみよう。結果オブジェクトから，<span class="in">`brms`</span>パッケージに含まれる<span class="in">`as_draws_df`</span>関数を用いて，MCMCサンプルをデータフレームとして取り出すことができる。</span>
+<span id="cb20-186"><a href="#cb20-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-187"><a href="#cb20-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r mcmc_samples}</span></span>
+<span id="cb20-188"><a href="#cb20-188" aria-hidden="true" tabindex="-1"></a>mcmc_samples <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">as_draws_df</span>(result.bayes)</span>
+<span id="cb20-189"><a href="#cb20-189" aria-hidden="true" tabindex="-1"></a>mcmc_samples <span class="sc">%&gt;%</span></span>
+<span id="cb20-190"><a href="#cb20-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-191"><a href="#cb20-191" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span>
+<span id="cb20-192"><a href="#cb20-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-193"><a href="#cb20-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-194"><a href="#cb20-194" aria-hidden="true" tabindex="-1"></a>いま取り出した<span class="in">`mcmc_samples`</span>は，<span class="in">`as_draws_df`</span>関数の出力によって，<span class="in">`data.frame`</span>型の特殊系になっているので，改めて<span class="in">`as.data.frame`</span>関数を用いてデータフレームに変換し，最初の数行を表示させている。</span>
+<span id="cb20-195"><a href="#cb20-195" aria-hidden="true" tabindex="-1"></a>これの後ろの3列に，<span class="in">`.chain`</span>,<span class="in">`.iteration`</span>,<span class="in">`.draw`</span>という列があるが，これはそれぞれMCMCサンプルのchain番号，サンプルの通し番号，サンプルの通し番号である。</span>
+<span id="cb20-196"><a href="#cb20-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-197"><a href="#cb20-197" aria-hidden="true" tabindex="-1"></a>すでに述べたように，デフォルトでは4つのチェインからサンプリングを行う。画面に表示されているのは，第1チェインの1，2，...,6番目のステップ＝サンプルである。つまり，各行が3次元同時確立空間の代表値であることを指している。</span>
+<span id="cb20-198"><a href="#cb20-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-199"><a href="#cb20-199" aria-hidden="true" tabindex="-1"></a><span class="in">`b_Intercept`</span>は切片$\beta_0$のサンプル，<span class="in">`b_x`</span>は傾き$\beta_1$のサンプルである。また今回は単回帰分析であるから，$Y \sim N(\beta_0 + \beta_1 x, \sigma)$というモデルを推定していたわけで，<span class="in">`sigma`</span>はこの$\sigma$のサンプルである。<span class="in">`Intercept`</span>は$\beta_0 + \beta_1 x$，すなわち正規分布の位置を表している。</span>
+<span id="cb20-200"><a href="#cb20-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-201"><a href="#cb20-201" aria-hidden="true" tabindex="-1"></a><span class="in">`lprior`</span>はLog Priorの略で，パラメータの事前分布の対数を表している。<span class="in">`lp__`</span>はLog Posteriorの略で，パラメータの事後分布の対数を表している。いずれも，モデルの推定に関係する情報として提供されているが，今ここは気にしなくてもいいだろう。</span>
+<span id="cb20-202"><a href="#cb20-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-203"><a href="#cb20-203" aria-hidden="true" tabindex="-1"></a>次のコードは，MCMCサンプルの要約統計量を使って事後分布を記述したものである。MAP推定値については，Rの<span class="in">`density`</span>関数を使って，観測データからカーネル密度推定（Kernel Density Estimation, KDE）を計算し，そのピークの度数を取ることで，MAP推定値を算出している。</span>
+<span id="cb20-204"><a href="#cb20-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-207"><a href="#cb20-207" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-208"><a href="#cb20-208" aria-hidden="true" tabindex="-1"></a><span class="co"># MAP推定用の関数を定義</span></span>
+<span id="cb20-209"><a href="#cb20-209" aria-hidden="true" tabindex="-1"></a>find_map <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb20-210"><a href="#cb20-210" aria-hidden="true" tabindex="-1"></a>  density_obj <span class="ot">&lt;-</span> <span class="fu">density</span>(x)</span>
+<span id="cb20-211"><a href="#cb20-211" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(density_obj<span class="sc">$</span>x[<span class="fu">which.max</span>(density_obj<span class="sc">$</span>y)])</span>
+<span id="cb20-212"><a href="#cb20-212" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-213"><a href="#cb20-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-214"><a href="#cb20-214" aria-hidden="true" tabindex="-1"></a>mcmc_samples <span class="sc">%&gt;%</span></span>
+<span id="cb20-215"><a href="#cb20-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-216"><a href="#cb20-216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(b_Intercept, b_x, sigma) <span class="sc">%&gt;%</span></span>
+<span id="cb20-217"><a href="#cb20-217" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"iter"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-218"><a href="#cb20-218" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>iter) <span class="sc">%&gt;%</span></span>
+<span id="cb20-219"><a href="#cb20-219" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span></span>
+<span id="cb20-220"><a href="#cb20-220" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-221"><a href="#cb20-221" aria-hidden="true" tabindex="-1"></a>    <span class="at">EAP =</span> <span class="fu">mean</span>(value),</span>
+<span id="cb20-222"><a href="#cb20-222" aria-hidden="true" tabindex="-1"></a>    <span class="at">MAD =</span> <span class="fu">median</span>(value),</span>
+<span id="cb20-223"><a href="#cb20-223" aria-hidden="true" tabindex="-1"></a>    <span class="at">MAP =</span> <span class="fu">find_map</span>(value),</span>
+<span id="cb20-224"><a href="#cb20-224" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(value),</span>
+<span id="cb20-225"><a href="#cb20-225" aria-hidden="true" tabindex="-1"></a>    <span class="at">L95 =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> <span class="fl">0.025</span>),</span>
+<span id="cb20-226"><a href="#cb20-226" aria-hidden="true" tabindex="-1"></a>    <span class="at">U95 =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> <span class="fl">0.975</span>),</span>
+<span id="cb20-227"><a href="#cb20-227" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb20-228"><a href="#cb20-228" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-229"><a href="#cb20-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-230"><a href="#cb20-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-231"><a href="#cb20-231" aria-hidden="true" tabindex="-1"></a>今回は，ベイズ統計の位置付けとMCMC法によるベイズ推定の実際を，パッケージを用いて説明した。</span>
+<span id="cb20-232"><a href="#cb20-232" aria-hidden="true" tabindex="-1"></a><span class="in">`brms`</span>パッケージは線形モデルやその応用において非常に強力であり，ベイズ統計の実践においては，これを用いることが多いだろう。ただし，線形モデルでないモデルについては，自分でstanのコードを書いて推定することも多い。線形モデルの限界に囚われず，自由な統計モデリングの世界があることも視野に入れておいてほしい。</span>
+<span id="cb20-233"><a href="#cb20-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-234"><a href="#cb20-234" aria-hidden="true" tabindex="-1"></a><span class="fu">### brmsパッケージのオプション</span></span>
+<span id="cb20-235"><a href="#cb20-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-236"><a href="#cb20-236" aria-hidden="true" tabindex="-1"></a>ベイズ推定には事前分布が必要である。しかし<span class="in">`brm`</span>関数を実行した時に，事前分布は特段指定しなかった。これはパッケージがデフォルトで用意した事前分布を用いたからである。</span>
+<span id="cb20-237"><a href="#cb20-237" aria-hidden="true" tabindex="-1"></a>どのような事前分布が用いられたかを確認するには，以下のようにする。</span>
+<span id="cb20-238"><a href="#cb20-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-241"><a href="#cb20-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-242"><a href="#cb20-242" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(result.bayes)</span>
+<span id="cb20-243"><a href="#cb20-243" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-244"><a href="#cb20-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-245"><a href="#cb20-245" aria-hidden="true" tabindex="-1"></a>これをみると，回帰係数にはflatな事前分布が用いられていることがわかる。これはデータから考えられた取りうる範囲が全て等確率な，一様分布を次全部ぷとしたことを表している。これは無情報時全部分布と呼ばれる。</span>
+<span id="cb20-246"><a href="#cb20-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-247"><a href="#cb20-247" aria-hidden="true" tabindex="-1"></a>残差の分散$\sigma$については，<span class="in">`student_t(3, 0, 21.3) `</span>，すなわちt分布が使われていることがわかる。具体的にこの分布がどのような形状か，描いてみてみよう。</span>
+<span id="cb20-250"><a href="#cb20-250" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-251"><a href="#cb20-251" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb20-252"><a href="#cb20-252" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-253"><a href="#cb20-253" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">21.3</span></span>
+<span id="cb20-254"><a href="#cb20-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-255"><a href="#cb20-255" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">dt</span>((x <span class="sc">-</span> mu) <span class="sc">/</span> sigma, df) <span class="sc">/</span> sigma,</span>
+<span id="cb20-256"><a href="#cb20-256" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">100</span>,</span>
+<span id="cb20-257"><a href="#cb20-257" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Half-Student-t Distribution"</span>,</span>
+<span id="cb20-258"><a href="#cb20-258" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"sigma"</span>, <span class="at">ylab =</span> <span class="st">"Density"</span></span>
+<span id="cb20-259"><a href="#cb20-259" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-260"><a href="#cb20-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-261"><a href="#cb20-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-262"><a href="#cb20-262" aria-hidden="true" tabindex="-1"></a>分散は正の値しか取らないので，<span class="in">`brms`</span> は <span class="in">`student_t(3, 0, 21.3)`</span> を 半分に折りたたみ、半t分布（half-Student-t） に変換して利用している。t分布は正規分布より裾の重い分布であり，大きな値が出る可能性も考慮されている。分散の事前分布には他にも，cauchy分布やexponential分布などが用いられることもある。</span>
+<span id="cb20-263"><a href="#cb20-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-264"><a href="#cb20-264" aria-hidden="true" tabindex="-1"></a><span class="fu">### MCMCサンプリングの設定</span></span>
+<span id="cb20-265"><a href="#cb20-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-266"><a href="#cb20-266" aria-hidden="true" tabindex="-1"></a><span class="in">`brms`</span>パッケージでは，MCMCサンプリングの設定もできる。例えばチェインの数を増やすとか，warmup期間を変えるとか，間引きを変えるとか，いろいろな設定が可能である。また，再現性を確保するために乱数のシードを固定することもできる。これらの設定をしたコードの例を示す。必要に応じて，いろいろな設定を試してみるといいだろう。特に事前分布については，いろいろ変えても結果が大きく変わらない方が，推定値の信頼性も高まると考えられる。事前分布の変更によって，事後分布がどの程度影響されるかを分析することを感度分析というが，このためにも事前分布をデフォルトに任せず設定したり，デフォルトを利用したとしてもどの設定にしているのかを確認できるようになっておこう。</span>
+<span id="cb20-267"><a href="#cb20-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-270"><a href="#cb20-270" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-271"><a href="#cb20-271" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb20-272"><a href="#cb20-272" aria-hidden="true" tabindex="-1"></a><span class="co"># 事前分布の設定</span></span>
+<span id="cb20-273"><a href="#cb20-273" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb20-274"><a href="#cb20-274" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"uniform(0, 100)"</span>, <span class="at">class =</span> <span class="st">"Intercept"</span>), <span class="co"># 切片: 一様分布(0, 100)</span></span>
+<span id="cb20-275"><a href="#cb20-275" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"normal(0, 10)"</span>, <span class="at">class =</span> <span class="st">"b"</span>), <span class="co"># 回帰係数: N(0, 10)</span></span>
+<span id="cb20-276"><a href="#cb20-276" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_prior</span>(<span class="st">"cauchy(0, 5)"</span>, <span class="at">class =</span> <span class="st">"sigma"</span>) <span class="co"># 標準偏差: Cauchy(0, 5)</span></span>
+<span id="cb20-277"><a href="#cb20-277" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-278"><a href="#cb20-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-279"><a href="#cb20-279" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x,</span>
+<span id="cb20-280"><a href="#cb20-280" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb20-281"><a href="#cb20-281" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> priors,</span>
+<span id="cb20-282"><a href="#cb20-282" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">3000</span>,</span>
+<span id="cb20-283"><a href="#cb20-283" aria-hidden="true" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="dv">2000</span>,</span>
+<span id="cb20-284"><a href="#cb20-284" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">3</span>,</span>
+<span id="cb20-285"><a href="#cb20-285" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">12345</span>,</span>
+<span id="cb20-286"><a href="#cb20-286" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-287"><a href="#cb20-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-288"><a href="#cb20-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-289"><a href="#cb20-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-290"><a href="#cb20-290" aria-hidden="true" tabindex="-1"></a><span class="fu">## 課題</span></span>
+<span id="cb20-291"><a href="#cb20-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-292"><a href="#cb20-292" aria-hidden="true" tabindex="-1"></a>以下のデータセットは被説明変数$y$，説明変数$x1,x2$からなる重回帰分析のサンプルデータです。データセット全体($n=100$)は<span class="co">[</span><span class="ot">ex_regression3.csv</span><span class="co">](ex_regression1.csv)</span>からダウンロード可能です。このデータセットを用いて，<span class="in">`brms`</span>パッケージによる重回帰分析を実行してください。</span>
+<span id="cb20-293"><a href="#cb20-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-294"><a href="#cb20-294" aria-hidden="true" tabindex="-1"></a>分析結果について，以下の項目を順に報告してください：</span>
+<span id="cb20-295"><a href="#cb20-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-296"><a href="#cb20-296" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>回帰係数（切片，$x1$，$x2$）の推定値と95%信用区間</span>
+<span id="cb20-297"><a href="#cb20-297" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>MCMCの収束診断（<span class="in">`Rhat`</span>と<span class="in">`Bulk-ESS`</span>の値に基づいて判断）</span>
+<span id="cb20-298"><a href="#cb20-298" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>各パラメータの事後分布のヒストグラムとトレースプロット</span>
+<span id="cb20-299"><a href="#cb20-299" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>デフォルトで使用された事前分布の確認と説明</span>
+<span id="cb20-300"><a href="#cb20-300" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>MCMCサンプルからのMAP推定値の算出（本章で示した<span class="in">`find_map`</span>関数を利用）</span>
+<span id="cb20-301"><a href="#cb20-301" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>MCMCサンプルに基づく90%信用区間と75%信用区間の算出</span>
+<span id="cb20-302"><a href="#cb20-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-303"><a href="#cb20-303" aria-hidden="true" tabindex="-1"></a>なお，レポートには使用したRコードと，各項目の結果に対する簡潔な解釈を含めてください。</span>
+<span id="cb20-304"><a href="#cb20-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-307"><a href="#cb20-307" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-308"><a href="#cb20-308" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
+<span id="cb20-309"><a href="#cb20-309" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb20-310"><a href="#cb20-310" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb20-311"><a href="#cb20-311" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb20-312"><a href="#cb20-312" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb20-313"><a href="#cb20-313" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="fl">2.3</span></span>
+<span id="cb20-314"><a href="#cb20-314" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">1.2</span></span>
+<span id="cb20-315"><a href="#cb20-315" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb20-316"><a href="#cb20-316" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb20-317"><a href="#cb20-317" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb20-318"><a href="#cb20-318" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2 <span class="sc">+</span> e</span>
+<span id="cb20-319"><a href="#cb20-319" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2)</span>
+<span id="cb20-320"><a href="#cb20-320" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sample)</span>
+<span id="cb20-321"><a href="#cb20-321" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(sample, <span class="at">file =</span> <span class="st">"ex_regression3.csv"</span>)</span>
+<span id="cb20-322"><a href="#cb20-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-323"><a href="#cb20-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-324"><a href="#cb20-324" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- </span></span>
+<span id="cb20-325"><a href="#cb20-325" aria-hidden="true" tabindex="-1"></a><span class="al">###</span><span class="co"> 課題の解答例</span></span>
+<span id="cb20-326"><a href="#cb20-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-329"><a href="#cb20-329" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-330"><a href="#cb20-330" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
+<span id="cb20-331"><a href="#cb20-331" aria-hidden="true" tabindex="-1"></a><span class="co"># データの読み込みと前処理</span></span>
+<span id="cb20-332"><a href="#cb20-332" aria-hidden="true" tabindex="-1"></a><span class="co">pacman::p_load(tidyverse)</span></span>
+<span id="cb20-333"><a href="#cb20-333" aria-hidden="true" tabindex="-1"></a><span class="co">pacman::p_load(brms)</span></span>
+<span id="cb20-334"><a href="#cb20-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-335"><a href="#cb20-335" aria-hidden="true" tabindex="-1"></a><span class="co"># データの読み込み</span></span>
+<span id="cb20-336"><a href="#cb20-336" aria-hidden="true" tabindex="-1"></a><span class="co">data &lt;- read.csv("ex_regression3.csv")</span></span>
+<span id="cb20-337"><a href="#cb20-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-338"><a href="#cb20-338" aria-hidden="true" tabindex="-1"></a><span class="co"># モデルの推定</span></span>
+<span id="cb20-339"><a href="#cb20-339" aria-hidden="true" tabindex="-1"></a><span class="co">model &lt;- brm(</span></span>
+<span id="cb20-340"><a href="#cb20-340" aria-hidden="true" tabindex="-1"></a><span class="co">  y ~ x1 + x2,</span></span>
+<span id="cb20-341"><a href="#cb20-341" aria-hidden="true" tabindex="-1"></a><span class="co">  data = data,</span></span>
+<span id="cb20-342"><a href="#cb20-342" aria-hidden="true" tabindex="-1"></a><span class="co">  seed = 123 # 再現性のため</span></span>
+<span id="cb20-343"><a href="#cb20-343" aria-hidden="true" tabindex="-1"></a><span class="co">)</span></span>
+<span id="cb20-344"><a href="#cb20-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-345"><a href="#cb20-345" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 推定値と95%信用区間の確認</span></span>
+<span id="cb20-346"><a href="#cb20-346" aria-hidden="true" tabindex="-1"></a><span class="co">summary(model)</span></span>
+<span id="cb20-347"><a href="#cb20-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-348"><a href="#cb20-348" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. MCMCの収束診断の詳細確認</span></span>
+<span id="cb20-349"><a href="#cb20-349" aria-hidden="true" tabindex="-1"></a><span class="co"># Rhatと有効サンプルサイズの確認は summary() の出力に含まれています</span></span>
+<span id="cb20-350"><a href="#cb20-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-351"><a href="#cb20-351" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 事後分布のヒストグラムとトレースプロット</span></span>
+<span id="cb20-352"><a href="#cb20-352" aria-hidden="true" tabindex="-1"></a><span class="co">plot(model)</span></span>
+<span id="cb20-353"><a href="#cb20-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-354"><a href="#cb20-354" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. デフォルトの事前分布の確認</span></span>
+<span id="cb20-355"><a href="#cb20-355" aria-hidden="true" tabindex="-1"></a><span class="co">get_prior(model)</span></span>
+<span id="cb20-356"><a href="#cb20-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-357"><a href="#cb20-357" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. MCMCサンプルの取り出しとMAP推定値の計算</span></span>
+<span id="cb20-358"><a href="#cb20-358" aria-hidden="true" tabindex="-1"></a><span class="co"># MAP推定用の関数</span></span>
+<span id="cb20-359"><a href="#cb20-359" aria-hidden="true" tabindex="-1"></a><span class="co">find_map &lt;- function(x) {</span></span>
+<span id="cb20-360"><a href="#cb20-360" aria-hidden="true" tabindex="-1"></a><span class="co">  density_obj &lt;- density(x)</span></span>
+<span id="cb20-361"><a href="#cb20-361" aria-hidden="true" tabindex="-1"></a><span class="co">  return(density_obj$x[which.max(density_obj$y)])</span></span>
+<span id="cb20-362"><a href="#cb20-362" aria-hidden="true" tabindex="-1"></a><span class="co">}</span></span>
+<span id="cb20-363"><a href="#cb20-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-364"><a href="#cb20-364" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMCサンプルの取り出しと要約統計量の計算</span></span>
+<span id="cb20-365"><a href="#cb20-365" aria-hidden="true" tabindex="-1"></a><span class="co">mcmc_samples &lt;- as_draws_df(model)</span></span>
+<span id="cb20-366"><a href="#cb20-366" aria-hidden="true" tabindex="-1"></a><span class="co">mcmc_summary &lt;- mcmc_samples %&gt;%</span></span>
+<span id="cb20-367"><a href="#cb20-367" aria-hidden="true" tabindex="-1"></a><span class="co">  as.data.frame() %&gt;%</span></span>
+<span id="cb20-368"><a href="#cb20-368" aria-hidden="true" tabindex="-1"></a><span class="co">  select(b_Intercept, b_x1, b_x2, sigma) %&gt;%</span></span>
+<span id="cb20-369"><a href="#cb20-369" aria-hidden="true" tabindex="-1"></a><span class="co">  pivot_longer(everything()) %&gt;%</span></span>
+<span id="cb20-370"><a href="#cb20-370" aria-hidden="true" tabindex="-1"></a><span class="co">  group_by(name) %&gt;%</span></span>
+<span id="cb20-371"><a href="#cb20-371" aria-hidden="true" tabindex="-1"></a><span class="co">  summarise(</span></span>
+<span id="cb20-372"><a href="#cb20-372" aria-hidden="true" tabindex="-1"></a><span class="co">    MAP = find_map(value),</span></span>
+<span id="cb20-373"><a href="#cb20-373" aria-hidden="true" tabindex="-1"></a><span class="co">    Mean = mean(value),</span></span>
+<span id="cb20-374"><a href="#cb20-374" aria-hidden="true" tabindex="-1"></a><span class="co">    SD = sd(value),</span></span>
+<span id="cb20-375"><a href="#cb20-375" aria-hidden="true" tabindex="-1"></a><span class="co">    `75%_Lower` = quantile(value, 0.125),</span></span>
+<span id="cb20-376"><a href="#cb20-376" aria-hidden="true" tabindex="-1"></a><span class="co">    `75%_Upper` = quantile(value, 0.875),</span></span>
+<span id="cb20-377"><a href="#cb20-377" aria-hidden="true" tabindex="-1"></a><span class="co">    `90%_Lower` = quantile(value, 0.05),</span></span>
+<span id="cb20-378"><a href="#cb20-378" aria-hidden="true" tabindex="-1"></a><span class="co">    `90%_Upper` = quantile(value, 0.95),</span></span>
+<span id="cb20-379"><a href="#cb20-379" aria-hidden="true" tabindex="-1"></a><span class="co">    .groups = "drop"</span></span>
+<span id="cb20-380"><a href="#cb20-380" aria-hidden="true" tabindex="-1"></a><span class="co">  )</span></span>
+<span id="cb20-381"><a href="#cb20-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-382"><a href="#cb20-382" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の表示</span></span>
+<span id="cb20-383"><a href="#cb20-383" aria-hidden="true" tabindex="-1"></a><span class="co">mcmc_summary</span></span>
+<span id="cb20-384"><a href="#cb20-384" aria-hidden="true" tabindex="-1"></a><span class="co">```</span></span>
+<span id="cb20-385"><a href="#cb20-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-386"><a href="#cb20-386" aria-hidden="true" tabindex="-1"></a><span class="co">この分析結果から以下のことが分かります：</span></span>
+<span id="cb20-387"><a href="#cb20-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-388"><a href="#cb20-388" aria-hidden="true" tabindex="-1"></a><span class="co">1. 推定値について：</span></span>
+<span id="cb20-389"><a href="#cb20-389" aria-hidden="true" tabindex="-1"></a><span class="co">   - 切片（Intercept）、x1係数、x2係数のそれぞれについて、点推定値と95%信用区間が得られました</span></span>
+<span id="cb20-390"><a href="#cb20-390" aria-hidden="true" tabindex="-1"></a><span class="co">   - これらの推定値は真の値（$\beta_0=2$, $\beta_1=1.5$, $\beta_2=2.3$）を良く捉えています</span></span>
+<span id="cb20-391"><a href="#cb20-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-392"><a href="#cb20-392" aria-hidden="true" tabindex="-1"></a><span class="co">2. MCMCの収束診断：</span></span>
+<span id="cb20-393"><a href="#cb20-393" aria-hidden="true" tabindex="-1"></a><span class="co">   - すべてのパラメータでRhat値が1.1未満であり、収束は良好です</span></span>
+<span id="cb20-394"><a href="#cb20-394" aria-hidden="true" tabindex="-1"></a><span class="co">   - Bulk-ESSも十分な値（&gt;1000）を示しており、効果的なサンプリングができています</span></span>
+<span id="cb20-395"><a href="#cb20-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-396"><a href="#cb20-396" aria-hidden="true" tabindex="-1"></a><span class="co">3. 事後分布：</span></span>
+<span id="cb20-397"><a href="#cb20-397" aria-hidden="true" tabindex="-1"></a><span class="co">   - ヒストグラムから、各パラメータの事後分布が概ね正規分布に従っていることが確認できます</span></span>
+<span id="cb20-398"><a href="#cb20-398" aria-hidden="true" tabindex="-1"></a><span class="co">   - トレースプロットは良好な混合を示しています</span></span>
+<span id="cb20-399"><a href="#cb20-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-400"><a href="#cb20-400" aria-hidden="true" tabindex="-1"></a><span class="co">4. 事前分布：</span></span>
+<span id="cb20-401"><a href="#cb20-401" aria-hidden="true" tabindex="-1"></a><span class="co">   - デフォルトでは、回帰係数に対して無情報事前分布が使用されています</span></span>
+<span id="cb20-402"><a href="#cb20-402" aria-hidden="true" tabindex="-1"></a><span class="co">   - 分散パラメータには半t分布が使用されています</span></span>
+<span id="cb20-403"><a href="#cb20-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-404"><a href="#cb20-404" aria-hidden="true" tabindex="-1"></a><span class="co">5. MAP推定値：</span></span>
+<span id="cb20-405"><a href="#cb20-405" aria-hidden="true" tabindex="-1"></a><span class="co">   - 各パラメータのMAP推定値は平均値に近い値を示しており、事後分布が対称的であることを示唆しています</span></span>
+<span id="cb20-406"><a href="#cb20-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-407"><a href="#cb20-407" aria-hidden="true" tabindex="-1"></a><span class="co">6. 信用区間：</span></span>
+<span id="cb20-408"><a href="#cb20-408" aria-hidden="true" tabindex="-1"></a><span class="co">   - 90%信用区間と75%信用区間は、パラメータの不確実性の程度を異なる水準で示しています</span></span>
+<span id="cb20-409"><a href="#cb20-409" aria-hidden="true" tabindex="-1"></a><span class="co">   - これらの区間は真の値を含んでおり、モデルの推定精度が良好であることを示しています --&gt;</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

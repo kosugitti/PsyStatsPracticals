@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.29">
+<meta name="generator" content="quarto-1.7.30">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -93,10 +93,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-231ef2f9d4ce3268f31ef752336c15d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -155,6 +155,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -373,7 +374,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -412,6 +413,8 @@ window.Quarto = {
 <p>回帰分析のモデル式にそってデータを生成し，分析によってパラメータリカバリを行ってみよう。</p>
 <p>説明変数については制約がないので一様乱数から生成し，平均0，標準偏差<span class="math inline">\(\sigma\)</span>の誤差とともに被説明変数を作る。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
@@ -426,6 +429,7 @@ window.Quarto = {
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># データの確認</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>          x          y
 1 -4.248450 -11.120952
@@ -435,9 +439,12 @@ window.Quarto = {
 5  8.809346  30.026546
 6 -9.088870 -25.355175</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">"y~x"</span>) <span class="co"># 線形モデルの描画</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -448,8 +455,11 @@ window.Quarto = {
 </div>
 <p>このデータに基づいて回帰分析を実行した結果が以下のとおりである。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -477,8 +487,11 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h3 data-number="11.2.2" class="anchored" data-anchor-id="残差の正規性と相関関係"><span class="header-section-number">11.2.2</span> 残差の正規性と相関関係</h3>
 <p><code>lm</code>関数が返した結果オブジェクトには，表示されていない多くの情報が含まれている。例えば予測値や残差も含まれているので，これを使って回帰分析の特徴を見てみよう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(dat, <span class="at">yhat =</span> result.lm<span class="sc">$</span>fitted.values, <span class="at">residuals =</span> result.lm<span class="sc">$</span>residuals)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       x                  y                yhat            residuals       
  Min.   :-9.99069   Min.   :-28.216   Min.   :-27.9721   Min.   :-2.82796  
@@ -493,10 +506,13 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>次に，残差の平均が0になっていることも確認しておこう。これが0でない<span class="math inline">\(c\)</span>であれば，回帰係数が常に<span class="math inline">\(c\)</span>だけズレていることになるので，そのような系統的ズレは最適な線形の当てはめにおいて除外されているべきだからである<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
 <p>また，回帰分析において残差は正規分布に従うことが仮定されていた。これを検証するにはQ-Qプロットを見ると良い。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> residuals)) <span class="sc">+</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -509,7 +525,10 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>データ生成メカニズムによっては，被説明変数が二値的であったり，順序的であったり，カウント変数であったり，と正規分布がそぐわないものもあるだろう。そのようなデータに無理やり回帰分析を当てはめることは適切ではない。いかなる時もデータは可視化して，モデルを当てはめることの適切さをチェックすることを忘れたはならない。</p>
 <p>ちなみに出力結果を直接<code>plot</code>関数に入れてもよい。ここから残差と予測値の相関関係や，Q-Qプロット，標準化残差のスケールロケーションプロット，レバレッジと標準化残差<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> などがプロットされる。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -541,8 +560,11 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>残差と予測値のプロットからも想像できるが，両者の相関はゼロである。図で確認しておこう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(GGally) <span class="co"># 必要ならインストールしよう</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -565,27 +587,36 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>ここで第二の変数<span class="math inline">\(x_2\)</span>があったとする。第一の変数<span class="math inline">\(x_1\)</span>で<span class="math inline">\(y\)</span>を説明した残差<span class="math inline">\(e_y\)</span>と，第一の変数で第二の変数を説明した残差<span class="math inline">\(e_{x2}\)</span>との相関を<strong>偏相関partial correlation</strong>という。これは第一の変数<span class="math inline">\(x_1\)</span>からの影響を両者から取り除いているので，<span class="math inline">\(x_1\)</span>で統制した相関係数ということができる。偏相関は単純な相関が「見せかけの関係」でないことを検証するための重要な指標である。</p>
 <p>偏相関係数を計算してみよう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(psych)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="fl">0.8</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">3</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">1000</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), Sigma, <span class="at">empirical =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 相関行列</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    V1  V2  V3
 V1 1.0 0.3 0.5
 V2 0.3 1.0 0.8
 V3 0.5 0.8 1.0</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 回帰分析をして残差を求める</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>result.lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> V1, <span class="at">data =</span> X)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>result.lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V3 <span class="sc">~</span> V1, <span class="at">data =</span> X)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(result.lm1<span class="sc">$</span>residuals, result.lm2<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7867958</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 偏相関を求めるR関数で確認</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">partial.r</span>(X)[<span class="dv">2</span>, <span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7867958</code></pre>
 </div>
@@ -593,19 +624,25 @@ V3 0.5 0.8 1.0</code></pre>
 <p>最後は<code>psych</code>パッケージの偏相関行列を求める関数で検証した。確かに残差同士の相関係数が偏相関係数になっていることが確認できたと思う。</p>
 <p>そして，ここでは残差同士の相関係数として算出しているが，残差をつかった回帰分析の係数が偏回帰係数になるのである。このデータセットの第一変数を従属変数にした重回帰分析の結果から，これを確認してみよう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>result.mra <span class="ot">&lt;-</span> <span class="fu">lm</span>(V1 <span class="sc">~</span> V2 <span class="sc">+</span> V3, <span class="at">data =</span> X)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 回帰係数を取り出す</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>result.mra<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept)            V2            V3 
 -5.218050e-17 -2.777778e-01  7.222222e-01 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差をつかって偏回帰係数を確認する</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>result.lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V1 <span class="sc">~</span> V3, <span class="at">data =</span> X)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>result.lm4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> V3, <span class="at">data =</span> X)</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>result.lm5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(result.lm3<span class="sc">$</span>residuals <span class="sc">~</span> result.lm4<span class="sc">$</span>residuals)</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>result.lm5<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>         (Intercept) result.lm4$residuals 
        -7.925711e-18        -2.777778e-01 </code></pre>
@@ -621,7 +658,10 @@ V3 0.5 0.8 1.0</code></pre>
 <p>偏回帰係数の解釈が難しい理由の一つは，説明変数同士に相関関係がみられることにある。 特に，説明変数間の相関関係が高くなることは<strong>多重共線性</strong>Multicollinearityの問題という。この問題は，回帰係数の標準誤差がインフレを起こすことを指す。</p>
 <p>例えば先ほどの例で，説明変数<code>V2</code>と<code>V3</code>は相関係数<span class="math inline">\(0.8\)</span>を持っていた。この時の回帰係数の標準誤差を確認しておこう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.mra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -647,8 +687,11 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>標準誤差は0.0449であり，それほど大きくない標準誤差で問題がないようである。しかし両者の相関係数がより高くなり，一方が他方に線形的に従属してしまうと係数の推定値が不安定になるため，注意が必要である。</p>
 <p>このインフレを確認するための指標がVariance Infration Factor: VIFである。Rでは<code>car</code>パッケージにある<code>vif</code>関数に重回帰モデルを入れることでこの指標が算出される。一般にVIFが3，あるいは10を超えると多重共線性が生じており，解釈に注意が必要と言われている<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(car) <span class="co"># なければ入れておこう</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(result.mra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      V2       V3 
 2.777778 2.777778 </code></pre>
@@ -671,6 +714,8 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h3 data-number="11.4.1" class="anchored" data-anchor-id="係数の検定"><span class="header-section-number">11.4.1</span> 係数の検定</h3>
 <p>サンプルが母集団から得られた確率変数であるのだから，(偏)回帰係数もまた確率変数である。すなわち，サンプルが変わるごとに変化し，その揺らぎがある確率分布に従うと考えられる。これを確認するためには，データ生成過程をモデリングし，反復することで近似させて理解するのがいいだろう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
@@ -699,6 +744,7 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> beta0.est) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
 <span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -709,8 +755,11 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> beta1.est) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -724,33 +773,48 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>図から明らかなように，回帰係数も確率的に分布する。ただしその平均は理論値に近似している。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(beta0.est)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.999257</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(beta1.est)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.999798</code></pre>
 </div>
 </div>
 <p>この分布の幅が回帰係数の標準誤差である。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(beta0.est)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.04580387</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(beta1.est)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.007659277</code></pre>
 </div>
 </div>
 <p>回帰係数はt分布に従い，その自由度はサンプルサイズからモデルで用いる係数の数を引いたものになる。先ほどのヒストグラムを基準化し，理論分布を重ねて描画してみることで確認しておこう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> beta1.est) <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">100</span>) <span class="sc">+</span></span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">dt</span>(x, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -765,6 +829,8 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h3 data-number="11.4.2" class="anchored" data-anchor-id="モデル適合度の検定"><span class="header-section-number">11.4.2</span> モデル適合度の検定</h3>
 <p>一方で，出力の最後にはF統計量による検定も行われていたことを確認しておこう。次に示すのは重回帰分析の例である。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
@@ -778,6 +844,7 @@ F-statistic: 191.7 on 2 and 997 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2)</span>
 <span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> sample)</span>
 <span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -811,6 +878,8 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 <p>重回帰分析のサンプルサイズ設計は，変数の効果の大きさ(回帰係数)が事前にわかっているのであれば，nを徐々に増やしていくシミュレーションによって行える。しかしそのようなケースは稀であり，実際には<span class="math inline">\(R^2\)</span>の検定を用いて，ある効果量と検出力の下で，正しく検出できるサイズを算出することになる。</p>
 <p>サンプルサイズの算出には，非心F分布を用いる。この時の非心度は，効果量<span class="math inline">\(f^2\)</span>に<span class="math inline">\(n\)</span>をかけたものになる。これを使ってサンプルサイズ設計をする例は以下のとおりである。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fl">0.15</span> <span class="co"># 効果量</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># タイプ1エラー率</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># タイプ2エラー率</span></span>
@@ -828,6 +897,7 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 <span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 92</code></pre>
 </div>
@@ -880,6 +950,8 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 <li><span class="math inline">\(R^2=0.3\)</span>を目標として，説明変数の数<span class="math inline">\(p=10\)</span>の重回帰分析を行う際に，必要なサンプルサイズはいくつになるか，計算してみましょう。ここで，<span class="math inline">\(\alpha = 0.05,\beta=0.2\)</span>とします。</li>
 </ol>
 
+
+<!-- -->
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-Haebara2014" class="csl-entry" role="listitem">
@@ -986,6 +1058,57 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -1327,7 +1450,424 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
         <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb44" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 重回帰分析の基礎</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## 回帰分析の基礎</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>ここでは回帰分析を扱う。説明変数$x$と被説明変数$y$の関数関係$y=f(x)$に，次の一次式を当てはめるのが単回帰分析である。</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>$$ y_i  = \beta_0 + \beta_1 x_i + e_i = \hat{y}_i + e_i$$</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>一次式を$\hat{y}$とまとめたものを予測値といい，予測値と実測値$y$の差分$e_i$を残差residualsという。</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>空間上の一次直線の切片，傾きを求めるというのが基本的な問題であり，二点であれば一意に定めることができるが，データ分析の場面では3点以上の多くのデータセットの中に直線を当てはめることになるので，なんらかの外的な基準が必要になる。この時，「残差の分散が最も小さくなるように」と考えるのが**最小二乗法**の考え方であり，「残差が正規分布に従っていると考え，その尤度が最も大きくなるように」と考えるのが**最尤法**の考え方である。前者は記述統計的な，後者は確率モデルとしての感が過多になっていることに注意してほしい。また確率モデルの推定方法としては，事前分布を用いた**ベイズ推定**が用いられることもある。</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>最小二乗法による推定値は，次の式で表される。証明は他書<span class="co">[</span><span class="ot">@kosugi2018; @Nishiuchi201712</span><span class="co">]</span>に譲るが，ロジックとして残差の二乗和$\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2$を最小にすることを考え，この式を展開するか偏微分を用いて極小値を求めることで算出できるとだけ伝えておこう。いずれにせよ，平均値$\bar{x},\bar{y}$や分散・共分散$s_x,s_y,r_{xy}$など標本統計量から推定できるのはありがたいことである。</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>$$\beta_0 = \bar{y} - \beta_1\bar{x},\quad \beta_1 = r_{xy} \frac{s_y}{s_x}$$</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>また，ここでは$x,y$ともに連続変数を想定しているが，説明変数$x$が二値，あるいはカテゴリカルなものであれば$y$の平均値を通る直線を探すことになる。直線の傾きが0であれば「平均値が同じ」という線形モデルであり，これは平均値差の検定における帰無仮説と同等である。このように，t検定やANOVAは回帰分析の特殊ケースとも考えられ，まとめて**一般線形モデル**と呼ばれる。一般線形モデルは，被説明変数が連続的で，線形モデルによる平均値に正規分布に従う残差が加わったものとして考えるという意味で統一的に表現される。</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- これらの平均的な位置に説明変数からの線形モデルを当てはめる場合は，線形モデルによる重み付き加算の値を**リンク関数**で変換して確率分布のパラメータに当てはめるという方法で一般化される。こうしたモデルを**一般化線形モデル**という。 --&gt;</span></span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>ANOVAの場合は，二つ以上の要因による効果を考えることもあった。交互作用項を考慮しなければ，2要因のモデルは次のように表現することができる。</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>$$ y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + e_i $$</span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>このように説明変数が複数ある回帰分析を特に重回帰分析Multiple Regression Analysisと呼ぶ。一次式なので，ある変数に限れば線形性が担保されているから，これも線形モデルの仲間である。重回帰分析を用いる場合は，説明変数同士を比較して「どちらの説明変数の方が影響力が大きいか」ということが論じられることが多いが，係数は当然$x_n, y$の単位に依存するため，素点の回帰係数は使い勝手が悪い。そこですべての変数を標準化した標準化係数が用いられることが多い。</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## 回帰分析の特徴</span></span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>以下，具体的なデータを用いて回帰分析の特徴を見てみよう</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a><span class="fu">### パラメータリカバリ</span></span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>回帰分析のモデル式にそってデータを生成し，分析によってパラメータリカバリを行ってみよう。</span>
+<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a>説明変数については制約がないので一様乱数から生成し，平均0，標準偏差$\sigma$の誤差とともに被説明変数を作る。</span>
+<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-38"><a href="#cb44-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
+<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
+<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb44-45"><a href="#cb44-45" aria-hidden="true" tabindex="-1"></a><span class="co"># データの生成</span></span>
+<span id="cb44-46"><a href="#cb44-46" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb44-47"><a href="#cb44-47" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb44-48"><a href="#cb44-48" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x <span class="sc">+</span> e</span>
+<span id="cb44-49"><a href="#cb44-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-50"><a href="#cb44-50" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb44-51"><a href="#cb44-51" aria-hidden="true" tabindex="-1"></a><span class="co"># データの確認</span></span>
+<span id="cb44-52"><a href="#cb44-52" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span>
+<span id="cb44-53"><a href="#cb44-53" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb44-54"><a href="#cb44-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb44-55"><a href="#cb44-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">"y~x"</span>) <span class="co"># 線形モデルの描画</span></span>
+<span id="cb44-56"><a href="#cb44-56" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-57"><a href="#cb44-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-58"><a href="#cb44-58" aria-hidden="true" tabindex="-1"></a>このデータに基づいて回帰分析を実行した結果が以下のとおりである。</span>
+<span id="cb44-59"><a href="#cb44-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-62"><a href="#cb44-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-63"><a href="#cb44-63" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)</span>
+<span id="cb44-64"><a href="#cb44-64" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span>
+<span id="cb44-65"><a href="#cb44-65" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-66"><a href="#cb44-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-67"><a href="#cb44-67" aria-hidden="true" tabindex="-1"></a>ここでは$\beta_0 =2, \beta_1=3, \sigma = 1$と設定しており，ほぼ理論通りの係数がリカバリーできていることを出力から確認しておこう。</span>
+<span id="cb44-68"><a href="#cb44-68" aria-hidden="true" tabindex="-1"></a>もちろんリカバリの精度は，データの線形性の強さに依存するから，残差の分散が大きかったりサンプルサイズが小さくなると，必ずしもうまくリカバリできないことがあることは想像に難くないだろう。</span>
+<span id="cb44-69"><a href="#cb44-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-70"><a href="#cb44-70" aria-hidden="true" tabindex="-1"></a><span class="fu">### 残差の正規性と相関関係</span></span>
+<span id="cb44-71"><a href="#cb44-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-72"><a href="#cb44-72" aria-hidden="true" tabindex="-1"></a><span class="in">`lm`</span>関数が返した結果オブジェクトには，表示されていない多くの情報が含まれている。例えば予測値や残差も含まれているので，これを使って回帰分析の特徴を見てみよう。</span>
+<span id="cb44-73"><a href="#cb44-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-76"><a href="#cb44-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-77"><a href="#cb44-77" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(dat, <span class="at">yhat =</span> result.lm<span class="sc">$</span>fitted.values, <span class="at">residuals =</span> result.lm<span class="sc">$</span>residuals)</span>
+<span id="cb44-78"><a href="#cb44-78" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dat)</span>
+<span id="cb44-79"><a href="#cb44-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-80"><a href="#cb44-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-81"><a href="#cb44-81" aria-hidden="true" tabindex="-1"></a>予測値$\hat{y}$は<span class="in">`fitted.values`</span>として保存されている。これの平均値が被説明変数$y$の平均値に一致していることが確認できる。回帰分析は説明変数$x$を伸ばしたり($\beta_1$倍する)ズラしたり($\beta_0$を加える)しながら，被説明変数$y$に当てはめるのであり，位置合わせがなされた予測値の中心が被説明変数の中心と一致することは理解しやすいだろう<span class="ot">[^11.1]</span>。</span>
+<span id="cb44-82"><a href="#cb44-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-83"><a href="#cb44-83" aria-hidden="true" tabindex="-1"></a>次に，残差の平均が0になっていることも確認しておこう。これが0でない$c$であれば，回帰係数が常に$c$だけズレていることになるので，そのような系統的ズレは最適な線形の当てはめにおいて除外されているべきだからである<span class="ot">[^11.2]</span>。</span>
+<span id="cb44-84"><a href="#cb44-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-85"><a href="#cb44-85" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.1]: </span>もちろん証明できる。$\beta_0 = \bar{y} - \beta_1\bar{x},\beta_1 = r_{xy} \frac{s_y}{s_x}$より，$\bar{\bar{y}} = \frac{1}{n}\sum(\bar{y} - \beta_1\bar{x} + \beta_1x_i) = \bar{y} - \beta_1\bar{x} + \beta_1\frac{1}{n}\sum x_i = \bar{y}$である。</span>
+<span id="cb44-86"><a href="#cb44-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-87"><a href="#cb44-87" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.2]: </span>もちろん証明できる。$\bar{e} = \frac{1}{n}\sum e_i = \frac{1}{n} \sum (y_i - \hat{y}_i) = \bar{y} = \bar{\hat{y}} = 0$である。 </span>
+<span id="cb44-88"><a href="#cb44-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-89"><a href="#cb44-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-90"><a href="#cb44-90" aria-hidden="true" tabindex="-1"></a>また，回帰分析において残差は正規分布に従うことが仮定されていた。これを検証するにはQ-Qプロットを見ると良い。</span>
+<span id="cb44-91"><a href="#cb44-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-94"><a href="#cb44-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-95"><a href="#cb44-95" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span></span>
+<span id="cb44-96"><a href="#cb44-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb44-97"><a href="#cb44-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb44-98"><a href="#cb44-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>()</span>
+<span id="cb44-99"><a href="#cb44-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-100"><a href="#cb44-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-101"><a href="#cb44-101" aria-hidden="true" tabindex="-1"></a>Q-Qプロットとは2つの確率分布を比較するためのグラフであり，横軸には理論的分布の分位点が，縦軸に実データが並ぶもので，右上がりの直線上にデータが載っていれば分布に従っている，と判断するものである。直線から逸脱している点は理論的分布からの逸脱と考えられる。今回の結果はほとんどが正規分布の直線上にあることから，大きな逸脱がないことが認められる。</span>
+<span id="cb44-102"><a href="#cb44-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-103"><a href="#cb44-103" aria-hidden="true" tabindex="-1"></a>データ生成メカニズムによっては，被説明変数が二値的であったり，順序的であったり，カウント変数であったり，と正規分布がそぐわないものもあるだろう。そのようなデータに無理やり回帰分析を当てはめることは適切ではない。いかなる時もデータは可視化して，モデルを当てはめることの適切さをチェックすることを忘れたはならない。</span>
+<span id="cb44-104"><a href="#cb44-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-105"><a href="#cb44-105" aria-hidden="true" tabindex="-1"></a>ちなみに出力結果を直接<span class="in">`plot`</span>関数に入れてもよい。ここから残差と予測値の相関関係や，Q-Qプロット，標準化残差のスケールロケーションプロット，レバレッジと標準化残差<span class="ot">[^11.3]</span> などがプロットされる。</span>
+<span id="cb44-106"><a href="#cb44-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-107"><a href="#cb44-107" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.3]: </span>縦軸の標準化された残差の大きな値は解釈に注意が必要な外れ値である可能性が高い。レバレッジも同様に回帰係数に大きな影響を与える値の指標であり，この図の端に位置する変数は注意が必要，と考える。</span>
+<span id="cb44-108"><a href="#cb44-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-111"><a href="#cb44-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-112"><a href="#cb44-112" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.lm)</span>
+<span id="cb44-113"><a href="#cb44-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-114"><a href="#cb44-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-115"><a href="#cb44-115" aria-hidden="true" tabindex="-1"></a>残差と予測値のプロットからも想像できるが，両者の相関はゼロである。図で確認しておこう。</span>
+<span id="cb44-116"><a href="#cb44-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-119"><a href="#cb44-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-120"><a href="#cb44-120" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
+<span id="cb44-121"><a href="#cb44-121" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(GGally) <span class="co"># 必要ならインストールしよう</span></span>
+<span id="cb44-122"><a href="#cb44-122" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(dat)</span>
+<span id="cb44-123"><a href="#cb44-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-124"><a href="#cb44-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-125"><a href="#cb44-125" aria-hidden="true" tabindex="-1"></a>この関係から明らかなように，残差は説明変数や予測値と相関しない<span class="ot">[^11.5]</span>。説明変数と残差に相関関係があるとすると，説明変数でまだ説明できていない分散が残っていることになるし，予測値と残差に相関がないことは予測値が高いか低いかにかかわらず，残差が一様に分布していることを意味する。このことを踏まえて，重回帰分析の特徴を理解していこう。</span>
+<span id="cb44-126"><a href="#cb44-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-127"><a href="#cb44-127" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.5]: </span>もちろん証明できる。詳細は @kosugi2018 を参照すること。</span>
+<span id="cb44-128"><a href="#cb44-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-129"><a href="#cb44-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-130"><a href="#cb44-130" aria-hidden="true" tabindex="-1"></a><span class="fu">## 重回帰分析の特徴</span></span>
+<span id="cb44-131"><a href="#cb44-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-132"><a href="#cb44-132" aria-hidden="true" tabindex="-1"></a>重回帰分析においては，回帰係数は偏回帰係数partial regression coefficientsと呼ばれる。この「偏」の一文字が意味することを考えていこう。</span>
+<span id="cb44-133"><a href="#cb44-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-134"><a href="#cb44-134" aria-hidden="true" tabindex="-1"></a><span class="fu">### 回帰係数と偏回帰係数</span></span>
+<span id="cb44-135"><a href="#cb44-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-136"><a href="#cb44-136" aria-hidden="true" tabindex="-1"></a>単回帰分析の回帰係数は，説明変数$x$が一単位上昇した時の被説明変数の変化量，と解釈すればよい。これに対して重回帰分析の偏回帰係数を，「説明変数$x_1$が一単位上昇した時の被説明変数の変化量」とすることはできない。というのも，説明変数が複数($x_2,x_3,\ldots$)あり，他の説明変数の次元についての変化を考慮していない変化量になっているからである。</span>
+<span id="cb44-137"><a href="#cb44-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-138"><a href="#cb44-138" aria-hidden="true" tabindex="-1"></a>重回帰分析において，説明変数が完全に無相関で直交しているのであれば，$x_1$の変化と$x_2$の変化を独立して説明できるが，往々にしてそのようなことはない。偏回帰係数は当該変数以外の変動を*統制した*回帰係数である。</span>
+<span id="cb44-139"><a href="#cb44-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-140"><a href="#cb44-140" aria-hidden="true" tabindex="-1"></a>上で単回帰係数において，説明変数と残差が相関しないことを確認した。言い換えれば，説明変数で説明でき分散は全て説明し尽くされており，残差は説明変数で説明できない被説明変数の分散，つまり説明変数の影響を除外した被説明変数の分散と考えることができる(被説明変数の分散=説明変数が説明する分散+残差の分散)。</span>
+<span id="cb44-141"><a href="#cb44-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-142"><a href="#cb44-142" aria-hidden="true" tabindex="-1"></a>ここで第二の変数$x_2$があったとする。第一の変数$x_1$で$y$を説明した残差$e_y$と，第一の変数で第二の変数を説明した残差$e_{x2}$との相関を**偏相関partial correlation**という。これは第一の変数$x_1$からの影響を両者から取り除いているので，$x_1$で統制した相関係数ということができる。偏相関は単純な相関が「見せかけの関係」でないことを検証するための重要な指標である。</span>
+<span id="cb44-143"><a href="#cb44-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-144"><a href="#cb44-144" aria-hidden="true" tabindex="-1"></a>偏相関係数を計算してみよう。</span>
+<span id="cb44-147"><a href="#cb44-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-148"><a href="#cb44-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
+<span id="cb44-149"><a href="#cb44-149" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
+<span id="cb44-150"><a href="#cb44-150" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(psych)</span>
+<span id="cb44-151"><a href="#cb44-151" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="fl">0.8</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb44-152"><a href="#cb44-152" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">1000</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), Sigma, <span class="at">empirical =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb44-153"><a href="#cb44-153" aria-hidden="true" tabindex="-1"></a><span class="do">## 相関行列</span></span>
+<span id="cb44-154"><a href="#cb44-154" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X)</span>
+<span id="cb44-155"><a href="#cb44-155" aria-hidden="true" tabindex="-1"></a><span class="do">## 回帰分析をして残差を求める</span></span>
+<span id="cb44-156"><a href="#cb44-156" aria-hidden="true" tabindex="-1"></a>result.lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> V1, <span class="at">data =</span> X)</span>
+<span id="cb44-157"><a href="#cb44-157" aria-hidden="true" tabindex="-1"></a>result.lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V3 <span class="sc">~</span> V1, <span class="at">data =</span> X)</span>
+<span id="cb44-158"><a href="#cb44-158" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(result.lm1<span class="sc">$</span>residuals, result.lm2<span class="sc">$</span>residuals)</span>
+<span id="cb44-159"><a href="#cb44-159" aria-hidden="true" tabindex="-1"></a><span class="do">## 偏相関を求めるR関数で確認</span></span>
+<span id="cb44-160"><a href="#cb44-160" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">partial.r</span>(X)[<span class="dv">2</span>, <span class="dv">3</span>]</span>
+<span id="cb44-161"><a href="#cb44-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-162"><a href="#cb44-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-163"><a href="#cb44-163" aria-hidden="true" tabindex="-1"></a>最後は<span class="in">`psych`</span>パッケージの偏相関行列を求める関数で検証した。確かに残差同士の相関係数が偏相関係数になっていることが確認できたと思う。</span>
+<span id="cb44-164"><a href="#cb44-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-165"><a href="#cb44-165" aria-hidden="true" tabindex="-1"></a>そして，ここでは残差同士の相関係数として算出しているが，残差をつかった回帰分析の係数が偏回帰係数になるのである。このデータセットの第一変数を従属変数にした重回帰分析の結果から，これを確認してみよう。</span>
+<span id="cb44-166"><a href="#cb44-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-169"><a href="#cb44-169" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-170"><a href="#cb44-170" aria-hidden="true" tabindex="-1"></a>result.mra <span class="ot">&lt;-</span> <span class="fu">lm</span>(V1 <span class="sc">~</span> V2 <span class="sc">+</span> V3, <span class="at">data =</span> X)</span>
+<span id="cb44-171"><a href="#cb44-171" aria-hidden="true" tabindex="-1"></a><span class="co"># 回帰係数を取り出す</span></span>
+<span id="cb44-172"><a href="#cb44-172" aria-hidden="true" tabindex="-1"></a>result.mra<span class="sc">$</span>coefficients</span>
+<span id="cb44-173"><a href="#cb44-173" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差をつかって偏回帰係数を確認する</span></span>
+<span id="cb44-174"><a href="#cb44-174" aria-hidden="true" tabindex="-1"></a>result.lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V1 <span class="sc">~</span> V3, <span class="at">data =</span> X)</span>
+<span id="cb44-175"><a href="#cb44-175" aria-hidden="true" tabindex="-1"></a>result.lm4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> V3, <span class="at">data =</span> X)</span>
+<span id="cb44-176"><a href="#cb44-176" aria-hidden="true" tabindex="-1"></a>result.lm5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(result.lm3<span class="sc">$</span>residuals <span class="sc">~</span> result.lm4<span class="sc">$</span>residuals)</span>
+<span id="cb44-177"><a href="#cb44-177" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb44-178"><a href="#cb44-178" aria-hidden="true" tabindex="-1"></a>result.lm5<span class="sc">$</span>coefficients</span>
+<span id="cb44-179"><a href="#cb44-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-180"><a href="#cb44-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-181"><a href="#cb44-181" aria-hidden="true" tabindex="-1"></a>重回帰分析の結果<span class="in">`result.mra`</span>の<span class="in">`V2`</span>から<span class="in">`V1`</span>への回帰係数は<span class="in">`r round(result.mra$coefficients[2],4)`</span>である。また，<span class="in">`V3`</span>で<span class="in">`V1,V2`</span>を統制した残差同士をつかい，回帰係数を求めた結果は<span class="in">`r round(result.lm5$coefficients[2],4)`</span>と，同じ値になっていることが確認できただろう。</span>
+<span id="cb44-182"><a href="#cb44-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-183"><a href="#cb44-183" aria-hidden="true" tabindex="-1"></a><span class="in">`V3`</span>から<span class="in">`V1`</span>への偏回帰係数も同様で，<span class="in">`V2`</span>で両者を統制した残差同士による回帰係数になっている。このように，重回帰分析の回帰係数は，他の説明変数で統制した値になっており，日本語で説明するなら「他の変数の値が同じであると想定した条件つきの，当該変数の影響力」とでもいうべき値になっている。</span>
+<span id="cb44-184"><a href="#cb44-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-185"><a href="#cb44-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-186"><a href="#cb44-186" aria-hidden="true" tabindex="-1"></a>なぜこのような持って回った説明をするかというと，つい「条件付きの」という話を忘れて報告，解釈してしまうことが多いからで，@yoshidaMRA の論文での指摘は議論を呼んだのは記憶に新しい<span class="ot">[^11.6]</span>。</span>
+<span id="cb44-187"><a href="#cb44-187" aria-hidden="true" tabindex="-1"></a>たとえば今回の例でも，回帰係数が<span class="in">`r round(result.mra$coefficients[2],4)`</span>であったのに対し，<span class="in">`V1`</span>と<span class="in">`V2`</span>の単相関が<span class="in">`r round(cor(X$V1,X$V2),4)`</span> であったことを思い出そう。符号が反転しているため，解釈は真逆になってしまう。実際の単相関は正の関係であるから，条件付きであることを忘れて「<span class="in">`V2`</span>は負の影響，<span class="in">`V3`</span>は正の影響」と表現してしまうと，ミスリーディングなことになるからである。</span>
+<span id="cb44-188"><a href="#cb44-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-189"><a href="#cb44-189" aria-hidden="true" tabindex="-1"></a>また，@Toyoda201706 は重回帰分析のこうした誤用を避けるために，独立変数を事前に直交化したデザインで行うコンジョイント分析の積極的な利用を提案している。我々が重回帰分析をうまく使いこなせないのであれば，そうした手法も有用であるだろう。</span>
+<span id="cb44-190"><a href="#cb44-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-191"><a href="#cb44-191" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.6]: </span>論文が早期公開された後，心理学会が主催するオンラインシンポジウムでは著者とこの論文で取り上げられた論文の著者が登場して，議論が交わされた(日本心理学会YouTubeライブ・話題の論文について著者と語るシリーズ,2021年7月2日20時-21時40分)。平日の夜という設定，早期公開版における議論であったにも関わらず，1700名近い視聴者が参加した。</span>
+<span id="cb44-192"><a href="#cb44-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-193"><a href="#cb44-193" aria-hidden="true" tabindex="-1"></a><span class="fu">### 多重共線性</span></span>
+<span id="cb44-194"><a href="#cb44-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-195"><a href="#cb44-195" aria-hidden="true" tabindex="-1"></a>偏回帰係数の解釈が難しい理由の一つは，説明変数同士に相関関係がみられることにある。</span>
+<span id="cb44-196"><a href="#cb44-196" aria-hidden="true" tabindex="-1"></a>特に，説明変数間の相関関係が高くなることは**多重共線性**Multicollinearityの問題という。この問題は，回帰係数の標準誤差がインフレを起こすことを指す。</span>
+<span id="cb44-197"><a href="#cb44-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-198"><a href="#cb44-198" aria-hidden="true" tabindex="-1"></a>例えば先ほどの例で，説明変数<span class="in">`V2`</span>と<span class="in">`V3`</span>は相関係数$0.8$を持っていた。この時の回帰係数の標準誤差を確認しておこう。</span>
+<span id="cb44-199"><a href="#cb44-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-202"><a href="#cb44-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-203"><a href="#cb44-203" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.mra)</span>
+<span id="cb44-204"><a href="#cb44-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-205"><a href="#cb44-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-206"><a href="#cb44-206" aria-hidden="true" tabindex="-1"></a>標準誤差は<span class="in">`r round(sqrt(diag(vcov(result.mra)))[2],4)`</span>であり，それほど大きくない標準誤差で問題がないようである。しかし両者の相関係数がより高くなり，一方が他方に線形的に従属してしまうと係数の推定値が不安定になるため，注意が必要である。</span>
+<span id="cb44-207"><a href="#cb44-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-208"><a href="#cb44-208" aria-hidden="true" tabindex="-1"></a>このインフレを確認するための指標がVariance Infration Factor: VIFである。Rでは<span class="in">`car`</span>パッケージにある<span class="in">`vif`</span>関数に重回帰モデルを入れることでこの指標が算出される。一般にVIFが3，あるいは10を超えると多重共線性が生じており，解釈に注意が必要と言われている<span class="ot">[^11.7]</span>。</span>
+<span id="cb44-211"><a href="#cb44-211" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-212"><a href="#cb44-212" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: FALSE</span></span>
+<span id="cb44-213"><a href="#cb44-213" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(car) <span class="co"># なければ入れておこう</span></span>
+<span id="cb44-214"><a href="#cb44-214" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(result.mra)</span>
+<span id="cb44-215"><a href="#cb44-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-216"><a href="#cb44-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-217"><a href="#cb44-217" aria-hidden="true" tabindex="-1"></a>幸い，今回の値はこれらの基準を下回っていたので許容範囲内である。</span>
+<span id="cb44-218"><a href="#cb44-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-219"><a href="#cb44-219" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.7]: </span>2変数重回帰分析モデルで，VIFが3であれば説明変数間の相関は$r=0.81$程度である。VIFが10であれば$r=0.97$にもなる。詳しくは @kosugi2023 を参照。</span>
+<span id="cb44-220"><a href="#cb44-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-221"><a href="#cb44-221" aria-hidden="true" tabindex="-1"></a><span class="fu">### 変数の投入順序</span></span>
+<span id="cb44-222"><a href="#cb44-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-223"><a href="#cb44-223" aria-hidden="true" tabindex="-1"></a>重回帰分析の場合は複数の説明変数があるが，これを投入するときに全ての変数を同時に投入するか，順番をつけて投入するかといった手法の違いがある。前者を強制投入法と呼ぶこともある。</span>
+<span id="cb44-224"><a href="#cb44-224" aria-hidden="true" tabindex="-1"></a>順番をつけて投入する方法は，逐次投入と呼ばれる。この場合は，適合度指標などを参考に変数を追加あるいは削除して，適合度が統計的に有意に向上するかどうかを考えながら進めていく。</span>
+<span id="cb44-225"><a href="#cb44-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-226"><a href="#cb44-226" aria-hidden="true" tabindex="-1"></a>重回帰係数の予測値$\hat{y}$と，被説明変数$y$の相関係数$R_{y\hat{y}}$は**重相関係数**と呼ばれ，予測がうまくいっているかどうかを表す適合度の一つである。相関係数なので$-1$から$+1$までの値を取りうるが，$-1$は逆に完全に合致していることになるので，この相関係数の符号は大して情報を持たない。そこでこれを二乗した$R_{y\hat{y}}^2$を考える。これは**決定係数**とも呼ばれ，説明変数の分散のうち予測値の分散が占める割合を表している。<span class="ot">[^11.8]</span></span>
+<span id="cb44-227"><a href="#cb44-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-228"><a href="#cb44-228" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.8]: </span>もちろん証明できる。@kosugi2018 を参照。</span>
+<span id="cb44-229"><a href="#cb44-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-230"><a href="#cb44-230" aria-hidden="true" tabindex="-1"></a>説明変数の逐次投入は，説明変数を持たないヌルモデルから一つずつ追加していくForward Selection，全ての変数を投入してから一つずつ減らしていくBackward Selectionがある。Forwardのほうは追加することによって$R^2$が有意に増加するか，Backwardのほうは削除しても有意に$R^2$が減らないか，を確認しながら進めることになる。この方法は手元のデータに最も適した説明変数のペアを選出できる方法ではあるが，検定を繰り返していることの問題と，手元のデータ以外に一般化する時の根拠の乏しさから，用いられないこともある。</span>
+<span id="cb44-231"><a href="#cb44-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-232"><a href="#cb44-232" aria-hidden="true" tabindex="-1"></a>逐次投入法には別の観点からの手法もある。それが階層的回帰分析である。この手法は，重回帰分析における交互作用項の投入を検討する文脈で発展した。重回帰分析では，説明変数同士の相関がない，もしくは小さい方が望ましい。しかし，交互作用とは分散分析における組み合わせの効果を表すものであり，実験デザインによっては交互作用効果が重要な変動であることも少なくない。回帰分析と分散分析は，一般線形モデルという形で統一的に理解されるが，回帰分析でも連続的に変化する組み合わせの効果を考えることができる。交互作用があるということは説明変数間に相関があることを意味するため，回帰分析の大前提に抵触する可能性があり，その投入には慎重を期する必要がある。</span>
+<span id="cb44-233"><a href="#cb44-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-234"><a href="#cb44-234" aria-hidden="true" tabindex="-1"></a>こうした文脈から，まずは要因の効果を投入し，次に交互作用項を投入してモデル適合度の有意な改善がみられるかどうかを検証する手順が推奨されている。この逐次投入法を特に階層的回帰分析と呼ぶ。ここでの「階層」とは，手順が重要度順に進められていることを意味し，データの特徴に関するものではないことに注意が必要である<span class="ot">[^11.9]</span>。</span>
+<span id="cb44-235"><a href="#cb44-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-236"><a href="#cb44-236" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11.9]: </span>これに対して，データの階層性(ex.学級$\subset$市区町村$\subset$都道府県)を考慮する線形モデルのことを，階層線形モデルHierarchical Linear Model:HLM という。</span>
+<span id="cb44-237"><a href="#cb44-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-238"><a href="#cb44-238" aria-hidden="true" tabindex="-1"></a><span class="fu">## 係数の標準誤差と検定</span></span>
+<span id="cb44-239"><a href="#cb44-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-240"><a href="#cb44-240" aria-hidden="true" tabindex="-1"></a><span class="fu">### 係数の検定</span></span>
+<span id="cb44-241"><a href="#cb44-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-242"><a href="#cb44-242" aria-hidden="true" tabindex="-1"></a>サンプルが母集団から得られた確率変数であるのだから，(偏)回帰係数もまた確率変数である。すなわち，サンプルが変わるごとに変化し，その揺らぎがある確率分布に従うと考えられる。これを確認するためには，データ生成過程をモデリングし，反復することで近似させて理解するのがいいだろう。</span>
+<span id="cb44-243"><a href="#cb44-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-246"><a href="#cb44-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-247"><a href="#cb44-247" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb44-248"><a href="#cb44-248" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb44-249"><a href="#cb44-249" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb44-250"><a href="#cb44-250" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb44-251"><a href="#cb44-251" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb44-252"><a href="#cb44-252" aria-hidden="true" tabindex="-1"></a><span class="co"># データ生成関数</span></span>
+<span id="cb44-253"><a href="#cb44-253" aria-hidden="true" tabindex="-1"></a>dataMake <span class="ot">&lt;-</span> <span class="cf">function</span>(n, beta0, beta1, sigma) {</span>
+<span id="cb44-254"><a href="#cb44-254" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb44-255"><a href="#cb44-255" aria-hidden="true" tabindex="-1"></a>  e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb44-256"><a href="#cb44-256" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x <span class="sc">+</span> e</span>
+<span id="cb44-257"><a href="#cb44-257" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb44-258"><a href="#cb44-258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(dat)</span>
+<span id="cb44-259"><a href="#cb44-259" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-260"><a href="#cb44-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-261"><a href="#cb44-261" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果オブジェクトの準備</span></span>
+<span id="cb44-262"><a href="#cb44-262" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb44-263"><a href="#cb44-263" aria-hidden="true" tabindex="-1"></a>beta0.est <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)</span>
+<span id="cb44-264"><a href="#cb44-264" aria-hidden="true" tabindex="-1"></a>beta1.est <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, iter)</span>
+<span id="cb44-265"><a href="#cb44-265" aria-hidden="true" tabindex="-1"></a><span class="co"># simulation</span></span>
+<span id="cb44-266"><a href="#cb44-266" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {</span>
+<span id="cb44-267"><a href="#cb44-267" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">dataMake</span>(n, beta0, beta1, sigma)</span>
+<span id="cb44-268"><a href="#cb44-268" aria-hidden="true" tabindex="-1"></a>  result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sample)</span>
+<span id="cb44-269"><a href="#cb44-269" aria-hidden="true" tabindex="-1"></a>  beta0.est[i] <span class="ot">&lt;-</span> result.lm<span class="sc">$</span>coefficients[<span class="dv">1</span>]</span>
+<span id="cb44-270"><a href="#cb44-270" aria-hidden="true" tabindex="-1"></a>  beta1.est[i] <span class="ot">&lt;-</span> result.lm<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span>
+<span id="cb44-271"><a href="#cb44-271" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-272"><a href="#cb44-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-273"><a href="#cb44-273" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> beta0.est) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb44-274"><a href="#cb44-274" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span>
+<span id="cb44-275"><a href="#cb44-275" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> beta1.est) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb44-276"><a href="#cb44-276" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span>
+<span id="cb44-277"><a href="#cb44-277" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-278"><a href="#cb44-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-279"><a href="#cb44-279" aria-hidden="true" tabindex="-1"></a>図から明らかなように，回帰係数も確率的に分布する。ただしその平均は理論値に近似している。</span>
+<span id="cb44-280"><a href="#cb44-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-283"><a href="#cb44-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-284"><a href="#cb44-284" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(beta0.est)</span>
+<span id="cb44-285"><a href="#cb44-285" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(beta1.est)</span>
+<span id="cb44-286"><a href="#cb44-286" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-287"><a href="#cb44-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-288"><a href="#cb44-288" aria-hidden="true" tabindex="-1"></a>この分布の幅が回帰係数の標準誤差である。</span>
+<span id="cb44-289"><a href="#cb44-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-292"><a href="#cb44-292" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-293"><a href="#cb44-293" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(beta0.est)</span>
+<span id="cb44-294"><a href="#cb44-294" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(beta1.est)</span>
+<span id="cb44-295"><a href="#cb44-295" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-296"><a href="#cb44-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-297"><a href="#cb44-297" aria-hidden="true" tabindex="-1"></a>回帰係数はt分布に従い，その自由度はサンプルサイズからモデルで用いる係数の数を引いたものになる。先ほどのヒストグラムを基準化し，理論分布を重ねて描画してみることで確認しておこう。</span>
+<span id="cb44-298"><a href="#cb44-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-301"><a href="#cb44-301" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-302"><a href="#cb44-302" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> beta1.est) <span class="sc">%&gt;%</span></span>
+<span id="cb44-303"><a href="#cb44-303" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb44-304"><a href="#cb44-304" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb44-305"><a href="#cb44-305" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">100</span>) <span class="sc">+</span></span>
+<span id="cb44-306"><a href="#cb44-306" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">dt</span>(x, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">2</span>)</span>
+<span id="cb44-307"><a href="#cb44-307" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-308"><a href="#cb44-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-309"><a href="#cb44-309" aria-hidden="true" tabindex="-1"></a>このt分布を用いて，係数が0の母集団から得られたサンプルなのかどうかの検定が行われる。</span>
+<span id="cb44-310"><a href="#cb44-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-311"><a href="#cb44-311" aria-hidden="true" tabindex="-1"></a><span class="fu">### モデル適合度の検定</span></span>
+<span id="cb44-312"><a href="#cb44-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-313"><a href="#cb44-313" aria-hidden="true" tabindex="-1"></a>一方で，出力の最後にはF統計量による検定も行われていたことを確認しておこう。次に示すのは重回帰分析の例である。</span>
+<span id="cb44-316"><a href="#cb44-316" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-317"><a href="#cb44-317" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb44-318"><a href="#cb44-318" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb44-319"><a href="#cb44-319" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb44-320"><a href="#cb44-320" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb44-321"><a href="#cb44-321" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb44-322"><a href="#cb44-322" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb44-323"><a href="#cb44-323" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb44-324"><a href="#cb44-324" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb44-325"><a href="#cb44-325" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb44-326"><a href="#cb44-326" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2 <span class="sc">+</span> e</span>
+<span id="cb44-327"><a href="#cb44-327" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2)</span>
+<span id="cb44-328"><a href="#cb44-328" aria-hidden="true" tabindex="-1"></a>result.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> sample)</span>
+<span id="cb44-329"><a href="#cb44-329" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.lm)</span>
+<span id="cb44-330"><a href="#cb44-330" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-331"><a href="#cb44-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-332"><a href="#cb44-332" aria-hidden="true" tabindex="-1"></a>上の例では，統計量$F$が，自由度$F($ <span class="in">`r summary(result.lm)$fstatistic[2]`</span>,<span class="in">`r summary(result.lm)$fstatistic[3]`</span> $)$のもとで，<span class="in">`r round(summary(result.lm)$fstatistic[1],4)`</span>であり，統計的に有意ではないと判断される(p=<span class="in">`r round(pf(summary(result.lm)$fstatistic[1], summary(result.lm)$fstatistic[2], summary(result.lm)$fstatistic[3], lower.tail = FALSE),4)`</span>,n.s.)。</span>
+<span id="cb44-333"><a href="#cb44-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-334"><a href="#cb44-334" aria-hidden="true" tabindex="-1"></a>これは重相関係数に対する検定であり，母集団においてモデル全体としての説明力が0である，という帰無仮説を検証しているものである。この有意性検定には，説明変数の数$p$，サンプルサイズ$n$，重相関係数$R^2$を用いて，以下の式で用いられる検定統計量Fを利用する<span class="co">[</span><span class="ot">@Haebara2014</span><span class="co">]</span>。</span>
+<span id="cb44-335"><a href="#cb44-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-336"><a href="#cb44-336" aria-hidden="true" tabindex="-1"></a>$$ F= \frac{R^2}{1-R^2}\cdot\frac{n-p-1}{p} $$</span>
+<span id="cb44-337"><a href="#cb44-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-338"><a href="#cb44-338" aria-hidden="true" tabindex="-1"></a>ここで右辺第一項目はCohenの効果量($f^2=\frac{R^2}{1-R^2}$) といわれ，サンプルサイズ設計においてはこの指標が利用される。</span>
+<span id="cb44-339"><a href="#cb44-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-340"><a href="#cb44-340" aria-hidden="true" tabindex="-1"></a><span class="fu">## サンプルサイズ設計</span></span>
+<span id="cb44-341"><a href="#cb44-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-342"><a href="#cb44-342" aria-hidden="true" tabindex="-1"></a>重回帰分析のサンプルサイズ設計は，変数の効果の大きさ(回帰係数)が事前にわかっているのであれば，nを徐々に増やしていくシミュレーションによって行える。しかしそのようなケースは稀であり，実際には$R^2$の検定を用いて，ある効果量と検出力の下で，正しく検出できるサイズを算出することになる。</span>
+<span id="cb44-343"><a href="#cb44-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-344"><a href="#cb44-344" aria-hidden="true" tabindex="-1"></a>サンプルサイズの算出には，非心F分布を用いる。この時の非心度は，効果量$f^2$に$n$をかけたものになる。これを使ってサンプルサイズ設計をする例は以下のとおりである。</span>
+<span id="cb44-345"><a href="#cb44-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-348"><a href="#cb44-348" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-349"><a href="#cb44-349" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fl">0.15</span> <span class="co"># 効果量</span></span>
+<span id="cb44-350"><a href="#cb44-350" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># タイプ1エラー率</span></span>
+<span id="cb44-351"><a href="#cb44-351" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># タイプ2エラー率</span></span>
+<span id="cb44-352"><a href="#cb44-352" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># 説明変数の数</span></span>
+<span id="cb44-353"><a href="#cb44-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-354"><a href="#cb44-354" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">500</span>) {</span>
+<span id="cb44-355"><a href="#cb44-355" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> f2 <span class="sc">*</span> n</span>
+<span id="cb44-356"><a href="#cb44-356" aria-hidden="true" tabindex="-1"></a>  df1 <span class="ot">&lt;-</span> p</span>
+<span id="cb44-357"><a href="#cb44-357" aria-hidden="true" tabindex="-1"></a>  df2 <span class="ot">&lt;-</span> n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb44-358"><a href="#cb44-358" aria-hidden="true" tabindex="-1"></a>  cv <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="at">p =</span> <span class="dv">1</span> <span class="sc">-</span> alpha, df1, df2)</span>
+<span id="cb44-359"><a href="#cb44-359" aria-hidden="true" tabindex="-1"></a>  t2error <span class="ot">&lt;-</span> <span class="fu">pf</span>(<span class="at">q =</span> cv, df1, df2, <span class="at">ncp =</span> lambda)</span>
+<span id="cb44-360"><a href="#cb44-360" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (t2error <span class="sc">&lt;</span> beta) {</span>
+<span id="cb44-361"><a href="#cb44-361" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb44-362"><a href="#cb44-362" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb44-363"><a href="#cb44-363" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-364"><a href="#cb44-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-365"><a href="#cb44-365" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span>
+<span id="cb44-366"><a href="#cb44-366" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-367"><a href="#cb44-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-368"><a href="#cb44-368" aria-hidden="true" tabindex="-1"></a>この設定では，n = <span class="in">`r n`</span>以上であればモデルとして影響力がないとは言えない，ということがわかる。</span>
+<span id="cb44-369"><a href="#cb44-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-370"><a href="#cb44-370" aria-hidden="true" tabindex="-1"></a><span class="fu">## まとめ</span></span>
+<span id="cb44-371"><a href="#cb44-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-372"><a href="#cb44-372" aria-hidden="true" tabindex="-1"></a>重回帰分析は，人文社会科学で多用される技術ではあるが，技術が先行して理解が伴わないまま利用されているケースも少なくない。繰り返しになる点もあるが，以下に注意点をまとめておく。</span>
+<span id="cb44-373"><a href="#cb44-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-374"><a href="#cb44-374" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>**偏回帰係数の意味**；重回帰分析における偏回帰係数は，ほかの変数を統制した上での値であり，あたかも各係数が独立直交しているかのように解釈するのは適切ではない。</span>
+<span id="cb44-375"><a href="#cb44-375" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>**誤差の正規性**；誤差は正規分布に従っているという仮定があり，二値データや整数しかとらないカウントデータなどに盲目的にモデルを適用してはならない。誤差の正規性が満たされているかどうかは，分析後にQ-Qプロットを用いて確認する。</span>
+<span id="cb44-376"><a href="#cb44-376" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>**誤差の均質性**；誤差はモデル全体にわたって同じ正規分布に従っているというのもモデルの仮定である。すなわち，独立変数に応じて誤差分散が変わるといった均質でないデータの場合は，正しく推定されない。誤差の均質性については，分析後のQ-Qプロットを用いて確認する。</span>
+<span id="cb44-377"><a href="#cb44-377" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>**誤差間の独立性**；誤差はモデル全体にわたって同じ正規分布から独立に生成されている(i.i.d)というのがモデルの仮定である。時系列データのように，誤差間に対応(自己回帰)がみられるデータの場合は回帰分析は適切な手法とならない。状態空間モデルなど，誤差間関係を適切にモデリングしたものを当てはめる必要がある。</span>
+<span id="cb44-378"><a href="#cb44-378" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>**モデルの適切な定式化**；モデルには被説明変数に影響を与えるすべての変数が正しく含まれている必要がある。例えば，影響を与えることがわかっている変数$X_o$を意図的に除外して分析をしたとする。そのモデルに含まれる変数$X_a$が被説明変数$y$に影響を与えていたとしても，$X_a$と$X_o$に相関があれば，$X_o$の影響力が$X_a$を通じて$y$に伝播するkから，$X_a$の影響力が課題に評価されることになる。自らの仮説のために，意図的に変数を選択するのはQRPsに該当する。</span>
+<span id="cb44-379"><a href="#cb44-379" aria-hidden="true" tabindex="-1"></a><span class="ss">+ </span>**説明変数間の相関関係**；説明変数のうちにあまりにも相関関係が高い変数ペアがあれば，多重共線性の疑いが生じる。多重共線性は推定値の不安定さとなって現れる。このような場合は，説明変数を主成分分析で合成変数にまとめるといった対応が考えられる。また，高い相関ではないが交互作用効果が見たいといった場合は，逐次投入など慎重に個々の影響を考えながら投入するようにする(階層的重回帰分析)。なお交互作用項は，各変数の平均からの偏差をかけ合わせたものにすることが一般的である。</span>
+<span id="cb44-380"><a href="#cb44-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-381"><a href="#cb44-381" aria-hidden="true" tabindex="-1"></a><span class="fu">## 課題</span></span>
+<span id="cb44-382"><a href="#cb44-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-383"><a href="#cb44-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-384"><a href="#cb44-384" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>以下のデータセットは被説明変数$y$，説明変数$x1,x2$からなる重回帰分析のサンプルデータです。画面には一部しか表示しておらず，全体($n=100$)はこちら<span class="co">[</span><span class="ot">ex_regression1.csv</span><span class="co">](ex_regression1.csv)</span>からダウンロード可能です。このデータセットを用いて重回帰分析を行い，結果を出力してください。</span>
+<span id="cb44-385"><a href="#cb44-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-388"><a href="#cb44-388" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-389"><a href="#cb44-389" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
+<span id="cb44-390"><a href="#cb44-390" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb44-391"><a href="#cb44-391" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb44-392"><a href="#cb44-392" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb44-393"><a href="#cb44-393" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb44-394"><a href="#cb44-394" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb44-395"><a href="#cb44-395" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb44-396"><a href="#cb44-396" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb44-397"><a href="#cb44-397" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb44-398"><a href="#cb44-398" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb44-399"><a href="#cb44-399" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2 <span class="sc">+</span> e</span>
+<span id="cb44-400"><a href="#cb44-400" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2)</span>
+<span id="cb44-401"><a href="#cb44-401" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sample)</span>
+<span id="cb44-402"><a href="#cb44-402" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(sample, <span class="at">file =</span> <span class="st">"ex_regression1.csv"</span>)</span>
+<span id="cb44-403"><a href="#cb44-403" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-404"><a href="#cb44-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-405"><a href="#cb44-405" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>以下のデータセットは被説明変数$y$，説明変数$x1,x2$からなる重回帰分析のサンプルデータです。画面には一部しか表示しておらず，全体($n=300$)はこちら<span class="co">[</span><span class="ot">ex_regression2.csv</span><span class="co">](ex_regression2.csv)</span>からダウンロード可能です。このデータセットを用いて重回帰分析を行ってください。結果のプロットから，上に挙げた重回帰分析の仮定に反しているところを指摘してください。</span>
+<span id="cb44-406"><a href="#cb44-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-409"><a href="#cb44-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-410"><a href="#cb44-410" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
+<span id="cb44-411"><a href="#cb44-411" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb44-412"><a href="#cb44-412" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb44-413"><a href="#cb44-413" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb44-414"><a href="#cb44-414" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb44-415"><a href="#cb44-415" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb44-416"><a href="#cb44-416" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb44-417"><a href="#cb44-417" aria-hidden="true" tabindex="-1"></a>tau <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb44-418"><a href="#cb44-418" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb44-419"><a href="#cb44-419" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> rho <span class="sc">*</span> x1 <span class="sc">+</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> rho<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb44-420"><a href="#cb44-420" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fu">exp</span>(x2 <span class="sc">*</span> tau))</span>
+<span id="cb44-421"><a href="#cb44-421" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2 <span class="sc">+</span> e</span>
+<span id="cb44-422"><a href="#cb44-422" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2)</span>
+<span id="cb44-423"><a href="#cb44-423" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sample)</span>
+<span id="cb44-424"><a href="#cb44-424" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(sample, <span class="at">file =</span> <span class="st">"ex_regression2.csv"</span>)</span>
+<span id="cb44-425"><a href="#cb44-425" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb44-426"><a href="#cb44-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-427"><a href="#cb44-427" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>$R^2=0.3$を目標として，説明変数の数$p=10$の重回帰分析を行う際に，必要なサンプルサイズはいくつになるか，計算してみましょう。ここで，$\alpha = 0.05,\beta=0.2$とします。</span>
+<span id="cb44-428"><a href="#cb44-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-431"><a href="#cb44-431" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb44-432"><a href="#cb44-432" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: FALSE</span></span>
+<span id="cb44-433"><a href="#cb44-433" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
+<span id="cb44-434"><a href="#cb44-434" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: FALSE</span></span>
+<span id="cb44-435"><a href="#cb44-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-436"><a href="#cb44-436" aria-hidden="true" tabindex="-1"></a>R2 <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb44-437"><a href="#cb44-437" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> R2 <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> R2) <span class="co"># 効果量</span></span>
+<span id="cb44-438"><a href="#cb44-438" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># タイプ1エラー率</span></span>
+<span id="cb44-439"><a href="#cb44-439" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># タイプ2エラー率</span></span>
+<span id="cb44-440"><a href="#cb44-440" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># 説明変数の数</span></span>
+<span id="cb44-441"><a href="#cb44-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-442"><a href="#cb44-442" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">20</span><span class="sc">:</span><span class="dv">500</span>) {</span>
+<span id="cb44-443"><a href="#cb44-443" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> f2 <span class="sc">*</span> n</span>
+<span id="cb44-444"><a href="#cb44-444" aria-hidden="true" tabindex="-1"></a>  df1 <span class="ot">&lt;-</span> p</span>
+<span id="cb44-445"><a href="#cb44-445" aria-hidden="true" tabindex="-1"></a>  df2 <span class="ot">&lt;-</span> n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb44-446"><a href="#cb44-446" aria-hidden="true" tabindex="-1"></a>  cv <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="at">p =</span> <span class="dv">1</span> <span class="sc">-</span> alpha, df1, df2)</span>
+<span id="cb44-447"><a href="#cb44-447" aria-hidden="true" tabindex="-1"></a>  t2error <span class="ot">&lt;-</span> <span class="fu">pf</span>(<span class="at">q =</span> cv, df1, df2, <span class="at">ncp =</span> lambda)</span>
+<span id="cb44-448"><a href="#cb44-448" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (t2error <span class="sc">&lt;</span> beta) {</span>
+<span id="cb44-449"><a href="#cb44-449" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb44-450"><a href="#cb44-450" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb44-451"><a href="#cb44-451" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-452"><a href="#cb44-452" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(n)</span>
+<span id="cb44-453"><a href="#cb44-453" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

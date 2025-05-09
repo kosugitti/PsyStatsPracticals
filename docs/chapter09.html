@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.29">
+<meta name="generator" content="quarto-1.7.30">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -93,10 +93,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-231ef2f9d4ce3268f31ef752336c15d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -155,6 +155,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -366,7 +367,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></h1>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -406,7 +407,10 @@ window.Quarto = {
 <p>筆者がお勧めするのは，大正大学の井関龍太が開発した<a href="https://riseki.cloudfree.jp/?ANOVA君">anovakun</a>である。パッケージ化されていないので，リンク先からソースコードを読み込んでanovakun関数を実行する必要があるが，さまざまな実験デザインに対応し，また下位検定や効果量，球面性の補正などおよそ分散分析で必要な手法は網羅されている。以下ではこれを用いた実践を行う。</p>
 <p>anovakunの読み込みは，ソースコードをプロジェクトフォルダにダウンロードして<code>source</code>関数で読み込むか，インターネットに繋がっている状態でリンク先から直接ソースファイル(anovakun_489.txt)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>を<code>source</code>関数で読み込むといいだろう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://riseki.cloudfree.jp/?plugin=attach&amp;refer=ANOVA%E5%90%9B&amp;openfile=anovakun_489.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>読み込みが終わるとEnvironタブにanovakun関数が含まれていることを確認しよう。</p>
 <section id="anova君の入力とデータ" class="level3" data-number="9.3.1">
@@ -424,6 +428,8 @@ window.Quarto = {
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="way-anova"><span class="header-section-number">9.4.1</span> 1way-ANOVA</h3>
 <p>もっとも単純な一要因3水準，Between計画の例から始めよう。仮想データの生成を行うことで，分散分析のメカニズムと共に見ていくことにする。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">5</span></span>
@@ -449,6 +455,7 @@ window.Quarto = {
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="do">## データの確認</span></span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   ID group     value
 1   1     A  5.318573
@@ -467,14 +474,17 @@ window.Quarto = {
 14 14     C 13.332048
 15 15     C 11.332477</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### 実行</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"As"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 [ As-Type Design ]
 
 This output was generated by anovakun 4.8.9 under R version 4.5.0.
-It was executed on Fri May  9 13:15:54 2025.
+It was executed on Fri May  9 13:35:44 2025.
 
  
 &lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;
@@ -541,6 +551,8 @@ output is over --------------------///</code></pre>
 <h3 data-number="9.4.2" class="anchored" data-anchor-id="way-anova-1"><span class="header-section-number">9.4.2</span> 2way-ANOVA</h3>
 <p>二要因の場合も見ておこう。ANOVA君の表記方法は要因計画の型が変わるだけで大きな変更はないが，交互作用interactionを考える必要があるところがポイントである。これも仮想データの組成を見ることでその意義がわかりやすくなるだろう。間2<span class="math inline">\(\times\)</span>間2の実験デザインを例に，まずは各水準の理論的平均値がどのようにつくられるかをみておこう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
@@ -559,10 +571,13 @@ output is over --------------------///</code></pre>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>mu12 <span class="ot">&lt;-</span> mu <span class="sc">+</span> effectA <span class="sc">-</span> effectB <span class="sc">-</span> effectAB</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>mu21 <span class="ot">&lt;-</span> mu <span class="sc">-</span> effectA <span class="sc">+</span> effectB <span class="sc">-</span> effectAB</span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>mu22 <span class="ot">&lt;-</span> mu <span class="sc">-</span> effectA <span class="sc">-</span> effectB <span class="sc">+</span> effectAB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>効果の現れ方は相対的だから，要因Aが第一水準に<code>+effectA</code>の形で現れたら，第二水準には<code>-effectA</code> の形で現れる。要因Bについても同様である。交互作用については組み合わせにおいて生じるから，要因Aの第一水準と要因Bの第一水準の組み合わせのところに<code>+effectAB</code>を充てる。ここでも効果は相対的に現れるという条件を守るために，要因Aの第一水準の中で<code>+effectAB</code>の効果を相殺するために，要因Aの第一水準と要因Bの第二水準の組み合わせの符号が反転する。同様に，要因Bの第一水準の中で相殺するために要因Aの第二水準と要因Bの第一水準には<code>-effectAB</code>が加わる。</p>
 <p>このようにして考えられる理論的平均値に対して，外乱要因である誤差が生じて実現値が得られる。 組み上げて得られたデータを確認しておこう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X11 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu11, <span class="at">sd =</span> sigma)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>X12 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu12, <span class="at">sd =</span> sigma)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>X21 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu21, <span class="at">sd =</span> sigma)</span>
@@ -574,6 +589,7 @@ output is over --------------------///</code></pre>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(X11, X12, X21, X22)</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   ID FactorA FactorB      value
 1   1       1       1 17.3185731
@@ -621,13 +637,16 @@ output is over --------------------///</code></pre>
 <p>もちろん実際には，計画に応じたデータセットが得られているはずであり，各群のサンプルサイズが異なるなどの事情もあるだろう。しかしこうして，理論的にデータの組成を見ておくことで，サンプルサイズを変えたり効果量を変えたりしながら，どのように結果が変わってくるかを確認しながら進めることができる<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
 <p>それではこの仮想データを分析してみよう。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"ABs"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 [ ABs-Type Design ]
 
 This output was generated by anovakun 4.8.9 under R version 4.5.0.
-It was executed on Fri May  9 13:15:54 2025.
+It was executed on Fri May  9 13:35:44 2025.
 
  
 &lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;
@@ -681,6 +700,8 @@ output is over --------------------///</code></pre>
 <h2 data-number="9.5" class="anchored" data-anchor-id="withinデザイン"><span class="header-section-number">9.5</span> Withinデザイン</h2>
 <p>Withinデザインは対応のあるt検定の時と同じように，多次元正規分布からの生成として考えよう。すなわち各個体から得られるデータが相関しているという仮定をおくのである。以下のサンプルコードを読んで，データ生成過程を確認しよう。なお共分散は<span class="math inline">\(\rho_{xy}=\frac{s_{xy}}{s_xs_y}\)</span>より<span class="math inline">\(s_{xy}=\rho_{xy}s_xs_y\)</span>として整形している。</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
@@ -706,6 +727,7 @@ output is over --------------------///</code></pre>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, mus, Sigma) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
 <span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co"># データの確認</span></span>
 <span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>          V1        V2       V3
 1  10.625304  9.418518 7.493325
@@ -719,11 +741,14 @@ output is over --------------------///</code></pre>
 9   6.909722  9.863405 7.429485
 10 11.267590 10.798088 8.754522</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Long型に整形</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> X <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30 × 3
       ID name  value
@@ -740,14 +765,17 @@ output is over --------------------///</code></pre>
 10     4 V1     9.39
 # ℹ 20 more rows</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 分析の実行</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(X, <span class="st">"sA"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>, <span class="at">GG =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 [ sA-Type Design ]
 
 This output was generated by anovakun 4.8.9 under R version 4.5.0.
-It was executed on Fri May  9 13:15:55 2025.
+It was executed on Fri May  9 13:35:44 2025.
 
  
 &lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;
@@ -884,6 +912,8 @@ output is over --------------------///</code></pre>
 </ol>
 
 
+<!-- -->
+
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-Nagata.kentei" class="csl-entry" role="listitem">
 永田靖, and 吉田道弘. 1997. <em>統計的多重比較法の基礎</em>. サイエンティスト社.
@@ -969,6 +999,57 @@ output is over --------------------///</code></pre>
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -1310,7 +1391,296 @@ output is over --------------------///</code></pre>
         <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb19" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 多群の平均値差の検定</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>心理学実験においては，古典的に分散分析モデルが多用されてきた。平均値差を見ることで実験の効果，因果関係を明らかにできるように，巧妙に実験デザインが組み立てられる。その精緻さは理論的一貫性という意味である種の美しさを持ち，多くの研究者が魅了されてきた。</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>分散分析にのせることを目的にした実験計画であり，実験デザインの不自由さ(とにかく分散分析をしなければならない!)が批判的に論じられることもあるが，心理学が測定している対象が平均値差以上の精度で議論できる性質でないという反論もあるだろう。</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>今や分散分析を超えたより高度な統計モデルがあり，現在の研究においては分散分析はもはや過去のものにすぎないかもしれないが，以後のモデルも分散分析を基本としたその発展系であるので，改めて基本を押さえておくことも重要である。</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">## 分散分析の基礎</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>分散分析は「分散」の分析であるかのような名称であるが，平均値差を検定するためのものである。なぜ「分散」を冠するかといえば，効果量のところで見たように，平均値差の判断には群内分散の情報が必要だからである。</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>多群の平均値の差，その散らばりを群間分散といい，群に含まれるデータの散らばりを群内分散とよぶ。分散分析は群内分散に対する群間分散の比が十分に大きいと考えられる場合，群間に統計的な有意差があると判断する。分散の比を表す確率分布はF分布と呼ばれる。F分布は群間・群内それぞれの自由度を母数にもつ。</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>また，実験計画はBetweenデザインとWithinデザインに区分される。t検定でみたような，対応のない独立した群を対象にしたデザインがBetween，群間に相関が想定される対応のある群を対象にしたデザインがWithinである。Withinデザインは同じ個体から複数回の反応を得る(ex. period 1-2-3...)ため，反復測定デザインRepeated measured designともよばれることがある。この場合，群内分散から個人内の分散すなわち個人差を取り出すことができるため，これが分離できないBetweenデザインよりも基本的にWithinデザインのほうが目的となる変動を捉えやすい。ただし，反復測定による個体への負担を考えると，毎回Withinデザインでいいというわけにもいかないところが難点である。</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>$$Between Design: \text{全変動} = \text{群間変動}+ \text{群内変動(誤差)}$$</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>$$Within Design:  \text{全変動} = \text{群間変動}+ \text{個人差変動} + \text{誤差}$$</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>分散分析は要因が複数ある場合も考えられるから，要因AがBetween，要因BがWithinといった場合は混合計画と呼ばれることがある。慣例的に，要因Factorとその要因に含まれる水準Levelを同時に表現し，$\text{間}2 \times \text{間}3$の分散分析(二要因の分散分析で，いずれもBetweenデザインであり，水準数がそれぞれ2と3)，といった言い方をすることがある。</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## 分散分析のステップ</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>t検定において等分散性の仮定が成立するかどうかが事前に問題になったように，Betweenデザインにおいても分散の等質性は仮定されており，Leveneの検定などで事前に検証しておくべきである。またWithinデザインにおいては，データの組成に関わる分散共分散行列の非対角要素が全て等しいことが望ましいが，実践的にはそこまでの仮定が成立しているとは考えにくい。ただし分散分析としては，等分散性の仮定よりも，より緩やかな球面性の仮定が成立していればよいとされており，これを事前に検定することが一般的である。Welchの補正のように，球面性の仮定が成立していない場合は，自由度を補正することで検定の精度が維持される。</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>分散分析は多要因・多水準の平均値差の検定である。各水準ごとにt検定を繰り返せば良いのではないか，というアイデアは誰しも思いつくことであろうが，この方法は検定の目的である$\alpha$水準の制御ができなくなるという問題を含む。そこで多水準の場合は分散分析を行うことで，すべての要因・水準の母平均が同じであるという帰無仮説を検定し，効果の有無をまず明確にする。この帰無仮説が棄却されたらどこかに差があるわけだから，以後は慎重に$\alpha$水準を制御しつつ事後的な検定にすすむ。</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>水準間の差をみるための事後的な検定は，下位検定とも呼ばれる。その方法は多岐に渡り，ゴールドスタンダードは存在せず，往々にして分析者が利用しているソフトウェアが対応する手法が選択される。要因・水準が多くなると検証すべき組み合わせも多くなり，下位検定の手続きも非常に煩雑になる。統計ソフトウェアはそれこそ機械的に，幾重にも細かく分散分析表を分解して下位検定をつづけていってくれるが，いくら制御されているとはいえ検定を繰り返していることに変わりはないし，各下位検定の結果を一貫した総合的解釈をするのは困難である。実験計画はシンプルであるほうが望ましいし，複雑なモデルになるようであれば分散分析を超えた，階層線形モデルやベイジアンアプローチなどを取る方が良いだろう。</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## ANOVA君を使う</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>分散分析をRで実行するには，基本関数である<span class="in">`aov`</span>やcarパッケージなどを用いることができる。</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>もっとも，その出力は必ずしも親切ではないし，下位検定や効果量の算出などは別のパッケージ，別の関数を用いる必要がある。</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>筆者がお勧めするのは，大正大学の井関龍太が開発した<span class="co">[</span><span class="ot">anovakun</span><span class="co">](https://riseki.cloudfree.jp/?ANOVA君)</span>である。パッケージ化されていないので，リンク先からソースコードを読み込んでanovakun関数を実行する必要があるが，さまざまな実験デザインに対応し，また下位検定や効果量，球面性の補正などおよそ分散分析で必要な手法は網羅されている。以下ではこれを用いた実践を行う。</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>anovakunの読み込みは，ソースコードをプロジェクトフォルダにダウンロードして<span class="in">`source`</span>関数で読み込むか，インターネットに繋がっている状態でリンク先から直接ソースファイル(anovakun_489.txt)<span class="ot">[^9.1]</span>を<span class="in">`source`</span>関数で読み込むといいだろう。</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://riseki.cloudfree.jp/?plugin=attach&amp;refer=ANOVA%E5%90%9B&amp;openfile=anovakun_489.txt"</span>)</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="ot">[^9.1]: </span>2024.03.17時点での最新バージョンが4.8.9である。リンク先URLは，公式サイトからソースファイルのリンクをコピーして貼り付けると良い。</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>読み込みが終わるとEnvironタブにanovakun関数が含まれていることを確認しよう。</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### ANOVA君の入力とデータ</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>ANOVA君は伝統的にワイド型データから読み込むようになっている。すなわち，一行に1オブザベーション入っている形式である。Between計画の場合は，データの前に水準数を表すインデックスと最終的な従属変数の形に整形したデータが必要である。Within計画の場合は1行に1Obs.なのだから，反復した水準の数だけ右にデータを入れていく形に整形する。</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>しかし<span class="co">[</span><span class="ot">Chapter @sec-Long_and_Wide</span><span class="co">]</span> で述べたように，昨今は計算機にとって優しい型，ロング型での入力もおおく，ANOVA君もversion 4.4.0からロング型での入力も許すようになった。その場合はオプション<span class="in">`long=TRUE`</span> とロング型であることを明記する必要がある。</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>ANOVA君を使う時は，関数<span class="in">`anovakun`</span>に，データ，要因計画の型，各要因の水準の順で入力する。ここで要因計画の型とは，文字列でBetween/Withinの違いを明示することになる。被験者のラベルを表す小文字の<span class="in">`s`</span>を挟んで，左側に間(Between)要因，右側に内(Within)要因を入れる。例えば一要因Between計画の場合は<span class="in">`"As"`</span>，二要因Within計画の場合は<span class="in">`"sAB"`</span>，間1内2の混合計画であれば<span class="in">`"AsBC"`</span>のようにする。</span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>続いて入力する水準数は，要因の数だけ必要である。ただし，ロング型で入力した場合は自動的に水準数が計算されるので入力の必要がない。</span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a>このテキストでは，データの持ち替えについてすでに触れているので，色々扱いやすいロング型に整形して利用していくものとする。</span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a><span class="fu">## Betweenデザイン</span></span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1way-ANOVA</span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a>もっとも単純な一要因3水準，Between計画の例から始めよう。仮想データの生成を行うことで，分散分析のメカニズムと共に見ていくことにする。</span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a>n3 <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a><span class="co"># 母平均，効果量，母SD</span></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="co"># 群平均</span></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> mu <span class="sc">-</span> (delta <span class="sc">*</span> sigma)</span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> mu</span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a>mu3 <span class="ot">&lt;-</span> mu <span class="sc">+</span> (delta <span class="sc">*</span> sigma)</span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="co"># データセット</span></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu1, sigma)</span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu2, sigma)</span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a>X3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n3, mu3, sigma)</span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="do">## 組み上げる</span></span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span>(n1 <span class="sc">+</span> n2 <span class="sc">+</span> n3),</span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="fu">c</span>(n1, n2, n3))),</span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(X1, X2, X3)</span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a><span class="do">## データの確認</span></span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a>dat</span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="do">### 実行</span></span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"As"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a>出力結果は大きく分けて記述統計<span class="in">`&lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;`</span>と，分散分析表<span class="in">`&lt;&lt; ANOVA TABLE &gt;&gt;`</span>，下位検定<span class="in">`&lt;&lt; POST ANALYSES &gt;&gt;`</span>に分けられる。記述統計はデータが正しく読み込めているかどうかのチェックに使おう。</span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a>一番のメインは分散分析表であり，平方和sum of squaresを自由度dfで割った，1自由度あたりのデータの散らばりを，群間と群内(誤差)との比で検証しているのが見て取れる。群間平方和が$98.38$，群内平方和が$89.58$であり，それぞれ自由度$2$($3$水準$-1$)と$12$($\sum_{j=1}^3 n_j-1$)から生じているので，平均平方Mean Squaresがそれぞれ$49.19$と$7.47$である。この比が$6.5897$で，自由度$F(2,12)$のF分布においてこの値以上の極端な数字が出る確率が5%を下回っている(実に$p=0.0117$である)ため，統計的に有意であると判断できる。</span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a>分散分析表のTotalのところで，全体のSSが群間SS+群内SSに一致していること，自由度も全体df=群間df+群内dfになっていることを確認しておこう。</span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a>また，<span class="in">`anovakun`</span>関数の引数として<span class="in">`peta = TRUE`</span>を指定したが，これは偏$\eta^2$(partial eta)と呼ばれる効果量を出力するためのオプションである。</span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a>今回は分散分析の時点で統計的な有意差が認められたため($F(2,12)=6.59, p &lt; 0.05, \eta^2=0.52$)，続いて下位検定が表示されている。ANOVA君は下位検定についても複数のオプションを持っているが，デフォルトではShafferの修正Bonferroni検定が行われる。詳しくは専門書<span class="co">[</span><span class="ot">@Nagata.kentei</span><span class="co">]</span>を参照してほしいが，概略を説明すると，検証すべき仮説の数で有意水準を分割するというBonferroniの方法を，競合する仮説の数も考慮して分母を調整するというものである。</span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a>この計算の結果，A群とC群の間にのみ統計的な有意差が確認された($t(12)=3.61,p&lt;0.05$)と言える。</span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2way-ANOVA</span></span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a>二要因の場合も見ておこう。ANOVA君の表記方法は要因計画の型が変わるだけで大きな変更はないが，交互作用interactionを考える必要があるところがポイントである。これも仮想データの組成を見ることでその意義がわかりやすくなるだろう。間2$\times$間2の実験デザインを例に，まずは各水準の理論的平均値がどのようにつくられるかをみておこう。</span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-115"><a href="#cb19-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-116"><a href="#cb19-116" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb19-117"><a href="#cb19-117" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
+<span id="cb19-118"><a href="#cb19-118" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-119"><a href="#cb19-119" aria-hidden="true" tabindex="-1"></a><span class="co"># 全体平均，効果量，母SD</span></span>
+<span id="cb19-120"><a href="#cb19-120" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-121"><a href="#cb19-121" aria-hidden="true" tabindex="-1"></a>delta1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-122"><a href="#cb19-122" aria-hidden="true" tabindex="-1"></a>delta2 <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># ここではあえて要因Bの効果を0にしている</span></span>
+<span id="cb19-123"><a href="#cb19-123" aria-hidden="true" tabindex="-1"></a>delta3 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb19-124"><a href="#cb19-124" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb19-125"><a href="#cb19-125" aria-hidden="true" tabindex="-1"></a><span class="co"># 効果の計算</span></span>
+<span id="cb19-126"><a href="#cb19-126" aria-hidden="true" tabindex="-1"></a>effectA <span class="ot">&lt;-</span> delta1 <span class="sc">*</span> sigma <span class="co"># Factor A</span></span>
+<span id="cb19-127"><a href="#cb19-127" aria-hidden="true" tabindex="-1"></a>effectB <span class="ot">&lt;-</span> delta2 <span class="sc">*</span> sigma <span class="co"># Factor B</span></span>
+<span id="cb19-128"><a href="#cb19-128" aria-hidden="true" tabindex="-1"></a>effectAB <span class="ot">&lt;-</span> delta3 <span class="sc">*</span> sigma <span class="co"># interaction</span></span>
+<span id="cb19-129"><a href="#cb19-129" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群の平均</span></span>
+<span id="cb19-130"><a href="#cb19-130" aria-hidden="true" tabindex="-1"></a>mu11 <span class="ot">&lt;-</span> mu <span class="sc">+</span> effectA <span class="sc">+</span> effectB <span class="sc">+</span> effectAB</span>
+<span id="cb19-131"><a href="#cb19-131" aria-hidden="true" tabindex="-1"></a>mu12 <span class="ot">&lt;-</span> mu <span class="sc">+</span> effectA <span class="sc">-</span> effectB <span class="sc">-</span> effectAB</span>
+<span id="cb19-132"><a href="#cb19-132" aria-hidden="true" tabindex="-1"></a>mu21 <span class="ot">&lt;-</span> mu <span class="sc">-</span> effectA <span class="sc">+</span> effectB <span class="sc">-</span> effectAB</span>
+<span id="cb19-133"><a href="#cb19-133" aria-hidden="true" tabindex="-1"></a>mu22 <span class="ot">&lt;-</span> mu <span class="sc">-</span> effectA <span class="sc">-</span> effectB <span class="sc">+</span> effectAB</span>
+<span id="cb19-134"><a href="#cb19-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-135"><a href="#cb19-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-136"><a href="#cb19-136" aria-hidden="true" tabindex="-1"></a>効果の現れ方は相対的だから，要因Aが第一水準に<span class="in">`+effectA`</span>の形で現れたら，第二水準には<span class="in">`-effectA`</span> の形で現れる。要因Bについても同様である。交互作用については組み合わせにおいて生じるから，要因Aの第一水準と要因Bの第一水準の組み合わせのところに<span class="in">`+effectAB`</span>を充てる。ここでも効果は相対的に現れるという条件を守るために，要因Aの第一水準の中で<span class="in">`+effectAB`</span>の効果を相殺するために，要因Aの第一水準と要因Bの第二水準の組み合わせの符号が反転する。同様に，要因Bの第一水準の中で相殺するために要因Aの第二水準と要因Bの第一水準には<span class="in">`-effectAB`</span>が加わる。</span>
+<span id="cb19-137"><a href="#cb19-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-138"><a href="#cb19-138" aria-hidden="true" tabindex="-1"></a>このようにして考えられる理論的平均値に対して，外乱要因である誤差が生じて実現値が得られる。</span>
+<span id="cb19-139"><a href="#cb19-139" aria-hidden="true" tabindex="-1"></a>組み上げて得られたデータを確認しておこう。</span>
+<span id="cb19-142"><a href="#cb19-142" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-143"><a href="#cb19-143" aria-hidden="true" tabindex="-1"></a>X11 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu11, <span class="at">sd =</span> sigma)</span>
+<span id="cb19-144"><a href="#cb19-144" aria-hidden="true" tabindex="-1"></a>X12 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu12, <span class="at">sd =</span> sigma)</span>
+<span id="cb19-145"><a href="#cb19-145" aria-hidden="true" tabindex="-1"></a>X21 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu21, <span class="at">sd =</span> sigma)</span>
+<span id="cb19-146"><a href="#cb19-146" aria-hidden="true" tabindex="-1"></a>X22 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu22, <span class="at">sd =</span> sigma)</span>
+<span id="cb19-147"><a href="#cb19-147" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-148"><a href="#cb19-148" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span>(n <span class="sc">*</span> <span class="dv">4</span>),</span>
+<span id="cb19-149"><a href="#cb19-149" aria-hidden="true" tabindex="-1"></a>  <span class="at">FactorA =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> n <span class="sc">*</span> <span class="dv">2</span>),</span>
+<span id="cb19-150"><a href="#cb19-150" aria-hidden="true" tabindex="-1"></a>  <span class="at">FactorB =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> n), <span class="dv">2</span>),</span>
+<span id="cb19-151"><a href="#cb19-151" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(X11, X12, X21, X22)</span>
+<span id="cb19-152"><a href="#cb19-152" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-153"><a href="#cb19-153" aria-hidden="true" tabindex="-1"></a>dat</span>
+<span id="cb19-154"><a href="#cb19-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-155"><a href="#cb19-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-156"><a href="#cb19-156" aria-hidden="true" tabindex="-1"></a>もちろん実際には，計画に応じたデータセットが得られているはずであり，各群のサンプルサイズが異なるなどの事情もあるだろう。しかしこうして，理論的にデータの組成を見ておくことで，サンプルサイズを変えたり効果量を変えたりしながら，どのように結果が変わってくるかを確認しながら進めることができる<span class="ot">[^9.2]</span>。</span>
+<span id="cb19-157"><a href="#cb19-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-158"><a href="#cb19-158" aria-hidden="true" tabindex="-1"></a><span class="ot">[^9.2]: </span>かつては分散分析は手計算でできる分析モデルであり，得られたデータを平方和に分解していくプロセスをたどりながら分散分析のメカニズムが体得されるという教育が多く見られた。ただしその方法は計算に時間がかかること，ミスが混在しやすいことに加え，手元のデータが唯一無二のものであるという印象を強くすることが懸念される。推測統計学においては，手元のデータはあくまでも実現値に過ぎないと考えるのであり，乱数を生成して幾つでも自在に作り出せる経験を得た方が教育効果として良いのではないか，と筆者は考えている。</span>
+<span id="cb19-159"><a href="#cb19-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-160"><a href="#cb19-160" aria-hidden="true" tabindex="-1"></a>それではこの仮想データを分析してみよう。</span>
+<span id="cb19-163"><a href="#cb19-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-164"><a href="#cb19-164" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"ABs"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-165"><a href="#cb19-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-166"><a href="#cb19-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-167"><a href="#cb19-167" aria-hidden="true" tabindex="-1"></a>基本的な結果の見方については，一要因のときと同じである。今回は要因Aと交互作用の効果を作り，正しく検出されている。下位検定については，要因Aが2水準であったためこちらの主効果の検証は必要なく(記述統計を見て群平均比較をすればよい)，交互作用についての単純効果の検証が行われている。</span>
+<span id="cb19-168"><a href="#cb19-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-169"><a href="#cb19-169" aria-hidden="true" tabindex="-1"></a><span class="fu">## Withinデザイン</span></span>
+<span id="cb19-170"><a href="#cb19-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-171"><a href="#cb19-171" aria-hidden="true" tabindex="-1"></a>Withinデザインは対応のあるt検定の時と同じように，多次元正規分布からの生成として考えよう。すなわち各個体から得られるデータが相関しているという仮定をおくのである。以下のサンプルコードを読んで，データ生成過程を確認しよう。なお共分散は$\rho_{xy}=\frac{s_{xy}}{s_xs_y}$より$s_{xy}=\rho_{xy}s_xs_y$として整形している。</span>
+<span id="cb19-172"><a href="#cb19-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-175"><a href="#cb19-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-176"><a href="#cb19-176" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
+<span id="cb19-177"><a href="#cb19-177" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
+<span id="cb19-178"><a href="#cb19-178" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb19-179"><a href="#cb19-179" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
+<span id="cb19-180"><a href="#cb19-180" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-181"><a href="#cb19-181" aria-hidden="true" tabindex="-1"></a><span class="co"># 全体平均，効果量，母SD</span></span>
+<span id="cb19-182"><a href="#cb19-182" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-183"><a href="#cb19-183" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-184"><a href="#cb19-184" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> s2 <span class="ot">&lt;-</span> s3 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-185"><a href="#cb19-185" aria-hidden="true" tabindex="-1"></a>rho12 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb19-186"><a href="#cb19-186" aria-hidden="true" tabindex="-1"></a>rho13 <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb19-187"><a href="#cb19-187" aria-hidden="true" tabindex="-1"></a>rho23 <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb19-188"><a href="#cb19-188" aria-hidden="true" tabindex="-1"></a>mus <span class="ot">&lt;-</span> <span class="fu">c</span>(mu, mu <span class="sc">+</span> s1 <span class="sc">*</span> delta, mu <span class="sc">-</span> s1 <span class="sc">*</span> delta)</span>
+<span id="cb19-189"><a href="#cb19-189" aria-hidden="true" tabindex="-1"></a><span class="co"># 共分散行列の生成</span></span>
+<span id="cb19-190"><a href="#cb19-190" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">3</span>)</span>
+<span id="cb19-191"><a href="#cb19-191" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> s1<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb19-192"><a href="#cb19-192" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">2</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> s2<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb19-193"><a href="#cb19-193" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">3</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> s3<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb19-194"><a href="#cb19-194" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">2</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> rho12 <span class="sc">*</span> s1 <span class="sc">*</span> s2</span>
+<span id="cb19-195"><a href="#cb19-195" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">1</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">3</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> rho13 <span class="sc">*</span> s1 <span class="sc">*</span> s3</span>
+<span id="cb19-196"><a href="#cb19-196" aria-hidden="true" tabindex="-1"></a>Sigma[<span class="dv">2</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> Sigma[<span class="dv">3</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> rho23 <span class="sc">*</span> s2 <span class="sc">*</span> s3</span>
+<span id="cb19-197"><a href="#cb19-197" aria-hidden="true" tabindex="-1"></a><span class="co"># データの生成</span></span>
+<span id="cb19-198"><a href="#cb19-198" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, mus, Sigma) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb19-199"><a href="#cb19-199" aria-hidden="true" tabindex="-1"></a><span class="co"># データの確認</span></span>
+<span id="cb19-200"><a href="#cb19-200" aria-hidden="true" tabindex="-1"></a>X</span>
+<span id="cb19-201"><a href="#cb19-201" aria-hidden="true" tabindex="-1"></a><span class="co"># Long型に整形</span></span>
+<span id="cb19-202"><a href="#cb19-202" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> X <span class="sc">%&gt;%</span></span>
+<span id="cb19-203"><a href="#cb19-203" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-204"><a href="#cb19-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb19-205"><a href="#cb19-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span>
+<span id="cb19-206"><a href="#cb19-206" aria-hidden="true" tabindex="-1"></a><span class="co"># 分析の実行</span></span>
+<span id="cb19-207"><a href="#cb19-207" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(X, <span class="st">"sA"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>, <span class="at">GG =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-208"><a href="#cb19-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-209"><a href="#cb19-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-210"><a href="#cb19-210" aria-hidden="true" tabindex="-1"></a>上記コードについていくつか解説をしておこう。</span>
+<span id="cb19-211"><a href="#cb19-211" aria-hidden="true" tabindex="-1"></a>今回，各群の分散は同じにしつつ，変数間相関に大きな違いを持たせた。あえて球面性の仮定が成立しないような例を得たかったからで，出力の<span class="in">`&lt;&lt; SPHERICITY INDICES &gt;&gt;`</span>をみると統計量$\lambda$のあとの$p$値が5%を下回っており，「球面性が成立している」という帰無仮説が棄却されていることがわかる。この時いくつかの補正法があるが，今回はGreenhouse-Geisserの補正を当てることにしている。それが<span class="in">`anovakun`</span>関数のなかの<span class="in">`GG=TRUE`</span>の箇所である。</span>
+<span id="cb19-212"><a href="#cb19-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-213"><a href="#cb19-213" aria-hidden="true" tabindex="-1"></a>これを踏まえて分散分析表が示されている。ここでも全体平方和<span class="in">`SS`</span>，自由度<span class="in">`df`</span>が各行の要素の和になっていることが確認できるが，その因子名のところに<span class="in">`s`</span>が含まれていることが確認できる。これが個体ごとの変動を表しており，誤差から個人差を取り除いて効果の検証ができていることがわかる。</span>
+<span id="cb19-214"><a href="#cb19-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a>分散分析は加法的，線形的な分解であるからわかりやすく，要因が複雑に組み合わさることがあっても基本的に今回のパーツを組み上げることで理解できる。言い換えると，データが先にある実践的な場合には平方和をひとつひとつ丁寧に紐解いていくことで理解できる。実にanovakunの前進であるanova4では4要因，anovakunでは26要因までのデザインを分析することが可能である。もっとも4要因計画にもなると3次の交互作用まで考えられ，主効果と合わせてこれらの交互作用効果を解釈するのは困難である。anoakunは2次以上の交互作用が見られた場合，自動的に下位検定を行ってくれないので，要因の水準ごとにデータを分割して，分散分析表を解体しつつ分析する必要がある。<span class="ot">[^9.3]</span></span>
+<span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a>しかしもちろん，これには検定の多重性の問題が関わってくるから，あまり推奨される手法ではない。ごく少ない要因で，主効果の有無を検証することを主眼においた丁寧な実験デザインを組み立てることを試みるべきである。</span>
+<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-219"><a href="#cb19-219" aria-hidden="true" tabindex="-1"></a>またここでは，仮想データを作ることで，得られたデータの背後にある生成メカニズムに注目した。「与えられたデータを分解する」のが分散分析であるのに対し，リバースエンジニアリングからアプローチしたのである。こうすることで，分散分析の見えない仮定に注意が向くことを期待している。簡便のために，いくつかのパラメータを均質化するなどしたが，実践的には群ごとのサンプルサイズが異なることも少なくないだろうし，群間の分散や共分散が均質であることを前提とするのは難しいだろう。これを考慮した細かい作り込みも，リバースエンジニアリングによって生成メカニズムがわかっている場合には応用が可能である。さらに，どこの水準間にどのような効果があると仮定されるか，といった精緻な仮説があるのなら，そこだけをターゲットにした分析を行うことも可能である。</span>
+<span id="cb19-220"><a href="#cb19-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-221"><a href="#cb19-221" aria-hidden="true" tabindex="-1"></a>分散分析は，あくまでも大雑把な全体的傾向を見るためのものであることに留意しよう。心理学のデータがより精緻な仮定に耐えうる精度を持つものになれば，分散分析は過去の遺物となるかもしれない。</span>
+<span id="cb19-222"><a href="#cb19-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-223"><a href="#cb19-223" aria-hidden="true" tabindex="-1"></a><span class="fu">## 課題</span></span>
+<span id="cb19-224"><a href="#cb19-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-225"><a href="#cb19-225" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>以下のデータセットは一要因4水準Between計画で得られたものです。分散分析を行って，要因の効果があるかどうか，水準間に差があるとすればどこに見られるかを報告してください。なおこのデータセットはこちら<span class="co">[</span><span class="ot">ex_anova1.csv</span><span class="co">](ex_anova1.csv)</span>からダウンロード可能です。</span>
+<span id="cb19-226"><a href="#cb19-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-229"><a href="#cb19-229" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-230"><a href="#cb19-230" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
+<span id="cb19-231"><a href="#cb19-231" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
+<span id="cb19-232"><a href="#cb19-232" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb19-233"><a href="#cb19-233" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb19-234"><a href="#cb19-234" aria-hidden="true" tabindex="-1"></a>n3 <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb19-235"><a href="#cb19-235" aria-hidden="true" tabindex="-1"></a>n4 <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb19-236"><a href="#cb19-236" aria-hidden="true" tabindex="-1"></a><span class="co"># 母平均，効果量，母SD</span></span>
+<span id="cb19-237"><a href="#cb19-237" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-238"><a href="#cb19-238" aria-hidden="true" tabindex="-1"></a>delta1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-239"><a href="#cb19-239" aria-hidden="true" tabindex="-1"></a>delta2 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb19-240"><a href="#cb19-240" aria-hidden="true" tabindex="-1"></a>delta3 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span></span>
+<span id="cb19-241"><a href="#cb19-241" aria-hidden="true" tabindex="-1"></a>delta4 <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="sc">-</span> (delta1 <span class="sc">+</span> delta2 <span class="sc">+</span> delta3)</span>
+<span id="cb19-242"><a href="#cb19-242" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb19-243"><a href="#cb19-243" aria-hidden="true" tabindex="-1"></a><span class="co"># 群平均</span></span>
+<span id="cb19-244"><a href="#cb19-244" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> mu <span class="sc">+</span> (delta1 <span class="sc">*</span> sigma)</span>
+<span id="cb19-245"><a href="#cb19-245" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> mu <span class="sc">+</span> (delta2 <span class="sc">*</span> sigma)</span>
+<span id="cb19-246"><a href="#cb19-246" aria-hidden="true" tabindex="-1"></a>mu3 <span class="ot">&lt;-</span> mu <span class="sc">+</span> (delta3 <span class="sc">*</span> sigma)</span>
+<span id="cb19-247"><a href="#cb19-247" aria-hidden="true" tabindex="-1"></a>mu4 <span class="ot">&lt;-</span> mu <span class="sc">+</span> (delta4 <span class="sc">*</span> sigma)</span>
+<span id="cb19-248"><a href="#cb19-248" aria-hidden="true" tabindex="-1"></a><span class="co"># データセット</span></span>
+<span id="cb19-249"><a href="#cb19-249" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, mu1, sigma) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb19-250"><a href="#cb19-250" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2, mu2, sigma) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb19-251"><a href="#cb19-251" aria-hidden="true" tabindex="-1"></a>X3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n3, mu3, sigma) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb19-252"><a href="#cb19-252" aria-hidden="true" tabindex="-1"></a>X4 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n4, mu3, sigma) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb19-253"><a href="#cb19-253" aria-hidden="true" tabindex="-1"></a><span class="do">## 組み上げる</span></span>
+<span id="cb19-254"><a href="#cb19-254" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-255"><a href="#cb19-255" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span>(n1 <span class="sc">+</span> n2 <span class="sc">+</span> n3 <span class="sc">+</span> n4),</span>
+<span id="cb19-256"><a href="#cb19-256" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], <span class="fu">c</span>(n1, n2, n3, n4))),</span>
+<span id="cb19-257"><a href="#cb19-257" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(X1, X2, X3, X4)</span>
+<span id="cb19-258"><a href="#cb19-258" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-259"><a href="#cb19-259" aria-hidden="true" tabindex="-1"></a>dat</span>
+<span id="cb19-260"><a href="#cb19-260" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(dat, <span class="at">file =</span> <span class="st">"ex_anova1.csv"</span>)</span>
+<span id="cb19-261"><a href="#cb19-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-262"><a href="#cb19-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-263"><a href="#cb19-263" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>以下のデータセットは一要因4水準Within計画で得られたものです。分散分析を行って，要因の効果があるかどうか，水準間に差があるとすればどこに見られるかを報告してください。なおこのデータセットはこちら<span class="co">[</span><span class="ot">ex_anova2.csv</span><span class="co">](ex_anova2.csv)</span>からダウンロード可能です。</span>
+<span id="cb19-264"><a href="#cb19-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-267"><a href="#cb19-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-268"><a href="#cb19-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: FALSE</span></span>
+<span id="cb19-269"><a href="#cb19-269" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
+<span id="cb19-270"><a href="#cb19-270" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
+<span id="cb19-271"><a href="#cb19-271" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb19-272"><a href="#cb19-272" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
+<span id="cb19-273"><a href="#cb19-273" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb19-274"><a href="#cb19-274" aria-hidden="true" tabindex="-1"></a><span class="co"># 全体平均，効果量，母SD</span></span>
+<span id="cb19-275"><a href="#cb19-275" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-276"><a href="#cb19-276" aria-hidden="true" tabindex="-1"></a>delta1 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-277"><a href="#cb19-277" aria-hidden="true" tabindex="-1"></a>delta2 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb19-278"><a href="#cb19-278" aria-hidden="true" tabindex="-1"></a>delta3 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb19-279"><a href="#cb19-279" aria-hidden="true" tabindex="-1"></a>delta4 <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="sc">-</span> (delta1 <span class="sc">+</span> delta2 <span class="sc">+</span> delta3)</span>
+<span id="cb19-280"><a href="#cb19-280" aria-hidden="true" tabindex="-1"></a>Mus <span class="ot">&lt;-</span> <span class="fu">c</span>(mu <span class="sc">+</span> delta1, mu <span class="sc">+</span> delta2, mu <span class="sc">+</span> delta3, mu <span class="sc">+</span> delta4)</span>
+<span id="cb19-281"><a href="#cb19-281" aria-hidden="true" tabindex="-1"></a>SDs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb19-282"><a href="#cb19-282" aria-hidden="true" tabindex="-1"></a>rhos <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb19-283"><a href="#cb19-283" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span>,</span>
+<span id="cb19-284"><a href="#cb19-284" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.2</span>, <span class="dv">1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>,</span>
+<span id="cb19-285"><a href="#cb19-285" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="fl">0.8</span>,</span>
+<span id="cb19-286"><a href="#cb19-286" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.4</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="dv">1</span></span>
+<span id="cb19-287"><a href="#cb19-287" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">4</span>)</span>
+<span id="cb19-288"><a href="#cb19-288" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">diag</span>(SDs) <span class="sc">%*%</span> rhos</span>
+<span id="cb19-289"><a href="#cb19-289" aria-hidden="true" tabindex="-1"></a><span class="co"># データの生成</span></span>
+<span id="cb19-290"><a href="#cb19-290" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, Mus, Sigma) <span class="sc">%&gt;%</span></span>
+<span id="cb19-291"><a href="#cb19-291" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-292"><a href="#cb19-292" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb19-293"><a href="#cb19-293" aria-hidden="true" tabindex="-1"></a><span class="co"># データの確認</span></span>
+<span id="cb19-294"><a href="#cb19-294" aria-hidden="true" tabindex="-1"></a>X</span>
+<span id="cb19-295"><a href="#cb19-295" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(X, <span class="at">file =</span> <span class="st">"ex_anova2.csv"</span>)</span>
+<span id="cb19-296"><a href="#cb19-296" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-297"><a href="#cb19-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-298"><a href="#cb19-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-299"><a href="#cb19-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-300"><a href="#cb19-300" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>間(3)$\times$間(3)の分散分析モデルの仮想データセットを作りましょう。そのデータに分散分析を適用し，仮定した要因の効果がみられるか(あるいは効果がないと仮定した場合に正しく検出されないか)を確認しましょう。</span>
+<span id="cb19-301"><a href="#cb19-301" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>【発展課題】二要因混合計画分散分析(間$\times$内)の仮想データセットを作りましょう。そのデータに分散分析を適用し，仮定した要因の効果がみられるか(あるいは効果がないと仮定した場合に正しく検出されないか)を確認しましょう。</span>
+<span id="cb19-302"><a href="#cb19-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-303"><a href="#cb19-303" aria-hidden="true" tabindex="-1"></a><span class="ot">[^9.3]: </span>anovakunの補助関数anovatanを用いることで，注目したい要因ごとにデータを分割してくれる。詳しくは公式サイトのマニュアルを参照してほしい。</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 
