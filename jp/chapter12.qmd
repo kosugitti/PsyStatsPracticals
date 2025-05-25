@@ -301,87 +301,44 @@ head(sample)
 write.csv(sample, file = "ex_regression3.csv")
 ```
 
-<!-- 
-### 課題の解答例
-
 ```{r}
 #| message: FALSE
-# データの読み込みと前処理
-pacman::p_load(tidyverse)
-pacman::p_load(brms)
+library(ggplot2)
+library(patchwork)
 
-# データの読み込み
-data <- read.csv("ex_regression3.csv")
-
-# モデルの推定
-model <- brm(
-  y ~ x1 + x2,
-  data = data,
-  seed = 123 # 再現性のため
+# データの準備
+x <- seq(-4, 4, length.out = 1000)
+normal_df <- data.frame(
+  x = x,
+  density = dnorm(x),
+  cdf = pnorm(x),
+  logistic = plogis(x)
 )
 
-# 1. 推定値と95%信用区間の確認
-summary(model)
+# 1. 標準正規分布
+p1 <- ggplot(normal_df, aes(x = x, y = density)) +
+  geom_line() +
+  labs(title = "標準正規分布",
+       x = "x",
+       y = "確率密度") +
+  theme_minimal()
 
-# 2. MCMCの収束診断の詳細確認
-# Rhatと有効サンプルサイズの確認は summary() の出力に含まれています
+# 2. 累積正規分布
+p2 <- ggplot(normal_df, aes(x = x, y = cdf)) +
+  geom_line() +
+  labs(title = "累積正規分布",
+       x = "x",
+       y = "累積確率") +
+  theme_minimal()
 
-# 3. 事後分布のヒストグラムとトレースプロット
-plot(model)
+# 3. ロジスティック曲線
+p3 <- ggplot(normal_df, aes(x = x, y = logistic)) +
+  geom_line() +
+  labs(title = "ロジスティック曲線",
+       x = "x",
+       y = "確率") +
+  theme_minimal()
 
-# 4. デフォルトの事前分布の確認
-get_prior(model)
-
-# 5. MCMCサンプルの取り出しとMAP推定値の計算
-# MAP推定用の関数
-find_map <- function(x) {
-  density_obj <- density(x)
-  return(density_obj$x[which.max(density_obj$y)])
-}
-
-# MCMCサンプルの取り出しと要約統計量の計算
-mcmc_samples <- as_draws_df(model)
-mcmc_summary <- mcmc_samples %>%
-  as.data.frame() %>%
-  select(b_Intercept, b_x1, b_x2, sigma) %>%
-  pivot_longer(everything()) %>%
-  group_by(name) %>%
-  summarise(
-    MAP = find_map(value),
-    Mean = mean(value),
-    SD = sd(value),
-    `75%_Lower` = quantile(value, 0.125),
-    `75%_Upper` = quantile(value, 0.875),
-    `90%_Lower` = quantile(value, 0.05),
-    `90%_Upper` = quantile(value, 0.95),
-    .groups = "drop"
-  )
-
-# 結果の表示
-mcmc_summary
+# 3つのプロットを横に並べて表示
+p1 + p2 + p3
 ```
-
-この分析結果から以下のことが分かります：
-
-1. 推定値について：
-   - 切片（Intercept）、x1係数、x2係数のそれぞれについて、点推定値と95%信用区間が得られました
-   - これらの推定値は真の値（$\beta_0=2$, $\beta_1=1.5$, $\beta_2=2.3$）を良く捉えています
-
-2. MCMCの収束診断：
-   - すべてのパラメータでRhat値が1.1未満であり、収束は良好です
-   - Bulk-ESSも十分な値（>1000）を示しており、効果的なサンプリングができています
-
-3. 事後分布：
-   - ヒストグラムから、各パラメータの事後分布が概ね正規分布に従っていることが確認できます
-   - トレースプロットは良好な混合を示しています
-
-4. 事前分布：
-   - デフォルトでは、回帰係数に対して無情報事前分布が使用されています
-   - 分散パラメータには半t分布が使用されています
-
-5. MAP推定値：
-   - 各パラメータのMAP推定値は平均値に近い値を示しており、事後分布が対称的であることを示唆しています
-
-6. 信用区間：
-   - 90%信用区間と75%信用区間は、パラメータの不確実性の程度を異なる水準で示しています
-   - これらの区間は真の値を含んでおり、モデルの推定精度が良好であることを示しています -->
