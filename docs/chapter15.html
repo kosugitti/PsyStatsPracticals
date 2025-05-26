@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.30">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>15&nbsp; ベイジアンモデリング – 心理学統計実習</title>
+<title>15&nbsp; 多変量解析(その2) – 心理学統計実習</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./practices.html" rel="next">
+<link href="./chapter16.html" rel="next">
 <link href="./chapter14.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -38,7 +38,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-231ef2f9d4ce3268f31ef752336c15d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter15.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter15.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -231,19 +231,25 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析(その1)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter15.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./practices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">演習問題</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">演習問題</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -257,15 +263,24 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#そのほかの分析1距離行列を用いるもの" id="toc-そのほかの分析1距離行列を用いるもの" class="nav-link active" data-scroll-target="#そのほかの分析1距離行列を用いるもの"><span class="header-section-number">15.1</span> そのほかの分析1；距離行列を用いるもの</a></li>
+  <li><a href="#クラスター分析" id="toc-クラスター分析" class="nav-link" data-scroll-target="#クラスター分析"><span class="header-section-number">15.2</span> クラスター分析</a></li>
+  <li><a href="#多次元尺度構成法" id="toc-多次元尺度構成法" class="nav-link" data-scroll-target="#多次元尺度構成法"><span class="header-section-number">15.3</span> 多次元尺度構成法</a></li>
+  <li><a href="#そのほかの分析2共頻行列を用いるもの" id="toc-そのほかの分析2共頻行列を用いるもの" class="nav-link" data-scroll-target="#そのほかの分析2共頻行列を用いるもの"><span class="header-section-number">15.4</span> そのほかの分析2；共頻行列を用いるもの</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></h1>
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></h1>
 </div>
 
 
@@ -282,8 +297,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="そのほかの分析1距離行列を用いるもの" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="そのほかの分析1距離行列を用いるもの"><span class="header-section-number">15.1</span> そのほかの分析1；距離行列を用いるもの</h2>
+</section>
+<section id="クラスター分析" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="クラスター分析"><span class="header-section-number">15.2</span> クラスター分析</h2>
+</section>
+<section id="多次元尺度構成法" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="多次元尺度構成法"><span class="header-section-number">15.3</span> 多次元尺度構成法</h2>
+</section>
+<section id="そのほかの分析2共頻行列を用いるもの" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="そのほかの分析2共頻行列を用いるもの"><span class="header-section-number">15.4</span> そのほかの分析2；共頻行列を用いるもの</h2>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -687,13 +714,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./chapter14.html" class="pagination-link" aria-label="多変量解析">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析</span></span>
+      <a href="./chapter14.html" class="pagination-link" aria-label="多変量解析(その1)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析(その1)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./practices.html" class="pagination-link" aria-label="演習問題">
-        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">演習問題</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapter16.html" class="pagination-link" aria-label="ベイジアンモデリング">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
