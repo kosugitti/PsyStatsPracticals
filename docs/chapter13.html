@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>13&nbsp; 線型モデルの展開 – 心理学統計実習</title>
+<title>13&nbsp; 線形モデルの展開 – 心理学統計実習</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -83,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter13.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter13.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線形モデルの展開</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -225,7 +254,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter13.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線形モデルの展開</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -268,10 +297,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#一般線型モデル" id="toc-一般線型モデル" class="nav-link active" data-scroll-target="#一般線型モデル"><span class="header-section-number">13.1</span> 一般線型モデル</a></li>
-  <li><a href="#一般化線型モデルglm" id="toc-一般化線型モデルglm" class="nav-link" data-scroll-target="#一般化線型モデルglm"><span class="header-section-number">13.2</span> 一般化線型モデル(GLM)</a></li>
+  <li><a href="#一般線形モデルgeneral-linear-model" id="toc-一般線形モデルgeneral-linear-model" class="nav-link active" data-scroll-target="#一般線形モデルgeneral-linear-model"><span class="header-section-number">13.1</span> 一般線形モデル(General Linear Model)</a></li>
+  <li><a href="#一般化線形モデルglm" id="toc-一般化線形モデルglm" class="nav-link" data-scroll-target="#一般化線形モデルglm"><span class="header-section-number">13.2</span> 一般化線形モデル(GLM)</a></li>
   <li><a href="#一般化線形混合モデルglmm" id="toc-一般化線形混合モデルglmm" class="nav-link" data-scroll-target="#一般化線形混合モデルglmm"><span class="header-section-number">13.3</span> 一般化線形混合モデル(GLMM)</a></li>
-  <li><a href="#階層線型モデルhlm" id="toc-階層線型モデルhlm" class="nav-link" data-scroll-target="#階層線型モデルhlm"><span class="header-section-number">13.4</span> 階層線型モデル(HLM)</a></li>
+  <li><a href="#階層線形モデルhlm" id="toc-階層線形モデルhlm" class="nav-link" data-scroll-target="#階層線形モデルhlm"><span class="header-section-number">13.4</span> 階層線形モデル(HLM)</a></li>
   </ul>
 </nav>
     </div>
@@ -280,7 +309,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></h1>
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線形モデルの展開</span></h1>
 </div>
 
 
@@ -297,17 +326,42 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="一般線型モデル" class="level2" data-number="13.1">
-<h2 data-number="13.1" class="anchored" data-anchor-id="一般線型モデル"><span class="header-section-number">13.1</span> 一般線型モデル</h2>
+<p>この章では，線形モデルの展開を説明する。線形モデルは，説明変数と目的変数の関係を線形すなわち一次式で表現するモデルである。 線形モデルは，一般化線形モデル(GLM)，一般化線形混合モデル(GLMM)，階層線形モデル(HLM)と拡張していくが，まずは一般線形モデル(LM)についてみておこう。</p>
+<section id="一般線形モデルgeneral-linear-model" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="一般線形モデルgeneral-linear-model"><span class="header-section-number">13.1</span> 一般線形モデル(General Linear Model)</h2>
+<p>線形モデルの基本は回帰分析モデルである。単回帰モデルは次の式で表される。</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x + e_i
+\]</span></p>
+<p>ここで，<span class="math inline">\(y_i\)</span>は<span class="math inline">\(i\)</span>番目の観測値，<span class="math inline">\(\beta_0\)</span>は切片，<span class="math inline">\(\beta_1\)</span>は回帰係数，<span class="math inline">\(e_i\)</span>は誤差項である。 この式を拡張したのが重回帰分析で，次の式で表される。</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + e_i
+\]</span></p>
+<p>ここで，<span class="math inline">\(x_1, x_2, \cdots, x_p\)</span>は説明変数，<span class="math inline">\(\beta_1, \beta_2, \cdots, \beta_p\)</span>は回帰係数である。</p>
+<p>この式をベクトルと行列で表現すると，次のようになる。</p>
+<p><span class="math display">\[
+y = X\beta + e
+\]</span></p>
+<p>ここで，<span class="math inline">\(y\)</span>は<span class="math inline">\(n\)</span>次元のベクトル，<span class="math inline">\(X\)</span>は<span class="math inline">\(n \times p\)</span>の<strong>計画行列</strong>(design matrix)，<span class="math inline">\(\beta\)</span>は<span class="math inline">\(p\)</span>次元のベクトル，<span class="math inline">\(e\)</span>は<span class="math inline">\(n\)</span>次元のベクトルである。</p>
+<p>計画行列は，説明変数のデータをまとめた行列であり，次のようになる。</p>
+<p><span class="math display">\[
+X = \begin{pmatrix}
+1 &amp; x_1 &amp; x_2 &amp; \cdots &amp; x_p\\
+1 &amp; x_1 &amp; x_2 &amp; \cdots &amp; x_p\\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+1 &amp; x_1 &amp; x_2 &amp; \cdots &amp; x_p
+\end{pmatrix}
+\]</span></p>
+<p>第一列目にあるのは切片にかかる係数であり，第二列目以降にあるのは説明変数にかかる係数である。 ここに係数ベクトル<span class="math inline">\(\beta= (\beta_0, \beta_1, \beta_2, \cdots, \beta_p)^T\)</span>をかけることで，説明変数の線形結合が得られる。</p>
 </section>
-<section id="一般化線型モデルglm" class="level2" data-number="13.2">
-<h2 data-number="13.2" class="anchored" data-anchor-id="一般化線型モデルglm"><span class="header-section-number">13.2</span> 一般化線型モデル(GLM)</h2>
+<section id="一般化線形モデルglm" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="一般化線形モデルglm"><span class="header-section-number">13.2</span> 一般化線形モデル(GLM)</h2>
 </section>
 <section id="一般化線形混合モデルglmm" class="level2" data-number="13.3">
 <h2 data-number="13.3" class="anchored" data-anchor-id="一般化線形混合モデルglmm"><span class="header-section-number">13.3</span> 一般化線形混合モデル(GLMM)</h2>
 </section>
-<section id="階層線型モデルhlm" class="level2" data-number="13.4">
-<h2 data-number="13.4" class="anchored" data-anchor-id="階層線型モデルhlm"><span class="header-section-number">13.4</span> 階層線型モデル(HLM)</h2>
+<section id="階層線形モデルhlm" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="階層線形モデルhlm"><span class="header-section-number">13.4</span> 階層線形モデル(HLM)</h2>
 
 
 </section>

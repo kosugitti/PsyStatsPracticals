@@ -309,7 +309,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線形モデルの展開</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -513,8 +513,8 @@ F-statistic: 1.437e+05 on 1 and 498 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 1.8e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.18 seconds.
+Chain 1: Gradient evaluation took 1.5e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.15 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -606,9 +606,9 @@ Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 0.011 seconds (Warm-up)
+Chain 4:  Elapsed Time: 0.012 seconds (Warm-up)
 Chain 4:                0.01 seconds (Sampling)
-Chain 4:                0.021 seconds (Total)
+Chain 4:                0.022 seconds (Total)
 Chain 4: </code></pre>
 </div>
 </div>
@@ -815,53 +815,6 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 4 33.9792671  7.660348  9.0894765
 5 13.2855865  8.809346 -0.3419521
 6  6.2687719 -9.088870  7.8070044</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># データの準備</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>normal_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">density =</span> <span class="fu">dnorm</span>(x),</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">cdf =</span> <span class="fu">pnorm</span>(x),</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">logistic =</span> <span class="fu">plogis</span>(x)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 標準正規分布</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(normal_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> density)) <span class="sc">+</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"標準正規分布"</span>,</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"x"</span>,</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"確率密度"</span>) <span class="sc">+</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 累積正規分布</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(normal_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> cdf)) <span class="sc">+</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"累積正規分布"</span>,</span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"x"</span>,</span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"累積確率"</span>) <span class="sc">+</span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. ロジスティック曲線</span></span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(normal_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> logistic)) <span class="sc">+</span></span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"ロジスティック曲線"</span>,</span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"x"</span>,</span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"確率"</span>) <span class="sc">+</span></span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 3つのプロットを横に並べて表示</span></span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="chapter12_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
 </div>
 </div>
 
@@ -1280,8 +1233,8 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapter13.html" class="pagination-link" aria-label="線型モデルの展開">
-        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapter13.html" class="pagination-link" aria-label="線形モデルの展開">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線形モデルの展開</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
