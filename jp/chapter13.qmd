@@ -152,11 +152,57 @@ $$
 ここで，$p$は成功確率であり，0から1の範囲の値を取る。
 こうしたデータは現実にも少なくない。生死，病気の有無，テストの正答/誤答のようなデータが代表的である。こうしたデータを目的変数にして，直線回帰を行うと当然おかしなことが生じる。すなわち，予測値が0と1の範囲を超えることがありえるからである。
 
-そこで，直線関数を0と1の範囲に入るように変形してやれば良い。変形には，次のロジスティック関数が用いられる。
+そこで，線形予測子と確率を適切に結びつけるリンク関数を用いる。ロジスティック回帰では**ロジット関数**（logit function）をリンク関数として使用する：
 
-$$ f(x) = \frac{1}{1 + e^{-x}} $$
+$$
+\text{logit}(p) = \log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x
+$$
 
-ここで$x$を線形モデルでデザインし，線形モデルの予測値$p$をロジスティック関数にかけることで，0から1の範囲に収まる確率が得られる。
+この関係を$p$について解いてみよう。$\eta = \beta_0 + \beta_1 x$とおくと：
+
+$$
+\log\left(\frac{p}{1-p}\right) = \eta
+$$
+
+両辺の指数を取ると：
+
+$$
+\frac{p}{1-p} = e^{\eta}
+$$
+
+両辺に$(1-p)$をかけると：
+
+$$
+p = (1-p) \cdot e^{\eta}
+$$
+
+展開すると：
+
+$$
+p = e^{\eta} - p \cdot e^{\eta}
+$$
+
+$p$について整理すると：
+
+$$
+p + p \cdot e^{\eta} = e^{\eta}
+$$
+
+$$
+p(1 + e^{\eta}) = e^{\eta}
+$$
+
+$$
+p = \frac{e^{\eta}}{1 + e^{\eta}}
+$$
+
+分子分母を$e^{\eta}$で割ると：
+
+$$
+p = \frac{1}{e^{-\eta} + 1} = \frac{1}{1 + e^{-\eta}}
+$$
+
+$\eta = \beta_0 + \beta_1 x$を代入すると，**ロジスティック関数**（逆リンク関数）が得られる：
 
 $$
 p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}}
@@ -233,21 +279,7 @@ summary(result.ml)
 
 また，回帰係数の解釈には注意が必要である。普通の回帰分析であれば，説明変数が1単位変わると目的変数がどれだけ変わるかを表すが，ロジスティック回帰ではこのような直接的な解釈はできない。ロジスティック関数によって変換されたものが意味を持つからである。
 
-もともと線形モデルをロジスティック関数によって次のように変換したのであった。
-
-$$ p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}} $$
-
-この式を$x$について解いてみよう。
-
-$$ p(1 + e^{-(\beta_0 + \beta_1 x)}) = 1 $$
-$$ p + pe^{-(\beta_0 + \beta_1 x)} = 1 $$
-
-$$ pe^{-(\beta_0 + \beta_1 x)} = 1 - p $$
-
-$$ e^{-(\beta_0 + \beta_1 x)} = \frac{1-p}{p} $$
-
-$$ -(\beta_0 + \beta_1 x) = \log \frac{1-p}{p} $$
-
+線形モデルが表すのは次の関係なのであった。
 $$ \beta_0 + \beta_1 x = \log \frac{p}{1-p} $$
 
 この$\log \frac{p}{1-p}$は**ロジット**(logit)と呼ばれる。ロジスティック回帰では，確率$p$をロジットに変換することで線形関係を表現している。逆に言えば，線形モデルで表現されているのはログを取った確率の比であり，この比が説明変数の線形関係によって決まるということである。であるから，結果を解釈するには係数を指数関数$e$を取り，確率の比として理解する必要がある。
@@ -302,10 +334,19 @@ ggplot(poisson_data, aes(x = factor(x), y = prob)) +
   )
 ```
 
-このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよく，ポアソン分布の位置パラメータ$\lambda$は正の実数しかとらないため，指数変換することで対応する。すなわち，
-$$ \lambda_i = \exp(b_0 + b_1 x_i) $$
+このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよい。ポアソン回帰では**対数関数**をリンク関数として使用する：
+
+$$
+\log(\lambda_i) = \beta_0 + \beta_1 x_i
+$$
+
+この関係を$\lambda_i$について解くと，**指数関数**（逆リンク関数）が得られる：
+
+$$ \lambda_i = \exp(\beta_0 + \beta_1 x_i) $$
+
 として
-$$ y_i \sim Pois(\lambda_i) $$
+
+$$ y_i \sim \text{Pois}(\lambda_i) $$
 
 を考えるのである。
 
@@ -915,9 +956,109 @@ ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが�
 
 ### 具体例
 
+ここでは，階層線形モデルの具体例としてこれまで用いてきた野球のデータを用いる。このデータには選手の個人成績（身長，体重，安打数など）と，選手が所属するチーム，守備位置といった階層構造が含まれている。
 
-```{r}
-pacman::p_load(tidyverse)
-dat <- read_csv("Baseball.csv")
-summary(dat)
+野球データの特徴として，選手は特定のチームに所属し，そのチーム内で特定の守備位置を担当するという階層構造がある。つまり，守備位置はチームにネストされた構造となっている。チームレベルでは戦術や指導方法が共通し，同じチーム内の守備位置レベルでは求められる技能や体格が類似する傾向がある。このような階層構造を無視して分析すると，個人差を過大評価したり，統計的推論に誤りが生じる可能性がある。
+
+本例では2020年度のデータに限定し，投手を除く野手のデータのみを使用する。投手は他の野手とは明らかに異なる特性を持つため，分析から除外することで，より一貫性のあるデータセットとする。
+
+まずは階層構造の意義を確認するため，チームおよび守備位置のICC（級内相関係数）を計算し，階層モデルの適用が適切かどうかを検証する。ICCの計算には`multilevel`パッケージを用いた。
+
+```{r HLM example}
+#| message: false
+#| warning: false
+pacman::p_load(tidyverse, brms, bayesplot, multilevel)
+dat <- read_csv("Baseball.csv") %>%
+    filter(Year == "2020年度") %>%
+    mutate(
+        position = as.factor(position)
+    ) %>%
+    filter(position != "投手")
+
+# Calculate ICC using multilevel package
+# チームレベルのICC
+icc_team <- multilevel::ICC1(aov(Hit ~ team, data = dat))
+
+# ネスト構造を考慮したICC計算
+# チーム内ポジションのICC
+dat$team_position <- paste(dat$team, dat$position, sep = "_")
+icc_team_position <- multilevel::ICC1(aov(Hit ~ team_position, data = dat))
+
+# 参考：ポジション単独のICC
+icc_position <- multilevel::ICC1(aov(Hit ~ position, data = dat))
+
+print(paste("Team ICC1:", round(icc_team, 3)))
+print(paste("Team:Position ICC1:", round(icc_team_position, 3)))
+print(paste("Position ICC1:", round(icc_position, 3)))
+```
+
+
+```{r data_preparation}
+# チーム内ポジションのネスト構造を作成
+dat <- dat %>%
+    mutate(team_position = paste(team, position, sep = "_"))
+
+# データ構造の確認
+dat %>% 
+    group_by(team, position) %>% 
+    summarise(n = n(), .groups = "drop") %>% 
+    head(10)
+```
+
+```{r brm_HLM}
+# ネスト構造を考慮したポアソンモデル
+# (1 | team) + (1 | team:position) でポジションをチーム内にネスト
+model_hit <- brm(
+    Hit ~ Games + height + weight + (1 | team) + (1 | team:position),
+    data = dat,
+    family = poisson(),
+    chains = 4,
+    iter = 10000,
+    cores = 4
+)
+
+# Model summary for Hit model
+summary(model_hit)
+```
+
+```{r mcmc_check_hlm}
+plot(model_hit)
+```
+
+```{r pp_check}
+# Posterior predictive check for Hit model
+pp_check(model_hit, ndraws = 100)
+```
+
+```{r model_fit_visualize}
+#| dev: "ragg_png"
+#| fig-height: 12
+#| fig-width: 16
+#| out-width: "100%"
+
+predicted_hit <- fitted(model_hit,
+    newdata = dat,
+    allow_new_levels = TRUE
+) %>% as.data.frame()
+
+
+plot_data <- data.frame(
+    observed = dat$Hit,
+    predicted = predicted_hit$Estimate,
+    team = dat$team,
+    position = dat$position
+)
+
+ggplot(plot_data, aes(x = observed, y = predicted, color = team)) +
+    geom_point(alpha = 0.7, size = 2) +
+    geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+    labs(
+        x = "Observed Hit", y = "Predicted Hit",
+        title = "Predicted vs Observed Hit Count (2020年度)",
+        color = "Team"
+    ) +
+    facet_wrap(team ~ position, scales = "free") +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+
 ```

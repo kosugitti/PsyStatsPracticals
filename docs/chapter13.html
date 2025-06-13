@@ -427,9 +427,41 @@ X = \begin{pmatrix}
 P(Y = y) = p^y (1-p)^{1-y}
 \]</span></p>
 <p>ここで，<span class="math inline">\(p\)</span>は成功確率であり，0から1の範囲の値を取る。 こうしたデータは現実にも少なくない。生死，病気の有無，テストの正答/誤答のようなデータが代表的である。こうしたデータを目的変数にして，直線回帰を行うと当然おかしなことが生じる。すなわち，予測値が0と1の範囲を超えることがありえるからである。</p>
-<p>そこで，直線関数を0と1の範囲に入るように変形してやれば良い。変形には，次のロジスティック関数が用いられる。</p>
-<p><span class="math display">\[ f(x) = \frac{1}{1 + e^{-x}} \]</span></p>
-<p>ここで<span class="math inline">\(x\)</span>を線形モデルでデザインし，線形モデルの予測値<span class="math inline">\(p\)</span>をロジスティック関数にかけることで，0から1の範囲に収まる確率が得られる。</p>
+<p>そこで，線形予測子と確率を適切に結びつけるリンク関数を用いる。ロジスティック回帰では<strong>ロジット関数</strong>（logit function）をリンク関数として使用する：</p>
+<p><span class="math display">\[
+\text{logit}(p) = \log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x
+\]</span></p>
+<p>この関係を<span class="math inline">\(p\)</span>について解いてみよう。<span class="math inline">\(\eta = \beta_0 + \beta_1 x\)</span>とおくと：</p>
+<p><span class="math display">\[
+\log\left(\frac{p}{1-p}\right) = \eta
+\]</span></p>
+<p>両辺の指数を取ると：</p>
+<p><span class="math display">\[
+\frac{p}{1-p} = e^{\eta}
+\]</span></p>
+<p>両辺に<span class="math inline">\((1-p)\)</span>をかけると：</p>
+<p><span class="math display">\[
+p = (1-p) \cdot e^{\eta}
+\]</span></p>
+<p>展開すると：</p>
+<p><span class="math display">\[
+p = e^{\eta} - p \cdot e^{\eta}
+\]</span></p>
+<p><span class="math inline">\(p\)</span>について整理すると：</p>
+<p><span class="math display">\[
+p + p \cdot e^{\eta} = e^{\eta}
+\]</span></p>
+<p><span class="math display">\[
+p(1 + e^{\eta}) = e^{\eta}
+\]</span></p>
+<p><span class="math display">\[
+p = \frac{e^{\eta}}{1 + e^{\eta}}
+\]</span></p>
+<p>分子分母を<span class="math inline">\(e^{\eta}\)</span>で割ると：</p>
+<p><span class="math display">\[
+p = \frac{1}{e^{-\eta} + 1} = \frac{1}{1 + e^{-\eta}}
+\]</span></p>
+<p><span class="math inline">\(\eta = \beta_0 + \beta_1 x\)</span>を代入すると，<strong>ロジスティック関数</strong>（逆リンク関数）が得られる：</p>
 <p><span class="math display">\[
 p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}}
 \]</span></p>
@@ -555,14 +587,7 @@ Number of Fisher Scoring iterations: 8</code></pre>
 </div>
 <p>最尤推定の結果とベイズ推定の結果に多少のズレが見られるが，これはサンプルサイズの小ささによるものである。アウトプット変数が2値しか持たないため，分散がどうしても小さくなりがちであり，正確な推定値を得るためにはより多くのデータが必要である。</p>
 <p>また，回帰係数の解釈には注意が必要である。普通の回帰分析であれば，説明変数が1単位変わると目的変数がどれだけ変わるかを表すが，ロジスティック回帰ではこのような直接的な解釈はできない。ロジスティック関数によって変換されたものが意味を持つからである。</p>
-<p>もともと線形モデルをロジスティック関数によって次のように変換したのであった。</p>
-<p><span class="math display">\[ p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}} \]</span></p>
-<p>この式を<span class="math inline">\(x\)</span>について解いてみよう。</p>
-<p><span class="math display">\[ p(1 + e^{-(\beta_0 + \beta_1 x)}) = 1 \]</span> <span class="math display">\[ p + pe^{-(\beta_0 + \beta_1 x)} = 1 \]</span></p>
-<p><span class="math display">\[ pe^{-(\beta_0 + \beta_1 x)} = 1 - p \]</span></p>
-<p><span class="math display">\[ e^{-(\beta_0 + \beta_1 x)} = \frac{1-p}{p} \]</span></p>
-<p><span class="math display">\[ -(\beta_0 + \beta_1 x) = \log \frac{1-p}{p} \]</span></p>
-<p><span class="math display">\[ \beta_0 + \beta_1 x = \log \frac{p}{1-p} \]</span></p>
+<p>線形モデルが表すのは次の関係なのであった。 <span class="math display">\[ \beta_0 + \beta_1 x = \log \frac{p}{1-p} \]</span></p>
 <p>この<span class="math inline">\(\log \frac{p}{1-p}\)</span>は<strong>ロジット</strong>(logit)と呼ばれる。ロジスティック回帰では，確率<span class="math inline">\(p\)</span>をロジットに変換することで線形関係を表現している。逆に言えば，線形モデルで表現されているのはログを取った確率の比であり，この比が説明変数の線形関係によって決まるということである。であるから，結果を解釈するには係数を指数関数<span class="math inline">\(e\)</span>を取り，確率の比として理解する必要がある。</p>
 <p>今回のデータでは説明変数の係数が1.36と推定されたから，<span class="math inline">\(e^{1.36} = 3.89\)</span>である。これは，説明変数が1単位増加すると，成功確率が3.89倍になる，ということを意味する。</p>
 </section>
@@ -582,7 +607,14 @@ P(Y = y) = \frac{\lambda^y e^{-\lambda}}{y!}
 </div>
 </div>
 </div>
-<p>このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよく，ポアソン分布の位置パラメータ<span class="math inline">\(\lambda\)</span>は正の実数しかとらないため，指数変換することで対応する。すなわち， <span class="math display">\[ \lambda_i = \exp(b_0 + b_1 x_i) \]</span> として <span class="math display">\[ y_i \sim Pois(\lambda_i) \]</span></p>
+<p>このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよい。ポアソン回帰では<strong>対数関数</strong>をリンク関数として使用する：</p>
+<p><span class="math display">\[
+\log(\lambda_i) = \beta_0 + \beta_1 x_i
+\]</span></p>
+<p>この関係を<span class="math inline">\(\lambda_i\)</span>について解くと，<strong>指数関数</strong>（逆リンク関数）が得られる：</p>
+<p><span class="math display">\[ \lambda_i = \exp(\beta_0 + \beta_1 x_i) \]</span></p>
+<p>として</p>
+<p><span class="math display">\[ y_i \sim \text{Pois}(\lambda_i) \]</span></p>
 <p>を考えるのである。</p>
 <p>以下にサンプルデータを作ったポアソン回帰の例を示す。</p>
 <div class="cell">
@@ -801,14 +833,14 @@ y_{ij} = (\beta_0 + u_{0i}) + \beta_1 x_{ij} + e_{ij}
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 0.9 seconds.
-Chain 2 finished in 1.1 seconds.
-Chain 3 finished in 1.0 seconds.
-Chain 4 finished in 1.1 seconds.
+Chain 1 finished in 0.8 seconds.
+Chain 2 finished in 0.9 seconds.
+Chain 3 finished in 0.9 seconds.
+Chain 4 finished in 0.9 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 1.0 seconds.
-Total execution time: 1.2 seconds.</code></pre>
+Mean chain execution time: 0.9 seconds.
+Total execution time: 1.1 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_intercept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1146,14 +1178,14 @@ y_{ij} = \beta_0  + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 0.3 seconds.
-Chain 2 finished in 0.4 seconds.
-Chain 3 finished in 0.3 seconds.
-Chain 4 finished in 0.4 seconds.
+Chain 1 finished in 0.7 seconds.
+Chain 3 finished in 0.6 seconds.
+Chain 2 finished in 0.7 seconds.
+Chain 4 finished in 0.7 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.3 seconds.
-Total execution time: 0.5 seconds.</code></pre>
+Mean chain execution time: 0.7 seconds.
+Total execution time: 0.9 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_slope)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1335,14 +1367,14 @@ y_{ij} = (\beta_0 + u_{0i}) + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 2 finished in 2.0 seconds.
-Chain 3 finished in 2.0 seconds.
-Chain 1 finished in 2.1 seconds.
-Chain 4 finished in 2.1 seconds.
+Chain 2 finished in 4.4 seconds.
+Chain 3 finished in 4.4 seconds.
+Chain 1 finished in 4.7 seconds.
+Chain 4 finished in 4.6 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 2.1 seconds.
-Total execution time: 2.2 seconds.</code></pre>
+Mean chain execution time: 4.5 seconds.
+Total execution time: 4.8 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_both)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -1516,61 +1548,162 @@ Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij
 </section>
 <section id="具体例" class="level3" data-number="13.4.2">
 <h3 data-number="13.4.2" class="anchored" data-anchor-id="具体例"><span class="header-section-number">13.4.2</span> 具体例</h3>
+<p>ここでは，階層線形モデルの具体例としてこれまで用いてきた野球のデータを用いる。このデータには選手の個人成績（身長，体重，安打数など）と，選手が所属するチーム，守備位置といった階層構造が含まれている。</p>
+<p>野球データの特徴として，選手は特定のチームに所属し，そのチーム内で特定の守備位置を担当するという階層構造がある。つまり，守備位置はチームにネストされた構造となっている。チームレベルでは戦術や指導方法が共通し，同じチーム内の守備位置レベルでは求められる技能や体格が類似する傾向がある。このような階層構造を無視して分析すると，個人差を過大評価したり，統計的推論に誤りが生じる可能性がある。</p>
+<p>本例では2020年度のデータに限定し，投手を除く野手のデータのみを使用する。投手は他の野手とは明らかに異なる特性を持つため，分析から除外することで，より一貫性のあるデータセットとする。</p>
+<p>まずは階層構造の意義を確認するため，チームおよび守備位置のICC（級内相関係数）を計算し，階層モデルの適用が適切かどうかを検証する。ICCの計算には<code>multilevel</code>パッケージを用いた。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 7944 Columns: 17
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr  (6): Year, Name, team, bloodType, UniformNum, position
-dbl (11): salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save, Hold
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, brms, bayesplot, multilevel)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2020年度"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="fu">as.factor</span>(position)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(position <span class="sc">!=</span> <span class="st">"投手"</span>)</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate ICC using multilevel package</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="co"># チームレベルのICC</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>icc_team <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team, <span class="at">data =</span> dat))</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ネスト構造を考慮したICC計算</span></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="co"># チーム内ポジションのICC</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>team_position <span class="ot">&lt;-</span> <span class="fu">paste</span>(dat<span class="sc">$</span>team, dat<span class="sc">$</span>position, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>icc_team_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team_position, <span class="at">data =</span> dat))</span>
+<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 参考：ポジション単独のICC</span></span>
+<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a>icc_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> position, <span class="at">data =</span> dat))</span>
+<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team ICC1:"</span>, <span class="fu">round</span>(icc_team, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     Year               Name               team               salary     
- Length:7944        Length:7944        Length:7944        Min.   :  200  
- Class :character   Class :character   Class :character   1st Qu.: 1000  
- Mode  :character   Mode  :character   Mode  :character   Median : 2000  
-                                                          Mean   : 5244  
-                                                          3rd Qu.: 5800  
-                                                          Max.   :90000  
-                                                                         
-  bloodType             height          weight        UniformNum       
- Length:7944        Min.   :163.0   Min.   : 60.00   Length:7944       
- Class :character   1st Qu.:177.0   1st Qu.: 78.00   Class :character  
- Mode  :character   Median :180.0   Median : 83.00   Mode  :character  
-                    Mean   :180.7   Mean   : 84.25                     
-                    3rd Qu.:184.0   3rd Qu.: 89.00                     
-                    Max.   :216.0   Max.   :135.00                     
-                                                                       
-   position             Games            AtBats           Hit        
- Length:7944        Min.   :  1.00   Min.   :  0.0   Min.   :  0.00  
- Class :character   1st Qu.:  9.00   1st Qu.: 24.0   1st Qu.:  4.00  
- Mode  :character   Median : 25.00   Median : 93.0   Median : 20.00  
-                    Mean   : 40.62   Mean   :163.5   Mean   : 41.88  
-                    3rd Qu.: 60.00   3rd Qu.:269.0   3rd Qu.: 68.00  
-                    Max.   :144.00   Max.   :603.0   Max.   :216.00  
-                                     NA's   :3923    NA's   :3923    
-       HR              Win              Lose             Save      
- Min.   : 0.000   Min.   : 0.000   Min.   : 0.000   Min.   : 0.00  
- 1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: 0.00  
- Median : 1.000   Median : 1.000   Median : 1.000   Median : 0.00  
- Mean   : 3.956   Mean   : 2.481   Mean   : 2.474   Mean   : 1.27  
- 3rd Qu.: 4.000   3rd Qu.: 4.000   3rd Qu.: 4.000   3rd Qu.: 0.00  
- Max.   :60.000   Max.   :24.000   Max.   :15.000   Max.   :54.00  
- NA's   :3923     NA's   :4014     NA's   :4014     NA's   :4014   
-      Hold       
- Min.   : 0.000  
- 1st Qu.: 0.000  
- Median : 0.000  
- Mean   : 3.575  
- 3rd Qu.: 3.000  
- Max.   :50.000  
- NA's   :4014    </code></pre>
+<pre><code>[1] "Team ICC1: -0.031"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team:Position ICC1:"</span>, <span class="fu">round</span>(icc_team_position, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Team:Position ICC1: -0.029"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Position ICC1:"</span>, <span class="fu">round</span>(icc_position, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Position ICC1: 0.046"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># チーム内ポジションのネスト構造を作成</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">team_position =</span> <span class="fu">paste</span>(team, position, <span class="at">sep =</span> <span class="st">"_"</span>))</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co"># データ構造の確認</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span> </span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team, position) <span class="sc">%&gt;%</span> </span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   team    position     n
+   &lt;chr&gt;   &lt;fct&gt;    &lt;int&gt;
+ 1 Carp    外野手       9
+ 2 Carp    内野手      14
+ 3 Carp    捕手         6
+ 4 DeNA    外野手       8
+ 5 DeNA    内野手      13
+ 6 DeNA    捕手         5
+ 7 Dragons 外野手      10
+ 8 Dragons 内野手      12
+ 9 Dragons 捕手         5
+10 Eagles  外野手       9</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ネスト構造を考慮したポアソンモデル</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (1 | team) + (1 | team:position) でポジションをチーム内にネスト</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>model_hit <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    Hit <span class="sc">~</span> Games <span class="sc">+</span> height <span class="sc">+</span> weight <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> team) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> team<span class="sc">:</span>position),</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(),</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">10000</span>,</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span></span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 25 divergent transitions after warmup. See
+https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+to find out why this is a problem and how to eliminate them.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model summary for Hit model</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_hit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 25 divergent transitions after warmup. Increasing
+adapt_delta above 0.8 may help. See
+http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_hit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/mcmc_check_hlm-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/mcmc_check_hlm-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior predictive check for Hit model</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(model_hit, <span class="at">ndraws =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/pp_check-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>predicted_hit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model_hit,</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> dat,</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">allow_new_levels =</span> <span class="cn">TRUE</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">observed =</span> dat<span class="sc">$</span>Hit,</span>
+<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">predicted =</span> predicted_hit<span class="sc">$</span>Estimate,</span>
+<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">team =</span> dat<span class="sc">$</span>team,</span>
+<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> dat<span class="sc">$</span>position</span>
+<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-14"><a href="#cb79-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> observed, <span class="at">y =</span> predicted, <span class="at">color =</span> team)) <span class="sc">+</span></span>
+<span id="cb79-15"><a href="#cb79-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb79-16"><a href="#cb79-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb79-17"><a href="#cb79-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb79-18"><a href="#cb79-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Observed Hit"</span>, <span class="at">y =</span> <span class="st">"Predicted Hit"</span>,</span>
+<span id="cb79-19"><a href="#cb79-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Predicted vs Observed Hit Count (2020年度)"</span>,</span>
+<span id="cb79-20"><a href="#cb79-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"Team"</span></span>
+<span id="cb79-21"><a href="#cb79-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb79-22"><a href="#cb79-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(team <span class="sc">~</span> position, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb79-23"><a href="#cb79-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb79-24"><a href="#cb79-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/model_fit_visualize-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 
