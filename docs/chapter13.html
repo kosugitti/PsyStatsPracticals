@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -340,14 +360,16 @@ window.Quarto = {
   </ul></li>
   <li><a href="#一般化線形混合モデルglmm" id="toc-一般化線形混合モデルglmm" class="nav-link" data-scroll-target="#一般化線形混合モデルglmm"><span class="header-section-number">13.3</span> 一般化線形混合モデル(GLMM)</a>
   <ul class="collapse">
-  <li><a href="#ランダム切片モデル" id="toc-ランダム切片モデル" class="nav-link" data-scroll-target="#ランダム切片モデル"><span class="header-section-number">13.3.1</span> ランダム切片モデル</a></li>
-  <li><a href="#ランダム傾きモデル" id="toc-ランダム傾きモデル" class="nav-link" data-scroll-target="#ランダム傾きモデル"><span class="header-section-number">13.3.2</span> ランダム傾きモデル</a></li>
-  <li><a href="#ランダム切片ランダム傾きモデル" id="toc-ランダム切片ランダム傾きモデル" class="nav-link" data-scroll-target="#ランダム切片ランダム傾きモデル"><span class="header-section-number">13.3.3</span> ランダム切片ランダム傾きモデル</a></li>
+  <li><a href="#個人差の分布を混ぜる" id="toc-個人差の分布を混ぜる" class="nav-link" data-scroll-target="#個人差の分布を混ぜる"><span class="header-section-number">13.3.1</span> 個人差の分布を「混ぜる」</a></li>
+  <li><a href="#ランダム切片モデル" id="toc-ランダム切片モデル" class="nav-link" data-scroll-target="#ランダム切片モデル"><span class="header-section-number">13.3.2</span> ランダム切片モデル</a></li>
+  <li><a href="#ランダム傾きモデル" id="toc-ランダム傾きモデル" class="nav-link" data-scroll-target="#ランダム傾きモデル"><span class="header-section-number">13.3.3</span> ランダム傾きモデル</a></li>
+  <li><a href="#ランダム切片ランダム傾きモデル" id="toc-ランダム切片ランダム傾きモデル" class="nav-link" data-scroll-target="#ランダム切片ランダム傾きモデル"><span class="header-section-number">13.3.4</span> ランダム切片ランダム傾きモデル</a></li>
   </ul></li>
   <li><a href="#階層線形モデルhlm" id="toc-階層線形モデルhlm" class="nav-link" data-scroll-target="#階層線形モデルhlm"><span class="header-section-number">13.4</span> 階層線形モデル(HLM)</a>
   <ul class="collapse">
   <li><a href="#レベル階層線形モデル" id="toc-レベル階層線形モデル" class="nav-link" data-scroll-target="#レベル階層線形モデル"><span class="header-section-number">13.4.1</span> 2レベル階層線形モデル</a></li>
-  <li><a href="#具体例" id="toc-具体例" class="nav-link" data-scroll-target="#具体例"><span class="header-section-number">13.4.2</span> 具体例</a></li>
+  <li><a href="#モデルの図解" id="toc-モデルの図解" class="nav-link" data-scroll-target="#モデルの図解"><span class="header-section-number">13.4.2</span> モデルの図解</a></li>
+  <li><a href="#具体例" id="toc-具体例" class="nav-link" data-scroll-target="#具体例"><span class="header-section-number">13.4.3</span> 具体例</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -672,11 +694,11 @@ P(Y = y) = \frac{\lambda^y e^{-\lambda}}{y!}
 
 Chain 1 finished in 0.1 seconds.
 Chain 2 finished in 0.1 seconds.
-Chain 3 finished in 0.1 seconds.
-Chain 4 finished in 0.1 seconds.
+Chain 3 finished in 0.0 seconds.
+Chain 4 finished in 0.0 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.1 seconds.
+Mean chain execution time: 0.0 seconds.
 Total execution time: 0.2 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.pois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -736,9 +758,21 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <p>線形モデルのさらなる拡張として，<strong>一般化線形混合モデル(GLMM)</strong>Generalized Linear Mixed Modelがある。ここまでの回帰モデルは，説明変数が目的変数に対して一貫した効果を持つと仮定してきた。この効果を特に<strong>固定効果</strong>fixed effectというが，GLMMでは固定効果に加えて<strong>変量効果</strong>random effectを考慮することができる。</p>
 <p>変量効果とは，説明変数が個体ごとに異なる値を持つことを意味する。たとえばWithinデザインの要因計画は個人差を考慮することができるが，これは変量効果を考慮したモデルであるといえる。すなわち，研究として見たい効果はWithin要因の水準ごとの固定効果であり，これとは別に個人の平均値が異なることを想定しているから，個人ごとの平均値を変量効果として考慮しているモデルといえる。</p>
 <p>このように変量効果は個人ごとに異なる影響を考えることであるが，仮定としてこうした個人差が確率分布，特に正規分布に従っていると考えるのである。個人差は確率分布からランダムに生じるものであり，個人同士の平均的な違いは交換可能であると考えられる。またこうした個人差の分散は，個人の平均値の分散として捉えられる。このように個人差を表す確率分布も混ぜ込むので，混合(Mixed)モデルと呼ばれるのである。</p>
+<section id="個人差の分布を混ぜる" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="個人差の分布を混ぜる"><span class="header-section-number">13.3.1</span> 個人差の分布を「混ぜる」</h3>
+<p>分散分析のBetweenモデルとWithinモデルの違いについて考えてみよう。 一要因の場合，Betweenモデルは次のように表される。 <span class="math display">\[ SS_T = SS_A + SS_e \]</span></p>
+<p>ここで<span class="math inline">\(SS_T\)</span>とは全体の平方和(Sum of Squares)であり，これを右辺の要因Aで説明する平方和<span class="math inline">\(SS_A\)</span>と誤差<span class="math inline">\(SS_E\)</span>に分解するのであった。</p>
+<p>このときWithinモデルは，</p>
+<p><span class="math display">\[SS_T = SS_A + SS_s + SS_e\]</span></p>
+<p>と表され，ここで<span class="math inline">\(SS_s\)</span>が個人差の平方和である。 検定に際しては<span class="math inline">\(SS_e\)</span>に対する<span class="math inline">\(SS_A\)</span>の比率を考える<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>ことになるから，効果の大きさが同じであればWithinデザインの方が有利である。Betweenデザインは誤差から個人差を分離できていないからで，これを分離して誤差を小さくできる方が効果vs誤差の比は大きくなるからである。</p>
+<p>ここでは分散での記述であったが，個別の値<span class="math inline">\(Y_{ij}\)</span>を考えると，Betweenデザインは</p>
+<p><span class="math display">\[ Y_{ij} = \beta_0 + \beta_1 x_{ij} + e_{ij} \]</span> であり，Withinデザインは <span class="math display">\[ Y_{ij} = \mu + \beta_{0i} + beta_1 x_{ij} + e_{ij} \]</span> である。ここで<span class="math inline">\(\mu\)</span>は全平均であり，<span class="math inline">\(\beta_{01}\)</span>は全平均から個人平均の差，つまり個人差を表している。個人<span class="math inline">\(i\)</span>に対して反復測定がなされているからその平均を計算することができ，相対的な切片の違いを個人の効果として取り出していると言える。</p>
+<p>ここで確率変数を考えると， <span class="math display">\[e_{ij} \sim N(0, \sigma_e)\]</span> <span class="math display">\[\beta_{0i} \sim N(0, \sigma_s)\]</span></p>
+<p>となるから，一つの値に対して複数の確率分布が混合(mix)されていることがわかる。</p>
 <p>ここでは個人差が平均値，すなわち切片が異なるものとして説明したが，傾きに対して個人差を考えることもできる。変量効果がどこにあるかによって，ランダム切片モデル，ランダム傾きモデル，ランダム切片ランダム傾きモデルなどと呼ばれることがある。</p>
-<section id="ランダム切片モデル" class="level3" data-number="13.3.1">
-<h3 data-number="13.3.1" class="anchored" data-anchor-id="ランダム切片モデル"><span class="header-section-number">13.3.1</span> ランダム切片モデル</h3>
+</section>
+<section id="ランダム切片モデル" class="level3" data-number="13.3.2">
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="ランダム切片モデル"><span class="header-section-number">13.3.2</span> ランダム切片モデル</h3>
 <p>ランダム切片モデルは，切片が個人ごとに異なるモデルである。切片が個人ごとに異なるということは，切片の個人差が正規分布に従うと考えることである。</p>
 <p><span class="math display">\[
 \beta_{0i} = \beta_0 + u_{0i}
@@ -833,14 +867,14 @@ y_{ij} = (\beta_0 + u_{0i}) + \beta_1 x_{ij} + e_{ij}
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 0.8 seconds.
-Chain 2 finished in 0.9 seconds.
-Chain 3 finished in 0.9 seconds.
-Chain 4 finished in 0.9 seconds.
+Chain 1 finished in 0.5 seconds.
+Chain 2 finished in 0.6 seconds.
+Chain 3 finished in 0.5 seconds.
+Chain 4 finished in 0.6 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.9 seconds.
-Total execution time: 1.1 seconds.</code></pre>
+Mean chain execution time: 0.5 seconds.
+Total execution time: 0.6 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_intercept)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -937,8 +971,8 @@ F-statistic:  6420 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>変量効果のモデル表記は，固定効果に加えて<code>(1 | person)</code>のように表記する。ここで，<code>1</code>は切片を表し，<code>person</code>は個人を表す。このようにすることで，個人ごとに異なる切片を考慮することができる。</p>
 <p>設定したパラメタ（個人差の標準偏差<span class="math inline">\(\sigma_u\)</span> = 1，残差の標準偏差<span class="math inline">\(\sigma_e\)</span> = 0.5）に対して，ベイズ推定では個人差の標準偏差が1.012，残差の標準偏差が0.53と推定されている。ML推定では個人差の標準偏差が0.864，残差の標準偏差が0.527と推定された。両手法ともに設定値に近い値が得られており，適切にパラメタが推定されていることがわかる。</p>
 <p>このデータに対して，固定効果のみで推定すると切片が1.318，傾きが1.974と推定される。傾きに対しては同じ値になるが切片の変動を考慮するかどうかで推定値が異なっていることがわかる。固定効果のみのモデルの場合，切片に想定された正規分布の平均値のみ推定したことになっている。実践的な意味としては，Within計画をBetween計画と皆して推定しているようなものであり，せっかく綺麗に取り分けられる個人差分散を無視しているようなものである。</p>
-<section id="個人レベルの推定値の取得" class="level4" data-number="13.3.1.1">
-<h4 data-number="13.3.1.1" class="anchored" data-anchor-id="個人レベルの推定値の取得"><span class="header-section-number">13.3.1.1</span> 個人レベルの推定値の取得</h4>
+<section id="個人レベルの推定値の取得" class="level4" data-number="13.3.2.1">
+<h4 data-number="13.3.2.1" class="anchored" data-anchor-id="個人レベルの推定値の取得"><span class="header-section-number">13.3.2.1</span> 個人レベルの推定値の取得</h4>
 <p>ベイズ推定の利点の一つは，個人ごとの推定値とその不確実性を定量化できることである。MCMCサンプルから個人の変量効果を取り出し，事後分布を可視化してみよう。</p>
 <p><code>brms</code>パッケージの関数<code>ranef</code>を使うと面倒なことをしなくても直接取り出してくれるが，MCMCサンプルを取り出して加工して確認することは，MCMCによる推定の理解を深めるのに良い訓練となる。</p>
 <div class="cell">
@@ -1081,8 +1115,8 @@ F-statistic:  6420 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>このように，ベイズ推定では個人ごとの推定値とその不確実性を詳細に分析することができる。</p>
 </section>
 </section>
-<section id="ランダム傾きモデル" class="level3" data-number="13.3.2">
-<h3 data-number="13.3.2" class="anchored" data-anchor-id="ランダム傾きモデル"><span class="header-section-number">13.3.2</span> ランダム傾きモデル</h3>
+<section id="ランダム傾きモデル" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="ランダム傾きモデル"><span class="header-section-number">13.3.3</span> ランダム傾きモデル</h3>
 <p>ランダム傾きモデルは，傾きが個人ごとに異なるモデルである。傾きが個人ごとに異なるということは，傾きの個人差が正規分布に従うと考えることである。</p>
 <p><span class="math display">\[
 \beta_{1i} = \beta_1 + u_{1i}
@@ -1178,14 +1212,14 @@ y_{ij} = \beta_0  + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 0.7 seconds.
-Chain 3 finished in 0.6 seconds.
-Chain 2 finished in 0.7 seconds.
-Chain 4 finished in 0.7 seconds.
+Chain 1 finished in 0.4 seconds.
+Chain 3 finished in 0.4 seconds.
+Chain 2 finished in 0.5 seconds.
+Chain 4 finished in 0.5 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.7 seconds.
-Total execution time: 0.9 seconds.</code></pre>
+Mean chain execution time: 0.5 seconds.
+Total execution time: 0.6 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_slope)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1258,8 +1292,8 @@ x -0.250</code></pre>
 <p>変量効果のモデル表記で，<code>(0 + x | person)</code>は傾きのみにランダム効果を考慮することを表す。<code>0</code>によって切片の固定効果を除き，<code>x</code>で傾きにランダム効果を指定している。それぞれの出力が，理論値のどこを反映したものであるか確認しておこう。</p>
 <p>また出力結果はランダム切片モデルの時と同様に，関数あるいはMCMCサンプルから推定値やその分布情報を得ることもできる。自分なりに加工して出力結果を確認してみてほしい。</p>
 </section>
-<section id="ランダム切片ランダム傾きモデル" class="level3" data-number="13.3.3">
-<h3 data-number="13.3.3" class="anchored" data-anchor-id="ランダム切片ランダム傾きモデル"><span class="header-section-number">13.3.3</span> ランダム切片ランダム傾きモデル</h3>
+<section id="ランダム切片ランダム傾きモデル" class="level3" data-number="13.3.4">
+<h3 data-number="13.3.4" class="anchored" data-anchor-id="ランダム切片ランダム傾きモデル"><span class="header-section-number">13.3.4</span> ランダム切片ランダム傾きモデル</h3>
 <p>ランダム切片ランダム傾きモデルは，切片と傾きの両方が個人ごとに異なるモデルである。これは最も複雑な変量効果モデルで，個人ごとに異なる切片と傾きを同時に考慮する。</p>
 <p><span class="math display">\[
 \beta_{0i} = \beta_0 + u_{0i}
@@ -1367,14 +1401,14 @@ y_{ij} = (\beta_0 + u_{0i}) + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 2 finished in 4.4 seconds.
-Chain 3 finished in 4.4 seconds.
-Chain 1 finished in 4.7 seconds.
-Chain 4 finished in 4.6 seconds.
+Chain 2 finished in 2.5 seconds.
+Chain 3 finished in 2.5 seconds.
+Chain 1 finished in 2.6 seconds.
+Chain 4 finished in 2.6 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 4.5 seconds.
-Total execution time: 4.8 seconds.</code></pre>
+Mean chain execution time: 2.6 seconds.
+Total execution time: 2.7 seconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_both)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -1546,9 +1580,19 @@ Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij
 <p>ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが大きい場合（一般的に0.05以上），階層モデルの適用が推奨される。</p>
 </section>
 </section>
-<section id="具体例" class="level3" data-number="13.4.2">
-<h3 data-number="13.4.2" class="anchored" data-anchor-id="具体例"><span class="header-section-number">13.4.2</span> 具体例</h3>
-<p>ここでは，階層線形モデルの具体例としてこれまで用いてきた野球のデータを用いる。このデータには選手の個人成績（身長，体重，安打数など）と，選手が所属するチーム，守備位置といった階層構造が含まれている。</p>
+<section id="モデルの図解" class="level3" data-number="13.4.2">
+<h3 data-number="13.4.2" class="anchored" data-anchor-id="モデルの図解"><span class="header-section-number">13.4.2</span> モデルの図解</h3>
+<p>数式で表現することでわかりにくくなったかもしれないので，図解しておく。この図は下から順にみていくとよい。 データ<span class="math inline">\(Y_{ij}\)</span>が図の底にあり，これをある正規分布が生成していると考える。この正規分布の幅<span class="math inline">\(\sigma_e^2\)</span>に応じて個人レベルの誤差<span class="math inline">\(r_{ij}\)</span>が生成される。この正規分布の平均は会期モデルで表現されるが，その時の回帰係数が多次元正規分布によって生成される。多次元正規分布はそれぞれの位置(平均)と幅をもち，さらに両者の相関関係<span class="math inline">\(\rho\)</span>も含まれる。切片<span class="math inline">\(\beta_{0j}\)</span>および傾き<span class="math inline">\(\beta_{1j}\)</span>に生じる誤差<span class="math inline">\(u_{0j},u_{1j}\)</span>が幅<span class="math inline">\(\tau_{00},\tau_{11}\)</span>に応じて生成され，またその平均は学級レベルの変数で説明される会期式になっている。ここでの切片と傾きについては事前情報がないので，無情報分布(一様分布)で表している。誤差の事前分布は負の数を取らないように，切断された分布をもちいる。cauchy分布やt分布など，裾の重い分布が用いられることが多い。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/hlm_model.png" class="img-fluid figure-img"></p>
+<figcaption>HLMのモデル図</figcaption>
+</figure>
+</div>
+</section>
+<section id="具体例" class="level3" data-number="13.4.3">
+<h3 data-number="13.4.3" class="anchored" data-anchor-id="具体例"><span class="header-section-number">13.4.3</span> 具体例</h3>
+<p>具体的な応用例を見ておこう。 ここでは，これまで用いてきた野球のデータを用いる。このデータには選手の個人成績（身長，体重，安打数など）と，選手が所属するチーム，守備位置といった階層構造が含まれている。</p>
 <p>野球データの特徴として，選手は特定のチームに所属し，そのチーム内で特定の守備位置を担当するという階層構造がある。つまり，守備位置はチームにネストされた構造となっている。チームレベルでは戦術や指導方法が共通し，同じチーム内の守備位置レベルでは求められる技能や体格が類似する傾向がある。このような階層構造を無視して分析すると，個人差を過大評価したり，統計的推論に誤りが生じる可能性がある。</p>
 <p>本例では2020年度のデータに限定し，投手を除く野手のデータのみを使用する。投手は他の野手とは明らかに異なる特性を持つため，分析から除外することで，より一貫性のあるデータセットとする。</p>
 <p>まずは階層構造の意義を確認するため，チームおよび守備位置のICC（級内相関係数）を計算し，階層モデルの適用が適切かどうかを検証する。ICCの計算には<code>multilevel</code>パッケージを用いた。</p>
@@ -1559,59 +1603,44 @@ Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij
 <span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
 <span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="fu">as.factor</span>(position)</span>
 <span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(position <span class="sc">!=</span> <span class="st">"投手"</span>)</span>
-<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate ICC using multilevel package</span></span>
-<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="co"># チームレベルのICC</span></span>
-<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>icc_team <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team, <span class="at">data =</span> dat))</span>
-<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ネスト構造を考慮したICC計算</span></span>
-<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="co"># チーム内ポジションのICC</span></span>
-<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>team_position <span class="ot">&lt;-</span> <span class="fu">paste</span>(dat<span class="sc">$</span>team, dat<span class="sc">$</span>position, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
-<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>icc_team_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team_position, <span class="at">data =</span> dat))</span>
-<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 参考：ポジション単独のICC</span></span>
-<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a>icc_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> position, <span class="at">data =</span> dat))</span>
-<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team ICC1:"</span>, <span class="fu">round</span>(icc_team, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(position <span class="sc">!=</span> <span class="st">"投手"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7944 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (6): Year, Name, team, bloodType, UniformNum, position
+dbl (11): salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save, Hold
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate ICC using multilevel package</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># チームレベルのICC</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>icc_team <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team, <span class="at">data =</span> dat))</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ネスト構造を考慮したICC計算</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="co"># チーム内ポジションのICC</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>team_position <span class="ot">&lt;-</span> <span class="fu">paste</span>(dat<span class="sc">$</span>team, dat<span class="sc">$</span>position, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>icc_team_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team_position, <span class="at">data =</span> dat))</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 参考：ポジション単独のICC</span></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>icc_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> position, <span class="at">data =</span> dat))</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team ICC1:"</span>, <span class="fu">round</span>(icc_team, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Team ICC1: -0.031"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team:Position ICC1:"</span>, <span class="fu">round</span>(icc_team_position, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team:Position ICC1:"</span>, <span class="fu">round</span>(icc_team_position, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Team:Position ICC1: -0.029"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Position ICC1:"</span>, <span class="fu">round</span>(icc_position, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Position ICC1:"</span>, <span class="fu">round</span>(icc_position, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Position ICC1: 0.046"</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># チーム内ポジションのネスト構造を作成</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">team_position =</span> <span class="fu">paste</span>(team, position, <span class="at">sep =</span> <span class="st">"_"</span>))</span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co"># データ構造の確認</span></span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span> </span>
-<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team, position) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 3
-   team    position     n
-   &lt;chr&gt;   &lt;fct&gt;    &lt;int&gt;
- 1 Carp    外野手       9
- 2 Carp    内野手      14
- 3 Carp    捕手         6
- 4 DeNA    外野手       8
- 5 DeNA    内野手      13
- 6 DeNA    捕手         5
- 7 Dragons 外野手      10
- 8 Dragons 内野手      12
- 9 Dragons 捕手         5
-10 Eagles  外野手       9</code></pre>
-</div>
-</div>
+<p>それほど大きなICCは得られていない<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>が，実践例のためこのまま分析を進めるものとする。</p>
+<p>従属変数を安打数(<code>Hit</code>)，説明変数をゲーム出場回数(<code>Games</code>)ならびに選手の体躯(<code>height</code>と<code>weight</code>)とする。 これらがチーム，チームの中でのポジションでネストされていて切片が異なるとしたモデルを構成する。なお安打数は正の整数しか取らないから，ポアソン分布を用いた。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ネスト構造を考慮したポアソンモデル</span></span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (1 | team) + (1 | team:position) でポジションをチーム内にネスト</span></span>
@@ -1630,7 +1659,7 @@ Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij
 <pre><code>Start sampling</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: There were 25 divergent transitions after warmup. See
+<pre><code>Warning: There were 57 divergent transitions after warmup. See
 https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
 to find out why this is a problem and how to eliminate them.</code></pre>
 </div>
@@ -1640,11 +1669,12 @@ to find out why this is a problem and how to eliminate them.</code></pre>
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model summary for Hit model</span></span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_hit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: There were 25 divergent transitions after warmup. Increasing
+<pre><code>Warning: There were 57 divergent transitions after warmup. Increasing
 adapt_delta above 0.8 may help. See
 http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
 </div>
 </div>
+<p>MCMCのチェックのプロットを見ておく。Rhatなどの数値も良好である。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_hit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1662,6 +1692,7 @@ http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code><
 </div>
 </div>
 </div>
+<p>モデルがデータにあっているかどうかを確認する一つの方法が，<strong>事後予測分布</strong>による可視化である。モデルから生成されるデータの分布を実際のデータに重ねてみて，同じような分布が得られているかを見ておく。 <code>bayesplot</code>パッケージの<code>pp_check</code>関数は，事後予測分布の一部とデータとの重なり具合を可視化してくれる。これを見ると，安打数がごく少ないあたりの分布はうまく適合していない。モデルとして改良の余地があるところだろう。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior predictive check for Hit model</span></span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(model_hit, <span class="at">ndraws =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1673,6 +1704,7 @@ http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code><
 </div>
 </div>
 </div>
+<p>最後に，グループごとのプロットを見てみよう。チーム差，ポジションの違いといった細かい調整により，よりうまくデータに適合している様子が見てとれるだろう。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>predicted_hit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model_hit,</span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> dat,</span>
@@ -1708,6 +1740,14 @@ http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code><
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Hox2002" class="csl-entry" role="listitem">
+Hox, J. 2002. <em>Multilevel Analysis: Techniques and Applications</em>. Lawrence Erlbaum Associates.
+</div>
+<div id="ref-Raudenbush2000" class="csl-entry" role="listitem">
+Raudenbush, S.W., and Liu.X. 2000. <span>“Statistical Power and Optimal Design for Multisite Randomnized Trials.”</span> <em>Psychological Methods</em> 5: 199–213.
+</div>
+</div>
 </section>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
@@ -1715,6 +1755,8 @@ http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code><
 <ol>
 <li id="fn1"><p>エクスキューズが許されるなら，当時の統計学，計算機科学は現代に比べると貧弱で，理論的に正しくないことがわかっていても，ユーザにはそれ以上のことができなかったということがある。また心理学で測定されるデータは，あくまでも目に見えない心を表現したラフな近似値で，統計学上の仮定に違反したことで生じる問題よりも，そもそも本質的な問題があるのだから，統計の運用もあくまでもラフな近似値で良い，という風潮があったのかもしれない。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>一般化線型モデルと一般線型モデルは，一文字「化」が入るかどうかの微妙な違いである。英語ではgeneralとgeneralizedの違いなので，こちらで理解した方が間違いが少なくて良いかもしれない。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>もちろん正確には自由度で割った平均平方(Mean Squares)の比が検定統計量の<span class="math inline">\(F\)</span>値である。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>0.05を小，0.10を中，0.15. を大とする基準が最も一般的である(<span class="citation" data-cites="Hox2002">Hox (<a href="references.html#ref-Hox2002" role="doc-biblioref">2002</a>)</span>,<span class="citation" data-cites="Raudenbush2000">Raudenbush and Liu.X (<a href="references.html#ref-Raudenbush2000" role="doc-biblioref">2000</a>)</span>)。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
