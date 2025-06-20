@@ -1099,3 +1099,171 @@ ggplot(plot_data, aes(x = observed, y = predicted, color = team)) +
     theme(legend.position = "bottom")
 
 ```
+
+## 課題
+
+### 基本問題：パラメータリカバリ
+
+brmsパッケージを使用してベイズ統計モデリングにおけるパラメータリカバリを実践してください。パラメータリカバリとは、既知のパラメータで生成したデータから、そのパラメータを正しく推定できるかを確認する手法のことです。
+
+
+#### 課題1-1: ロジスティック回帰のパラメータリカバリ
+
+```{r exercise-logistic}
+#| eval: false
+# ロジスティック回帰のパラメータリカバリ
+# Step 1: 既知のパラメータでデータを生成
+set.seed(123)
+n <- 200
+true_intercept <- 0.5
+true_slope <- 1.2
+x <- rnorm(n, mean = 0, sd = 1)
+p <- plogis(true_intercept + true_slope * x)  # logistic function
+y <- rbinom(n, size = 1, prob = p)
+
+# データフレーム作成
+df_logistic <- data.frame(x = x, y = y)
+
+# Step 2: brmsでベイズ推定
+model_logistic <- brm(
+    y ~ x,
+    family = bernoulli(),
+    data = df_logistic,
+    prior = c(
+        prior(normal(0, 2.5), class = Intercept),
+        prior(normal(0, 2.5), class = b)
+    ),
+    chains = 4,
+    iter = 2000,
+    cores = 4,
+    refresh = 0
+)
+
+# Step 3: 結果の確認
+summary(model_logistic)
+plot(model_logistic)
+
+# Step 4: パラメータリカバリの評価
+# 真の値との比較
+posterior_summary(model_logistic)
+```
+
+**課題**: 上記のコードを実行し、真の切片(0.5)と傾き(1.2)が適切に推定されているかを確認してください。また、事後分布の95%信頼区間に真の値が含まれているかを確認してください。
+
+#### 課題1-2: ポアソン回帰のパラメータリカバリ
+
+```{r exercise-poisson}
+#| eval: false
+# 課題1-2: ポアソン回帰のパラメータリカバリ
+set.seed(456)
+n <- 300
+true_intercept <- 1.0
+true_slope <- 0.8
+x <- runif(n, min = 0, max = 3)
+lambda <- exp(true_intercept + true_slope * x)
+y <- rpois(n, lambda = lambda)
+
+df_poisson <- data.frame(x = x, y = y)
+
+# ベイズ推定
+model_poisson <- brm(
+    y ~ x,
+    family = poisson(),
+    data = df_poisson,
+    prior = c(
+        prior(normal(0, 2.5), class = Intercept),
+        prior(normal(0, 2.5), class = b)
+    ),
+    chains = 4,
+    iter = 2000,
+    cores = 4,
+    refresh = 0
+)
+
+summary(model_poisson)
+plot(model_poisson)
+```
+
+**課題**: 真の切片(1.0)と傾き(0.8)が適切に推定されているかを確認してください。
+
+### 応用問題：野球データの階層モデリング
+
+野球データを用いて、Year、Teamでネストされた階層構造を持つモデルを構築します。2018年度から2020年度の3年間のデータを使用し、投手のデータに限定します。変数には年俸(salary)、身長(height)、体重(weight)のほか、投手の成績として勝利数(Win)、負け数(Lose)、ホールドポイント(Hold)、セーブポイント(Save)があります。これらの変数を用いて、年度・チームの階層効果を考慮したモデリングを行います。
+```{r prac_data_handling}
+#| eval: false
+#| message: false
+dat <- read_csv("Baseball.csv") %>%
+  filter(Year %in% c("2018年度", "2019年度", "2020年度")) %>%
+  filter(position == "投手") %>%
+  filter(!is.na(Win), !is.na(Lose), !is.na(Games), !is.na(salary), !is.na(height), !is.na(weight)) %>%
+  mutate(
+    Year = as.factor(Year),
+    team = as.factor(team)
+  )
+```
+
+#### モデルA:ポアソン回帰モデル
+
+次のモデルを実行してください。
+```{r hlm_poisson}
+#| eval: false
+model1 <- brm(
+  Win ~ height + weight + Games + (1 | team) + (1 | Year),
+  family = poisson(),
+  data = dat,
+  iter = 2000,
+  cores = 4
+)
+```
+
+**課題1**: このモデルの構造を説明してください。以下の点について述べてください：
+
+- 従属変数と確率分布
+- 固定効果(説明変数)の意味
+- 変量効果(階層構造)の意味
+- なぜこの確率分布を選んだのか
+
+**課題2**: モデルの結果を解釈してください。以下の観点が含まれるといいでしょう。：
+
+- 各固定効果の係数の意味と統計的有意性
+- 変量効果の分散の大きさとその解釈
+
+**課題3**: 以下の可視化を行ってください：
+
+- `plot(model1)` でMCMCの収束診断
+- `pp_check(model1)` で事後予測チェック
+- チーム別・年度別の予測値と実測値の比較プロット
+
+#### モデルB:対数正規モデル
+
+次のモデルを実行してください。
+```{r hlm_lognormal}
+#| eval: false
+model2 <- brm(
+  log(salary) ~ Win + Lose + (1 + Games | team) + (1 | Year),
+  family = gaussian(),
+  data = dat,
+  iter = 2000,
+  cores = 4
+)
+```
+
+
+**課題1**: このモデルの構造を説明してください。以下の点について述べてください：
+
+- 従属変数の対数変換の理由
+- 固定効果(Win, Lose)の経済的意味
+- 変量効果の構造(ランダム切片・ランダム傾き)の意味
+
+**課題2**: モデルの結果を解釈してください。以下の観点が含まれるといいでしょう。：
+
+- 勝利数・敗戦数が年俸に与える影響（%変化として）
+- チーム間の年俸格差とGames効果の違い
+- 年度効果の大きさと経済的解釈
+
+**課題3**: 以下の可視化を行ってください：
+
+- `plot(model2)` でMCMCの収束診断
+- チーム別のGames効果の違いを可視化
+- 実際の年俸と予測年俸の散布図
+
