@@ -146,7 +146,220 @@ par(mfrow = c(1, 1))
 
 #### モデルベースか否か
 
-階層的クラスタリングや，k-means, fuzzy c-meansの非階層的クラスタリングモデルでは，クラスター数の決定について客観的な指標がなかった。そこで，確率モデルとしてクラスター分析を考え，モデル適合度の観点から
+階層的クラスタリングや，k-means, fuzzy c-meansの非階層的クラスタリングモデルでは，クラスター数の決定について客観的な指標がなかbunった。そこで，確率モデルとしてクラスター分析を考え，モデル適合度の観点から評価することを考える。
+
+
+ある変数についてヒストグラムを描き，次のような出力を得たとしよう。
+```{r bimodal}
+#| message: FALSE
+#| dev: "ragg_png"
+#| echo: false
+pacman::p_load(tidyverse,patchwork)
+set.seed(12345)
+mu1 <- -2
+sig1 <- 1
+mu2 <- 2
+sig2 <- 1.5
+
+N1 <- 1000
+N2 <- 3000
+
+dat <- data.frame(
+    x = c(rnorm(N1, mu1, sig1), rnorm(N2, mu2, sig2)),
+    id = c(rep(1, N1), rep(2, N2))
+) %>%
+    mutate(id = as.factor(id))
+dat %>% 
+    ggplot(aes(x = x))+geom_density()+theme_minimal()
+
+```
+
+このようなデータに対して，正規分布モデルを当てはめるのは適切だろうか。
+正規分布は単峰で左右対称であることが特徴だから，無理やり当てはめるとおかしなことになるだろう。
+ここには隠れた二つの正規分布があると考え，それぞれが混ざり合って出てきたものと考えたほうが良い。
+
+```{r towmodels}
+#| message: FALSE
+#| dev: "ragg_png"
+#| echo: false
+
+# 単一正規分布モデル
+p1 <- dat %>% 
+  ggplot(aes(x = x)) +
+  geom_density(alpha = 0.5, fill = "lightblue") +
+  stat_function(fun = dnorm, 
+                args = list(mean = mean(dat$x), sd = sd(dat$x)),
+                color = "red", size = 1.2) +
+  labs(title = "単一正規分布モデル",
+       x = "値", y = "密度") +
+  theme_minimal()
+
+# 混合正規分布モデル
+p2 <- dat %>% 
+  ggplot(aes(x = x)) +
+  geom_density(alpha = 0.5, fill = "lightblue") +
+  stat_function(fun = function(x) (N1/(N1+N2)) * dnorm(x, mu1, sig1),
+                color = "red", size = 1, linetype = "dashed") +
+  stat_function(fun = function(x) (N2/(N1+N2)) * dnorm(x, mu2, sig2),
+                color = "red", size = 1, linetype = "dashed") +
+  stat_function(fun = function(x) (N1/(N1+N2)) * dnorm(x, mu1, sig1) + 
+                                  (N2/(N1+N2)) * dnorm(x, mu2, sig2),
+                color = "red", size = 1.2) +
+  labs(title = "混合正規分布モデル",
+       x = "x", y = "密度") +
+  theme_minimal()
+
+# patchworkで並べる
+p1 + p2
+```
+
+統計モデルとしては，混合正規分布モデル(Gaussian Mixture Model, GMM)と呼ばれるのだが，これは異なる2つの群を生成モデルとしているクラスター分析であると考えることもできる。GMMでは観測されたデータが複数の正規分布を含んでいると考え，各群に想定される正規分布の平均，分散および群の混合率を推定することでデータの潜在的な特徴を明らかにする。今回は簡便のために1変数でのモデルにしたが，複数の変数がある場合は多変量正規分布で考えることになる。
+
+確率モデルになっているので，尤度を用いてデータとの適合度を計算することができる。潜在的な分布がいくつあるのかをBICなどを基準に選定することで，客観的にクラス数を決定することができるのが利点である。
+
+パッケージを使って具体的なデータを分類してみよう。
+
+```{r mclust_iris}
+#| message: FALSE
+#| dev: "ragg_png"
+pacman::p_load(mclust)
+
+# irisデータから数値変数のみを取得
+iris_data <- iris[, 1:4]
+
+# mclustによるクラスタリング
+gmm_result <- Mclust(iris_data)
+
+# 結果の表示
+summary(gmm_result, parameters = TRUE)
+
+# 分類結果の可視化
+plot(gmm_result, what = "classification")
+
+# 真の種と比較
+table(iris$Species, gmm_result$classification)
+
+# BICによるモデル選択結果
+plot(gmm_result, what = "BIC")
+```
+
+`mclust`では，各クラスターの共分散行列の構造によって異なるモデルが考慮される。モデル名は3文字のコードで表現され，それぞれの文字が以下の意味を持つ：
+
+- **1文字目(Volume)**: 各クラスターの大きさ(体積)
+  - `E` = Equal(等しい)
+  - `V` = Variable(異なる)
+
+- **2文字目(Shape)**: 各クラスターの形状
+  - `E` = Equal(等しい)
+  - `V` = Variable(異なる)
+
+- **3文字目(Orientation)**: 各クラスターの向き
+  - `E` = Equal(等しい)
+  - `V` = Variable(異なる)
+  - `I` = Identity(単位行列，球形)
+
+例えば：
+- **`EII`**: 全クラスターが同じ大きさの球形(等分散球形)
+- **`VII`**: 各クラスターが異なる大きさの球形(異分散球形)
+- **`EEE`**: 全クラスターが同じ大きさ・形状・向きの楕円
+- **`VVV`**: 各クラスターが異なる大きさ・形状・向きの楕円(最も一般的)
+
+これらの組み合わせにより，14種類の共分散構造から最適モデルをBICを参考に自動的に選定される。今回は`VEV (ellipsoidal, equal shape)`の2クラスターモデルが最適として判断された(実際は3種あるが，データからは2種類が最適と判断されている)。
+
+潜在的に分類する手法は，例えばマーケティング業界では購買層を探索的に見出す手法として使われる。潜在的なクラスが順序尺度水準であることを想定すれば，潜在ランクモデルと呼ばれ，テスト理論の応用モデルとして提案されている。@TDE2022 ではIRTのような精緻な$\theta_i$の推定よりも段階的な推定の方が実践的意義が高いことから，潜在ランクモデルを活用する利点が論じられている。
+
+#### バイクラスタリング
+
+Cattelのデータキューブのところで触れたように，Observation $\times$ Variablesのデータセットがあったとき，変数の共変動から個人を分類することも，個人の共変動から変数を分類することもできる。そしてまた，両者を同時に分類するバイクラスタリング(Biclustering)という手法も提案されている。
+
+BiclusteringはTwo-Mode Clusteringとも呼ばれ，様々なモデルが提案されているが，ここでは @TDE2022 のテスト理論の観点から見てみよう。
+
+テスト理論はデータがバイナリであり，この分析の確率モデルとしてはベルヌーイ分布を置いたIRTが一般的である。しかし上で述べたように，IRTで推定されるような潜在得点$\theta$の精度は実質的な意味が見えにくいことがある。すなわち，$\theta$が$0.01$ポイント違うことが，どのような違いに相当するのか。$\theta$を$0.5$ポイント上昇させるために受検者はどのような努力をすれば良いのか。また実用上も，数段階の診断結果や，単純な合否の2段階に分割してのフィードバックをするのであれば，そこまで細かい分類は必要ないかもしれない。
+
+@TDE2022 のバイクラスタリングでは，テストデータにおける項目を複数のフィールドに，受検者を複数のクラスに分類する。受験者の分類は正答率に応じて順序づけることができ，ランクとして表現することができる(ランクで表現されるモデルは特にランクラスタリングとよばれる)。
+
+荘島のバイクラスタリングモデルを形式化するために，主要な行列を定義しよう。$J$を項目数，$S$を受検者数，$C$を潜在クラス/ランク数，$F$を潜在フィールド数とする。
+
+バイクラスター参照行列$\boldsymbol{\Pi}_B$は次のように定義される：
+
+$$
+\boldsymbol{\Pi}_B=\left[\begin{array}{ccc}
+\pi_{11} & \cdots & \pi_{1F} \\
+\vdots & \ddots & \vdots \\
+\pi_{C1} & \cdots & \pi_{CF}
+\end{array}\right]=\left\{\pi_{fc}\right\}
+$$
+
+ここで各要素$\pi_{fc}$は，クラス/ランク$c$の受検者がフィールド$f$の項目に正答する確率を表す。
+
+クラス所属行列$\mathbf{M}_C$とフィールド所属行列$\mathbf{M}_F$は次のように定義される：
+
+$$
+\mathbf{M}_C=\left[\begin{array}{ccc}
+m_{11} & \cdots & m_{1C} \\
+\vdots & \ddots & \vdots \\
+m_{S1} & \cdots & m_{SC}
+\end{array}\right], \quad
+\mathbf{M}_F=\left[\begin{array}{ccc}
+m_{11} & \cdots & m_{1F} \\
+\vdots & \ddots & \vdots \\
+m_{J1} & \cdots & m_{JF}
+\end{array}\right]
+$$
+
+ランククラスタリングにおけるランク所属行列$\mathbf{M}_R$は，クラス所属行列$\mathbf{M}_C$に，前後のクラスのつながりを緩やかに繋げるフィルター行列$\mathbf{F}$をかけることで得られる。
+
+$$
+\mathbf{M}_R = \mathbf{M}_C \mathbf{F}
+$$
+
+フィルタ行列は，例えばランク数が6の場合，次のような行列になる。
+$$
+\mathbf{F}=\left[\begin{array}{rrrrrrr}
+0.864 & 0.120 & & & & & \\
+0.136 & 0.760 & 0.120 & & & & \\
+& 0.120 & 0.760 & 0.120 & & & \\
+& & 0.120 & 0.760 & 0.120 & & \\
+& & & 0.120 & 0.760 & 0.120 & \\
+& & & & 0.120 & 0.760 & 0.136 \\
+& & & & & 0.120 & 0.864 \\
+\end{array}\right]
+$$
+
+これらを踏まえて，尤度関数は次のように定義され，EMアルゴリズムによって推定される。
+
+$$
+l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\prod_{c=1}^C \left(\pi_{fc}^{u_{sj}} (1-\pi_{fc})^{1-u_{sj}}\right)^{z_{sj} m_{sc} m_{jf}}
+$$
+
+これを実装したパッケージ`exametrika`とそのサンプルコードをみて，実践例を見てみよう。
+
+```{r exametrika}
+#| message: FALSE
+#| dev: "ragg_png"
+pacman::p_load(exametrika)
+result.Ranklustering <- Biclustering(J35S515, 
+                                    nfld = 5, ncls = 6, 
+                                    method = "R",verbose = F)
+plot(result.Ranklustering, type = "Array")
+```
+
+`exametrika`パッケージのバイクラスタリングは，引数にデータ，フィールド数`nfld`，クラス(ランク)数`ncls`，および手法(`B`ならバイクラスタリング，`R`ならランクラスタリング)をとる。
+ここではパッケージに含まれているサンプルデータ`J35S515`を使っているが，これは35項目からなるテストで515人の受検者からの回答を得たものである。
+
+分析結果としてアレイプロットがしめされている。この図の左は，行ごとに受検者，列ごとに項目からなり，正答を黒い四角(■)，誤答を白い四角(□)で表現したローデータである。右に示されているのは分析結果による同様の表示で，ランクごと，フィールドごとに類似したパターンがまとめられていることがわかる。
+
+フィールドの分類とランクをみることで，受検者には次のランクに進むにはどの領域の項目に正答すれば良いか，といった情報を提供することができる。また，フィールドやランクへの所属は確率で表現され(ファジィクラスタリング)，受検者にはランクアップOdds, ランクダウンOddsを提供することができる。
+
+フィールド所属行列，ランク所属行列を可視化したプロファイルの出力を以下に示す。
+```{r biclustering}
+plot(result.Ranklustering, type = "FRP", nc = 2, nr = 3)
+plot(result.Ranklustering, type = "RMP", students = 1:9, nc = 3, nr = 3)
+```
+
+バイクラスタリングは多値モデルも開発されており，心理尺度の新しい分析手法として期待されている。というのも，クラスタリングは表層的な反応パターンによる分類で，因子分析法やIRT(GRM)のようなデータ生成メカニズムを仮定しないことから，潜在変数の意味解釈といった理論的問題を避けることができるからである。また，項目についてのクラスタリングは得点もしくは変化得点を質的な意味に割り当てることが容易であることもその理由として挙げられる。
+
+なお，パッケージ`exametrika`には @TDE2022 に含まれる12のモデル全てを実装している。詳しくは[サイト](https://kosugitti.github.io/exametrika/index.html)を参照のこと。
 
 ### 多次元尺度構成法
 

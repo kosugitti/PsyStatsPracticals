@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.7.32" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+
+<title>15  多変量解析(その2) – 心理学統計実習</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<!-- htmldependencies:E3FAD763 -->
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn"
+      data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" 
+      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs"></h1>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" role="link"
+        aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+        onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="/">
+      心理学統計実習
+      </a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="/心理学統計実習.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="/心理学統計実習.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>1</span>  <span class='chapter-title'>はじめようR/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>2</span>  <span class='chapter-title'>Rの基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>3</span>  <span class='chapter-title'>Rによるデータハンドリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>4</span>  <span class='chapter-title'>Rによるレポートの作成</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>5</span>  <span class='chapter-title'>Rでプログラミング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>6</span>  <span class='chapter-title'>確率とシミュレーション</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>7</span>  <span class='chapter-title'>統計的仮説検定(Null Hypothesis Statistical Testing)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>8</span>  <span class='chapter-title'>平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>9</span>  <span class='chapter-title'>多群の平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>10</span>  <span class='chapter-title'>疑わしき研究実践とサンプルサイズ設計</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>11</span>  <span class='chapter-title'>重回帰分析の基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>12</span>  <span class='chapter-title'>ベイズ統計の活用</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>13</span>  <span class='chapter-title'>線形モデルの展開</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>14</span>  <span class='chapter-title'>多変量解析(その1)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter15.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class='chapter-number'>15</span>  <span class='chapter-title'>多変量解析(その2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>16</span>  <span class='chapter-title'>ベイジアンモデリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>17</span>  <span class='chapter-title'>演習問題</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" ></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <div id="quarto-toc-target"></div>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">15</span>  <span class="chapter-title">多変量解析(その2)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#距離行列を用いるもの" id="toc-距離行列を用いるもの"><span class="header-section-number">15.1</span> 距離行列を用いるもの</a>
+  <ul>
+  <li><a href="#心理学における距離データ" id="toc-心理学における距離データ"><span class="header-section-number">15.1.1</span> 心理学における距離データ</a></li>
+  <li><a href="#クラスター分析" id="toc-クラスター分析"><span class="header-section-number">15.1.2</span> クラスター分析</a></li>
+  <li><a href="#多次元尺度構成法" id="toc-多次元尺度構成法"><span class="header-section-number">15.1.3</span> 多次元尺度構成法</a></li>
+  </ul></li>
+  <li><a href="#共頻行列を用いるもの" id="toc-共頻行列を用いるもの"><span class="header-section-number">15.2</span> 共頻行列を用いるもの</a></li>
+  <li><a href="#偏相関行列を用いるもの" id="toc-偏相関行列を用いるもの"><span class="header-section-number">15.3</span> 偏相関行列を用いるもの</a></li>
+  </ul>
+</nav>
+<p>先の章では分散共分散行列(相関行列)に基づいた線形モデルを中心に紹介した。 しかし，多変量解析はそれだけではない。 むしろ測定モデルとして潜在変数を仮定する手法だけに固執するあまり，心理測定の仮定に違反するようなデータであっても因子分析を適用したり，モデルの適合度を優先しすぎて不自然な設定に走ったりするような誤用が多く見られる。</p>
+<p>心理学においては因子分析が構成概念を測定していると「純粋に」信じられて多用されてきたが，かつてはさまざまな多変量解析技法が必要に応じて開発，使用されていたのである。 ここでは分析のスタートになる行列の種類で区分し，いくつかの多変量解析モデルを紹介する。</p>
+<section id="距離行列を用いるもの" class="level2" data-number="15.1">
+<h2 data-number="15.1"><span class="header-section-number">15.1</span> 距離行列を用いるもの</h2>
+<p>距離とは，次の四つの公理を満たす数字のことをいう。</p>
+<ol type="1">
+<li><strong>非負性</strong>: <span class="math inline">\(d(x,y) \geq 0\)</span> (距離は0以上)</li>
+<li><strong>同一性</strong>: <span class="math inline">\(d(x,y) = 0 \Leftrightarrow x = y\)</span> (距離が0なのは同じ点の場合のみ)</li>
+<li><strong>対称性</strong>: <span class="math inline">\(d(x,y) = d(y,x)\)</span> (距離は方向に依存しない)</li>
+<li><strong>三角不等式</strong>: <span class="math inline">\(d(x,z) \leq d(x,y) + d(y,z)\)</span> (遠回りは最短距離以上)</li>
+</ol>
+<p>距離行列とは行列の要素が距離を表しているもので，一般に正方・対称行列になる。この点は分散共分散行列や相関行列と同じで，この行列演算によって分散共分散を用いたモデルとは別の解釈が成立する分析を作ることができる。</p>
+<p>ちなみにRでは距離行列を作るのに<code>dist</code>関数を用いる。オプションとして特段の指定がなければユークリッド距離が用いられるが，他にも以下のようなオプションがある。</p>
+<ul>
+<li><code>"euclidean"</code>: ユークリッド距離。<span class="math inline">\(d(x,y) = \sqrt{\sum_{i=1}^N (x_i-y_i)^2}\)</span>で表される。</li>
+<li><code>"maximum"</code>: チェビシェフ距離。<span class="math inline">\(d(x,y) = max(|x_i - y_i|)\)</span>で表される。</li>
+<li><code>"manhattan"</code>: マンハッタン距離。<span class="math inline">\(d(x,y)=\sum (|x_i - y_i|)\)</span>で表される。</li>
+<li><code>"canberra"</code>: キャンベラ距離。<span class="math inline">\(d(x,y) = \sum \frac{|x_i-y_i|}{|x_i+y_i|}\)</span>で表される</li>
+<li><code>"binary"</code>: バイナリ距離。ジャッカード距離ともいう。0/1のデータに対する距離で，<span class="math inline">\(d(x,y) = \frac{b+c}{a+b+c+d}\)</span>で表される(aは両方1，bはxが1でyが0，cはxが0でyが1，dは両方0)。両方に共通して1である要素が多いほど距離が小さくなる。</li>
+<li><code>"minkowski"</code>: ミンコフスキー距離。一般化された距離とも言われ，係数<span class="math inline">\(p\)</span>でさまざまな距離を表現できる。<span class="math inline">\(d(x,y)=\left(\sum |x_i-y_i|^p\right)^{\frac{1}{p}}\)</span>で表される。例えば<span class="math inline">\(p=1\)</span>ならばマンハッタン距離，<span class="math inline">\(p=2\)</span>ならユークリッド距離である。<span class="math inline">\(p=\infty\)</span>の時を特にチェビシェフの距離，または優勢次元距離という。</li>
+</ul>
+<section id="心理学における距離データ" class="level3" data-number="15.1.1">
+<h3 data-number="15.1.1"><span class="header-section-number">15.1.1</span> 心理学における距離データ</h3>
+<p>数字を何とみなすか，によって心理学でも距離データを扱うことはできる。 尺度評定の差分を(得点間の)距離とみなすこともできるし，相関係数も<span class="math inline">\(1.0-|r_{jk}|\)</span>のようにすれば距離とみなすことができる。 社会心理学におけるソシオメトリックデータは，対人関係の選好評定だが，これも対人間の距離とみなすことができるだろう。 実験心理学における刺激の混同率や汎化勾配，2つの茂樹が同じか違うかを判断する課題への反応潜時，刺激の代替価・連想価は類似性と考えられるから，これも距離データと言えるだろう<span class="citation" data-cites="Takane198002">(<a href="#ref-Takane198002" role="doc-biblioref">高根 1980</a>)</span>。 距離行列は一個体からの評定や反応からでも生成できるから，小サンプルの実験計画であっても距離行列を得ることができる。</p>
+<p>このように，類似性あるいは非類似性を距離と見做して用いることができる。 この利点は，回答者の自然な判断に任せられること，つまり「総合的に判断して，似ているか，似ていないか」といった回答をデータにできることである。研究者はついつい複数の類似した項目で多角的に聞かねばならない，と思いがちだが，下位の評定次元を実験者が準備することは回答者の自由度を束縛している側面もあり，また回答者の負担を考えると必ずしもいいことばかりではない。さらに項目によっては社会的な望ましさバイアスなども含まれるから，「総合的に評価してもらいたい」というのはそういったバイアスから逃れられる側面もある。</p>
+<p>距離を対象に考える多変量解析モデルも，そのほかのモデルと同様，要約や分類を目的にしている。また，多次元データを少数の次元に要約するために可視化する手法として用いられることもある。まずは分類を目的としたモデルから見ていこう。</p>
+</section>
+<section id="クラスター分析" class="level3" data-number="15.1.2">
+<h3 data-number="15.1.2"><span class="header-section-number">15.1.2</span> クラスター分析</h3>
+<p>クラスター分析は類似したものをまとめてクラスター(塊)を形成する分析方法である。 クラスター分析の中でも多くの手法・モデルが考えられており，いくつかの側面から分類することができる。</p>
+<section id="モデルの階層性" class="level4" data-number="15.1.2.1">
+<h4 data-number="15.1.2.1"><span class="header-section-number">15.1.2.1</span> モデルの階層性</h4>
+<section id="階層的クラスター分析" class="level5" data-number="15.1.2.1.1">
+<h5 data-number="15.1.2.1.1"><span class="header-section-number">15.1.2.1.1</span> 階層的クラスター分析</h5>
+<p>まずはクラスターが階層性を持つかどうか。階層的クラスター分析は距離の短いものから順にまとめていき，クラスターのクラスター，クラスターのクラスターのクラスター，といったように順次大きなグループにまとめ上げていく。</p>
+<p>結果は<em>デンドログラム</em>と呼ばれるツリー状のプロットで表されることが一般的で，適当なところで分割して利用する。適切なクラスター数に関する一般的な基準はほとんどなく，実用性に応じてツリーをカットすることが多い。</p>
+<p><code>iris</code>データによる実行例を示す。</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d_matrix <span class="ot">&lt;-</span> <span class="fu">dist</span>(iris[,<span class="sc">-</span><span class="dv">5</span>], <span class="at">method =</span> <span class="st">&#39;euclidean&#39;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>result.h <span class="ot">&lt;-</span> <span class="fu">hclust</span>(d_matrix, <span class="at">method =</span> <span class="st">&#39;ward.D2&#39;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.h, <span class="at">main =</span> <span class="st">&quot;Hierarchical Clustering Dendrogram&quot;</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/hierarical%20clustering-1.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+</div>
+<p>階層的クラスター分析のクラスター同士を上位クラスターにまとめていく方法がいくつか考案されており，Rでは<code>hclust</code>関数の<code>method</code>オプションで指定することができる。</p>
+<ul>
+<li><code>"ward.D"</code> / <code>"ward.D2"</code>: ウォード法。クラスター内の分散を最小化する</li>
+<li><code>"single"</code>: 最短距離法。クラスター間の最短距離でリンク</li>
+<li><code>"complete"</code>: 最長距離法。クラスター間の最長距離でリンク</li>
+<li><code>"average"</code>: 平均法(群平均法)。クラスター間の平均距離でリンク</li>
+<li><code>"mcquitty"</code>: McQuitty法。重み付き群平均法の一種</li>
+<li><code>"median"</code>: メディアン法。重み付き群中心法の一種</li>
+<li><code>"centroid"</code>: 重心法。</li>
+</ul>
+<p>最もよく使われるのがウォード法で，実践的にもこの手法による分類が最も解釈しやすい。なお，<code>ward.D</code>オプションはバグがあるので用いないことが望ましく，バグを修正した<code>ward.D2</code>を用いること[^15.1]。</p>
+<p><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: バグがあるのになぜ修正しないのか，と思われるかもしれない。<code>ward.D</code>はRのバージョン3.0.3以前まで用いられていたが，ユーザからの指摘で正しく分散が計算されていないことが発覚。Rの基本関数に誤りがあったことを認め，戒めとするために元のコードを残している。Rはフリーでオープンなソフトウェアであり，無償ではあるが，フリーだからといっていけないのではなく，こうした自浄作用があることを示すための措置と思われる。ちなみに筆者が以前プロプライエタリな統計ソフトを使っていた時にもおかしな挙動を発見したことがある。メーカに指摘すると「次のバージョンでは修正されているのでそちらを新たに購入しろ」という回答であったため，そのソフトウェアから決別することにした。科学的営みにおいて，有償サポートがあることが真実を担保しない例である。</p>
+<p>得られたクラスターの結果は<code>cutree</code>関数で任意のクラスター数に分割できる。今回，<code>iris</code>データは3種類のirisがあることがわかっているので，クラスター数3にしてその分類精度を確認してみよう。</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(result.h, <span class="at">k =</span> <span class="dv">3</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(clusters, iris<span class="sc">$</span>Species)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        
+clusters setosa versicolor virginica
+       1     50          0         0
+       2      0         49        15
+       3      0          1        35</code></pre>
+</div>
+</div>
+</section>
+<section id="非階層的クラスター分析" class="level5" data-number="15.1.2.1.2">
+<h5 data-number="15.1.2.1.2"><span class="header-section-number">15.1.2.1.2</span> 非階層的クラスター分析</h5>
+<p>非階層的クラスター分析として有名なのは，<code>k-means</code>法による分類である。アルゴリズムは次のとおりである。</p>
+<ol type="1">
+<li>指定されたクラスター数の重心ベクトルをランダムに生成する。</li>
+<li>各データ点を最も近い重心のクラスターに所属させる。</li>
+<li>クラスターごとに，重心を再計算する。</li>
+<li>2.-3. のステップを繰り返し，変動がなくなると推定終了とする。</li>
+</ol>
+<p>この方法は任意のクラス数に分類できること，大規模なデータであっても比較的早く収束することが利点である。 Rによるサンプルは以下のとおりである。</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result.k <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(d_matrix, <span class="at">centers =</span> <span class="dv">3</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(result.k<span class="sc">$</span>cluster, iris<span class="sc">$</span>Species)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+    setosa versicolor virginica
+  1      0          1        37
+  2     50          0         0
+  3      0         49        13</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="クラスタリングの境界" class="level4" data-number="15.1.2.2">
+<h4 data-number="15.1.2.2"><span class="header-section-number">15.1.2.2</span> クラスタリングの境界</h4>
+<p>ここまでのクラスタリングは，各個体がどのクラスターに所属するかが明確に定まっていたが，境界がそこまで明確でない中間的なデータ点もあるかもしれない。各データ点が1つのクラスターにのみ所属するという明確なクラスタリングのことを，ハードクラスタリングとかクリスプクラスタリングという。これに対して，各データ点が複数のクラスターに部分的に所属している，あるいは所属度が例えば0-1などの連続値で表現されるような，緩やかな所属をゆるするクラスタリングもあり，これらを総称してファジィクラスタリングとかソフトクラスタリングと呼ぶ。</p>
+<p>ファジィクラスタリングの例として，fuzzy c-means法を挙げる。</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(e1071)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>result.c <span class="ot">&lt;-</span> <span class="fu">cmeans</span>(d_matrix, <span class="at">centers =</span> <span class="dv">3</span>, <span class="at">m =</span> <span class="dv">2</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result.c<span class="sc">$</span>membership)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            1           2         3
+1 0.001506519 0.002333839 0.9961596
+2 0.002257788 0.003508791 0.9942334
+3 0.004265036 0.006430873 0.9893041
+4 0.003275393 0.005065169 0.9916594
+5 0.001606856 0.002468260 0.9959249
+6 0.009344861 0.015285915 0.9753692</code></pre>
+</div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(result.c<span class="sc">$</span>cluster, iris<span class="sc">$</span>Species)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+    setosa versicolor virginica
+  1      0          2        37
+  2      0         48        13
+  3     50          0         0</code></pre>
+</div>
+</div>
+<p><code>fuzzy c-means</code>は<code>e1071</code>パッケージに含まれている。 モデルの指定の時に，ファジィ度パラメータ<code>m</code>を指定する。通常1.5から3程度で，大きいほど曖昧さをゆるす。 出力として<code>membership</code>という所属確率が返される。この所属確率が最大のものをハードな分類として使用することができる。</p>
+<p><code>membership</code>をプロットしてみると，明らかに所属するクラスが明確なものと，曖昧なデータもあることがわかる。 心理学的応用としては，パーソナリティの分類や症状の分類などが考えられるだろう。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/fuzzy-cmeans%20plot-1.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="モデルベースか否か" class="level4" data-number="15.1.2.3">
+<h4 data-number="15.1.2.3"><span class="header-section-number">15.1.2.3</span> モデルベースか否か</h4>
+<p>階層的クラスタリングや，k-means, fuzzy c-meansの非階層的クラスタリングモデルでは，クラスター数の決定について客観的な指標がなかbunった。そこで，確率モデルとしてクラスター分析を考え，モデル適合度の観点から評価することを考える。</p>
+<p>ある変数についてヒストグラムを描き，次のような出力を得たとしよう。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/bimodal-1.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+</div>
+<p>このようなデータに対して，正規分布モデルを当てはめるのは適切だろうか。 正規分布は単峰で左右対称であることが特徴だから，無理やり当てはめるとおかしなことになるだろう。 ここには隠れた二つの正規分布があると考え，それぞれが混ざり合って出てきたものと考えたほうが良い。</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/towmodels-1.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+</div>
+<p>統計モデルとしては，混合正規分布モデル(Gaussian Mixture Model, GMM)と呼ばれるのだが，これは異なる2つの群を生成モデルとしているクラスター分析であると考えることもできる。GMMでは観測されたデータが複数の正規分布を含んでいると考え，各群に想定される正規分布の平均，分散および群の混合率を推定することでデータの潜在的な特徴を明らかにする。今回は簡便のために1変数でのモデルにしたが，複数の変数がある場合は多変量正規分布で考えることになる。</p>
+<p>確率モデルになっているので，尤度を用いてデータとの適合度を計算することができる。潜在的な分布がいくつあるのかをBICなどを基準に選定することで，客観的にクラス数を決定することができるのが利点である。</p>
+<p>パッケージを使って具体的なデータを分類してみよう。</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(mclust)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># irisデータから数値変数のみを取得</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>iris_data <span class="ot">&lt;-</span> iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># mclustによるクラスタリング</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>gmm_result <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(iris_data)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の表示</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gmm_result, <span class="at">parameters =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>---------------------------------------------------- 
+Gaussian finite mixture model fitted by EM algorithm 
+---------------------------------------------------- 
+
+Mclust VEV (ellipsoidal, equal shape) model with 2 components: 
+
+ log-likelihood   n df       BIC       ICL
+       -215.726 150 26 -561.7285 -561.7289
+
+Clustering table:
+  1   2 
+ 50 100 
+
+Mixing probabilities:
+        1         2 
+0.3333319 0.6666681 
+
+Means:
+                  [,1]     [,2]
+Sepal.Length 5.0060022 6.261996
+Sepal.Width  3.4280049 2.871999
+Petal.Length 1.4620007 4.905992
+Petal.Width  0.2459998 1.675997
+
+Variances:
+[,,1]
+             Sepal.Length Sepal.Width Petal.Length Petal.Width
+Sepal.Length   0.15065114  0.13080115   0.02084463  0.01309107
+Sepal.Width    0.13080115  0.17604529   0.01603245  0.01221458
+Petal.Length   0.02084463  0.01603245   0.02808260  0.00601568
+Petal.Width    0.01309107  0.01221458   0.00601568  0.01042365
+[,,2]
+             Sepal.Length Sepal.Width Petal.Length Petal.Width
+Sepal.Length    0.4000438  0.10865444    0.3994018  0.14368256
+Sepal.Width     0.1086544  0.10928077    0.1238904  0.07284384
+Petal.Length    0.3994018  0.12389040    0.6109024  0.25738990
+Petal.Width     0.1436826  0.07284384    0.2573899  0.16808182</code></pre>
+</div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 分類結果の可視化</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gmm_result, <span class="at">what =</span> <span class="st">&quot;classification&quot;</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/mclust_iris-1.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 真の種と比較</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(iris<span class="sc">$</span>Species, gmm_result<span class="sc">$</span>classification)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            
+              1  2
+  setosa     50  0
+  versicolor  0 50
+  virginica   0 50</code></pre>
+</div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BICによるモデル選択結果</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gmm_result, <span class="at">what =</span> <span class="st">&quot;BIC&quot;</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/mclust_iris-2.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>mclust</code>では，各クラスターの共分散行列の構造によって異なるモデルが考慮される。モデル名は3文字のコードで表現され，それぞれの文字が以下の意味を持つ：</p>
+<ul>
+<li><strong>1文字目(Volume)</strong>: 各クラスターの大きさ(体積)
+<ul>
+<li><code>E</code> = Equal(等しい)</li>
+<li><code>V</code> = Variable(異なる)</li>
+</ul></li>
+<li><strong>2文字目(Shape)</strong>: 各クラスターの形状
+<ul>
+<li><code>E</code> = Equal(等しい)</li>
+<li><code>V</code> = Variable(異なる)</li>
+</ul></li>
+<li><strong>3文字目(Orientation)</strong>: 各クラスターの向き
+<ul>
+<li><code>E</code> = Equal(等しい)</li>
+<li><code>V</code> = Variable(異なる)</li>
+<li><code>I</code> = Identity(単位行列，球形)</li>
+</ul></li>
+</ul>
+<p>例えば： - <strong><code>EII</code></strong>: 全クラスターが同じ大きさの球形(等分散球形) - <strong><code>VII</code></strong>: 各クラスターが異なる大きさの球形(異分散球形) - <strong><code>EEE</code></strong>: 全クラスターが同じ大きさ・形状・向きの楕円 - <strong><code>VVV</code></strong>: 各クラスターが異なる大きさ・形状・向きの楕円(最も一般的)</p>
+<p>これらの組み合わせにより，14種類の共分散構造から最適モデルをBICを参考に自動的に選定される。今回は<code>VEV (ellipsoidal, equal shape)</code>の2クラスターモデルが最適として判断された(実際は3種あるが，データからは2種類が最適と判断されている)。</p>
+<p>潜在的に分類する手法は，例えばマーケティング業界では購買層を探索的に見出す手法として使われる。潜在的なクラスが順序尺度水準であることを想定すれば，潜在ランクモデルと呼ばれ，テスト理論の応用モデルとして提案されている。<span class="citation" data-cites="TDE2022">Shojima (<a href="#ref-TDE2022" role="doc-biblioref">2022</a>)</span> ではIRTのような精緻な<span class="math inline">\(\theta_i\)</span>の推定よりも段階的な推定の方が実践的意義が高いことから，潜在ランクモデルを活用する利点が論じられている。</p>
+</section>
+<section id="バイクラスタリング" class="level4" data-number="15.1.2.4">
+<h4 data-number="15.1.2.4"><span class="header-section-number">15.1.2.4</span> バイクラスタリング</h4>
+<p>Cattelのデータキューブのところで触れたように，Observation <span class="math inline">\(\times\)</span> Variablesのデータセットがあったとき，変数の共変動から個人を分類することも，個人の共変動から変数を分類することもできる。そしてまた，両者を同時に分類するバイクラスタリング(Biclustering)という手法も提案されている。</p>
+<p>BiclusteringはTwo-Mode Clusteringとも呼ばれ，様々なモデルが提案されているが，ここでは <span class="citation" data-cites="TDE2022">Shojima (<a href="#ref-TDE2022" role="doc-biblioref">2022</a>)</span> のテスト理論の観点から見てみよう。</p>
+<p>テスト理論はデータがバイナリであり，この分析の確率モデルとしてはベルヌーイ分布を置いたIRTが一般的である。しかし上で述べたように，IRTで推定されるような潜在得点<span class="math inline">\(\theta\)</span>の精度は実質的な意味が見えにくいことがある。すなわち，<span class="math inline">\(\theta\)</span>が<span class="math inline">\(0.01\)</span>ポイント違うことが，どのような違いに相当するのか。<span class="math inline">\(\theta\)</span>を<span class="math inline">\(0.5\)</span>ポイント上昇させるために受検者はどのような努力をすれば良いのか。また実用上も，数段階の診断結果や，単純な合否の2段階に分割してのフィードバックをするのであれば，そこまで細かい分類は必要ないかもしれない。</p>
+<p><span class="citation" data-cites="TDE2022">Shojima (<a href="#ref-TDE2022" role="doc-biblioref">2022</a>)</span> のバイクラスタリングでは，テストデータにおける項目を複数のフィールドに，受検者を複数のクラスに分類する。受験者の分類は正答率に応じて順序づけることができ，ランクとして表現することができる(ランクで表現されるモデルは特にランクラスタリングとよばれる)。</p>
+<p>荘島のバイクラスタリングモデルを形式化するために，主要な行列を定義しよう。<span class="math inline">\(J\)</span>を項目数，<span class="math inline">\(S\)</span>を受検者数，<span class="math inline">\(C\)</span>を潜在クラス/ランク数，<span class="math inline">\(F\)</span>を潜在フィールド数とする。</p>
+<p>バイクラスター参照行列<span class="math inline">\(\boldsymbol{\Pi}_B\)</span>は次のように定義される：</p>
+<p><span class="math display">\[
+\boldsymbol{\Pi}_B=\left[\begin{array}{ccc}
+\pi_{11} &amp; \cdots &amp; \pi_{1F} \\
+\vdots &amp; \ddots &amp; \vdots \\
+\pi_{C1} &amp; \cdots &amp; \pi_{CF}
+\end{array}\right]=\left\{\pi_{fc}\right\}
+\]</span></p>
+<p>ここで各要素<span class="math inline">\(\pi_{fc}\)</span>は，クラス/ランク<span class="math inline">\(c\)</span>の受検者がフィールド<span class="math inline">\(f\)</span>の項目に正答する確率を表す。</p>
+<p>クラス所属行列<span class="math inline">\(\mathbf{M}_C\)</span>とフィールド所属行列<span class="math inline">\(\mathbf{M}_F\)</span>は次のように定義される：</p>
+<p><span class="math display">\[
+\mathbf{M}_C=\left[\begin{array}{ccc}
+m_{11} &amp; \cdots &amp; m_{1C} \\
+\vdots &amp; \ddots &amp; \vdots \\
+m_{S1} &amp; \cdots &amp; m_{SC}
+\end{array}\right], \quad
+\mathbf{M}_F=\left[\begin{array}{ccc}
+m_{11} &amp; \cdots &amp; m_{1F} \\
+\vdots &amp; \ddots &amp; \vdots \\
+m_{J1} &amp; \cdots &amp; m_{JF}
+\end{array}\right]
+\]</span></p>
+<p>ランククラスタリングにおけるランク所属行列<span class="math inline">\(\mathbf{M}_R\)</span>は，クラス所属行列<span class="math inline">\(\mathbf{M}_C\)</span>に，前後のクラスのつながりを緩やかに繋げるフィルター行列<span class="math inline">\(\mathbf{F}\)</span>をかけることで得られる。</p>
+<p><span class="math display">\[
+\mathbf{M}_R = \mathbf{M}_C \mathbf{F}
+\]</span></p>
+<p>フィルタ行列は，例えばランク数が6の場合，次のような行列になる。 <span class="math display">\[
+\mathbf{F}=\left[\begin{array}{rrrrrrr}
+0.864 &amp; 0.120 &amp; &amp; &amp; &amp; &amp; \\
+0.136 &amp; 0.760 &amp; 0.120 &amp; &amp; &amp; &amp; \\
+&amp; 0.120 &amp; 0.760 &amp; 0.120 &amp; &amp; &amp; \\
+&amp; &amp; 0.120 &amp; 0.760 &amp; 0.120 &amp; &amp; \\
+&amp; &amp; &amp; 0.120 &amp; 0.760 &amp; 0.120 &amp; \\
+&amp; &amp; &amp; &amp; 0.120 &amp; 0.760 &amp; 0.136 \\
+&amp; &amp; &amp; &amp; &amp; 0.120 &amp; 0.864 \\
+\end{array}\right]
+\]</span></p>
+<p>これらを踏まえて，尤度関数は次のように定義され，EMアルゴリズムによって推定される。</p>
+<p><span class="math display">\[
+l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\prod_{c=1}^C \left(\pi_{fc}^{u_{sj}} (1-\pi_{fc})^{1-u_{sj}}\right)^{z_{sj} m_{sc} m_{jf}}
+\]</span></p>
+<p>これを実装したパッケージ<code>exametrika</code>とそのサンプルコードをみて，実践例を見てみよう。</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>result.Ranklustering <span class="ot">&lt;-</span> <span class="fu">Biclustering</span>(J35S515, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">nfld =</span> <span class="dv">5</span>, <span class="at">ncls =</span> <span class="dv">6</span>, </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">method =</span> <span class="st">&quot;R&quot;</span>,<span class="at">verbose =</span> F)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">&quot;Array&quot;</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/exametrika-1.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>exametrika</code>パッケージのバイクラスタリングは，引数にデータ，フィールド数<code>nfld</code>，クラス(ランク)数<code>ncls</code>，および手法(<code>B</code>ならバイクラスタリング，<code>R</code>ならランクラスタリング)をとる。 ここではパッケージに含まれているサンプルデータ<code>J35S515</code>を使っているが，これは35項目からなるテストで515人の受検者からの回答を得たものである。</p>
+<p>分析結果としてアレイプロットがしめされている。この図の左は，行ごとに受検者，列ごとに項目からなり，正答を黒い四角(■)，誤答を白い四角(□)で表現したローデータである。右に示されているのは分析結果による同様の表示で，ランクごと，フィールドごとに類似したパターンがまとめられていることがわかる。</p>
+<p>フィールドの分類とランクをみることで，受検者には次のランクに進むにはどの領域の項目に正答すれば良いか，といった情報を提供することができる。また，フィールドやランクへの所属は確率で表現され(ファジィクラスタリング)，受検者にはランクアップOdds, ランクダウンOddsを提供することができる。</p>
+<p>フィールド所属行列，ランク所属行列を可視化したプロファイルの出力を以下に示す。</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">&quot;FRP&quot;</span>, <span class="at">nc =</span> <span class="dv">2</span>, <span class="at">nr =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/biclustering-1.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">&quot;RMP&quot;</span>, <span class="at">students =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">nc =</span> <span class="dv">3</span>, <span class="at">nr =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img src="chapter15_files/figure-html/biclustering-2.png" class="img-fluid" width="672" /></p>
+</figure>
+</div>
+</div>
+</div>
+<p>バイクラスタリングは多値モデルも開発されており，心理尺度の新しい分析手法として期待されている。というのも，クラスタリングは表層的な反応パターンによる分類で，因子分析法やIRT(GRM)のようなデータ生成メカニズムを仮定しないことから，潜在変数の意味解釈といった理論的問題を避けることができるからである。また，項目についてのクラスタリングは得点もしくは変化得点を質的な意味に割り当てることが容易であることもその理由として挙げられる。</p>
+<p>なお，パッケージ<code>exametrika</code>には <span class="citation" data-cites="TDE2022">Shojima (<a href="#ref-TDE2022" role="doc-biblioref">2022</a>)</span> に含まれる12のモデル全てを実装している。詳しくは<a href="https://kosugitti.github.io/exametrika/index.html">サイト</a>を参照のこと。</p>
+</section>
+</section>
+<section id="多次元尺度構成法" class="level3" data-number="15.1.3">
+<h3 data-number="15.1.3"><span class="header-section-number">15.1.3</span> 多次元尺度構成法</h3>
+</section>
+</section>
+<section id="共頻行列を用いるもの" class="level2" data-number="15.2">
+<h2 data-number="15.2"><span class="header-section-number">15.2</span> 共頻行列を用いるもの</h2>
+</section>
+<section id="偏相関行列を用いるもの" class="level2" data-number="15.3">
+<h2 data-number="15.3"><span class="header-section-number">15.3</span> 偏相関行列を用いるもの</h2>
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl">心理学統計実習</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXItdGl0bGU=">心理学統計実習</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uZXh0"><span class="chapter-number">16</span>  <span class="chapter-title">ベイジアンモデリング</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1wcmV2"><span class="chapter-number">14</span>  <span class="chapter-title">多変量解析(その1)</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9pbmRleC5odG1s44Gv44GY44KB44Gr">はじめに</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDEuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz7jga/jgZjjgoHjgojjgYZSL1JTdHVkaW88L3NwYW4+"><span class="chapter-number">1</span>  <span class="chapter-title">はじめようR/RStudio</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDIuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Mjwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5S44Gu5Z+656SOPC9zcGFuPg=="><span class="chapter-number">2</span>  <span class="chapter-title">Rの基礎</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDMuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Mzwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5S44Gr44KI44KL44OH44O844K/44OP44Oz44OJ44Oq44Oz44KwPC9zcGFuPg=="><span class="chapter-number">3</span>  <span class="chapter-title">Rによるデータハンドリング</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDQuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+NDwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5S44Gr44KI44KL44Os44Od44O844OI44Gu5L2c5oiQPC9zcGFuPg=="><span class="chapter-number">4</span>  <span class="chapter-title">Rによるレポートの作成</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDUuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+NTwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5S44Gn44OX44Ot44Kw44Op44Of44Oz44KwPC9zcGFuPg=="><span class="chapter-number">5</span>  <span class="chapter-title">Rでプログラミング</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDYuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Njwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz7norrnjofjgajjgrfjg5/jg6Xjg6zjg7zjgrfjg6fjg7M8L3NwYW4+"><span class="chapter-number">6</span>  <span class="chapter-title">確率とシミュレーション</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDcuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Nzwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz7ntbHoqIjnmoTku67oqqzmpJzlrpooTnVsbC1IeXBvdGhlc2lzLVN0YXRpc3RpY2FsLVRlc3RpbmcpPC9zcGFuPg=="><span class="chapter-number">7</span>  <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDguaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+ODwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz7lubPlnYflgKTlt67jga7mpJzlrpo8L3NwYW4+"><span class="chapter-number">8</span>  <span class="chapter-title">平均値差の検定</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMDkuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+OTwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz7lpJrnvqTjga7lubPlnYflgKTlt67jga7mpJzlrpo8L3NwYW4+"><span class="chapter-number">9</span>  <span class="chapter-title">多群の平均値差の検定</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMTAuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTA8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+55aR44KP44GX44GN56CU56m25a6f6Le144Go44K144Oz44OX44Or44K144Kk44K66Kit6KiIPC9zcGFuPg=="><span class="chapter-number">10</span>  <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMTEuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTE8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+6YeN5Zue5biw5YiG5p6Q44Gu5Z+656SOPC9zcGFuPg=="><span class="chapter-number">11</span>  <span class="chapter-title">重回帰分析の基礎</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMTIuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTI8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+44OZ44Kk44K657Wx6KiI44Gu5rS755SoPC9zcGFuPg=="><span class="chapter-number">12</span>  <span class="chapter-title">ベイズ統計の活用</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMTMuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTM8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+57ea5b2i44Oi44OH44Or44Gu5bGV6ZaLPC9zcGFuPg=="><span class="chapter-number">13</span>  <span class="chapter-title">線形モデルの展開</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMTQuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTQ8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+5aSa5aSJ6YeP6Kej5p6QKOOBneOBrjEpPC9zcGFuPg=="><span class="chapter-number">14</span>  <span class="chapter-title">多変量解析(その1)</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMTUuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTU8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+5aSa5aSJ6YeP6Kej5p6QKOOBneOBrjIpPC9zcGFuPg=="><span class="chapter-number">15</span>  <span class="chapter-title">多変量解析(その2)</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9jaGFwdGVyMTYuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTY8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+44OZ44Kk44K444Ki44Oz44Oi44OH44Oq44Oz44KwPC9zcGFuPg=="><span class="chapter-number">16</span>  <span class="chapter-title">ベイジアンモデリング</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9wcmFjdGljZXMuaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTc8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+5ryU57+S5ZWP6aGMPC9zcGFuPg=="><span class="chapter-number">17</span>  <span class="chapter-title">演習問題</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9yZWZlcmVuY2VzLmh0bWxSZWZlcmVuY2Vz">References</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWJyZWFkY3J1bWJzLTxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTU8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+5aSa5aSJ6YeP6Kej5p6QKOOBneOBrjIpPC9zcGFuPg=="><span class="chapter-number">15</span>  <span class="chapter-title">多変量解析(その2)</span></span></p>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGF0aXRsZQ=="><span class="chapter-number">15</span>  <span class="chapter-title">多変量解析(その2)</span> – 心理学統計実習</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkdGl0bGU="><span class="chapter-number">15</span>  <span class="chapter-title">多変量解析(その2)</span> – 心理学統計実習</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZHRpdGxl"><span class="chapter-number">15</span>  <span class="chapter-title">多変量解析(その2)</span> – 心理学統計実習</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGFzaXRlbmFtZQ==">心理学統計実習</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkZGVzYw=="></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZGRkZXNj"></span></p>
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-TDE2022" class="csl-entry" role="listitem">
+Shojima, Kojiro. 2022. <em>Test Data Engineering: Latent Rank Analysis, Biclustering, and Bayesian Network</em>. Springer.
+</div>
+<div id="ref-Takane198002" class="csl-entry" role="listitem">
+高根芳雄. 1980. <em>多次元尺度法</em>. 東京大学出版会.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>15.1<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id = "quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a  href="/chapter14.html" class="pagination-link" aria-label="多変量解析(その1)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class='chapter-number'>14</span>  <span class='chapter-title'>多変量解析(その1)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a  href="/chapter16.html" class="pagination-link" aria-label="ベイジアンモデリング">
+        <span class="nav-page-text"><span class='chapter-number'>16</span>  <span class='chapter-title'>ベイジアンモデリング</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+</body>
+
+</html>
