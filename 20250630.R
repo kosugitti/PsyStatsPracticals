@@ -1,9 +1,9 @@
 rm(list = ls())
 library(tidyverse)
 set.seed(12345)
-mu1 <- -1
+mu1 <- -2
 sig1 <- 1
-mu2 <- 1
+mu2 <- 2
 sig2 <- 1.5
 
 N1 <- 1000
@@ -14,4 +14,7 @@ dat <- data.frame(
     id = c(rep(1, N1), rep(2, N2))
 ) %>%
     mutate(id = as.factor(id))
-dat
+dat %>%
+    ggplot(aes(x = x))+geom_density()+theme_minimal()
+
+pacman::p_load(mixtools,EMCluster, ClusterR)
