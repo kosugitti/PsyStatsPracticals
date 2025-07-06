@@ -522,11 +522,10 @@ window.Quarto = {
 <p>ここで共通因子の数を決めるのは分析者であり，「有用な次元」の決定は主観的な側面を含むことに注意しよう。もちろんデータの構造から適した次元数を考える手法はいろいろ提案されており，昨今はより客観的基準で因子数を決定するのが一般的であるが，数学的な特徴から実践的な意味合いをもつ共通次元とみなすのは，あくまでも分析者の責任において行われるものである。</p>
 <p>因子数を決定する手法として，スクリープロットをつかった平行分析がある。 次のコードを見ながら具体的に見ていこう。分析には<code>psych</code>パッケージを用い，データは<code>psych</code>パッケージの持つサンプルデータ，<code>bfi</code>を用いる。 これは性格テストのビッグファイブ因子それぞれについて5項目で測定したデータである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> psych<span class="sc">::</span>bfi <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>gender, <span class="sc">-</span>education, <span class="sc">-</span>age)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 並行分析</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, psych)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> psych<span class="sc">::</span>bfi <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>gender, <span class="sc">-</span>education, <span class="sc">-</span>age)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 並行分析</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -749,36 +748,23 @@ Minimum correlation of possible factor scores     0.61 0.72 0.57 0.53 0.49 0.22<
 <p>この方法ではモデルの方が先にあり，このモデルから考えられる分散共分散行列の式を実際の分さ共分散行列に当てはめることになる。当てはめる，すなわち係数を推定する方法は，大きく分けて最小二乗法，最尤法，ベイズ法であるが，実際は各種推定法のアルゴリズム名まで把握しておくといいだろう。さらに推定後，モデルと実際の分散共分散行列がどれほど一致しているか，即ち<strong>適合度</strong>Model Fit Indicesをみてその評価を行うことになる。適合度指標も複数あるため，それらを見ながら総合的に評価することになる。</p>
 <p>Rでの具体例を見ておこう。パッケージ<code>lavvaan</code>を用いて<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>以下のようにモデルを与える<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lavaan)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>This is lavaan 0.6-19
-lavaan is FREE software! Please report any bugs.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-次のパッケージを付け加えます: 'lavaan'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>以下のオブジェクトは 'package:psych' からマスクされています:
-
-    cor2cov</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># モデル指定</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">Neuroticism =~ N1 + N2 + N3 + N4 + N5</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="st">Agreeableness =~ A1 + A2 + A3 + A4 + A5</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="st">Extraversion =~ E1 + E2 + E3 + E4 + E5</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="st">Openness =~ O1 + O2 + O3 + O4 + O5</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="st">Conscientiousness =~ C1 + C2 + C3 + C4 + C5</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(lavaan)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># モデル指定</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="st">Neuroticism =~ N1 + N2 + N3 + N4 + N5</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">Agreeableness =~ A1 + A2 + A3 + A4 + A5</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">Extraversion =~ E1 + E2 + E3 + E4 + E5</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="st">Openness =~ O1 + O2 + O3 + O4 + O5</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="st">Conscientiousness =~ C1 + C2 + C3 + C4 + C5</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>ここで<code>model</code>オブジェクトは文字列として入力されていることに注意しよう。シングル，あるいはダブルクォーテーションでモデル記述を囲むのである。また，潜在変数名を左辺に置き，それを構成する観測変数を右辺に置く<strong>測定方程式</strong>は，<code>=~</code>という演算子で繋ぐ。変数同士の相関的関係は<code>~~</code>という演算子を，回帰的関係は<code>~</code>という演算子を用いる。特に潜在変数同士の関係を記述する方程式は<strong>構造方程式</strong>と呼ばれる。</p>
 <p>ここでは因子間相関に関する記述はないが，デフォルトで<span class="math inline">\(0\)</span>と指定しないところには相関のパスが仮定される。係数をゼロに指定したい場合は，<code>Neuroticism ~~ 0 * Openness</code>のように記述するといいだろう。</p>
 <p>さて，モデルの指定が終われば，データと推定法を指定して推定させよう。 ここでは推定法(estimator)オプションを最尤法(ML)とした。また，要約を出力するときに，適合度指標(fit.meassures)と標準化係数(standardized)も表示するよう指定してある。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># モデル推定</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>model.fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(model, <span class="at">estimator =</span> <span class="st">"ML"</span>, <span class="at">data =</span> dat)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.fit, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># モデル推定</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>model.fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(model, <span class="at">estimator =</span> <span class="st">"ML"</span>, <span class="at">data =</span> dat)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.fit, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.6-19 ended normally after 55 iterations
 
@@ -925,8 +911,19 @@ Variances:
 <p>続く出力で，推定値Estimator や検定統計量が表示される。心理学の場合は，全ての変数を標準化した推定値<code>Std.all</code>を参照することが多い<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>。ここでパス係数が小さかったり，統計的に有意にならないものを削除することでモデルの適合度は上げることができる。 ただし，適合度を上げることが研究の目的になってはならない。仮定を当てはめるのだから，適当とされる目安を達成できない場合は仮定を省みて改良することはあるだろうが，適合度を上げるために仮定に合わないパスを引くようなことは，「頑張って有意にする」のと同じQRPsである。</p>
 <p>ところで，パッケージを使えば，パス図も自動で描いてくれる。他にも，<code>lavaanExtra</code>，<code>tidySEM</code>，<code>lavaanPlot</code>,<code>lavaanPlot2</code>など開発中のものも含めて様々なものがあるが，ここでは古典的な<code>semPlot</code>パッケージによる出力例を示す。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semPlot)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(model.fit, <span class="at">what =</span> <span class="st">"stand"</span>, <span class="at">style =</span> <span class="st">"lisrel"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(semPlot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>パッケージを '/opt/homebrew/lib/R/4.5/site-library' 中にインストールします
+('lib' が指定されていないため)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>依存対象 (dependency) 'htmlTable', 'viridis', 'arm', 'openxlsx', 'RUnit', 'Hmisc', 'glasso', 'fdrtool', 'pbapply', 'mi', 'kutils', 'rpf', 'qgraph', 'sem', 'XML', 'lisrelToR', 'rockchalk', 'corpcor', 'OpenMx' もインストールします</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+semPlot installed</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(model.fit, <span class="at">what =</span> <span class="st">"stand"</span>, <span class="at">style =</span> <span class="st">"lisrel"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1088,11 +1085,9 @@ Variances:
 <p>項目の特徴を表現するロジスティック曲線は，<strong>項目反応関数</strong>(Item Responose Function)あるいは<strong>項目特性曲線</strong>(Item Characteristic Curve)と呼ばれる。<code>ltm</code>パッケージや<code>exametrika</code> パッケージなど，IRTモデルを実行するためのRパッケージは複数あり，これを使って実践例を見てみよう。</p>
 <p>ここでは著者が開発した<code>exametrika</code>パッケージとそのサンプルデータを用いて，実際にIRTを実行してみよう。<code>exametrika</code>パッケージにはサンプルデータが複数含まれている。今回用いるJ15S500は，500人の被験者が15問の項目に回答したサンプルデータである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## なければインストールしておく</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("exametrika")</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exametrika)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>result<span class="fl">.2</span>pl <span class="ot">&lt;-</span> <span class="fu">IRT</span>(J15S500, <span class="at">model =</span> <span class="dv">2</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result<span class="fl">.2</span>pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>result<span class="fl">.2</span>pl <span class="ot">&lt;-</span> <span class="fu">IRT</span>(J15S500, <span class="at">model =</span> <span class="dv">2</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result<span class="fl">.2</span>pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Item Parameters
        slope location PSD(slope) PSD(location)
@@ -1245,12 +1240,12 @@ BIC             -457.330</code></pre>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result<span class="fl">.2</span>pl<span class="sc">$</span>ability)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          ID         EAP       PSD
-1 Student001 -0.66456788 0.5457047
-2 Student002 -0.14853712 0.5626979
-3 Student003  0.01362525 0.5699764
+1 Student001 -0.66456774 0.5457047
+2 Student002 -0.14853710 0.5626979
+3 Student003  0.01362524 0.5699764
 4 Student004  0.58775677 0.6012839
-5 Student005 -0.97796885 0.5415528
-6 Student006  0.85892497 0.6187224</code></pre>
+5 Student005 -0.97796883 0.5415527
+6 Student006  0.85892495 0.6187224</code></pre>
 </div>
 </div>
 </section>
@@ -1264,7 +1259,7 @@ BIC             -457.330</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">## なければインストールしておく</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("ltm")</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ltm)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(ltm)</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Science)</span>
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>result.grm <span class="ot">&lt;-</span> <span class="fu">grm</span>(Science)</span>
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result.grm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1360,7 +1355,7 @@ Log.Lik: -2998.129</code></pre>
 <h3 data-number="14.5.4" class="anchored" data-anchor-id="課題4-多次元多段階項目反応理論の実践"><span class="header-section-number">14.5.4</span> 課題4: 多次元多段階項目反応理論の実践</h3>
 <p><code>mirt</code>パッケージ(Multidimensional IRT)を用いて，多次元モデルを実行します。コードは次のようになります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mirt)</span>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(mirt)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2因子(model = 2)，段階反応(itemtype = 'graded')を指定</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>result.mirt <span class="ot">&lt;-</span> <span class="fu">mirt</span>(dat, <span class="at">model =</span> <span class="dv">2</span>, <span class="at">itemtype =</span> <span class="st">"graded"</span>)</span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 出力に際して斜交回転</span></span>

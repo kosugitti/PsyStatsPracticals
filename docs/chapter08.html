@@ -590,8 +590,16 @@ mean in group 1 mean in group 2
 <p>今回2群の差のデータを作る時に，<span class="math inline">\(\sigma d\)</span> としたが，平均値差の効果量esは， <span class="math display">\[ es = \frac{\mu_1 - \mu_2}{\sigma} \]</span></p>
 <p>で表現されるから，<span class="math inline">\(d\)</span>が効果量を表していたのである。もちろん我々は母平均，母SDなどを知り得ないのでこれもデータから推定する他ない。幸いRには<code>effsize</code>パッケージなど，効果量を算出するものが用意されている。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(effsize)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(effsize)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>パッケージを '/opt/homebrew/lib/R/4.5/site-library' 中にインストールします
+('lib' が指定されていないため)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+effsize installed</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Cohen's d
@@ -601,7 +609,7 @@ d estimate: -0.2232655 (small)
     lower     upper 
 -1.165749  0.719218 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(value <span class="sc">~</span> group, <span class="at">data =</span> dataSet, <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Hedges's g
@@ -624,13 +632,13 @@ g estimate: -0.2138318 (small)
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="仮想データの組成"><span class="header-section-number">8.4.1</span> 仮想データの組成</h3>
 <p>仮想データを作って演習してみよう。データの組成については，2種類のアプローチで説明が可能である。ひとつは次のシミュレーションで表されるような形である。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu1, sigma)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> X1 <span class="sc">+</span> sigma <span class="sc">*</span> d <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X1, X2, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, mu1, sigma)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> X1 <span class="sc">+</span> sigma <span class="sc">*</span> d <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigma)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X1, X2, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
@@ -651,16 +659,16 @@ mean difference
 <p><span class="math display">\[\mathbf{\Sigma} = \begin{pmatrix} \sigma_1^2 &amp; \sigma_{12}\\ \sigma_{21} &amp; \sigma_2^2 \end{pmatrix} = \begin{pmatrix} \sigma_1^2 &amp; \rho_{12}\sigma_1\sigma_2 \\ \rho_{21}\sigma_2\sigma_1 &amp; \sigma_2^2 \end{pmatrix}\]</span></p>
 <p>共分散<span class="math inline">\(\sigma_{ij}\)</span>は相関係数<span class="math inline">\(\rho_{ij}\)</span>を用いて書けることからわかるように，変数間に相関があることを想定してデータを生成するのである。この組成に従った仮想データの作成は以下のとおりである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS) <span class="co"># 多次正規乱数を生成するのに必要</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(mu1, mu1 <span class="sc">+</span> sigma <span class="sc">*</span> d)</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>SIG <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sigma<span class="sc">^</span><span class="dv">2</span>, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, sigma<span class="sc">^</span><span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, mu, SIG)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS) <span class="co"># 多次正規乱数を生成するのに必要</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(mu1, mu1 <span class="sc">+</span> sigma <span class="sc">*</span> d)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>SIG <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sigma<span class="sc">^</span><span class="dv">2</span>, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, rho <span class="sc">*</span> sigma <span class="sc">*</span> sigma, sigma<span class="sc">^</span><span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, mu, SIG)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
@@ -677,7 +685,7 @@ mean difference
 </div>
 <p>効果量については，対応のないt検定の場合と同じで良い。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Cohen's d
@@ -687,7 +695,7 @@ d estimate: -1.04088 (large)
       lower       upper 
 -2.04204357 -0.03971697 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(X[, <span class="dv">1</span>], X[, <span class="dv">2</span>], <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Hedges's g

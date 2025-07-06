@@ -111,8 +111,7 @@ $$ P_{i} = w_1X_{i1} + w_2X_{i2} + \cdots + w_MX_{iM} $$
 
 ```{r parallel}
 #| message: FALSE
-library(tidyverse)
-library(psych)
+pacman::p_load(tidyverse, psych)
 dat <- psych::bfi |> select(-gender, -education, -age)
 # 並行分析
 fa.parallel(dat)
@@ -245,7 +244,7 @@ Rでの具体例を見ておこう。パッケージ`lavvaan`を用いて[^14.3]
 [^14.4]: `lavaangui`というパッケージを用いれば，モデルの指摘もGUIでできる。
 
 ```{r}
-library(lavaan)
+pacman::p_load(lavaan)
 # モデル指定
 model <- "
 Neuroticism =~ N1 + N2 + N3 + N4 + N5
@@ -287,7 +286,7 @@ summary(model.fit, fit.measures = TRUE, standardized = TRUE)
 
 ところで，パッケージを使えば，パス図も自動で描いてくれる。他にも，`lavaanExtra`，`tidySEM`，`lavaanPlot`,`lavaanPlot2`など開発中のものも含めて様々なものがあるが，ここでは古典的な`semPlot`パッケージによる出力例を示す。
 ```{r}
-library(semPlot)
+pacman::p_load(semPlot)
 semPaths(model.fit, what = "stand", style = "lisrel")
 ```
 
@@ -459,9 +458,7 @@ $$ P(Y_{ij}=1|\theta_i,a_j,b_j,c_j,d_j,e_j) = c_j + \frac{d_j-c_j}{\{1+exp(-1.70
 
 ```{r}
 #| message: FALSE
-## なければインストールしておく
-# install.packages("exametrika")
-library(exametrika)
+pacman::p_load(exametrika)
 result.2pl <- IRT(J15S500, model = 2, verbose = FALSE)
 print(result.2pl)
 ```
@@ -531,7 +528,7 @@ IRTモデルは基本的にバイナリデータに対するモデルである�
 #| message: FALSE
 ## なければインストールしておく
 # install.packages("ltm")
-library(ltm)
+pacman::p_load(ltm)
 data(Science)
 result.grm <- grm(Science)
 print(result.grm)
@@ -577,8 +574,7 @@ plot(result.grm, items = 1, type = "ICC")
 #| echo: FALSE
 #| eval: FALSE
 # 準備
-library(psych)
-library(tidyverse)
+pacman::p_load(psych, tidyverse)
 data(small.msq)
 summary(small.msq)
 
@@ -624,7 +620,7 @@ print(result, sort= T, cut = 0.3)
 #| echo: FALSE
 #| eval: FALSE
 # CFAの例
-library(lavaan)
+pacman::p_load(lavaan)
 model <- '
 f1 =~ active + alert + aroused + sleepy + tired + drowsy
 f2 =~ anxious + jittery + nervous + calm + relaxed + at.ease
@@ -654,7 +650,7 @@ lavaanPlot(result.sem)
 #| echo: FALSE
 #| eval: FALSE
 # GRMの例
-library(ltm)
+pacman::p_load(ltm)
 EA <- dat %>% dplyr::select(active, alert, aroused, sleepy, tired, drowsy)
 TA <- dat %>% dplyr::select(anxious, jittery, nervous, calm, relaxed, at.ease)
 
@@ -670,7 +666,7 @@ plot(result.TA, type = "ICC")
 
 ```{r mirt example}
 #| eval: false
-library(mirt)
+pacman::p_load(mirt)
 # 2因子(model = 2)，段階反応(itemtype = 'graded')を指定
 result.mirt <- mirt(dat, model = 2, itemtype = "graded")
 # 出力に際して斜交回転
