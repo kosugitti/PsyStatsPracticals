@@ -72,7 +72,7 @@ plot(result.h, main = "Hierarchical Clustering Dendrogram")
 
 最もよく使われるのがウォード法で，実践的にもこの手法による分類が最も解釈しやすい。なお，`ward.D`オプションはバグがあるので用いないことが望ましく，バグを修正した`ward.D2`を用いること[^15.1]。
 
-^[15.1]: バグがあるのになぜ修正しないのか，と思われるかもしれない。`ward.D`はRのバージョン3.0.3以前まで用いられていたが，ユーザからの指摘で正しく分散が計算されていないことが発覚。Rの基本関数に誤りがあったことを認め，戒めとするために元のコードを残している。Rはフリーでオープンなソフトウェアであり，無償ではあるが，フリーだからといっていけないのではなく，こうした自浄作用があることを示すための措置と思われる。ちなみに筆者が以前プロプライエタリな統計ソフトを使っていた時にもおかしな挙動を発見したことがある。メーカに指摘すると「次のバージョンでは修正されているのでそちらを新たに購入しろ」という回答であったため，そのソフトウェアから決別することにした。科学的営みにおいて，有償サポートがあることが真実を担保しない例である。
+[^15.1]: バグがあるのになぜ修正しないのか，と思われるかもしれない。`ward.D`はRのバージョン3.0.3以前まで用いられていたが，ユーザからの指摘で正しく分散が計算されていないことが発覚。Rの基本関数に誤りがあったことを認め，戒めとするために元のコードを残している。Rはフリーでオープンなソフトウェアであり，無償ではあるが，フリーだからといっていけないのではなく，こうした自浄作用があることを示すための措置と思われる。ちなみに筆者が以前プロプライエタリな統計ソフトを使っていた時にもおかしな挙動を発見したことがある。メーカに指摘すると「次のバージョンでは修正されているのでそちらを新たに購入しろ」という回答であったため，そのソフトウェアから決別することにした。科学的営みにおいて，有償サポートがあることが真実を担保しない例である。
 
 得られたクラスターの結果は`cutree`関数で任意のクラスター数に分割できる。今回，`iris`データは3種類のirisがあることがわかっているので，クラスター数3にしてその分類精度を確認してみよう。
 
@@ -366,6 +366,104 @@ plot(result.Ranklustering, type = "RMP", students = 1:9, nc = 3, nr = 3)
 なお，パッケージ`exametrika`には @TDE2022 に含まれる12のモデル全てを実装している。詳しくは[サイト](https://kosugitti.github.io/exametrika/index.html)を参照のこと。
 
 ### 多次元尺度構成法
+
+多次元尺度構成法(Multidimensional Scaling,MDS)は，一言で言えば距離行列から地図を復元する手法である。
+MDSは大きく分けて計量(metric)MDSと非計量(non-metric)MDSがある。前者は距離行列の固有値分解から得られる固有ベクトルを座標とみなす，ストレートな表現方法であり，データが比率尺度水準以上の誤差のない数値であることが求められる。これによって， どうしてそのような解釈が可能なのかについては，Young-Householderの定理というMDSの基礎になった数学定理があるので，興味がある人は調べて見てほしい。
+
+以下に計量MDSの例を見てみよう。Rは`eurodist`というヨーロッパ各都市の距離についてのサンプルデータを持っており，これを使って基本関数`cmdscale`でMDSを実行してみよう。
+
+```{r cmdscale}
+#| message: FALSE
+#| dev: "ragg_png"
+#| fig-asp: 1
+result <- cmdscale(eurodist, k = 2)
+
+# 美しいプロットの作成
+plot(result[,1], result[,2], 
+     type = "n",  # 点は描かずにプロット領域だけ作成
+     xlab = "次元1", ylab = "次元2",
+     main = "ヨーロッパ都市間の多次元尺度構成法",
+     cex.main = 1.2,
+     cex.lab = 1.1)
+
+# 都市名をラベルとして表示
+text(result[,1], result[,2], 
+     labels = rownames(result),
+     cex = 0.8,
+     col = "darkblue",
+     font = 2)
+
+# グリッドを追加
+grid(lty = 2, col = "lightgray")
+```
+
+アテネ(Athens)が右上，ストックホルム(Stockholm)が下に来ていることから，南北が反転していると思われるが，それぞれの相対的な位置は大体復元できていることがわかるだろう。関数`cmdscale`は引数`k`で次元数を指定でき，今回は2次元を指定したが，実際は地球が球体だから`k=3`とすることが正しいが，事前知識がない場合は可視化のために低次元を指定することが一般的である。
+
+`eudodist`は実際の距離データであるから，比率尺度水準の誤差のないデータと見做せるだろう。しかし，心理学的な応用場面においては，比率尺度水準のデータや誤差のないデータは考えにくい。このとき用いられるのが，非計量MDSである。これを簡単に言えば，データの持つ大小関係を反映した多次元空間に対象を付置する(地図の座標を与える)ものである。すなわち，対象$i$と$j$の距離を$d_{ij}$と表すとすると，
+$$ d_{ij} < d_{kl} \to \delta_{ij} < \delta_{kl} $$
+
+という関係が保持されるような座標$\delta_{ij}$を求めるものである。非計量MDSのはしりであったKruscalの方法は，データとの適合を表すstress値として，
+$$ \sum_{i>j} e_{ij}^2 = \sum_{ij} (\delta_{ij}-d_{ij})^2 $$
+
+という最適化関数を最小化するように座標を求める。最適化関数は多くの研究者によって様々に提唱されており，Rでは便利なパッケージ`smacof`のアルゴリズム(Scaling by Majorizing a COmplicated Function)による実行がいいだろう。
+
+実例で見てみよう。`smacof`パッケージの持つ`ekman`データセットを用いる。これは5段階で色の類似度評定をしてもらったデータである。
+```{r smacof}
+#| message: FALSE
+#| dev: "ragg_png"
+#| fig-width: 12
+#| fig-height: 5
+pacman::p_load(smacof)
+
+# 次元数2から10でストレス値を計算
+dimensions <- 2:10
+stress_values <- numeric(length(dimensions))
+
+for(i in seq_along(dimensions)) {
+  result_temp <- mds(ekman, ndim = dimensions[i], type = "ordinal")
+  stress_values[i] <- result_temp$stress
+}
+stress_values
+# ストレス値のプロット
+plot(dimensions, stress_values, 
+     type = "b", pch = 16, 
+     xlab = "次元数", ylab = "ストレス値",
+     main = "次元数とストレス値の関係",
+     cex.main = 1.1,
+     cex.lab = 1.0,
+     col = "blue", lwd = 2)
+grid(lty = 2, col = "lightgray")
+```
+
+ここでは次元数を様々に変えて，適合度指標であるストレス値を得てプロットしている。
+
+```{r smacof2}
+# 5次元でのMDS結果
+result <- mds(ekman, ndim = 5, type = "ordinal")
+result
+
+# 2次元MDSの可視化
+plot(result$conf[,1], result$conf[,2], 
+     type = "n",
+     xlab = "次元1", ylab = "次元2",
+     main = paste("色彩知覚のMDS（2次元）\nStress =", round(result$stress, 3)),
+     cex.main = 1.1,
+     cex.lab = 1.0)
+
+# 色の名前をラベルとして表示
+text(result$conf[,1], result$conf[,2], 
+     labels = rownames(result$conf),
+     cex = 0.8,
+     col = "darkred",
+     font = 2)
+
+# グリッドを追加
+grid(lty = 2, col = "lightgray")
+
+```
+
+
+
 
 ## 共頻行列を用いるもの
 ## 偏相関行列を用いるもの
