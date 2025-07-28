@@ -358,7 +358,10 @@ window.Quarto = {
   <li><a href="#クラスター分析" id="toc-クラスター分析" class="nav-link" data-scroll-target="#クラスター分析"><span class="header-section-number">15.1.2</span> クラスター分析</a></li>
   <li><a href="#多次元尺度構成法" id="toc-多次元尺度構成法" class="nav-link" data-scroll-target="#多次元尺度構成法"><span class="header-section-number">15.1.3</span> 多次元尺度構成法</a></li>
   </ul></li>
-  <li><a href="#共頻行列を用いるもの" id="toc-共頻行列を用いるもの" class="nav-link" data-scroll-target="#共頻行列を用いるもの"><span class="header-section-number">15.2</span> 共頻行列を用いるもの</a></li>
+  <li><a href="#共頻行列を用いるもの" id="toc-共頻行列を用いるもの" class="nav-link" data-scroll-target="#共頻行列を用いるもの"><span class="header-section-number">15.2</span> 共頻行列を用いるもの</a>
+  <ul class="collapse">
+  <li><a href="#テキストマイニングとは" id="toc-テキストマイニングとは" class="nav-link" data-scroll-target="#テキストマイニングとは"><span class="header-section-number">15.2.1</span> テキストマイニングとは</a></li>
+  </ul></li>
   <li><a href="#偏相関行列を用いるもの" id="toc-偏相関行列を用いるもの" class="nav-link" data-scroll-target="#偏相関行列を用いるもの"><span class="header-section-number">15.3</span> 偏相関行列を用いるもの</a></li>
   </ul>
 </nav>
@@ -424,8 +427,8 @@ window.Quarto = {
 <p><code>iris</code>データによる実行例を示す。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d_matrix <span class="ot">&lt;-</span> <span class="fu">dist</span>(iris[,<span class="sc">-</span><span class="dv">5</span>], <span class="at">method =</span> <span class="st">'euclidean'</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>result.h <span class="ot">&lt;-</span> <span class="fu">hclust</span>(d_matrix, <span class="at">method =</span> <span class="st">'ward.D2'</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d_matrix <span class="ot">&lt;-</span> <span class="fu">dist</span>(iris[, <span class="sc">-</span><span class="dv">5</span>], <span class="at">method =</span> <span class="st">"euclidean"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>result.h <span class="ot">&lt;-</span> <span class="fu">hclust</span>(d_matrix, <span class="at">method =</span> <span class="st">"ward.D2"</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.h, <span class="at">main =</span> <span class="st">"Hierarchical Clustering Dendrogram"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -475,8 +478,8 @@ clusters setosa versicolor virginica
 <div class="cell-output cell-output-stdout">
 <pre><code>   
     setosa versicolor virginica
-  1      0         49        13
-  2      0          1        37
+  1      0          1        37
+  2      0         49        13
   3     50          0         0</code></pre>
 </div>
 </div>
@@ -491,21 +494,21 @@ clusters setosa versicolor virginica
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>result.c <span class="ot">&lt;-</span> <span class="fu">cmeans</span>(d_matrix, <span class="at">centers =</span> <span class="dv">3</span>, <span class="at">m =</span> <span class="dv">2</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result.c<span class="sc">$</span>membership)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            1           2         3
-1 0.001506518 0.002333843 0.9961596
-2 0.002257790 0.003508800 0.9942334
-3 0.004265036 0.006430884 0.9893041
-4 0.003275396 0.005065183 0.9916594
-5 0.001606855 0.002468263 0.9959249
-6 0.009344883 0.015285980 0.9753691</code></pre>
+<pre><code>            1         2           3
+1 0.002333836 0.9961596 0.001506519
+2 0.003508783 0.9942334 0.002257787
+3 0.006430862 0.9893041 0.004265036
+4 0.005065157 0.9916595 0.003275391
+5 0.002468258 0.9959249 0.001606857
+6 0.015285858 0.9753693 0.009344842</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(result.c<span class="sc">$</span>cluster, iris<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
     setosa versicolor virginica
-  1      0          2        37
-  2      0         48        13
-  3     50          0         0</code></pre>
+  1      0         48        13
+  2     50          0         0
+  3      0          2        37</code></pre>
 </div>
 </div>
 <p><code>fuzzy c-means</code>は<code>e1071</code>パッケージに含まれている。 モデルの指定の時に，ファジィ度パラメータ<code>m</code>を指定する。通常1.5から3程度で，大きいほど曖昧さをゆるす。 出力として<code>membership</code>という所属確率が返される。この所属確率が最大のものをハードな分類として使用することができる。</p>
@@ -702,10 +705,11 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <p>これを実装したパッケージ<code>exametrika</code>とそのサンプルコードをみて，実践例を見てみよう。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>result.Ranklustering <span class="ot">&lt;-</span> <span class="fu">Biclustering</span>(J35S515, </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">nfld =</span> <span class="dv">5</span>, <span class="at">ncls =</span> <span class="dv">6</span>, </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">method =</span> <span class="st">"R"</span>,<span class="at">verbose =</span> F)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"Array"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>result.Ranklustering <span class="ot">&lt;-</span> <span class="fu">Biclustering</span>(J35S515,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfld =</span> <span class="dv">5</span>, <span class="at">ncls =</span> <span class="dv">6</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"R"</span>, <span class="at">verbose =</span> F</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"Array"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -748,22 +752,24 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(eurodist, <span class="at">k =</span> <span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 美しいプロットの作成</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result[,<span class="dv">1</span>], result[,<span class="dv">2</span>], </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">"n"</span>,  <span class="co"># 点は描かずにプロット領域だけ作成</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"次元1"</span>, <span class="at">ylab =</span> <span class="st">"次元2"</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"ヨーロッパ都市間の多次元尺度構成法"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.main =</span> <span class="fl">1.2</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab =</span> <span class="fl">1.1</span>)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 都市名をラベルとして表示</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(result[,<span class="dv">1</span>], result[,<span class="dv">2</span>], </span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> <span class="fu">rownames</span>(result),</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex =</span> <span class="fl">0.8</span>,</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">font =</span> <span class="dv">2</span>)</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co"># グリッドを追加</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result[, <span class="dv">1</span>], result[, <span class="dv">2</span>],</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"n"</span>, <span class="co"># 点は描かずにプロット領域だけ作成</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元1"</span>, <span class="at">ylab =</span> <span class="st">"次元2"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"ヨーロッパ都市間の多次元尺度構成法"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.main =</span> <span class="fl">1.2</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.lab =</span> <span class="fl">1.1</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 都市名をラベルとして表示</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(result[, <span class="dv">1</span>], result[, <span class="dv">2</span>],</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">rownames</span>(result),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="fl">0.8</span>,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="dv">2</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co"># グリッドを追加</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -776,7 +782,7 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <p><code>eudodist</code>は実際の距離データであるから，比率尺度水準の誤差のないデータと見做せるだろう。しかし，心理学的な応用場面においては，比率尺度水準のデータや誤差のないデータは考えにくい。このとき用いられるのが，非計量MDSである。これを簡単に言えば，データの持つ大小関係を反映した多次元空間に対象を付置する(地図の座標を与える)ものである。すなわち，対象<span class="math inline">\(i\)</span>と<span class="math inline">\(j\)</span>の距離を<span class="math inline">\(d_{ij}\)</span>と表すとすると， <span class="math display">\[ d_{ij} &lt; d_{kl} \to \delta_{ij} &lt; \delta_{kl} \]</span></p>
 <p>という関係が保持されるような座標<span class="math inline">\(\delta_{ij}\)</span>を求めるものである。非計量MDSのはしりであったKruscalの方法は，データとの適合を表すstress値として， <span class="math display">\[ \sum_{i&gt;j} e_{ij}^2 = \sum_{ij} (\delta_{ij}-d_{ij})^2 \]</span></p>
 <p>という最適化関数を最小化するように座標を求める。最適化関数は多くの研究者によって様々に提唱されており，Rでは便利なパッケージ<code>smacof</code>のアルゴリズム(Scaling by Majorizing a COmplicated Function)による実行がいいだろう。</p>
-<p>実例で見てみよう。<code>smacof</code>パッケージの持つ<code>ekman</code>データセットを用いる。これは5段階で色の類似度評定をしてもらったデータである。</p>
+<p>実例で見てみよう。<code>smacof</code>パッケージの持つ<code>FaceExp</code>データセットを用いる。これは顔表情の類似度評定データで、異なる表情間の知覚的類似性を測定したものである。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(smacof)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -784,24 +790,25 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>dimensions <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">10</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>stress_values <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(dimensions))</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(dimensions)) {</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  result_temp <span class="ot">&lt;-</span> <span class="fu">mds</span>(ekman, <span class="at">ndim =</span> dimensions[i], <span class="at">type =</span> <span class="st">"ordinal"</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(dimensions)) {</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  result_temp <span class="ot">&lt;-</span> <span class="fu">mds</span>(FaceExp, <span class="at">ndim =</span> dimensions[i], <span class="at">type =</span> <span class="st">"ordinal"</span>)</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  stress_values[i] <span class="ot">&lt;-</span> result_temp<span class="sc">$</span>stress</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>stress_values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.27060516 0.17782850 0.13731874 0.10892906 0.07481835 0.04617915 0.02979180
-[8] 0.01904375 0.01904375</code></pre>
+<pre><code>[1] 0.106248100 0.059778016 0.035605225 0.019262481 0.011722294 0.007084647
+[7] 0.007084647 0.007084647 0.007084647</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ストレス値のプロット</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dimensions, stress_values, </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">16</span>, </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"次元数"</span>, <span class="at">ylab =</span> <span class="st">"ストレス値"</span>,</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"次元数とストレス値の関係"</span>,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.main =</span> <span class="fl">1.1</span>,</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab =</span> <span class="fl">1.0</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dimensions, stress_values,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元数"</span>, <span class="at">ylab =</span> <span class="st">"ストレス値"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"次元数とストレス値の関係（顔表情データ）"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.main =</span> <span class="fl">1.1</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.lab =</span> <span class="fl">1.0</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -810,58 +817,451 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 </div>
 </div>
 </div>
-<p>ここでは次元数を様々に変えて，適合度指標であるストレス値を得てプロットしている。</p>
+<p>ここでは次元数を様々に変えて，適合度指標であるストレス値を得てプロットしている。一般的に，ストレス値が0.05以下なら優秀，0.1以下なら良好，0.2以下なら普通とされる。</p>
+<p>プロットや値を見てみると，3次元でも十分な解が得られそうだ。改めて3次元であることを指定して分析し，プロットしてみよう。なお，<code>mds</code>関数の<code>type</code>引数に順序尺度水準であることを明記することで，適切な分析が行われる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5次元でのMDS結果</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mds</span>(ekman, <span class="at">ndim =</span> <span class="dv">5</span>, <span class="at">type =</span> <span class="st">"ordinal"</span>)</span>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3次元でのMDS結果</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mds</span>(FaceExp, <span class="at">ndim =</span> <span class="dv">3</span>, <span class="at">type =</span> <span class="st">"ordinal"</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-mds(delta = ekman, ndim = 5, type = "ordinal")
+mds(delta = FaceExp, ndim = 3, type = "ordinal")
 
 Model: Symmetric SMACOF 
-Number of objects: 14 
-Stress-1 value: 0.109 
-Number of iterations: 257 </code></pre>
+Number of objects: 13 
+Stress-1 value: 0.06 
+Number of iterations: 73 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2次元MDSの可視化</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>conf[,<span class="dv">1</span>], result<span class="sc">$</span>conf[,<span class="dv">2</span>], </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">"n"</span>,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"次元1"</span>, <span class="at">ylab =</span> <span class="st">"次元2"</span>,</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"色彩知覚のMDS（2次元）</span><span class="sc">\n</span><span class="st">Stress ="</span>, <span class="fu">round</span>(result<span class="sc">$</span>stress, <span class="dv">3</span>)),</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.main =</span> <span class="fl">1.1</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab =</span> <span class="fl">1.0</span>)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 色の名前をラベルとして表示</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(result<span class="sc">$</span>conf[,<span class="dv">1</span>], result<span class="sc">$</span>conf[,<span class="dv">2</span>], </span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> <span class="fu">rownames</span>(result<span class="sc">$</span>conf),</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex =</span> <span class="fl">0.8</span>,</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"darkred"</span>,</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">font =</span> <span class="dv">2</span>)</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co"># グリッドを追加</span></span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3次元MDSの可視化（3つの2次元プロット）</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元1 vs 次元2</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>conf[, <span class="dv">1</span>], result<span class="sc">$</span>conf[, <span class="dv">2</span>],</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元1"</span>, <span class="at">ylab =</span> <span class="st">"次元2"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"次元1 vs 次元2</span><span class="sc">\n</span><span class="st">Stress ="</span>, <span class="fu">round</span>(result<span class="sc">$</span>stress, <span class="dv">3</span>)),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.main =</span> <span class="fl">1.0</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.lab =</span> <span class="fl">0.9</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(result<span class="sc">$</span>conf[, <span class="dv">1</span>], result<span class="sc">$</span>conf[, <span class="dv">2</span>],</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">rownames</span>(result<span class="sc">$</span>conf),</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="fl">0.7</span>,</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="dv">2</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="chapter15_files/figure-html/smacof2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="chapter15_files/figure-html/smacof2-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元1 vs 次元3</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>conf[, <span class="dv">1</span>], result<span class="sc">$</span>conf[, <span class="dv">3</span>],</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元1"</span>, <span class="at">ylab =</span> <span class="st">"次元3"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"次元1 vs 次元3</span><span class="sc">\n</span><span class="st">Stress ="</span>, <span class="fu">round</span>(result<span class="sc">$</span>stress, <span class="dv">3</span>)),</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.main =</span> <span class="fl">1.0</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.lab =</span> <span class="fl">0.9</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(result<span class="sc">$</span>conf[, <span class="dv">1</span>], result<span class="sc">$</span>conf[, <span class="dv">3</span>],</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">rownames</span>(result<span class="sc">$</span>conf),</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="fl">0.7</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="dv">2</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter15_files/figure-html/smacof2-2.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元2 vs 次元3</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>conf[, <span class="dv">2</span>], result<span class="sc">$</span>conf[, <span class="dv">3</span>],</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元2"</span>, <span class="at">ylab =</span> <span class="st">"次元3"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"次元2 vs 次元3</span><span class="sc">\n</span><span class="st">Stress ="</span>, <span class="fu">round</span>(result<span class="sc">$</span>stress, <span class="dv">3</span>)),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.main =</span> <span class="fl">1.0</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.lab =</span> <span class="fl">0.9</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(result<span class="sc">$</span>conf[, <span class="dv">2</span>], result<span class="sc">$</span>conf[, <span class="dv">3</span>],</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">rownames</span>(result<span class="sc">$</span>conf),</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="fl">0.7</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="dv">2</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter15_files/figure-html/smacof2-3.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result<span class="sc">$</span>conf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                          D1          D2          D3
+Grief at death of mother          0.28389211 -0.35088341 -0.04383041
+Savoring a Coke                  -0.30306573  0.10620276 -0.29595552
+Very pleasant surprise           -0.71552867  0.56031573 -0.04008618
+Maternal love-baby in arms       -0.63827700 -0.09006026  0.02975313
+Physical exhaustion              -0.01879485 -0.49089080 -0.21059225
+Something wrong with plane        0.40829233 -0.05617713 -0.38685372
+Anger at seeing dog beaten        0.90768476  0.20575384 -0.18027858
+Pulling hard on seat of chair    -0.28180980  0.41937543  0.23764181
+Unexpectedly meets old boyfriend -0.65807066  0.18760808 -0.15097801
+Revulsion                         0.32995517 -0.40195569  0.32170945
+Extreme pain                      0.27856073 -0.05436048  0.46450844
+Knows plane will crash            0.67130146  0.61301964  0.04768550
+Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre>
+</div>
+</div>
+<p>このプロットから，顔表情間の知覚的類似性の構造を読み取ることができる。第一次元は快不快（valence）、第二次元は覚醒度（arousal）、第三次元は自然性（naturalness）を表していると解釈できる。</p>
+<p>より客観的な命名がしたい場合，座標と外部変数との相関などを求めて考える。相関係数はベクトルの角度に基づく<span class="math inline">\(\cos(\theta)\)</span>であり，軸上に外部変数の補助線を引くなどすればわかりやすい。こうした方法については， <span class="citation" data-cites="kosugi2016a">グリム and ヤーノルド (<a href="references.html#ref-kosugi2016a" role="doc-biblioref">[1994] 2016</a>)</span> に詳しい。</p>
 </section>
 </section>
 <section id="共頻行列を用いるもの" class="level2" data-number="15.2">
 <h2 data-number="15.2" class="anchored" data-anchor-id="共頻行列を用いるもの"><span class="header-section-number">15.2</span> 共頻行列を用いるもの</h2>
+<p>続いて共頻行列に基づく分析について考えてみよう。 共頻行列とはカテゴリカルなデータのクロス表であり，カテゴリが同時に生起していることを表す。このことが当該カテゴリの近さを表す共変量だとして分析を行う。</p>
+<p>カテゴリカルなデータであるから，応用範囲は広い。よく知られているのがテキストマイニングにおける応用例である。</p>
+<section id="テキストマイニングとは" class="level3" data-number="15.2.1">
+<h3 data-number="15.2.1" class="anchored" data-anchor-id="テキストマイニングとは"><span class="header-section-number">15.2.1</span> テキストマイニングとは</h3>
+<p>テキストマイニングとは自然言語データを統計的に処理するための，一連の技法の名称である。小説やWeb上の記事，自由記述回答や逐語録など自由に書かれた自然無言語表現を統計的に処理し，そこから意味のある知見を引き出す。</p>
+<p>日本語のテキストマイニングは，基本的に形態素解析＋多変量解析の技術の総称であると言える。日本語は英語をはじめとする単語で分かち書きされる文章とは違い，一連の文字列から品詞ごとに文章を区分する必要がある。この文章から品詞の切り分け，活用前の原型を抽出するなどの操作を形態素解析という。形態素解析には日本語辞書に基づく形態素解析エンジンが必要で，MECABやJANOME，ChaSenなどが知られている。これらをRやPythonで扱うためのパッケージも存在する。</p>
+<p>形態素解析によって，文章の中に当該単語が何回出現したかを表す文書単語行列を作成する。これは一般に，単語の数が非常に多くなるから疎な矩形行列になる。この矩形行列を対象に特異値分解を行なったり，単語<span class="math inline">\(\times\)</span>単語の(正方)共頻行列にすることで，多変量解析の対象となる。</p>
+<p>多変量解析モデルはどのようなものでもよく，ここで紹介したクラスター分析や多次元尺度法などがよく用いられる。行列のサイズが大きくなりがちなので，一般的な多変量解析では少ない次元での適合度が悪くなりがちである。ある程度は適合度を諦めて可視化のために低次元にするか，自己組織化マップ(Self-Organization Mapping)<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>などのアプローチで強制的に分類・可視化する方法などがとられることが多い。</p>
+<p>多変量解析で分析することももちろん可能だが，ビッグデータと機械学習の組み合わせにより，形態素ではなくトークン<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>を単位に用いることも多い。</p>
+<p>ここでは形態素解析によるテキストマイニングの例を見てみよう。 Rで形態素解析をするには，<code>RMeCab</code>パッケージを用いることが多い。最新版は作者のGithubサイト<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> から導入するのがいいだろう。まずは形態素解析エンジン<code>Mecab</code>をインストールし，その後で<code>RMecab</code>をインストールする<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>。詳しくは作者のサイト<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>を参照して欲しい。</p>
+<p>最近はこの一連の手間を省いてくれる，<code>gibasa</code>というパッケージがある。<code>gibasa</code>はCRANに登録されており，内部でMeCabのバイナリファイルを含んでいるので，外部ファイルを準備する必要がない仕組みになっている<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>。ここではこのパッケージを使った例を見てみよう。</p>
+<p>パッケージを読み込んで，適当な文章を形態素解析してみよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, gibasa)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="st">"私は昨日，カフェでコーヒーを飲んだ。"</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> gibasa<span class="sc">::</span><span class="fu">tokenize</span>(text)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 11 × 5
+   doc_id sentence_id token_id token    feature                                 
+   &lt;fct&gt;        &lt;int&gt;    &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;                                   
+ 1 1                1        1 私       名詞,代名詞,一般,*,*,*,私,ワタクシ,ワタクシ……
+ 2 1                1        2 は       助詞,係助詞,*,*,*,*,は,ハ,ワ            
+ 3 1                1        3 昨日     名詞,副詞可能,*,*,*,*,昨日,キノウ,キノー
+ 4 1                1        4 ，       記号,読点,*,*,*,*,，,，,，              
+ 5 1                1        5 カフェ   名詞,一般,*,*,*,*,カフェ,カフェ,カフェ  
+ 6 1                1        6 で       助詞,格助詞,一般,*,*,*,で,デ,デ         
+ 7 1                1        7 コーヒー 名詞,一般,*,*,*,*,コーヒー,コーヒー,コーヒー……
+ 8 1                1        8 を       助詞,格助詞,一般,*,*,*,を,ヲ,ヲ         
+ 9 1                1        9 飲ん     動詞,自立,*,*,五段・マ行,連用タ接続,飲む,ノン,ノン……
+10 1                1       10 だ       助動詞,*,*,*,特殊・タ,基本形,だ,ダ,ダ   
+11 1                1       11 。       記号,句点,*,*,*,*,。,。,。              </code></pre>
+</div>
+</div>
+<p><code>tokenize</code>関数によって文字列が品詞ごとに区分され，またその特徴が<code>feature</code>列に入っていることがわかるだろう。 この<code>feature</code>列に入っているのは<code>gibasa</code>が内蔵する<code>MeCab</code>の戻り値であり，このラベルを整理するためには<code>prettify</code>関数を用いる。</p>
+<p>また，実際のテキストマイニングにおいては助詞や記号は使いにくいし，動詞も活用する前の原型で考えるほうがいいだろう。 これらをパイプ演算子で繋ぎながら処理すると次のようになる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>gibasa<span class="sc">::</span><span class="fu">prettify</span>(dat, <span class="at">col_select =</span> <span class="fu">c</span>(<span class="st">"POS1"</span>, <span class="st">"Original"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(POS1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"名詞"</span>, <span class="st">"動詞"</span>, <span class="st">"形容詞"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  doc_id sentence_id token_id token    POS1  Original
+  &lt;fct&gt;        &lt;int&gt;    &lt;int&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;   
+1 1                1        1 私       名詞  私      
+2 1                1        3 昨日     名詞  昨日    
+3 1                1        5 カフェ   名詞  カフェ  
+4 1                1        7 コーヒー 名詞  コーヒー
+5 1                1        9 飲ん     動詞  飲む    </code></pre>
+</div>
+</div>
+<p>ここでは1つの文だけで分析を行ったが，次に実際のテキストマイニングの例として，京都ラーメンに関する感想文を使った分析例を見てみよう。</p>
+<p>ここでの処理の流れは次のとおりである。</p>
+<ol type="1">
+<li>文章を形態素に分割する</li>
+<li>文章ごとに単語の出現度数を書いた文書<span class="math inline">\(\times\)</span>単語行列をつくる(<code>dtm</code>)</li>
+<li>文書単語行列から単語<span class="math inline">\(\times\)</span>単語の距離行列を作る</li>
+<li>距離行列を対象に計量MDSを使って可視化</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 京都ラーメンに関する感想文データの作成</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>ramen_reviews <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"京都ラーメンは意外とコッテリしたのが多いんだよね。"</span>,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"濃厚なスープと細麺の組み合わせが絶妙で美味しかった。"</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ドロドロとした鶏ガラベースのスープが京都らしくて好み。"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"老舗のラーメンは深いコクがあり，麺との絡みが良くて好き。"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"京都駅近くの店で食べた醤油ラーメンのチャーシューが柔らかくて最高。"</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"京都ラーメンといえば天下一品のコッテリが魅力的。"</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"背脂がたっぷりのラーメンも京都で食べると格別だった。"</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"細麺とスープのバランスが絶妙で，また食べたくなる味。"</span>,</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"京都らしい濃い醤油ラーメンに九条ネギがよく合っていた。"</span>,</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"老舗の店主が作る丁寧なラーメンは心に残る味わいだった。"</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co"># トークン化して，品詞を選び出し，文章ごとにカウントする</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>dat_count <span class="ot">&lt;-</span> ramen_reviews <span class="sc">|&gt;</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># テキストを形態素に分解（単語・品詞・活用形など）</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  gibasa<span class="sc">::</span><span class="fu">tokenize</span>() <span class="sc">|&gt;</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 品詞情報と原型を選択・整理</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>  gibasa<span class="sc">::</span><span class="fu">prettify</span>(<span class="at">col_select =</span> <span class="fu">c</span>(<span class="st">"POS1"</span>, <span class="st">"Original"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 分析対象を名詞・形容詞に限定</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(POS1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"名詞"</span>, <span class="st">"形容詞"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># データ変換処理</span></span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">doc_id =</span> forcats<span class="sc">::</span><span class="fu">fct_drop</span>(doc_id),</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 原型がある場合は原型を、ない場合は現在の形を使用</span></span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(Original), token, Original)</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 文書ID別・単語別に出現回数をカウント</span></span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, token)</span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 文章単語行列の作成</span></span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>dtm <span class="ot">&lt;-</span> dat_count <span class="sc">|&gt;</span></span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> doc_id,</span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> token,</span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> n,</span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span> <span class="co"># 欠損値（その文書にその単語が出現しない）を0で埋める</span></span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>dtm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 45
+   doc_id    の    ん コッテリ ラーメン  京都  多い スープ  濃厚    細
+   &lt;fct&gt;  &lt;int&gt; &lt;int&gt;    &lt;int&gt;    &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;
+ 1 1          1     1        1        1     1     1      0     0     0
+ 2 2          0     0        0        0     0     0      1     1     1
+ 3 3          0     0        0        0     1     0      1     0     0
+ 4 4          0     0        0        1     0     0      0     0     0
+ 5 5          0     0        0        1     1     0      0     0     0
+ 6 6          0     0        1        1     1     0      0     0     0
+ 7 7          0     0        0        1     1     0      0     0     0
+ 8 8          0     0        0        0     0     0      1     0     1
+ 9 9          0     0        0        1     1     0      0     0     0
+10 10         0     0        0        1     0     0      0     0     0
+# ℹ 35 more variables: 組み合わせ &lt;int&gt;, 絶妙 &lt;int&gt;, 美味しい &lt;int&gt;, 麺 &lt;int&gt;,
+#   ガラベース &lt;int&gt;, 好み &lt;int&gt;, 鶏 &lt;int&gt;, コク &lt;int&gt;, 好き &lt;int&gt;, 深い &lt;int&gt;,
+#   老舗 &lt;int&gt;, 良い &lt;int&gt;, チャーシュー &lt;int&gt;, 店 &lt;int&gt;, 最高 &lt;int&gt;,
+#   柔らかい &lt;int&gt;, 近く &lt;int&gt;, 醤油 &lt;int&gt;, 駅 &lt;int&gt;, 天下一品 &lt;int&gt;, 的 &lt;int&gt;,
+#   魅力 &lt;int&gt;, 格別 &lt;int&gt;, 背 &lt;int&gt;, 脂 &lt;int&gt;, バランス &lt;int&gt;, 味 &lt;int&gt;,
+#   ネギ &lt;int&gt;, 九 &lt;int&gt;, 条 &lt;int&gt;, 濃い &lt;int&gt;, 丁寧 &lt;int&gt;, 味わい &lt;int&gt;,
+#   店主 &lt;int&gt;, 心 &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>distance_matrix <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(dtm[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 多次元尺度構成法（MDS）の実行</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>mds_result <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(distance_matrix, <span class="at">k =</span> <span class="dv">2</span>) <span class="co"># 2次元での古典的MDS</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplotで可視化（ggrepelを使用してラベル重複を回避）</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(ggrepel) <span class="co"># ラベル重複回避のためのパッケージ</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># MDS結果をデータフレームに変換</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>mds_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim1 =</span> mds_result[, <span class="dv">1</span>], <span class="co"># 第1次元の座標</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim2 =</span> mds_result[, <span class="dv">2</span>], <span class="co"># 第2次元の座標</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">word =</span> <span class="fu">rownames</span>(mds_result) <span class="co"># 単語名</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplotで散布図を作成</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mds_df, <span class="fu">aes</span>(<span class="at">x =</span> dim1, <span class="at">y =</span> dim2)) <span class="sc">+</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span> <span class="co"># 点をプロット</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>( <span class="co"># ggrepelを使用してラベル重複を回避</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> word), <span class="co"># 単語をラベルとして表示</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>, <span class="co"># ラベルサイズ</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="co"># ラベル色</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="co"># 太字</span></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">box.padding =</span> <span class="fl">0.3</span>, <span class="co"># ラベル周りの余白</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">point.padding =</span> <span class="fl">0.3</span>, <span class="co"># 点周りの余白</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.overlaps =</span> <span class="cn">Inf</span> <span class="co"># 重複制限なし</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"ラーメンレビュー単語の多次元尺度構成法"</span>,</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"次元1"</span>,</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"次元2"</span></span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="co"># シンプルなテーマ</span></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">14</span>), <span class="co"># タイトル中央寄せ</span></span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_line</span>(<span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"lightgray"</span>) <span class="co"># グリッド線</span></span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter15_files/figure-html/textminig_example-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ここでプロットされているのは，単語同士の類似度が近いものは近くに，遠いものは遠くにプロットされる地図である。これをみると，「麺」と「スープ」や「組み合わせ」「バランス」といった言葉が近くに付置されており，関係が深そうなことが読み取れる。</p>
+<p>ただし，「九条ネギ」が「九」と「条」に別れているように，機械的に分解することの限界もあり，こうした場合は辞書を変更したり，特定の単語・専門用語などを強制的に取り出すような工夫をする必要がある。形態素解析を経由したテキストマイニングは，多変量解析に入る前の事前クリーニングにかなりの労力を要することが少なくない。</p>
+<p>また，今回は10件程度の例であったが，基本的にテキストマイニングは膨大なデータや学習された辞書をもちいることが主流になってきている。これは生成AIとの相性もよく(生成AIはすでに自然言語についてある程度学習済みのものとも言える)，形態素解析や統計モデルを経ないテキストマイニングがこれから主流になってくるかもしれない。</p>
+</section>
 </section>
 <section id="偏相関行列を用いるもの" class="level2" data-number="15.3">
 <h2 data-number="15.3" class="anchored" data-anchor-id="偏相関行列を用いるもの"><span class="header-section-number">15.3</span> 偏相関行列を用いるもの</h2>
+<p>最後に偏相関行列を用いる統計モデルを紹介しておこう。</p>
+<p>(ピアソンの)相関行列は多くの線形モデルで多用されているが，変数<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>の背後に，両者に影響する<span class="math inline">\(Z\)</span>がある場合，見掛け上相関が高くなっているが，<span class="math inline">\(Z\)</span>の影響を除外する(統計的に統制する)とそれほど相関が高くない，ということもあり得る。</p>
+<p>この統計的に統制するというのは，<span class="math inline">\(X\)</span>を<span class="math inline">\(Z\)</span>で回帰して得られた残差<span class="math inline">\(R_x\)</span>と，<span class="math inline">\(Y\)</span>を<span class="math inline">\(Z\)</span>で回帰して得られた残差<span class="math inline">\(R_y\)</span>との相関であり，偏相関と呼ばれる。この相関の方が，本来的な関係を捉えていると言えるかもしれない。ここでは<span class="math inline">\(X,Y\)</span>の2変数の例であったが，多変量の相関行列に関しても同様に当該2変数以外の変数で(重)回å帰をし，その残差同士の相関を出した偏相関行列を考えることができる。これは逐一回帰分析をしなくても，次のような行列演算で一括して求めることができる。</p>
+<p>相関行列を<span class="math inline">\(\mathbf{R}\)</span>とすると，偏相関行列<span class="math inline">\(\mathbf{P}\)</span>の要素は次の式で計算される： <span class="math display">\[p_{ij} = -\frac{r^{ij}}{\sqrt{r^{ii} r^{jj}}}\]</span></p>
+<p>ここで<span class="math inline">\(r^{ij}\)</span>は相関行列の逆行列<span class="math inline">\(\mathbf{R}^{-1}\)</span>の<span class="math inline">\((i,j)\)</span>要素である。</p>
+<p>さて，因子分析は相関行列から始めて関係の強いところを因子にまとめるというイメージだが，この手順を反転させて，偏相関行列の関係の弱いところの繋がりをカットする，という方法で，純粋な変数間関係だけ残るようにして可視化する方法がある。</p>
+<p>この分析方法は<strong>グラフィカルモデリング</strong>と呼ばれる。量的な変数の場合は偏相関行列から，質的な変数の場合でも多元分割行列から，変数間の条件付き独立性を検証する方法で進められる。可視化の手段として，変数間関係をノードとタイからなるネットワークで表現することから，最近では<strong>ネットワーク分析</strong>と呼ばれることもある。</p>
+<p>心理学においては，因子が心理学的構成概念だと捉えられることが多い。しかし，構成概念とはそもそも単体でそこに「ある」ものではなく，いろいろな現象の総合的な全体である，というシステム論的な観点によれば，このネットワーク分析的なアプローチの方が適しているかもしれない。この理論的な体系と方法論の合体については，<span class="citation" data-cites="Network2024">アデラ＝マリア et al. (<a href="references.html#ref-Network2024" role="doc-biblioref">[2022] 2024</a>)</span> を参考にしてほしい。</p>
+<p>具体的な例で見てみよう。 例えば，性格検査のBig5データを使って相関行列と，その偏相関行列を見てみよう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(psych, corrplot, RColorBrewer)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Big5性格データの読み込み（最初の25項目のみ使用）</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>bfi <span class="ot">&lt;-</span> psych<span class="sc">::</span>bfi[, <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>]</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>bfi_clean <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(bfi) <span class="co"># 欠損値を除去</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 相関行列の計算</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(bfi_clean)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 偏相関行列の計算（行列演算で実行）</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>R_inv <span class="ot">&lt;-</span> <span class="fu">solve</span>(cor_matrix) <span class="co"># 相関行列の逆行列を計算</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 偏相関行列の各要素を計算</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>partial_cor_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="fu">nrow</span>(R_inv), <span class="at">ncol =</span> <span class="fu">ncol</span>(R_inv))</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(R_inv)) {</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(R_inv)) {</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i <span class="sc">!=</span> j) {</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>      <span class="co"># 偏相関の公式: p_ij = -r^ij / sqrt(r^ii * r^jj)</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>      partial_cor_matrix[i, j] <span class="ot">&lt;-</span> <span class="sc">-</span>R_inv[i, j] <span class="sc">/</span> <span class="fu">sqrt</span>(R_inv[i, i] <span class="sc">*</span> R_inv[j, j])</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 対角要素は1に設定</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(partial_cor_matrix) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 行名・列名を設定</span></span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(partial_cor_matrix) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(cor_matrix)</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(partial_cor_matrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(cor_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 相関行列と偏相関行列の比較表示</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 相関行列ヒートマップ</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(cor_matrix, </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"color"</span>,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">order =</span> <span class="st">"alphabet"</span>, <span class="co"># 同じ順序で比較</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.cex =</span> <span class="fl">0.6</span>,</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"black"</span>,</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">8</span>, <span class="at">name =</span> <span class="st">"RdYlBu"</span>),</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"相関行列"</span>,</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>),</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">cl.pos =</span> <span class="st">"n"</span>) <span class="co"># カラーバーを非表示</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 偏相関行列ヒートマップ</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(partial_cor_matrix, </span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"color"</span>, <span class="co"># 色で偏相関の強さを表示</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">order =</span> <span class="st">"alphabet"</span>, <span class="co"># アルファベット順で表示（相関行列と同じ順序で比較）</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.cex =</span> <span class="fl">0.6</span>, <span class="co"># 変数名のテキストサイズ</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="co"># 変数名の色</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">8</span>, <span class="at">name =</span> <span class="st">"RdYlBu"</span>), <span class="co"># 青-黄-赤のカラーパレット</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"偏相関行列"</span>, <span class="co"># 図のタイトル</span></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>)) <span class="co"># 図の余白設定（下，左，上，右）</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter15_files/figure-html/compare_heatmaps-1.png" class="img-fluid figure-img" width="1440"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="co">#環境を元に戻す</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>相関行列と偏相関行列を並べてみると，所々相関のパターンが違うところが見える。</p>
+<p>さて，ネットワークの表現をするには相関行列でも偏相関行列でも構わないのだが，一応ここでは偏相関行列を誓ったネットワークを見てみよう。</p>
+<p>ここでは<code>qgraph</code>パッケージを用いている。 この関数のオプションとして，推定に<code>glasso</code>を用いているが，ガウシアングラフィカルモデルの一種で，L1正則化(lasso)を行い重要でない変数間の関係を0にするモデルである。これでBICを基準に不要なパスをカットして描画される。描画のレイアウトオプションは<code>spring</code>だが，これはなるべく自然な配置にしてくれる方法であり，他にもいろいろなオプションがあり得る。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(qgraph)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>BICgraph <span class="ot">&lt;-</span> <span class="fu">qgraph</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  partial_cor_matrix, <span class="co"># 偏相関行列を入力データとして使用</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">graph =</span> <span class="st">"glasso"</span>, </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sampleSize =</span> <span class="fu">nrow</span>(bfi), <span class="co"># サンプルサイズを指定（統計的有意性の判定に使用）</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuning =</span> <span class="dv">0</span>, <span class="co"># 正則化パラメータ（0=BIC基準で自動選択、大きいほどスパース）</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">"spring"</span>, </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"BIC"</span>, <span class="co"># グラフのタイトル</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="cn">TRUE</span>, <span class="co"># 弱い結合を除去してスパースなネットワークを作成</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">details =</span> <span class="cn">TRUE</span> <span class="co"># 詳細な出力情報を表示</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Note: Network with lowest lambda selected as best network: assumption of sparsity might be violated.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter15_files/figure-html/glasso-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>さて，ネットワーク分析は「これが因子！」のような特定の何かに帰着するのではなく，全体像をそのまま見て捉えることが特徴的である。しかしそれでは何がなんだか分かりにくいということもあろう。ということで，ネットワークの中心がどこにあるのか，どのノードとどのノードの結びつきが強いのか，といったことを指標とする。これらは中心性指数と呼ばれ，次のコードで可視化される。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">centralityPlot</span>(</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">BIC =</span> BICgraph),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">include =</span> <span class="st">"all"</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter15_files/figure-html/centrality-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ここで示されている各指標の意味は次のとおり。</p>
+<ol type="1">
+<li>Strength（強度）</li>
+</ol>
+<ul>
+<li>ノードに接続しているエッジの重みの合計</li>
+<li>ネットワークでは、そのノードが他のノードとどれだけ強く関連しているかを表す</li>
+<li>次の式で計算される。<span class="math inline">\(strength = \sum | w_{ij}|\)</span>（絶対値の和）</li>
+</ul>
+<ol start="2" type="1">
+<li>Closeness（近接中心性）</li>
+</ol>
+<ul>
+<li>他の全てのノードまでの最短距離の逆数</li>
+<li>そのノードが他の全てのノードにどれだけ「近い」かを測定</li>
+<li>情報伝播や影響の広がりやすさを表すといえる</li>
+<li>距離の合計の逆数であり，次の式で計算される。<span class="math inline">\(closeness = \frac{1}{\sum d_{ij}}\)</span></li>
+</ul>
+<ol start="3" type="1">
+<li>Betweenness（媒介中心性）</li>
+</ol>
+<ul>
+<li>他のノード間の最短経路上にそのノードが位置する頻度であり，「橋渡し」の役割を果たすノードを特定する。</li>
+<li>ネットワークでは症状間の連鎖反応の「ハブ」を表す</li>
+</ul>
+<ol start="4" type="1">
+<li>Expected Influence（期待影響力）</li>
+</ol>
+<ul>
+<li>strengthの改良版で、正と負のエッジを区別したもの</li>
+<li>正のエッジは加算、負のエッジは減算。ここでは抑制関係も考慮した真の「影響力」を測定していると考えられる。</li>
+</ul>
+<p>ネットワークモデルは，推定法もいろいろ工夫されているし，動的なモデル，時系列モデルなども扱える。今後の発展が楽しみな分析方法の一つと言えるだろう。</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-TDE2022" class="csl-entry" role="listitem">
 Shojima, Kojiro. 2022. <em>Test Data Engineering: Latent Rank Analysis, Biclustering, and Bayesian Network</em>. Springer.
+</div>
+<div id="ref-Network2024" class="csl-entry" role="listitem">
+アデラ＝マリアイスヴォラヌ, サシャエプスカンプ, ローレンスウォルドープ, and デニーボースブーム. (2022) 2024. <em>心理ネットワークアプローチ入門:行動科学者と社会科学者のためのガイド</em>. Translated by 樫原潤 and 小杉考司. 勁草書房.
+</div>
+<div id="ref-kosugi2016a" class="csl-entry" role="listitem">
+グリムL. G., and ヤーノルドP. R. (1994) 2016. <em>研究論文を読み解くための多変量解析入門 基礎篇: 重回帰分析からメタ分析まで</em>. Translated by 小杉考司, 高田菜美, and 山根嵩史. 北大路書房.
 </div>
 <div id="ref-Takane198002" class="csl-entry" role="listitem">
 高根芳雄. 1980. <em>多次元尺度法</em>. 東京大学出版会.
@@ -872,6 +1272,12 @@ Shojima, Kojiro. 2022. <em>Test Data Engineering: Latent Rank Analysis, Bicluste
 <hr>
 <ol>
 <li id="fn1"><p>バグがあるのになぜ修正しないのか，と思われるかもしれない。<code>ward.D</code>はRのバージョン3.0.3以前まで用いられていたが，ユーザからの指摘で正しく分散が計算されていないことが発覚。Rの基本関数に誤りがあったことを認め，戒めとするために元のコードを残している。Rはフリーでオープンなソフトウェアであり，無償ではあるが，フリーだからといっていけないのではなく，こうした自浄作用があることを示すための措置と思われる。ちなみに筆者が以前プロプライエタリな統計ソフトを使っていた時にもおかしな挙動を発見したことがある。メーカに指摘すると「次のバージョンでは修正されているのでそちらを新たに購入しろ」という回答であったため，そのソフトウェアから決別することにした。科学的営みにおいて，有償サポートがあることが真実を担保しない例である。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>自己組織化マップ（SOM）とは，Kohonen Mapとも呼ばれる。計算機科学社のKohonenによって開発された教師なし学習アルゴリズムの一種である。高次元データを2次元の格子上にマッピングし，データの構造を保持しながら可視化する手法である。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>トークンとは，機械学習においてテキストを構成する最小の意味単位であり，必ずしも形態素に限らず類似性をもとに区切られた数値ベクトルである。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>　RMecabのGithubサイト<a href="https://github.com/IshidaMotohiro/RMeCab">https://github.com/IshidaMotohiro/RMeCab</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>　Mecabの公式サイト<a href="http://taku910.github.io/mecab/">http://taku910.github.io/mecab/</a><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>　RMecabのGithubサイト<a href="https://github.com/IshidaMotohiro/RMeCab">https://github.com/IshidaMotohiro/RMeCab</a><a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>　gibasaの解説<a href="https://zenn.dev/paithiov909/articles/gibasa-intro">https://zenn.dev/paithiov909/articles/gibasa-intro</a><a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
