@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -89,14 +89,15 @@ div.csl-indent {
 <link href="./chapter14.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-231ef2f9d4ce3268f31ef752336c15d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -139,7 +140,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -180,7 +181,9 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">心理学統計実習</a> 
         <div class="sidebar-tools-main">
@@ -432,10 +435,10 @@ window.Quarto = {
 <p>結果は<em>デンドログラム</em>と呼ばれるツリー状のプロットで表されることが一般的で，適当なところで分割して利用する。適切なクラスター数に関する一般的な基準はほとんどなく，実用性に応じてツリーをカットすることが多い。</p>
 <p><code>iris</code>データによる実行例を示す。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d_matrix <span class="ot">&lt;-</span> <span class="fu">dist</span>(iris[, <span class="sc">-</span><span class="dv">5</span>], <span class="at">method =</span> <span class="st">"euclidean"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>result.h <span class="ot">&lt;-</span> <span class="fu">hclust</span>(d_matrix, <span class="at">method =</span> <span class="st">"ward.D2"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.h, <span class="at">main =</span> <span class="st">"Hierarchical Clustering Dendrogram"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.h, <span class="at">main =</span> <span class="st">"Hierarchical Clustering Dendrogram"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -457,8 +460,8 @@ window.Quarto = {
 <p>最もよく使われるのがウォード法で，実践的にもこの手法による分類が最も解釈しやすい。なお，<code>ward.D</code>オプションはバグがあるので用いないことが望ましく，バグを修正した<code>ward.D2</code>を用いること<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。</p>
 <p>得られたクラスターの結果は<code>cutree</code>関数で任意のクラスター数に分割できる。今回，<code>iris</code>データは3種類のirisがあることがわかっているので，クラスター数3にしてその分類精度を確認してみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(result.h, <span class="at">k =</span> <span class="dv">3</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(clusters, iris<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(result.h, <span class="at">k =</span> <span class="dv">3</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(clusters, iris<span class="sc">$</span>Species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        
 clusters setosa versicolor virginica
@@ -479,13 +482,13 @@ clusters setosa versicolor virginica
 </ol>
 <p>この方法は任意のクラス数に分類できること，大規模なデータであっても比較的早く収束することが利点である。 Rによるサンプルは以下のとおりである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result.k <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(d_matrix, <span class="at">centers =</span> <span class="dv">3</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(result.k<span class="sc">$</span>cluster, iris<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result.k <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(d_matrix, <span class="at">centers =</span> <span class="dv">3</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(result.k<span class="sc">$</span>cluster, iris<span class="sc">$</span>Species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
     setosa versicolor virginica
-  1      0         49        13
-  2     50          0         0
+  1     50          0         0
+  2      0         49        13
   3      0          1        37</code></pre>
 </div>
 </div>
@@ -496,24 +499,24 @@ clusters setosa versicolor virginica
 <p>ここまでのクラスタリングは，各個体がどのクラスターに所属するかが明確に定まっていたが，境界がそこまで明確でない中間的なデータ点もあるかもしれない。各データ点が1つのクラスターにのみ所属するという明確なクラスタリングのことを，ハードクラスタリングとかクリスプクラスタリングという。これに対して，各データ点が複数のクラスターに部分的に所属している，あるいは所属度が例えば0-1などの連続値で表現されるような，緩やかな所属をゆるするクラスタリングもあり，これらを総称してファジィクラスタリングとかソフトクラスタリングと呼ぶ。</p>
 <p>ファジィクラスタリングの例として，fuzzy c-means法を挙げる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(e1071)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(e1071)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>result.c <span class="ot">&lt;-</span> <span class="fu">cmeans</span>(d_matrix, <span class="at">centers =</span> <span class="dv">3</span>, <span class="at">m =</span> <span class="dv">2</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result.c<span class="sc">$</span>membership)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result.c<span class="sc">$</span>membership)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            1           2         3
-1 0.001506518 0.002333848 0.9961596
-2 0.002257793 0.003508814 0.9942334
-3 0.004265036 0.006430901 0.9893041
-4 0.003275400 0.005065203 0.9916594
-5 0.001606853 0.002468266 0.9959249
-6 0.009344915 0.015286074 0.9753690</code></pre>
+1 0.002333835 0.001506519 0.9961596
+2 0.003508778 0.002257786 0.9942334
+3 0.006430857 0.004265036 0.9893041
+4 0.005065151 0.003275389 0.9916595
+5 0.002468257 0.001606858 0.9959249
+6 0.015285828 0.009344832 0.9753693</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(result.c<span class="sc">$</span>cluster, iris<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(result.c<span class="sc">$</span>cluster, iris<span class="sc">$</span>Species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
     setosa versicolor virginica
-  1      0          2        37
-  2      0         48        13
+  1      0         48        13
+  2      0          2        37
   3     50          0         0</code></pre>
 </div>
 </div>
@@ -560,7 +563,7 @@ clusters setosa versicolor virginica
 <p>確率モデルになっているので，尤度を用いてデータとの適合度を計算することができる。潜在的な分布がいくつあるのかをBICなどを基準に選定することで，客観的にクラス数を決定することができるのが利点である。</p>
 <p>パッケージを使って具体的なデータを分類してみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(mclust)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(mclust)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># irisデータから数値変数のみを取得</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>iris_data <span class="ot">&lt;-</span> iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
@@ -569,7 +572,7 @@ clusters setosa versicolor virginica
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>gmm_result <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(iris_data)</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果の表示</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gmm_result, <span class="at">parameters =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gmm_result, <span class="at">parameters =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>---------------------------------------------------- 
 Gaussian finite mixture model fitted by EM algorithm 
@@ -609,8 +612,8 @@ Sepal.Width     0.1086544  0.10928077    0.1238904  0.07284384
 Petal.Length    0.3994018  0.12389040    0.6109024  0.25738990
 Petal.Width     0.1436826  0.07284384    0.2573899  0.16808182</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 分類結果の可視化</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gmm_result, <span class="at">what =</span> <span class="st">"classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 分類結果の可視化</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gmm_result, <span class="at">what =</span> <span class="st">"classification"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -618,8 +621,8 @@ Petal.Width     0.1436826  0.07284384    0.2573899  0.16808182</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 真の種と比較</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(iris<span class="sc">$</span>Species, gmm_result<span class="sc">$</span>classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 真の種と比較</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(iris<span class="sc">$</span>Species, gmm_result<span class="sc">$</span>classification)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            
               1  2
@@ -627,8 +630,8 @@ Petal.Width     0.1436826  0.07284384    0.2573899  0.16808182</code></pre>
   versicolor  0 50
   virginica   0 50</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BICによるモデル選択結果</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gmm_result, <span class="at">what =</span> <span class="st">"BIC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BICによるモデル選択結果</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gmm_result, <span class="at">what =</span> <span class="st">"BIC"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -710,12 +713,12 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 \]</span></p>
 <p>これを実装したパッケージ<code>exametrika</code>とそのサンプルコードをみて，実践例を見てみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>result.Ranklustering <span class="ot">&lt;-</span> <span class="fu">Biclustering</span>(J35S515,</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfld =</span> <span class="dv">5</span>, <span class="at">ncls =</span> <span class="dv">6</span>,</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"R"</span>, <span class="at">verbose =</span> F</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"Array"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"Array"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -729,7 +732,7 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <p>フィールドの分類とランクをみることで，受検者には次のランクに進むにはどの領域の項目に正答すれば良いか，といった情報を提供することができる。また，フィールドやランクへの所属は確率で表現され(ファジィクラスタリング)，受検者にはランクアップOdds, ランクダウンOddsを提供することができる。</p>
 <p>フィールド所属行列，ランク所属行列を可視化したプロファイルの出力を以下に示す。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"FRP"</span>, <span class="at">nc =</span> <span class="dv">2</span>, <span class="at">nr =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"FRP"</span>, <span class="at">nc =</span> <span class="dv">2</span>, <span class="at">nr =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -737,7 +740,7 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"RMP"</span>, <span class="at">students =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">nc =</span> <span class="dv">3</span>, <span class="at">nr =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.Ranklustering, <span class="at">type =</span> <span class="st">"RMP"</span>, <span class="at">students =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">nc =</span> <span class="dv">3</span>, <span class="at">nr =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -755,7 +758,7 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <p>多次元尺度構成法(Multidimensional Scaling,MDS)は，一言で言えば距離行列から地図を復元する手法である。 MDSは大きく分けて計量(metric)MDSと非計量(non-metric)MDSがある。前者は距離行列の固有値分解から得られる固有ベクトルを座標とみなす，ストレートな表現方法であり，データが比率尺度水準以上の誤差のない数値であることが求められる。これによって， どうしてそのような解釈が可能なのかについては，Young-Householderの定理というMDSの基礎になった数学定理があるので，興味がある人は調べて見てほしい。</p>
 <p>以下に計量MDSの例を見てみよう。Rは<code>eurodist</code>というヨーロッパ各都市の距離についてのサンプルデータを持っており，これを使って基本関数<code>cmdscale</code>でMDSを実行してみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(eurodist, <span class="at">k =</span> <span class="dv">2</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(eurodist, <span class="at">k =</span> <span class="dv">2</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 美しいプロットの作成</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result[, <span class="dv">1</span>], result[, <span class="dv">2</span>],</span>
@@ -775,7 +778,7 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co"># グリッドを追加</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -790,7 +793,7 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <p>という最適化関数を最小化するように座標を求める。最適化関数は多くの研究者によって様々に提唱されており，Rでは便利なパッケージ<code>smacof</code>のアルゴリズム(Scaling by Majorizing a COmplicated Function)による実行がいいだろう。</p>
 <p>実例で見てみよう。<code>smacof</code>パッケージの持つ<code>FaceExp</code>データセットを用いる。これは顔表情の類似度評定データで、異なる表情間の知覚的類似性を測定したものである。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(smacof)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(smacof)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元数2から10でストレス値を計算</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>dimensions <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">10</span></span>
@@ -800,12 +803,12 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  result_temp <span class="ot">&lt;-</span> <span class="fu">mds</span>(FaceExp, <span class="at">ndim =</span> dimensions[i], <span class="at">type =</span> <span class="st">"ordinal"</span>)</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  stress_values[i] <span class="ot">&lt;-</span> result_temp<span class="sc">$</span>stress</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>stress_values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>stress_values</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.106248100 0.059778016 0.035605225 0.019262481 0.011722294 0.007084647
 [7] 0.007084647 0.007084647 0.007084647</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ストレス値のプロット</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ストレス値のプロット</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dimensions, stress_values,</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">16</span>,</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元数"</span>, <span class="at">ylab =</span> <span class="st">"ストレス値"</span>,</span>
@@ -814,7 +817,7 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.lab =</span> <span class="fl">1.0</span>,</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span></span>
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -826,9 +829,9 @@ l(\mathbf{U}\mid \boldsymbol{\Pi}_B) = \prod_{s=1}^S\prod_{j=1}^J\prod_{f=1}^F\p
 <p>ここでは次元数を様々に変えて，適合度指標であるストレス値を得てプロットしている。一般的に，ストレス値が0.05以下なら優秀，0.1以下なら良好，0.2以下なら普通とされる。</p>
 <p>プロットや値を見てみると，3次元でも十分な解が得られそうだ。改めて3次元であることを指定して分析し，プロットしてみよう。なお，<code>mds</code>関数の<code>type</code>引数に順序尺度水準であることを明記することで，適切な分析が行われる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3次元でのMDS結果</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3次元でのMDS結果</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mds</span>(FaceExp, <span class="at">ndim =</span> <span class="dv">3</span>, <span class="at">type =</span> <span class="st">"ordinal"</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -839,7 +842,7 @@ Number of objects: 13
 Stress-1 value: 0.06 
 Number of iterations: 73 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3次元MDSの可視化（3つの2次元プロット）</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3次元MDSの可視化（3つの2次元プロット）</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元1 vs 次元2</span></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>conf[, <span class="dv">1</span>], result<span class="sc">$</span>conf[, <span class="dv">2</span>],</span>
@@ -855,7 +858,7 @@ Number of iterations: 73 </code></pre>
 <span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
 <span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="dv">2</span></span>
 <span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -863,7 +866,7 @@ Number of iterations: 73 </code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元1 vs 次元3</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元1 vs 次元3</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>conf[, <span class="dv">1</span>], result<span class="sc">$</span>conf[, <span class="dv">3</span>],</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"n"</span>,</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元1"</span>, <span class="at">ylab =</span> <span class="st">"次元3"</span>,</span>
@@ -877,7 +880,7 @@ Number of iterations: 73 </code></pre>
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
 <span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="dv">2</span></span>
 <span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -885,7 +888,7 @@ Number of iterations: 73 </code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元2 vs 次元3</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次元2 vs 次元3</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>conf[, <span class="dv">2</span>], result<span class="sc">$</span>conf[, <span class="dv">3</span>],</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"n"</span>,</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"次元2"</span>, <span class="at">ylab =</span> <span class="st">"次元3"</span>,</span>
@@ -899,7 +902,7 @@ Number of iterations: 73 </code></pre>
 <span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"darkblue"</span>,</span>
 <span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="dv">2</span></span>
 <span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -909,7 +912,7 @@ Number of iterations: 73 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result<span class="sc">$</span>conf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result<span class="sc">$</span>conf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                          D1          D2          D3
 Grief at death of mother          0.28389211 -0.35088341 -0.04383041
@@ -946,10 +949,10 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <p>最近はこの一連の手間を省いてくれる，<code>gibasa</code>というパッケージがある。<code>gibasa</code>はCRANに登録されており，内部でMeCabのバイナリファイルを含んでいるので，外部ファイルを準備する必要がない仕組みになっている<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>。ここではこのパッケージを使った例を見てみよう。</p>
 <p>パッケージを読み込んで，適当な文章を形態素解析してみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, gibasa)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, gibasa)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="st">"私は昨日，カフェでコーヒーを飲んだ。"</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> gibasa<span class="sc">::</span><span class="fu">tokenize</span>(text)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>dat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 11 × 5
    doc_id sentence_id token_id token    feature                                 
@@ -970,8 +973,8 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <p><code>tokenize</code>関数によって文字列が品詞ごとに区分され，またその特徴が<code>feature</code>列に入っていることがわかるだろう。 この<code>feature</code>列に入っているのは<code>gibasa</code>が内蔵する<code>MeCab</code>の戻り値であり，このラベルを整理するためには<code>prettify</code>関数を用いる。</p>
 <p>また，実際のテキストマイニングにおいては助詞や記号は使いにくいし，動詞も活用する前の原型で考えるほうがいいだろう。 これらをパイプ演算子で繋ぎながら処理すると次のようになる。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>gibasa<span class="sc">::</span><span class="fu">prettify</span>(dat, <span class="at">col_select =</span> <span class="fu">c</span>(<span class="st">"POS1"</span>, <span class="st">"Original"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(POS1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"名詞"</span>, <span class="st">"動詞"</span>, <span class="st">"形容詞"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>gibasa<span class="sc">::</span><span class="fu">prettify</span>(dat, <span class="at">col_select =</span> <span class="fu">c</span>(<span class="st">"POS1"</span>, <span class="st">"Original"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(POS1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"名詞"</span>, <span class="st">"動詞"</span>, <span class="st">"形容詞"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 6
   doc_id sentence_id token_id token    POS1  Original
@@ -992,7 +995,7 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <li>距離行列を対象に計量MDSを使って可視化</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 京都ラーメンに関する感想文データの作成</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 京都ラーメンに関する感想文データの作成</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>ramen_reviews <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"京都ラーメンは意外とコッテリしたのが多いんだよね。"</span>,</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"濃厚なスープと細麺の組み合わせが絶妙で美味しかった。"</span>,</span>
@@ -1032,7 +1035,7 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span> <span class="co"># 欠損値（その文書にその単語が出現しない）を0で埋める</span></span>
 <span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>dtm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>dtm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 45
    doc_id    の    ん コッテリ ラーメン  京都  多い スープ  濃厚    細
@@ -1057,7 +1060,7 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>distance_matrix <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(dtm[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>distance_matrix <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(dtm[,<span class="sc">-</span><span class="dv">1</span>]))</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 多次元尺度構成法（MDS）の実行</span></span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>mds_result <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(distance_matrix, <span class="at">k =</span> <span class="dv">2</span>) <span class="co"># 2次元での古典的MDS</span></span>
@@ -1093,7 +1096,7 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">14</span>), <span class="co"># タイトル中央寄せ</span></span>
 <span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_line</span>(<span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"lightgray"</span>) <span class="co"># グリッド線</span></span>
-<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1119,7 +1122,7 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <p>心理学においては，因子が心理学的構成概念だと捉えられることが多い。しかし，構成概念とはそもそも単体でそこに「ある」ものではなく，いろいろな現象の総合的な全体である，というシステム論的な観点によれば，このネットワーク分析的なアプローチの方が適しているかもしれない。この理論的な体系と方法論の合体については，<span class="citation" data-cites="Network2024">アデラ＝マリア et al. (<a href="references.html#ref-Network2024" role="doc-biblioref">[2022] 2024</a>)</span> を参考にしてほしい。</p>
 <p>具体的な例で見てみよう。 例えば，性格検査のBig5データを使って相関行列と，その偏相関行列を見てみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(psych, corrplot, RColorBrewer)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(psych, corrplot, RColorBrewer)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Big5性格データの読み込み（最初の25項目のみ使用）</span></span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>bfi <span class="ot">&lt;-</span> psych<span class="sc">::</span>bfi[, <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>]</span>
@@ -1145,10 +1148,10 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 行名・列名を設定</span></span>
 <span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(partial_cor_matrix) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(cor_matrix)</span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(partial_cor_matrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(cor_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(partial_cor_matrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(cor_matrix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 相関行列と偏相関行列の比較表示</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 相関行列と偏相関行列の比較表示</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 相関行列ヒートマップ</span></span>
@@ -1170,7 +1173,7 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="co"># 変数名の色</span></span>
 <span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">8</span>, <span class="at">name =</span> <span class="st">"RdYlBu"</span>), <span class="co"># 青-黄-赤のカラーパレット</span></span>
 <span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"偏相関行列"</span>, <span class="co"># 図のタイトル</span></span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>)) <span class="co"># 図の余白設定（下，左，上，右）</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>)) <span class="co"># 図の余白設定（下，左，上，右）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1178,13 +1181,13 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="co">#環境を元に戻す</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="co">#環境を元に戻す</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>相関行列と偏相関行列を並べてみると，所々相関のパターンが違うところが見える。</p>
 <p>さて，ネットワークの表現をするには相関行列でも偏相関行列でも構わないのだが，一応ここでは偏相関行列を用いたネットワークを見てみよう。</p>
 <p>ここでは<code>qgraph</code>パッケージを用いている。 この関数のオプションとして，推定に<code>glasso</code>を用いているが，ガウシアングラフィカルモデルの一種で，L1正則化(lasso)を行い重要でない変数間の関係を0にするモデルである。これでBICを基準に不要なパスをカットして描画される。描画のレイアウトオプションは<code>spring</code>だが，これはなるべく自然な配置にしてくれる方法であり，他にもいろいろなオプションがあり得る。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(qgraph)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(qgraph)</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>BICgraph <span class="ot">&lt;-</span> <span class="fu">qgraph</span>(</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  partial_cor_matrix, <span class="co"># 偏相関行列を入力データとして使用</span></span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">graph =</span> <span class="st">"glasso"</span>, </span>
@@ -1194,7 +1197,7 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 <span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"BIC"</span>, <span class="co"># グラフのタイトル</span></span>
 <span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="cn">TRUE</span>, <span class="co"># 弱い結合を除去してスパースなネットワークを作成</span></span>
 <span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">details =</span> <span class="cn">TRUE</span> <span class="co"># 詳細な出力情報を表示</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Note: Network with lowest lambda selected as best network: assumption of sparsity might be violated.</code></pre>
 </div>
@@ -1208,10 +1211,10 @@ Light sleep                      -0.26413984 -0.64794771  0.20727634</code></pre
 </div>
 <p>さて，ネットワーク分析は「これが因子！」のような特定の何かに帰着するのではなく，全体像をそのまま見て捉えることが特徴的である。しかしそれでは何がなんだか分かりにくいということもあろう。ということで，ネットワークの中心がどこにあるのか，どのノードとどのノードの結びつきが強いのか，といったことを指標とする。これらは中心性指数と呼ばれ，次のコードで可視化される。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">centralityPlot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">centralityPlot</span>(</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">BIC =</span> BICgraph),</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">include =</span> <span class="st">"all"</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -1409,13 +1412,14 @@ Shojima, Kojiro. 2022. <em>Test Data Engineering: Latent Rank Analysis, Bicluste
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

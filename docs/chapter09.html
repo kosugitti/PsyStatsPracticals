@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -89,14 +89,15 @@ div.csl-indent {
 <link href="./chapter08.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-231ef2f9d4ce3268f31ef752336c15d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -139,7 +140,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -180,7 +181,9 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">心理学統計実習</a> 
         <div class="sidebar-tools-main">
@@ -413,7 +416,7 @@ window.Quarto = {
 <p>筆者がお勧めするのは，大正大学の井関龍太が開発した<a href="https://riseki.cloudfree.jp/?ANOVA君">anovakun</a>である。パッケージ化されていないので，リンク先からソースコードを読み込んでanovakun関数を実行する必要があるが，さまざまな実験デザインに対応し，また下位検定や効果量，球面性の補正などおよそ分散分析で必要な手法は網羅されている。以下ではこれを用いた実践を行う。</p>
 <p>anovakunの読み込みは，ソースコードをプロジェクトフォルダにダウンロードして<code>source</code>関数で読み込むか，インターネットに繋がっている状態でリンク先から直接ソースファイル(anovakun_489.txt)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>を<code>source</code>関数で読み込むといいだろう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://riseki.cloudfree.jp/?plugin=attach&amp;refer=ANOVA%E5%90%9B&amp;openfile=anovakun_489.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://riseki.cloudfree.jp/?plugin=attach&amp;refer=ANOVA%E5%90%9B&amp;openfile=anovakun_489.txt"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>読み込みが終わるとEnvironタブにanovakun関数が含まれていることを確認しよう。</p>
 <section id="anova君の入力とデータ" class="level3" data-number="9.3.1">
@@ -431,7 +434,7 @@ window.Quarto = {
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="way-anova"><span class="header-section-number">9.4.1</span> 1way-ANOVA</h3>
 <p>もっとも単純な一要因3水準，Between計画の例から始めよう。仮想データの生成を行うことで，分散分析のメカニズムと共に見ていくことにする。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">4</span></span>
@@ -455,7 +458,7 @@ window.Quarto = {
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(X1, X2, X3)</span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="do">## データの確認</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>dat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   ID group     value
 1   1     A  5.318573
@@ -474,14 +477,14 @@ window.Quarto = {
 14 14     C 13.332048
 15 15     C 11.332477</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### 実行</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"As"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### 実行</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"As"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 [ As-Type Design ]
 
 This output was generated by anovakun 4.8.9 under R version 4.5.1.
-It was executed on Tue Jul 29 08:03:24 2025.
+It was executed on Mon Sep 15 11:52:13 2025.
 
  
 &lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;
@@ -548,7 +551,7 @@ output is over --------------------///</code></pre>
 <h3 data-number="9.4.2" class="anchored" data-anchor-id="way-anova-1"><span class="header-section-number">9.4.2</span> 2way-ANOVA</h3>
 <p>二要因の場合も見ておこう。ANOVA君の表記方法は要因計画の型が変わるだけで大きな変更はないが，交互作用interactionを考える必要があるところがポイントである。これも仮想データの組成を見ることでその意義がわかりやすくなるだろう。間2<span class="math inline">\(\times\)</span>間2の実験デザインを例に，まずは各水準の理論的平均値がどのようにつくられるかをみておこう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 全体平均，効果量，母SD</span></span>
@@ -565,12 +568,12 @@ output is over --------------------///</code></pre>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>mu11 <span class="ot">&lt;-</span> mu <span class="sc">+</span> effectA <span class="sc">+</span> effectB <span class="sc">+</span> effectAB</span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>mu12 <span class="ot">&lt;-</span> mu <span class="sc">+</span> effectA <span class="sc">-</span> effectB <span class="sc">-</span> effectAB</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>mu21 <span class="ot">&lt;-</span> mu <span class="sc">-</span> effectA <span class="sc">+</span> effectB <span class="sc">-</span> effectAB</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>mu22 <span class="ot">&lt;-</span> mu <span class="sc">-</span> effectA <span class="sc">-</span> effectB <span class="sc">+</span> effectAB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>mu22 <span class="ot">&lt;-</span> mu <span class="sc">-</span> effectA <span class="sc">-</span> effectB <span class="sc">+</span> effectAB</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>効果の現れ方は相対的だから，要因Aが第一水準に<code>+effectA</code>の形で現れたら，第二水準には<code>-effectA</code> の形で現れる。要因Bについても同様である。交互作用については組み合わせにおいて生じるから，要因Aの第一水準と要因Bの第一水準の組み合わせのところに<code>+effectAB</code>を充てる。ここでも効果は相対的に現れるという条件を守るために，要因Aの第一水準の中で<code>+effectAB</code>の効果を相殺するために，要因Aの第一水準と要因Bの第二水準の組み合わせの符号が反転する。同様に，要因Bの第一水準の中で相殺するために要因Aの第二水準と要因Bの第一水準には<code>-effectAB</code>が加わる。</p>
 <p>このようにして考えられる理論的平均値に対して，外乱要因である誤差が生じて実現値が得られる。 組み上げて得られたデータを確認しておこう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X11 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu11, <span class="at">sd =</span> sigma)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X11 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu11, <span class="at">sd =</span> sigma)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>X12 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu12, <span class="at">sd =</span> sigma)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>X21 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu21, <span class="at">sd =</span> sigma)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>X22 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu22, <span class="at">sd =</span> sigma)</span>
@@ -580,7 +583,7 @@ output is over --------------------///</code></pre>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">FactorB =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> n), <span class="dv">2</span>),</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(X11, X12, X21, X22)</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>dat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   ID FactorA FactorB      value
 1   1       1       1 17.3185731
@@ -628,13 +631,13 @@ output is over --------------------///</code></pre>
 <p>もちろん実際には，計画に応じたデータセットが得られているはずであり，各群のサンプルサイズが異なるなどの事情もあるだろう。しかしこうして，理論的にデータの組成を見ておくことで，サンプルサイズを変えたり効果量を変えたりしながら，どのように結果が変わってくるかを確認しながら進めることができる<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
 <p>それではこの仮想データを分析してみよう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"ABs"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(dat, <span class="st">"ABs"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 [ ABs-Type Design ]
 
 This output was generated by anovakun 4.8.9 under R version 4.5.1.
-It was executed on Tue Jul 29 08:03:25 2025.
+It was executed on Mon Sep 15 11:52:13 2025.
 
  
 &lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;
@@ -688,7 +691,7 @@ output is over --------------------///</code></pre>
 <h2 data-number="9.5" class="anchored" data-anchor-id="withinデザイン"><span class="header-section-number">9.5</span> Withinデザイン</h2>
 <p>Withinデザインは対応のあるt検定の時と同じように，多次元正規分布からの生成として考えよう。すなわち各個体から得られるデータが相関しているという仮定をおくのである。以下のサンプルコードを読んで，データ生成過程を確認しよう。なお共分散は<span class="math inline">\(\rho_{xy}=\frac{s_{xy}}{s_xs_y}\)</span>より<span class="math inline">\(s_{xy}=\rho_{xy}s_xs_y\)</span>として整形している。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群のサンプルサイズ</span></span>
@@ -712,7 +715,7 @@ output is over --------------------///</code></pre>
 <span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co"># データの生成</span></span>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, mus, Sigma) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
 <span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co"># データの確認</span></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>X</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          V1        V2       V3
 1  10.625304  9.418518 7.493325
@@ -726,11 +729,11 @@ output is over --------------------///</code></pre>
 9   6.909722  9.863405 7.429485
 10 11.267590 10.798088 8.754522</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Long型に整形</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Long型に整形</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> X <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30 × 3
       ID name  value
@@ -747,14 +750,14 @@ output is over --------------------///</code></pre>
 10     4 V1     9.39
 # ℹ 20 more rows</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 分析の実行</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(X, <span class="st">"sA"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>, <span class="at">GG =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 分析の実行</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anovakun</span>(X, <span class="st">"sA"</span>, <span class="at">long =</span> <span class="cn">TRUE</span>, <span class="at">peta =</span> <span class="cn">TRUE</span>, <span class="at">GG =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 [ sA-Type Design ]
 
 This output was generated by anovakun 4.8.9 under R version 4.5.1.
-It was executed on Tue Jul 29 08:03:25 2025.
+It was executed on Mon Sep 15 11:52:14 2025.
 
  
 &lt;&lt; DESCRIPTIVE STATISTICS &gt;&gt;
@@ -958,13 +961,14 @@ output is over --------------------///</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
