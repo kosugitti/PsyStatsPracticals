@@ -1,7 +1,7 @@
 data{
     int<lower=0> Nobs;
     int<lower=0> Nmiss;
-    vector[2] obsX[Nobs];
+    array[Nobs] vector[2] obsX;
     array[Nmiss] real missX;
 }
 
@@ -29,5 +29,5 @@ model{
     mu[2] ~ uniform(0,100);
     sd1 ~ cauchy(0,5);
     sd2 ~ cauchy(0,5);
-    rho ~ lkj_corr(1);
+    rho ~ uniform(-1,1);
 }

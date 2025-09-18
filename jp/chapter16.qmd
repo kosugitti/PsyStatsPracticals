@@ -225,7 +225,7 @@ bayestestR::describe_posterior(sigma_draws, centrality = c("mean", "median", "MA
 具体的に数字で見てみよう。まずある程度の相関関係を持つデータを作り，その一部を欠損させてみよう。
 ```{r corrData}
 pacman::p_load(MASS,tidyverse)
-N <- 200
+N <- 500
 mu <- c(50,60)
 sd <- c(10,10)
 rho <- 0.7
@@ -301,7 +301,16 @@ $$ \mathbb{\Sigma} = \begin{pmatrix}
 model <- cmdstan_model('missing_corr.stan')
 
 dataSet <- list(
-    Nobs 
+    Nobs = sum(!is.na(dat$X2)),
+    Nmiss = NROW(dat$X1)-sum(!is.na(dat$X2)),
+    obsX = dat[!is.na(dat$X2),c(1,2)],
+    missX = dat[is.na(dat$X2),1]
+)
+
+model$sample(
+    data = dataSet,
+    chains = 4,
+    parallel_chains = 4
 )
 ```
 

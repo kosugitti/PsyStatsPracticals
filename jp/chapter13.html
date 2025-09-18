@@ -1,0 +1,2326 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>13&nbsp; 線型モデルの展開 – 心理学統計実習</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter14.html" rel="next">
+<link href="./chapter12.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter13.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">心理学統計実習</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめようR/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Rによるレポートの作成</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Rでプログラミング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析(その1)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">演習問題</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#一般線型モデルgeneral-linear-model" id="toc-一般線型モデルgeneral-linear-model" class="nav-link active" data-scroll-target="#一般線型モデルgeneral-linear-model"><span class="header-section-number">13.1</span> 一般線型モデル(General Linear Model)</a></li>
+  <li><a href="#一般化線型モデルglm" id="toc-一般化線型モデルglm" class="nav-link" data-scroll-target="#一般化線型モデルglm"><span class="header-section-number">13.2</span> 一般化線型モデル(GLM)</a>
+  <ul class="collapse">
+  <li><a href="#ベルヌーイ分布に対する線型モデルロジスティック回帰分析" id="toc-ベルヌーイ分布に対する線型モデルロジスティック回帰分析" class="nav-link" data-scroll-target="#ベルヌーイ分布に対する線型モデルロジスティック回帰分析"><span class="header-section-number">13.2.1</span> ベルヌーイ分布に対する線型モデル；ロジスティック回帰分析</a></li>
+  <li><a href="#ポアソン分布に対する線型モデルポアソン回帰" id="toc-ポアソン分布に対する線型モデルポアソン回帰" class="nav-link" data-scroll-target="#ポアソン分布に対する線型モデルポアソン回帰"><span class="header-section-number">13.2.2</span> ポアソン分布に対する線型モデル；ポアソン回帰</a></li>
+  </ul></li>
+  <li><a href="#一般化線型混合モデルglmm" id="toc-一般化線型混合モデルglmm" class="nav-link" data-scroll-target="#一般化線型混合モデルglmm"><span class="header-section-number">13.3</span> 一般化線型混合モデル(GLMM)</a>
+  <ul class="collapse">
+  <li><a href="#個人差の分布を混ぜる" id="toc-個人差の分布を混ぜる" class="nav-link" data-scroll-target="#個人差の分布を混ぜる"><span class="header-section-number">13.3.1</span> 個人差の分布を「混ぜる」</a></li>
+  <li><a href="#ランダム切片モデル" id="toc-ランダム切片モデル" class="nav-link" data-scroll-target="#ランダム切片モデル"><span class="header-section-number">13.3.2</span> ランダム切片モデル</a></li>
+  <li><a href="#ランダム傾きモデル" id="toc-ランダム傾きモデル" class="nav-link" data-scroll-target="#ランダム傾きモデル"><span class="header-section-number">13.3.3</span> ランダム傾きモデル</a></li>
+  <li><a href="#ランダム切片ランダム傾きモデル" id="toc-ランダム切片ランダム傾きモデル" class="nav-link" data-scroll-target="#ランダム切片ランダム傾きモデル"><span class="header-section-number">13.3.4</span> ランダム切片ランダム傾きモデル</a></li>
+  </ul></li>
+  <li><a href="#階層線型モデルhlm" id="toc-階層線型モデルhlm" class="nav-link" data-scroll-target="#階層線型モデルhlm"><span class="header-section-number">13.4</span> 階層線型モデル(HLM)</a>
+  <ul class="collapse">
+  <li><a href="#レベル階層線型モデル" id="toc-レベル階層線型モデル" class="nav-link" data-scroll-target="#レベル階層線型モデル"><span class="header-section-number">13.4.1</span> 2レベル階層線型モデル</a></li>
+  <li><a href="#モデルの図解" id="toc-モデルの図解" class="nav-link" data-scroll-target="#モデルの図解"><span class="header-section-number">13.4.2</span> モデルの図解</a></li>
+  <li><a href="#具体例" id="toc-具体例" class="nav-link" data-scroll-target="#具体例"><span class="header-section-number">13.4.3</span> 具体例</a></li>
+  </ul></li>
+  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">13.5</span> 課題</a>
+  <ul class="collapse">
+  <li><a href="#基本問題パラメータリカバリ" id="toc-基本問題パラメータリカバリ" class="nav-link" data-scroll-target="#基本問題パラメータリカバリ"><span class="header-section-number">13.5.1</span> 基本問題：パラメータリカバリ</a></li>
+  <li><a href="#応用問題野球データの階層モデリング" id="toc-応用問題野球データの階層モデリング" class="nav-link" data-scroll-target="#応用問題野球データの階層モデリング"><span class="header-section-number">13.5.2</span> 応用問題：野球データの階層モデリング</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>この章では，線型モデルの展開を説明する。線型モデルは，説明変数と目的変数の関係を線型すなわち一次式で表現するモデルである。 線型モデルは，一般化線型モデル(GLM)，一般化線型混合モデル(GLMM)，階層線型モデル(HLM)と拡張していくが，まずは一般線型モデル(LM)についてみておこう。</p>
+<section id="一般線型モデルgeneral-linear-model" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="一般線型モデルgeneral-linear-model"><span class="header-section-number">13.1</span> 一般線型モデル(General Linear Model)</h2>
+<p>線型モデルの基本は回帰分析モデルである。単回帰モデルは次の式で表される。</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x + e_i
+\]</span></p>
+<p>ここで，<span class="math inline">\(y_i\)</span>は<span class="math inline">\(i\)</span>番目の観測値，<span class="math inline">\(\beta_0\)</span>は切片，<span class="math inline">\(\beta_1\)</span>は回帰係数，<span class="math inline">\(e_i\)</span>は誤差項である。 この式を拡張したのが重回帰分析で，次の式で表される。</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + e_i
+\]</span></p>
+<p>ここで，<span class="math inline">\(x_1, x_2, \cdots, x_p\)</span>は説明変数，<span class="math inline">\(\beta_1, \beta_2, \cdots, \beta_p\)</span>は回帰係数である。</p>
+<p>この式をベクトルと行列で表現すると，次のようになる。</p>
+<p><span class="math display">\[
+y = X\beta + e
+\]</span></p>
+<p>ここで，<span class="math inline">\(y\)</span>は<span class="math inline">\(n\)</span>次元のベクトル，<span class="math inline">\(X\)</span>は<span class="math inline">\(n \times p\)</span>の<strong>計画行列</strong>(design matrix)，<span class="math inline">\(\beta\)</span>は<span class="math inline">\(p\)</span>次元のベクトル，<span class="math inline">\(e\)</span>は<span class="math inline">\(n\)</span>次元のベクトルである。</p>
+<p>計画行列は，説明変数のデータをまとめた行列であり，次のようになる。</p>
+<p><span class="math display">\[
+X = \begin{pmatrix}
+1 &amp; x_1 &amp; x_2 &amp; \cdots &amp; x_p\\
+1 &amp; x_1 &amp; x_2 &amp; \cdots &amp; x_p\\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+1 &amp; x_1 &amp; x_2 &amp; \cdots &amp; x_p
+\end{pmatrix}
+\]</span></p>
+<p>第一列目にあるのは切片にかかる係数であり，第二列目以降にあるのは説明変数にかかる係数である。 ここに係数ベクトル<span class="math inline">\(\beta= (\beta_0, \beta_1, \beta_2, \cdots, \beta_p)^T\)</span>をかけることで，説明変数の線型結合が得られる。</p>
+<p>この係数ベクトルにおいて，<span class="math inline">\(x\)</span>の値がバイナリ(0/1)の場合，その説明変数はダミー変数と呼ばれる。線型回帰モデルにおいて説明変数<span class="math inline">\(X\)</span>がダミー変数である場合は，横軸が2つの値しかとらないため散布図を描くと奇妙な形になることがわかるだろう。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/image_glm-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>この散布図に対して回帰直線を引けば，2群の平均値を通る直線が引かれる。回帰分析においては，予測式<span class="math inline">\(\hat{y}\)</span>を中心とした正規分布に従って誤差が生じると仮定されているのであった。ダミーデータの場合も，両群の平均値を中心に正規分布に従って誤差が生じると仮定したことになる。これはいわゆる2群の平均値の差を検定する時の仮定と同じであり，このことから平均値差の検定は説明変数が名義尺度水準の変数である回帰分析と同じ(一般)であることがわかる。回帰分析と平均値差の検定は数学的には同じ式で表現できるから，これを総称して<strong>一般線型モデル</strong>General Linear model という。</p>
+</section>
+<section id="一般化線型モデルglm" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="一般化線型モデルglm"><span class="header-section-number">13.2</span> 一般化線型モデル(GLM)</h2>
+<p>かつて心理学実践においては，要因計画法と帰無仮説検定の組み合わせによって研究を行うことが主流であった。平均値差の検定に落とし込むように研究をデザインし，帰無仮説検定でYESかNOか決着がつく。帰無仮説検定はデータの特性や生成メカニズムに依存せず，統計パッケージを用いれば誰にでも扱うことができ，<span class="math inline">\(p\)</span>値という手垢のついてない数値だけで判断できると考えられてきた。</p>
+<p>このことに関する問題については置くとして，ともかく「正規分布の平均値の差」に持ち込めさえすれば良い，ということが当時の研究者の共通認識であった。そのため，例えば比率のデータやカウントデータなど，正規分布を想定することができないデータに対しても，対数変換・角変換などを行って分布を正規分布のそれに近づけ，検定を行うということが行われていた。</p>
+<p>正規分布は理論的に<span class="math inline">\(\pm \infty\)</span>の範囲を取るのに対し，比率のデータは0から1の範囲にしかとらない。カウントデータは正の整数しかとらないデータであるから，こうしたデータに対して一般線型モデルをあてがうのは重大な仮定違反である<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。</p>
+<p>このような背景から，正規分布以外の確率分布を用いた統計モデルが考えられた。これが<strong>一般化線型モデル</strong>(Generalized Linear Model, GLM)である<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
+<p>確率分布の多くは，位置パラメータとスケールパラメータを持つ。統計モデルは平均的な挙動について考えるモデルだから，位置パラメータに線型モデルが当てがえるように，数式を変形してやれば良い。以下に例として，ベルヌーイ分布とポアソン分布をGLMで表現したものを考えてみよう。</p>
+<section id="ベルヌーイ分布に対する線型モデルロジスティック回帰分析" class="level3" data-number="13.2.1">
+<h3 data-number="13.2.1" class="anchored" data-anchor-id="ベルヌーイ分布に対する線型モデルロジスティック回帰分析"><span class="header-section-number">13.2.1</span> ベルヌーイ分布に対する線型モデル；ロジスティック回帰分析</h3>
+<p>ベルヌーイ分布はコイントスの表/裏のような2値をとるデータに対して用いられる。ベルヌーイ分布の確率関数は次のように表される。</p>
+<p><span class="math display">\[
+P(Y = y) = p^y (1-p)^{1-y}
+\]</span></p>
+<p>ここで，<span class="math inline">\(p\)</span>は成功確率であり，0から1の範囲の値を取る。 こうしたデータは現実にも少なくない。生死，病気の有無，テストの正答/誤答のようなデータが代表的である。こうしたデータを目的変数にして，直線回帰を行うと当然おかしなことが生じる。すなわち，予測値が0と1の範囲を超えることがありえるからである。</p>
+<p>そこで，線型予測子と確率を適切に結びつけるリンク関数を用いる。ロジスティック回帰では<strong>ロジット関数</strong>（logit function）をリンク関数として使用する：</p>
+<p><span class="math display">\[
+\text{logit}(p) = \log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x
+\]</span></p>
+<p>この関係を<span class="math inline">\(p\)</span>について解いてみよう。<span class="math inline">\(\eta = \beta_0 + \beta_1 x\)</span>とおくと：</p>
+<p><span class="math display">\[
+\log\left(\frac{p}{1-p}\right) = \eta
+\]</span></p>
+<p>両辺の指数を取ると：</p>
+<p><span class="math display">\[
+\frac{p}{1-p} = e^{\eta}
+\]</span></p>
+<p>両辺に<span class="math inline">\((1-p)\)</span>をかけると：</p>
+<p><span class="math display">\[
+p = (1-p) \cdot e^{\eta}
+\]</span></p>
+<p>展開すると：</p>
+<p><span class="math display">\[
+p = e^{\eta} - p \cdot e^{\eta}
+\]</span></p>
+<p><span class="math inline">\(p\)</span>について整理すると：</p>
+<p><span class="math display">\[
+p + p \cdot e^{\eta} = e^{\eta}
+\]</span></p>
+<p><span class="math display">\[
+p(1 + e^{\eta}) = e^{\eta}
+\]</span></p>
+<p><span class="math display">\[
+p = \frac{e^{\eta}}{1 + e^{\eta}}
+\]</span></p>
+<p>分子分母を<span class="math inline">\(e^{\eta}\)</span>で割ると：</p>
+<p><span class="math display">\[
+p = \frac{1}{e^{-\eta} + 1} = \frac{1}{1 + e^{-\eta}}
+\]</span></p>
+<p><span class="math inline">\(\eta = \beta_0 + \beta_1 x\)</span>を代入すると，<strong>ロジスティック関数</strong>（逆リンク関数）が得られる：</p>
+<p><span class="math display">\[
+p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}}
+\]</span></p>
+<p>このようにして得られた確率を用いて，ベルヌーイ分布の確率関数を次のように表現できる。</p>
+<p><span class="math display">\[ y \sim \text{Bernoulli}(p) \]</span></p>
+<p>サンプルデータを作って，線型回帰モデルとロジスティック回帰モデルの予測値を比較してみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, patchwork)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># データ生成</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="sc">-</span><span class="dv">10</span>, <span class="at">max =</span> <span class="dv">10</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> beta_0 <span class="sc">+</span> x <span class="sc">*</span> beta_1</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(<span class="sc">-</span>p))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> prob)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>df_logistic <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># p1: 線型回帰</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_logistic, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"線型回帰"</span>) <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># p2: ロジスティック回帰</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_logistic, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"binomial"</span>), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"ロジスティック回帰"</span>) <span class="sc">+</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># パッチワークで結合</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/logistic_curve-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>線型回帰の予測値が不適切な範囲にまで延伸するのに対し，ロジスティック回帰はうまく適合していることがわかるだろう。</p>
+<p>データからロジスティック回帰モデルを推定するには，<code>glm</code>関数を用いることができるが，ここではすでに学んだ<code>brms</code>パッケージによるベイズ推定でアプローチしてみよう。<code>brm</code>関数の書き方は，<code>glm</code>関数の書き方とほぼ同じであり，推定法をMLからベイズに変えることできる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(brms)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>result.bayes.logistic <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">bernoulli</span>(),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_logistic,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">12345</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.0 seconds.
+Chain 2 finished in 0.0 seconds.
+Chain 3 finished in 0.0 seconds.
+Chain 4 finished in 0.0 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.0 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.logistic)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: bernoulli 
+  Links: mu = logit 
+Formula: y ~ x 
+   Data: df_logistic (Number of observations: 200) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept     0.88      0.41     0.10     1.70 1.00     2314     2331
+x             1.35      0.26     0.91     1.92 1.00     2164     2080
+
+Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.bayes.logistic)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/logistic_regression-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 比較のためにML推定も行っておく</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>result.ml <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">data =</span> df_logistic)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.ml)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = y ~ x, family = binomial(), data = df_logistic)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)   0.8673     0.4058   2.137   0.0326 *  
+x             1.2661     0.2413   5.248 1.54e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 273.869  on 199  degrees of freedom
+Residual deviance:  45.112  on 198  degrees of freedom
+AIC: 49.112
+
+Number of Fisher Scoring iterations: 8</code></pre>
+</div>
+</div>
+<p>最尤推定の結果とベイズ推定の結果に多少のズレが見られるが，これはサンプルサイズの小ささによるものである。アウトプット変数が2値しか持たないため，分散がどうしても小さくなりがちであり，正確な推定値を得るためにはより多くのデータが必要である。</p>
+<p>また，回帰係数の解釈には注意が必要である。普通の回帰分析であれば，説明変数が1単位変わると目的変数がどれだけ変わるかを表すが，ロジスティック回帰ではこのような直接的な解釈はできない。ロジスティック関数によって変換されたものが意味を持つからである。</p>
+<p>線型モデルが表すのは次の関係なのであった。 <span class="math display">\[ \beta_0 + \beta_1 x = \log \frac{p}{1-p} \]</span></p>
+<p>この<span class="math inline">\(\log \frac{p}{1-p}\)</span>は<strong>ロジット</strong>(logit)と呼ばれる。ロジスティック回帰では，確率<span class="math inline">\(p\)</span>をロジットに変換することで線型関係を表現している。逆に言えば，線型モデルで表現されているのはログを取った確率の比であり，この比が説明変数の線型関係によって決まるということである。であるから，結果を解釈するには係数を指数関数<span class="math inline">\(e\)</span>を取り，確率の比として理解する必要がある。</p>
+<p>今回のデータでは説明変数の係数が1.36と推定されたから，<span class="math inline">\(e^{1.36} = 3.89\)</span>である。これは，説明変数が1単位増加すると，成功確率が3.89倍になる，ということを意味する。</p>
+</section>
+<section id="ポアソン分布に対する線型モデルポアソン回帰" class="level3" data-number="13.2.2">
+<h3 data-number="13.2.2" class="anchored" data-anchor-id="ポアソン分布に対する線型モデルポアソン回帰"><span class="header-section-number">13.2.2</span> ポアソン分布に対する線型モデル；ポアソン回帰</h3>
+<p>今度はカウント変数に対するモデルを考えてみよう。カウント変数は正の整数をとるデータであり，ポアソン分布を用いることができる。ポアソン分布の確率関数は次のように表される。</p>
+<p><span class="math display">\[
+P(Y = y) = \frac{\lambda^y e^{-\lambda}}{y!}
+\]</span></p>
+<p>ここで，<span class="math inline">\(\lambda\)</span>は平均である。ポアソン分布の形状も確認しておこう。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/poisson_curve-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよい。ポアソン回帰では<strong>対数関数</strong>をリンク関数として使用する：</p>
+<p><span class="math display">\[
+\log(\lambda_i) = \beta_0 + \beta_1 x_i
+\]</span></p>
+<p>この関係を<span class="math inline">\(\lambda_i\)</span>について解くと，<strong>指数関数</strong>（逆リンク関数）が得られる：</p>
+<p><span class="math display">\[ \lambda_i = \exp(\beta_0 + \beta_1 x_i) \]</span></p>
+<p>として</p>
+<p><span class="math display">\[ y_i \sim \text{Pois}(\lambda_i) \]</span></p>
+<p>を考えるのである。</p>
+<p>以下にサンプルデータを作ったポアソン回帰の例を示す。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データ生成</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">10</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_0 <span class="sc">+</span> beta_1 <span class="sc">*</span> x)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rpois</span>(n, <span class="at">lambda =</span> lambda)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>df_pois <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># p1: 線型回帰（不適切な例）</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_pois, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"カウント変数"</span>, <span class="at">title =</span> <span class="st">"線型回帰（不適切）"</span>) <span class="sc">+</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>))</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co"># p2: ポアソン回帰（適切な例）</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_pois, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"poisson"</span>), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"カウント変数"</span>, <span class="at">title =</span> <span class="st">"ポアソン回帰（適切）"</span>) <span class="sc">+</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>))</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co"># パッチワークで結合</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/poisson_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>線型回帰では負の値の予測値が出てしまう可能性があるのに対し，ポアソン回帰は指数関数による変換によって適切にカウントデータの特性を捉えていることがわかる。</p>
+<p>ポアソン回帰を実行するRコードの例を次に示す。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>result.bayes.pois <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_pois,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">12345</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.0 seconds.
+Chain 2 finished in 0.0 seconds.
+Chain 3 finished in 0.0 seconds.
+Chain 4 finished in 0.0 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.0 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.pois)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: poisson 
+  Links: mu = log 
+Formula: y ~ x 
+   Data: df_pois (Number of observations: 200) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept     0.49      0.07     0.36     0.63 1.00     1275     1675
+x             0.30      0.01     0.29     0.32 1.00     1471     1943
+
+Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.bayes.pois)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/poisson_regression-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 比較のためにML推定も行っておく</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>result.ml.pois <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">family =</span> <span class="fu">poisson</span>(), <span class="at">data =</span> df_pois)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.ml.pois)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = y ~ x, family = poisson(), data = df_pois)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) 0.495962   0.071166   6.969 3.19e-12 ***
+x           0.304829   0.009555  31.902  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 1457.6  on 199  degrees of freedom
+Residual deviance:  214.3  on 198  degrees of freedom
+AIC: 975.04
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="一般化線型混合モデルglmm" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="一般化線型混合モデルglmm"><span class="header-section-number">13.3</span> 一般化線型混合モデル(GLMM)</h2>
+<p>線型モデルのさらなる拡張として，<strong>一般化線型混合モデル(GLMM)</strong>Generalized Linear Mixed Modelがある。ここまでの回帰モデルは，説明変数が目的変数に対して一貫した効果を持つと仮定してきた。この効果を特に<strong>固定効果</strong>fixed effectというが，GLMMでは固定効果に加えて<strong>変量効果</strong>random effectを考慮することができる。</p>
+<p>変量効果とは，説明変数が個体ごとに異なる値を持つことを意味する。たとえばWithinデザインの要因計画は個人差を考慮することができるが，これは変量効果を考慮したモデルであるといえる。すなわち，研究として見たい効果はWithin要因の水準ごとの固定効果であり，これとは別に個人の平均値が異なることを想定しているから，個人ごとの平均値を変量効果として考慮しているモデルといえる。</p>
+<p>このように変量効果は個人ごとに異なる影響を考えることであるが，仮定としてこうした個人差が確率分布，特に正規分布に従っていると考えるのである。個人差は確率分布からランダムに生じるものであり，個人同士の平均的な違いは交換可能であると考えられる。またこうした個人差の分散は，個人の平均値の分散として捉えられる。このように個人差を表す確率分布も混ぜ込むので，混合(Mixed)モデルと呼ばれるのである。</p>
+<section id="個人差の分布を混ぜる" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="個人差の分布を混ぜる"><span class="header-section-number">13.3.1</span> 個人差の分布を「混ぜる」</h3>
+<p>分散分析のBetweenモデルとWithinモデルの違いについて考えてみよう。 一要因の場合，Betweenモデルは次のように表される。 <span class="math display">\[ SS_T = SS_A + SS_e \]</span></p>
+<p>ここで<span class="math inline">\(SS_T\)</span>とは全体の平方和(Sum of Squares)であり，これを右辺の要因Aで説明する平方和<span class="math inline">\(SS_A\)</span>と誤差<span class="math inline">\(SS_E\)</span>に分解するのであった。</p>
+<p>このときWithinモデルは，</p>
+<p><span class="math display">\[SS_T = SS_A + SS_s + SS_e\]</span></p>
+<p>と表され，ここで<span class="math inline">\(SS_s\)</span>が個人差の平方和である。 検定に際しては<span class="math inline">\(SS_e\)</span>に対する<span class="math inline">\(SS_A\)</span>の比率を考える<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>ことになるから，効果の大きさが同じであればWithinデザインの方が有利である。Betweenデザインは誤差から個人差を分離できていないからで，これを分離して誤差を小さくできる方が効果vs誤差の比は大きくなるからである。</p>
+<p>ここでは分散での記述であったが，個別の値<span class="math inline">\(Y_{ij}\)</span>を考えると，Betweenデザインは</p>
+<p><span class="math display">\[ Y_{ij} = \beta_0 + \beta_1 x_{ij} + e_{ij} \]</span> であり，Withinデザインは <span class="math display">\[ Y_{ij} = \mu + \beta_{0i} + \beta_1 x_{ij} + e_{ij} \]</span> である。ここで<span class="math inline">\(\mu\)</span>は全平均であり，<span class="math inline">\(\beta_{01}\)</span>は全平均から個人平均の差，つまり個人差を表している。個人<span class="math inline">\(i\)</span>に対して反復測定がなされているからその平均を計算することができ，相対的な切片の違いを個人の効果として取り出していると言える。</p>
+<p>ここで確率変数を考えると， <span class="math display">\[e_{ij} \sim N(0, \sigma_e)\]</span> <span class="math display">\[\beta_{0i} \sim N(0, \sigma_s)\]</span></p>
+<p>となるから，一つの値に対して複数の確率分布が混合(mix)されていることがわかる。</p>
+<p>ここでは個人差が平均値，すなわち切片が異なるものとして説明したが，傾きに対して個人差を考えることもできる。変量効果がどこにあるかによって，ランダム切片モデル，ランダム傾きモデル，ランダム切片ランダム傾きモデルなどと呼ばれることがある。</p>
+</section>
+<section id="ランダム切片モデル" class="level3" data-number="13.3.2">
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="ランダム切片モデル"><span class="header-section-number">13.3.2</span> ランダム切片モデル</h3>
+<p>ランダム切片モデルは，切片が個人ごとに異なるモデルである。切片が個人ごとに異なるということは，切片の個人差が正規分布に従うと考えることである。</p>
+<p><span class="math display">\[
+\beta_{0i} = \beta_0 + u_{0i}
+\]</span></p>
+<p>ここで，<span class="math inline">\(\beta_0\)</span>は全体の切片，<span class="math inline">\(u_{0i}\)</span>は個人<span class="math inline">\(i\)</span>の切片の個人差である。個人差は正規分布に従うと考えるから，</p>
+<p><span class="math display">\[
+u_{0i} \sim N(0, \sigma_u)
+\]</span></p>
+<p>と表現できる。モデル全体としては</p>
+<p><span class="math display">\[
+y_{ij} = (\beta_0 + u_{0i}) + \beta_1 x_{ij} + e_{ij}
+\]</span></p>
+<p>となる。ここで，<span class="math inline">\(e_{ij}\)</span>は誤差項であり，個人<span class="math inline">\(i\)</span>の<span class="math inline">\(j\)</span>番目の観測値に対する誤差を表す。</p>
+<p>具体的なデータを作って見てみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データ生成</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>n_person <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 個人数</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>n_obs <span class="ot">&lt;-</span> <span class="dv">20</span>     <span class="co"># 各個人の観測数</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>sigma_u <span class="ot">&lt;-</span> <span class="dv">1</span>    <span class="co"># 個人差の標準偏差</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>sigma_e <span class="ot">&lt;-</span> <span class="fl">0.5</span>  <span class="co"># 誤差の標準偏差</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 個人ごとのランダム切片</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>person_intercepts <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n_person, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_u)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># データフレーム作成</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>df_random_intercept <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">person =</span> <span class="dv">1</span><span class="sc">:</span>n_person,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">obs =</span> <span class="dv">1</span><span class="sc">:</span>n_obs</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">runif</span>(<span class="fu">n</span>(), <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">10</span>),</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">u_0 =</span> person_intercepts[person],</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> beta_0 <span class="sc">+</span> u_0 <span class="sc">+</span> beta_1 <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_e),</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">person_factor =</span> <span class="fu">factor</span>(person)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="do">## データの確認</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>df_random_intercept <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  person   obs     x   u_0     y person_factor
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;        
+1      1     1 8.81  -1.02 17.0  1            
+2      1     2 6.07  -1.02 11.5  1            
+3      1     3 7.40  -1.02 15.4  1            
+4      1     4 8.03  -1.02 16.9  1            
+5      1     5 9.02  -1.02 18.3  1            
+6      1     6 0.927 -1.02  2.00 1            </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p1: 線型回帰（全体で一つの回帰線）</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_random_intercept, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"線型回帰（固定効果のみ）"</span>) <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>))</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># p2: ランダム切片モデル（個人ごとに異なる切片の回帰線）</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_random_intercept, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">color =</span> person_factor)) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"ランダム切片モデル"</span>) <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>),</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/random_intercept_model plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ランダム効果を含むモデルを推定するコード例を以下に示す。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>result.bayes.random_intercept <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> person),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_random_intercept,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">12345</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.4 seconds.
+Chain 2 finished in 0.4 seconds.
+Chain 3 finished in 0.4 seconds.
+Chain 4 finished in 0.4 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.4 seconds.
+Total execution time: 0.6 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_intercept)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: y ~ x + (1 | person) 
+   Data: df_random_intercept (Number of observations: 200) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Multilevel Hyperparameters:
+~person (Number of levels: 10) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.01      0.30     0.60     1.73 1.01      408      786
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept     1.29      0.35     0.61     2.01 1.01      620      461
+x             1.98      0.01     1.96     2.01 1.00     2380     2052
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.53      0.03     0.48     0.59 1.00     1790     2245
+
+Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.bayes.random_intercept)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/random_intercept_model-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 比較のためにML推定も行っておく</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(lmerTest)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>result.ml.random_intercept <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> x <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> person), <span class="at">data =</span> df_random_intercept)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.ml.random_intercept)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: y ~ x + (1 | person)
+   Data: df_random_intercept
+
+REML criterion at convergence: 356.6
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.3167 -0.5745 -0.1189  0.6343  2.6464 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ person   (Intercept) 0.7462   0.8638  
+ Residual             0.2773   0.5266  
+Number of obs: 200, groups:  person, 10
+
+Fixed effects:
+             Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)   1.26699    0.28414  10.15076   4.459  0.00117 ** 
+x             1.98396    0.01361 189.35597 145.774  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+  (Intr)
+x -0.242</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## さらに比較のために，普通の回帰分析も行ってみる</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>result.ml.random_intercept.ordinal <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> df_random_intercept)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.ml.random_intercept.ordinal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x, data = df_random_intercept)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.27275 -0.59838  0.08193  0.50855  2.67596 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.31764    0.14235   9.256   &lt;2e-16 ***
+x            1.97394    0.02464  80.124   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9771 on 198 degrees of freedom
+Multiple R-squared:  0.9701,    Adjusted R-squared:  0.9699 
+F-statistic:  6420 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>変量効果のモデル表記は，固定効果に加えて<code>(1 | person)</code>のように表記する。ここで，<code>1</code>は切片を表し，<code>person</code>は個人を表す。このようにすることで，個人ごとに異なる切片を考慮することができる。</p>
+<p>設定したパラメタ（個人差の標準偏差<span class="math inline">\(\sigma_u\)</span> = 1，残差の標準偏差<span class="math inline">\(\sigma_e\)</span> = 0.5）に対して，ベイズ推定では個人差の標準偏差が1.012，残差の標準偏差が0.53と推定されている。ML推定では個人差の標準偏差が0.864，残差の標準偏差が0.527と推定された。両手法ともに設定値に近い値が得られており，適切にパラメタが推定されていることがわかる。</p>
+<p>このデータに対して，固定効果のみで推定すると切片が1.318，傾きが1.974と推定される。傾きに対しては同じ値になるが切片の変動を考慮するかどうかで推定値が異なっていることがわかる。固定効果のみのモデルの場合，切片に想定された正規分布の平均値のみ推定したことになっている。実践的な意味としては，Within計画をBetween計画と皆して推定しているようなものであり，せっかく綺麗に取り分けられる個人差分散を無視しているようなものである。</p>
+<section id="個人レベルの推定値の取得" class="level4" data-number="13.3.2.1">
+<h4 data-number="13.3.2.1" class="anchored" data-anchor-id="個人レベルの推定値の取得"><span class="header-section-number">13.3.2.1</span> 個人レベルの推定値の取得</h4>
+<p>ベイズ推定の利点の一つは，個人ごとの推定値とその不確実性を定量化できることである。MCMCサンプルから個人の変量効果を取り出し，事後分布を可視化してみよう。</p>
+<p><code>brms</code>パッケージの関数<code>ranef</code>を使うと面倒なことをしなくても直接取り出してくれるが，MCMCサンプルを取り出して加工して確認することは，MCMCによる推定の理解を深めるのに良い訓練となる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 個人ごとの変量効果を取得して表示してみる</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>random_effects <span class="ot">&lt;-</span> <span class="fu">ranef</span>(result.bayes.random_intercept)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(random_effects)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$person
+, , Intercept
+
+     Estimate Est.Error       Q2.5      Q97.5
+1  -1.2842574 0.3604082 -2.0328445 -0.6093264
+2  -0.2815002 0.3612608 -1.0005500  0.4143775
+3  -0.4328320 0.3614323 -1.1734005  0.2534434
+4  -1.0881607 0.3642191 -1.8473405 -0.4056347
+5   0.5388313 0.3636371 -0.2012679  1.2376413
+6  -0.2689177 0.3633187 -1.0316235  0.4175829
+7   0.5917789 0.3634518 -0.1563293  1.3063205
+8   1.6501281 0.3597518  0.9219949  2.3568723
+9   0.1666085 0.3624218 -0.5813912  0.8600216
+10  0.2276495 0.3628401 -0.5134040  0.9184448</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 個人の切片の変量効果の事後分布(MCMCサンプル)を取得</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>posterior_samples <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(result.bayes.random_intercept) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"r_person"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"iter"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>iter) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">person =</span> <span class="fu">str_extract</span>(name,<span class="at">pattern=</span><span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">person =</span> <span class="fu">factor</span>(person, <span class="at">levels =</span> <span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Dropping 'draws_df' class as required metadata was removed.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMCサンプルを使った要約</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>posterior_samples <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(person) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">EAP =</span> <span class="fu">mean</span>(value),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">quantile</span>(value, <span class="fl">0.5</span>),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">q025 =</span> <span class="fu">quantile</span>(value, <span class="fl">0.025</span>),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">q975 =</span> <span class="fu">quantile</span>(value, <span class="fl">0.975</span>),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(value),</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   person    EAP median   q025   q975    sd
+   &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+ 1 1      -1.28  -1.28  -2.03  -0.609 0.360
+ 2 2      -0.282 -0.273 -1.00   0.414 0.361
+ 3 3      -0.433 -0.425 -1.17   0.253 0.361
+ 4 4      -1.09  -1.08  -1.85  -0.406 0.364
+ 5 5       0.539  0.545 -0.201  1.24  0.364
+ 6 6      -0.269 -0.270 -1.03   0.418 0.363
+ 7 7       0.592  0.593 -0.156  1.31  0.363
+ 8 8       1.65   1.66   0.922  2.36  0.360
+ 9 9       0.167  0.171 -0.581  0.860 0.362
+10 10      0.228  0.235 -0.513  0.918 0.363</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 事後分布の描画</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(posterior_samples, <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> person)) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> person, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"切片の変量効果"</span>, <span class="at">y =</span> <span class="st">"事後密度"</span>, <span class="at">title =</span> <span class="st">"個人ごとの切片変量効果の事後分布"</span>) <span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>), <span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/individual_estimates-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ここで抜き出された個人の効果は，全体平均からの偏差であり，実際の切片は固定効果＋変量効果の形で得られている。これについても<code>coef</code>関数あるいはMCMCサンプルを加工することで，より具体的にイメージしながら利用できるだろう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 各個人の実際の切片（固定効果+変量効果）を取得</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>individual_coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(result.bayes.random_intercept)<span class="sc">$</span>person</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 実際の切片の事後分布（固定効果+変量効果）</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>total_intercept_samples <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(result.bayes.random_intercept) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(b_Intercept, <span class="fu">starts_with</span>(<span class="st">"r_person"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"iter"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(iter, b_Intercept)) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">person =</span> <span class="fu">str_extract</span>(name, <span class="at">pattern=</span><span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">person =</span> <span class="fu">factor</span>(person, <span class="at">levels =</span> <span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_intercept =</span> b_Intercept <span class="sc">+</span> value) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iter, person, total_intercept)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Dropping 'draws_df' class as required metadata was removed.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 実際の切片の事後分布の描画</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(total_intercept_samples, <span class="fu">aes</span>(<span class="at">x =</span> total_intercept, <span class="at">fill =</span> person)) <span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> person, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"実際の切片（固定効果+変量効果）"</span>, <span class="at">y =</span> <span class="st">"事後密度"</span>, </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"個人ごとの実際の切片の事後分布"</span>) <span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>), <span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/individual_total_effects-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 実際の切片の信頼区間</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>total_intercept_summary <span class="ot">&lt;-</span> total_intercept_samples <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(person) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">EAP =</span> <span class="fu">mean</span>(total_intercept),</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">quantile</span>(total_intercept, <span class="fl">0.5</span>),</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">q025 =</span> <span class="fu">quantile</span>(total_intercept, <span class="fl">0.025</span>),</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">q975 =</span> <span class="fu">quantile</span>(total_intercept, <span class="fl">0.975</span>),</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(total_intercept),</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(total_intercept_summary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   person     EAP  median    q025  q975    sd
+   &lt;fct&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 1      0.00382 0.00210 -0.284  0.279 0.146
+ 2 2      1.01    1.01     0.746  1.27  0.135
+ 3 3      0.855   0.857    0.597  1.10  0.128
+ 4 4      0.200   0.197   -0.0805 0.484 0.143
+ 5 5      1.83    1.83     1.55   2.11  0.142
+ 6 6      1.02    1.02     0.753  1.29  0.136
+ 7 7      1.88    1.88     1.61   2.14  0.137
+ 8 8      2.94    2.94     2.67   3.21  0.137
+ 9 9      1.45    1.45     1.18   1.73  0.139
+10 10     1.52    1.52     1.24   1.80  0.144</code></pre>
+</div>
+</div>
+<p>このように，ベイズ推定では個人ごとの推定値とその不確実性を詳細に分析することができる。</p>
+</section>
+</section>
+<section id="ランダム傾きモデル" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="ランダム傾きモデル"><span class="header-section-number">13.3.3</span> ランダム傾きモデル</h3>
+<p>ランダム傾きモデルは，傾きが個人ごとに異なるモデルである。傾きが個人ごとに異なるということは，傾きの個人差が正規分布に従うと考えることである。</p>
+<p><span class="math display">\[
+\beta_{1i} = \beta_1 + u_{1i}
+\]</span></p>
+<p>ここで，<span class="math inline">\(\beta_1\)</span>は全体の傾き，<span class="math inline">\(u_{1i}\)</span>は個人<span class="math inline">\(i\)</span>の傾きの個人差である。個人差は正規分布に従うと考えるから，</p>
+<p><span class="math display">\[
+u_{1i} \sim N(0, \sigma_u)
+\]</span></p>
+<p>と表現できる。モデル全体としては</p>
+<p><span class="math display">\[
+y_{ij} = \beta_0  + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
+\]</span></p>
+<p>となる。</p>
+<p>これについても具体的なデータを作って見てみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データ生成</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>n_person <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 個人数</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>n_obs <span class="ot">&lt;-</span> <span class="dv">20</span>     <span class="co"># 各個人の観測数</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>sigma_u <span class="ot">&lt;-</span> <span class="fl">0.5</span>  <span class="co"># 傾きの個人差の標準偏差</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>sigma_e <span class="ot">&lt;-</span> <span class="fl">1.5</span>  <span class="co"># 誤差の標準偏差</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 個人ごとのランダム傾き</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>person_slopes <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n_person, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_u)</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="co"># データフレーム作成</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>df_random_slope <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">person =</span> <span class="dv">1</span><span class="sc">:</span>n_person,</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">obs =</span> <span class="dv">1</span><span class="sc">:</span>n_obs</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">runif</span>(<span class="fu">n</span>(), <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">10</span>),</span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">u_1 =</span> person_slopes[person],</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> beta_0 <span class="sc">+</span> (beta_1 <span class="sc">+</span> u_1) <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_e),</span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">person_factor =</span> <span class="fu">factor</span>(person)</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a><span class="do">## データの確認</span></span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>df_random_slope <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  person   obs     x    u_1     y person_factor
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;        
+1      1     1 8.81  -0.508 12.5  1            
+2      1     2 6.07  -0.508  8.12 1            
+3      1     3 7.40  -0.508 13.9  1            
+4      1     4 8.03  -0.508 15.5  1            
+5      1     5 9.02  -0.508 15.2  1            
+6      1     6 0.927 -0.508  2.88 1            </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p1: 線型回帰（全体で一つの回帰線）</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_random_slope, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"線型回帰（固定効果のみ）"</span>) <span class="sc">+</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>))</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="co"># p2: ランダム傾きモデル（個人ごとに異なる傾きの回帰線）</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_random_slope, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">color =</span> person_factor)) <span class="sc">+</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"ランダム傾きモデル"</span>) <span class="sc">+</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>),</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/random_slope_model_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ランダム傾きモデルでは，個人ごとに回帰直線の傾きが異なることがわかる。これは，説明変数の効果が個人によって異なることを表している。</p>
+<p>ランダム傾きモデルを推定するコード例を以下に示す。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>result.bayes.random_slope <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x <span class="sc">+</span> (<span class="dv">0</span> <span class="sc">+</span> x <span class="sc">|</span> person),</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_random_slope,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">12345</span>,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.6 seconds.
+Chain 3 finished in 0.5 seconds.
+Chain 2 finished in 0.6 seconds.
+Chain 4 finished in 0.6 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.6 seconds.
+Total execution time: 0.7 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_slope)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: y ~ x + (0 + x | person) 
+   Data: df_random_slope (Number of observations: 200) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Multilevel Hyperparameters:
+~person (Number of levels: 10) 
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(x)     0.51      0.15     0.30     0.86 1.00      527     1003
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept     1.24      0.24     0.79     1.71 1.00     5674     3203
+x             2.04      0.16     1.73     2.36 1.00      605      743
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     1.60      0.08     1.45     1.76 1.00     1642     1684
+
+Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.bayes.random_slope)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/random_slope_model-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 比較のためにML推定も行っておく</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>result.ml.random_slope <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> x <span class="sc">+</span> (<span class="dv">0</span> <span class="sc">+</span> x <span class="sc">|</span> person), <span class="at">data =</span> df_random_slope)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.ml.random_slope)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: y ~ x + (0 + x | person)
+   Data: df_random_slope
+
+REML criterion at convergence: 792.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.2526 -0.6127 -0.0716  0.6858  2.6584 
+
+Random effects:
+ Groups   Name Variance Std.Dev.
+ person   x    0.1894   0.4352  
+ Residual      2.5139   1.5855  
+Number of obs: 200, groups:  person, 10
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept)   1.2415     0.2335 189.2290   5.317 2.96e-07 ***
+x             2.0451     0.1436  10.2643  14.240 4.31e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+  (Intr)
+x -0.250</code></pre>
+</div>
+</div>
+<p>変量効果のモデル表記で，<code>(0 + x | person)</code>は傾きのみにランダム効果を考慮することを表す。<code>0</code>によって切片の固定効果を除き，<code>x</code>で傾きにランダム効果を指定している。それぞれの出力が，理論値のどこを反映したものであるか確認しておこう。</p>
+<p>また出力結果はランダム切片モデルの時と同様に，関数あるいはMCMCサンプルから推定値やその分布情報を得ることもできる。自分なりに加工して出力結果を確認してみてほしい。</p>
+</section>
+<section id="ランダム切片ランダム傾きモデル" class="level3" data-number="13.3.4">
+<h3 data-number="13.3.4" class="anchored" data-anchor-id="ランダム切片ランダム傾きモデル"><span class="header-section-number">13.3.4</span> ランダム切片ランダム傾きモデル</h3>
+<p>ランダム切片ランダム傾きモデルは，切片と傾きの両方が個人ごとに異なるモデルである。これは最も複雑な変量効果モデルで，個人ごとに異なる切片と傾きを同時に考慮する。</p>
+<p><span class="math display">\[
+\beta_{0i} = \beta_0 + u_{0i}
+\]</span> <span class="math display">\[
+\beta_{1i} = \beta_1 + u_{1i}
+\]</span></p>
+<p>ここで，<span class="math inline">\(u_{0i}\)</span>は個人<span class="math inline">\(i\)</span>の切片の個人差，<span class="math inline">\(u_{1i}\)</span>は個人<span class="math inline">\(i\)</span>の傾きの個人差である。 このランダム効果はいずれも個人に係るものであるから相関することが仮定されるため，それぞれに正規分布を仮定するのではなく多変量正規分布から得られるものと仮定する。当然のことながら，この相関係数も推定対象である。</p>
+<p><span class="math display">\[
+\begin{pmatrix} u_{0i} \\ u_{1i} \end{pmatrix} \sim MVN\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \sigma_{u0}^2 &amp; \sigma_{u01} \\ \sigma_{u01} &amp; \sigma_{u1}^2 \end{pmatrix} \right)
+\]</span></p>
+<p>モデル全体としては</p>
+<p><span class="math display">\[
+y_{ij} = (\beta_0 + u_{0i}) + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
+\]</span></p>
+<p>となる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データ生成</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>n_person <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># 個人数</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>n_obs <span class="ot">&lt;-</span> <span class="dv">20</span>     <span class="co"># 各個人の観測数</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>sigma_u0 <span class="ot">&lt;-</span> <span class="fl">1.0</span>  <span class="co"># 切片の個人差の標準偏差</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>sigma_u1 <span class="ot">&lt;-</span> <span class="fl">0.5</span>  <span class="co"># 傾きの個人差の標準偏差</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.3</span>       <span class="co"># 切片と傾きの相関</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>sigma_e <span class="ot">&lt;-</span> <span class="fl">0.5</span>   <span class="co"># 誤差の標準偏差</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 切片と傾きの共分散行列</span></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sigma_u0<span class="sc">^</span><span class="dv">2</span>, rho<span class="sc">*</span>sigma_u0<span class="sc">*</span>sigma_u1, </span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>                  rho<span class="sc">*</span>sigma_u0<span class="sc">*</span>sigma_u1, sigma_u1<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 個人ごとのランダム効果（切片と傾き）</span></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>random_effects <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n_person, <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">Sigma =</span> Sigma)</span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>person_intercepts <span class="ot">&lt;-</span> random_effects[, <span class="dv">1</span>]</span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>person_slopes <span class="ot">&lt;-</span> random_effects[, <span class="dv">2</span>]</span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a><span class="co"># データフレーム作成</span></span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a>df_random_both <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb51-25"><a href="#cb51-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">person =</span> <span class="dv">1</span><span class="sc">:</span>n_person,</span>
+<span id="cb51-26"><a href="#cb51-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">obs =</span> <span class="dv">1</span><span class="sc">:</span>n_obs</span>
+<span id="cb51-27"><a href="#cb51-27" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-28"><a href="#cb51-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb51-29"><a href="#cb51-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">runif</span>(<span class="fu">n</span>(), <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">10</span>),</span>
+<span id="cb51-30"><a href="#cb51-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">u_0 =</span> person_intercepts[person],</span>
+<span id="cb51-31"><a href="#cb51-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">u_1 =</span> person_slopes[person],</span>
+<span id="cb51-32"><a href="#cb51-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> (beta_0 <span class="sc">+</span> u_0) <span class="sc">+</span> (beta_1 <span class="sc">+</span> u_1) <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma_e),</span>
+<span id="cb51-33"><a href="#cb51-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">person_factor =</span> <span class="fu">factor</span>(person, <span class="at">levels =</span> <span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>))</span>
+<span id="cb51-34"><a href="#cb51-34" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb51-35"><a href="#cb51-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-36"><a href="#cb51-36" aria-hidden="true" tabindex="-1"></a><span class="do">## データの確認</span></span>
+<span id="cb51-37"><a href="#cb51-37" aria-hidden="true" tabindex="-1"></a>df_random_both <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  person   obs     x   u_0    u_1     y person_factor
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;        
+1      1     1  7.52  1.12 -0.351 15.2  1            
+2      1     2  6.34  1.12 -0.351 12.8  1            
+3      1     3  2.48  1.12 -0.351  6.12 1            
+4      1     4  5.51  1.12 -0.351 11.3  1            
+5      1     5  2.35  1.12 -0.351  5.18 1            
+6      1     6  2.59  1.12 -0.351  5.38 1            </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p1: 線型回帰（全体で一つの回帰線）</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_random_both, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"線型回帰（固定効果のみ）"</span>) <span class="sc">+</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>))</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="co"># p2: ランダム切片ランダム傾きモデル（個人ごとに異なる切片と傾きの回帰線）</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_random_both, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">color =</span> person_factor)) <span class="sc">+</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"説明変数"</span>, <span class="at">y =</span> <span class="st">"目的変数"</span>, <span class="at">title =</span> <span class="st">"ランダム切片ランダム傾きモデル"</span>) <span class="sc">+</span></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"IPAexGothic"</span>),</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/random_intercept_slope_model_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>プロットを見ると，個人ごとに色分けしていない図(左；固定効果のみの線型回帰)だけ見て単純な線型回帰でもいいように思えるが，色分けした図(右；ランダム切片ランダム傾きモデル)をみると，より個体差をうまく捉えていることがわかる。データはまず可視化することが重要であることがわかるだろう。</p>
+<p>さて，これについての推定コードの書き方も見ておこう。切片と傾きの両方が変量効果として<code>()</code>の中に記述される。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>result.bayes.random_both <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> x <span class="sc">|</span> person),</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_random_both,</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">12345</span>,</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 2 finished in 2.2 seconds.
+Chain 3 finished in 2.3 seconds.
+Chain 1 finished in 2.4 seconds.
+Chain 4 finished in 2.4 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 2.3 seconds.
+Total execution time: 2.5 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_both)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 7 divergent transitions after warmup. Increasing
+adapt_delta above 0.8 may help. See
+http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: y ~ x + (1 + x | person) 
+   Data: df_random_both (Number of observations: 200) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Multilevel Hyperparameters:
+~person (Number of levels: 10) 
+                 Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)        0.96      0.29     0.55     1.70 1.00     1083     2237
+sd(x)                0.34      0.10     0.20     0.59 1.00     1244     1640
+cor(Intercept,x)     0.33      0.30    -0.34     0.80 1.00     1492     2408
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept     0.83      0.33     0.14     1.47 1.00     1360     1763
+x             1.65      0.11     1.43     1.89 1.00     1064     1454
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.53      0.03     0.47     0.58 1.00     4200     2756
+
+Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.bayes.random_both)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/random_intercept_slope_model-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/random_intercept_slope_model-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 比較のためにML推定も行っておく</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>result.ml.random_both <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> x <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> x <span class="sc">|</span> person), <span class="at">data =</span> df_random_both)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.ml.random_both)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: y ~ x + (1 + x | person)
+   Data: df_random_both
+
+REML criterion at convergence: 385
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.4362 -0.6324 -0.0689  0.5880  2.7101 
+
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr
+ person   (Intercept) 0.62433  0.7901       
+          x           0.07568  0.2751   0.43
+ Residual             0.27260  0.5221       
+Number of obs: 200, groups:  person, 10
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(&gt;|t|)    
+(Intercept)  0.83552    0.26122 8.76380   3.199   0.0112 *  
+x            1.65027    0.08804 8.98000  18.745 1.65e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+  (Intr)
+x 0.369 </code></pre>
+</div>
+</div>
+<p>変量効果のモデル表記で，<code>(1 + x | person)</code>は切片と傾きの両方にランダム効果を考慮することを表す。<code>1</code>は切片，<code>x</code>は傾きのランダム効果を指定している。</p>
+<p>このモデルでは切片と傾きの相関も推定される。設定した相関（<span class="math inline">\(\rho\)</span> = 0.3）がどの程度再現されているか確認してみよう。また，個人レベルの推定値も前述の方法で取り出すことができる。</p>
+</section>
+</section>
+<section id="階層線型モデルhlm" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="階層線型モデルhlm"><span class="header-section-number">13.4</span> 階層線型モデル(HLM)</h2>
+<p>階層線型モデルは，さらに確率分布をMixしていくモデルである。 個人差変数を変量効果として考えた時，ある個人<span class="math inline">\(i\)</span>から複数の反応<span class="math inline">\(j\)</span>を得てデータとしているのであった。これを個人に「ネストされた」データ(入子状のデータ。マトリョーシカのようなもの)として考えると，階層線型モデルのイメージに近い。</p>
+<p>階層線型モデルが扱うのは，階層構造を持つデータである。例えばある学級での教育効果を考えるとして，調査研究の範囲がひろがれば学級間比較，学校間比較となっていくだろう。学級は学校にネストされているし，学校は地区にネストされているし，地区は市区町村に，市区町村は都道府県にネストされている，という形で階層を考えることができる。</p>
+<p>また，学級の中の個人，個人の中の課題種別・・・と内側にネストしていくこともできる。ポイントはネストのレベルに対応した確率分布を仮定するから，そのネストレベルに含まれる各要素は質が同じで相互に交換可能なものであると考える点である。例えば記憶実験などにおいて，同程度の「無意味さ」を持った単語を覚えると言ったとき，「めぬそ」「ぬきは」といっった言葉はどちらを刺激として与えられても三文字の無意味な綴りであるという点では等質と皆しているのである。</p>
+<p>また階層線型モデルの面白いところは，上位の変数が下位の変数に影響を与えるようなモデルや，その逆のようなレベル間関係をモデリングできるところである。たとえば市区町村レベルの住民の数が，学級レベルの教育水準に影響をしているかもしれない。こういったレベル間関係も(理論的には)表現できるのである。</p>
+<p>どこにレベルを想定するか，そのレベルを想定する意味があるかどうかについても検証する必要がある。過度に複雑なモデルにしても意味がないので，そのレベルで一旦まとめる必要があるかどうかを，事前にチェックする必要がある。レベルでまとめることの意義は，級内相関(Interclass Correlation Coefficient)を見ることで判断する。</p>
+<section id="レベル階層線型モデル" class="level3" data-number="13.4.1">
+<h3 data-number="13.4.1" class="anchored" data-anchor-id="レベル階層線型モデル"><span class="header-section-number">13.4.1</span> 2レベル階層線型モデル</h3>
+<p>最も基本的な階層線型モデルは2レベルモデルである。ここでは学級（クラスター）にネストされた生徒の学習データを例に，2レベル階層線型モデルについて説明する。</p>
+<section id="レベル1個人レベルのモデル" class="level4" data-number="13.4.1.1">
+<h4 data-number="13.4.1.1" class="anchored" data-anchor-id="レベル1個人レベルのモデル"><span class="header-section-number">13.4.1.1</span> レベル1（個人レベル）のモデル</h4>
+<p>個人<span class="math inline">\(i\)</span>（<span class="math inline">\(i = 1, 2, \ldots, n_j\)</span>）が学級<span class="math inline">\(j\)</span>（<span class="math inline">\(j = 1, 2, \ldots, J\)</span>）に属している場合，レベル1のモデルは以下のように表される：</p>
+<p><span class="math display">\[
+Y_{ij} = \beta_{0j} + \beta_{1j}X_{ij} + r_{ij}
+\]</span></p>
+<p>ここで：</p>
+<ul>
+<li><span class="math inline">\(Y_{ij}\)</span>：学級<span class="math inline">\(j\)</span>の生徒<span class="math inline">\(i\)</span>の学習成績</li>
+<li><span class="math inline">\(X_{ij}\)</span>：学級<span class="math inline">\(j\)</span>の生徒<span class="math inline">\(i\)</span>の説明変数（例：学習時間）</li>
+<li><span class="math inline">\(\beta_{0j}\)</span>：学級<span class="math inline">\(j\)</span>の切片（学級<span class="math inline">\(j\)</span>の平均的な学習成績）</li>
+<li><span class="math inline">\(\beta_{1j}\)</span>：学級<span class="math inline">\(j\)</span>の傾き（学級<span class="math inline">\(j\)</span>における説明変数の効果）</li>
+<li><span class="math inline">\(r_{ij}\)</span>：個人レベルの誤差項，<span class="math inline">\(r_{ij} \sim N(0, \sigma^2)\)</span></li>
+</ul>
+</section>
+<section id="レベル2学級レベルのモデル" class="level4" data-number="13.4.1.2">
+<h4 data-number="13.4.1.2" class="anchored" data-anchor-id="レベル2学級レベルのモデル"><span class="header-section-number">13.4.1.2</span> レベル2（学級レベル）のモデル</h4>
+<p>学級レベルでは，レベル1の係数が学級レベルの変数の関数として表される：</p>
+<p><span class="math display">\[
+\beta_{0j} = \gamma_{00} + \gamma_{01}W_j + u_{0j}
+\]</span></p>
+<p><span class="math display">\[
+\beta_{1j} = \gamma_{10} + \gamma_{11}W_j + u_{1j}
+\]</span></p>
+<p>ここで：</p>
+<ul>
+<li><span class="math inline">\(W_j\)</span>：学級<span class="math inline">\(j\)</span>の説明変数（例：学級規模）</li>
+<li><span class="math inline">\(\gamma_{00}\)</span>：全体の切片（全学級の平均的な学習成績）</li>
+<li><span class="math inline">\(\gamma_{01}\)</span>：学級レベル変数<span class="math inline">\(W_j\)</span>の切片への効果</li>
+<li><span class="math inline">\(\gamma_{10}\)</span>：全体の傾き（全学級の平均的な効果の大きさ）</li>
+<li><span class="math inline">\(\gamma_{11}\)</span>：学級レベル変数<span class="math inline">\(W_j\)</span>の傾きへの効果</li>
+<li><span class="math inline">\(u_{0j}, u_{1j}\)</span>：学級レベルの誤差項（変量効果）</li>
+</ul>
+<p>変量効果は多変量正規分布に従うと仮定される：</p>
+<p><span class="math display">\[
+\begin{pmatrix} u_{0j} \\ u_{1j} \end{pmatrix} \sim MVN\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \tau_{00} &amp; \tau_{01} \\ \tau_{01} &amp; \tau_{11} \end{pmatrix} \right)
+\]</span></p>
+</section>
+<section id="統合モデル" class="level4" data-number="13.4.1.3">
+<h4 data-number="13.4.1.3" class="anchored" data-anchor-id="統合モデル"><span class="header-section-number">13.4.1.3</span> 統合モデル</h4>
+<p>レベル1とレベル2のモデルを統合すると：</p>
+<p><span class="math display">\[
+Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij} + u_{0j} + u_{1j}X_{ij} + r_{ij}
+\]</span></p>
+<p>この式は以下のように分解できる：</p>
+<p><strong>固定効果（Fixed Effects）</strong>：</p>
+<ul>
+<li><span class="math inline">\(\gamma_{00}\)</span>：全体切片</li>
+<li><span class="math inline">\(\gamma_{01}\)</span>：学級レベル変数の主効果</li>
+<li><span class="math inline">\(\gamma_{10}\)</span>：個人レベル変数の主効果</li>
+<li><span class="math inline">\(\gamma_{11}\)</span>：クロスレベル交互作用効果</li>
+</ul>
+<p><strong>変量効果（Random Effects）</strong>：</p>
+<ul>
+<li><span class="math inline">\(u_{0j}\)</span>：学級の切片における変量効果</li>
+<li><span class="math inline">\(u_{1j}X_{ij}\)</span>：学級の傾きにおける変量効果</li>
+<li><span class="math inline">\(r_{ij}\)</span>：個人レベルの誤差</li>
+</ul>
+</section>
+<section id="級内相関係数icc" class="level4" data-number="13.4.1.4">
+<h4 data-number="13.4.1.4" class="anchored" data-anchor-id="級内相関係数icc"><span class="header-section-number">13.4.1.4</span> 級内相関係数（ICC）</h4>
+<p>階層構造の意義を評価するために，級内相関係数（Intraclass Correlation Coefficient: ICC）を計算する。ICCは同じクラスター内の観測値間の相関を表す：</p>
+<p><span class="math display">\[
+\text{ICC} = \frac{\tau_{00}}{\tau_{00} + \sigma^2}
+\]</span></p>
+<p>ここで：</p>
+<ul>
+<li><span class="math inline">\(\tau_{00}\)</span>：学級間分散（between-group variance）</li>
+<li><span class="math inline">\(\sigma^2\)</span>：学級内分散（within-group variance）</li>
+</ul>
+<p>ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが大きい場合（一般的に0.05以上），階層モデルの適用が推奨される。</p>
+</section>
+</section>
+<section id="モデルの図解" class="level3" data-number="13.4.2">
+<h3 data-number="13.4.2" class="anchored" data-anchor-id="モデルの図解"><span class="header-section-number">13.4.2</span> モデルの図解</h3>
+<p>数式で表現することでわかりにくくなったかもしれないので，図解しておく。この図は下から順にみていくとよい。 データ<span class="math inline">\(Y_{ij}\)</span>が図の底にあり，これをある正規分布が生成していると考える。この正規分布の幅<span class="math inline">\(\sigma_e^2\)</span>に応じて個人レベルの誤差<span class="math inline">\(r_{ij}\)</span>が生成される。この正規分布の平均は会期モデルで表現されるが，その時の回帰係数が多次元正規分布によって生成される。多次元正規分布はそれぞれの位置(平均)と幅をもち，さらに両者の相関関係<span class="math inline">\(\rho\)</span>も含まれる。切片<span class="math inline">\(\beta_{0j}\)</span>および傾き<span class="math inline">\(\beta_{1j}\)</span>に生じる誤差<span class="math inline">\(u_{0j},u_{1j}\)</span>が幅<span class="math inline">\(\tau_{00},\tau_{11}\)</span>に応じて生成され，またその平均は学級レベルの変数で説明される会期式になっている。ここでの切片と傾きについては事前情報がないので，無情報分布(一様分布)で表している。誤差の事前分布は負の数を取らないように，切断された分布をもちいる。cauchy分布やt分布など，裾の重い分布が用いられることが多い。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/hlm_model.png" class="img-fluid figure-img"></p>
+<figcaption>HLMのモデル図</figcaption>
+</figure>
+</div>
+</section>
+<section id="具体例" class="level3" data-number="13.4.3">
+<h3 data-number="13.4.3" class="anchored" data-anchor-id="具体例"><span class="header-section-number">13.4.3</span> 具体例</h3>
+<p>具体的な応用例を見ておこう。 ここでは，これまで用いてきた野球のデータを用いる。このデータには選手の個人成績（身長，体重，安打数など）と，選手が所属するチーム，守備位置といった階層構造が含まれている。</p>
+<p>野球データの特徴として，選手は特定のチームに所属し，そのチーム内で特定の守備位置を担当するという階層構造がある。つまり，守備位置はチームにネストされた構造となっている。チームレベルでは戦術や指導方法が共通し，同じチーム内の守備位置レベルでは求められる技能や体格が類似する傾向がある。このような階層構造を無視して分析すると，個人差を過大評価したり，統計的推論に誤りが生じる可能性がある。</p>
+<p>本例では2020年度のデータに限定し，投手を除く野手のデータのみを使用する。投手は他の野手とは明らかに異なる特性を持つため，分析から除外することで，より一貫性のあるデータセットとする。</p>
+<p>まずは階層構造の意義を確認するため，チームおよび守備位置のICC（級内相関係数）を計算し，階層モデルの適用が適切かどうかを検証する。ICCの計算には<code>multilevel</code>パッケージを用いた。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, brms, bayesplot, multilevel)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2020年度"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="fu">as.factor</span>(position)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(position <span class="sc">!=</span> <span class="st">"投手"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7944 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (6): Year, Name, team, bloodType, UniformNum, position
+dbl (11): salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save, Hold
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate ICC using multilevel package</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># チームレベルのICC</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>icc_team <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team, <span class="at">data =</span> dat))</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ネスト構造を考慮したICC計算</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="co"># チーム内ポジションのICC</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>team_position <span class="ot">&lt;-</span> <span class="fu">paste</span>(dat<span class="sc">$</span>team, dat<span class="sc">$</span>position, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>icc_team_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> team_position, <span class="at">data =</span> dat))</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 参考：ポジション単独のICC</span></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>icc_position <span class="ot">&lt;-</span> multilevel<span class="sc">::</span><span class="fu">ICC1</span>(<span class="fu">aov</span>(Hit <span class="sc">~</span> position, <span class="at">data =</span> dat))</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team ICC1:"</span>, <span class="fu">round</span>(icc_team, <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Team ICC1: -0.031"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team:Position ICC1:"</span>, <span class="fu">round</span>(icc_team_position, <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Team:Position ICC1: -0.029"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Position ICC1:"</span>, <span class="fu">round</span>(icc_position, <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Position ICC1: 0.046"</code></pre>
+</div>
+</div>
+<p>ICCの値が負になっているので，群内のばらつきの方が群間のばらつきよりも大きいことがわかる。つまり群に分けた意味がないことを意味している。本来はある程度の正の大きさのICCを持つことが望ましい<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>。ただし，チーム<span class="math inline">\(\times\)</span>ポジションの組み合わせで群をつくると，群内の類似性が現れるため，これを群わけ変数として用いることにしよう。</p>
+<p>従属変数を安打数(<code>Hit</code>)，説明変数をゲーム出場回数(<code>Games</code>)ならびに選手の体躯(<code>height</code>と<code>weight</code>)とする。 これらがチームの中でのポジションでネストされていて切片が異なるとしたモデルを構成する。なお安打数は正の整数しか取らないから，ポアソン分布を用いた。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ネスト構造を考慮したポアソンモデル</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (1 | team) + (1 | team:position) でポジションをチーム内にネスト</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>model_hit <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    Hit <span class="sc">~</span> Games <span class="sc">+</span> height <span class="sc">+</span> weight <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> team<span class="sc">:</span>position),</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(),</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">10000</span>,</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span></span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model summary for Hit model</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>MCMCのチェックのプロットを見ておく。Rhatなどの数値も良好である。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/mcmc_check_hlm-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>モデルがデータにあっているかどうかを確認する一つの方法が，<strong>事後予測分布</strong>による可視化である。モデルから生成されるデータの分布を実際のデータに重ねてみて，同じような分布が得られているかを見ておく。 <code>bayesplot</code>パッケージの<code>pp_check</code>関数は，事後予測分布の一部とデータとの重なり具合を可視化してくれる。これを見ると，安打数がごく少ないあたりの分布はうまく適合していない。モデルとして改良の余地があるところだろう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior predictive check for Hit model</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(model_hit, <span class="at">ndraws =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/pp_check-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>最後に，グループごとのプロットを見てみよう。チーム差，ポジションの違いといった細かい調整により，よりうまくデータに適合している様子が見てとれるだろう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>predicted_hit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model_hit,</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> dat,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">allow_new_levels =</span> <span class="cn">TRUE</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">observed =</span> dat<span class="sc">$</span>Hit,</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">predicted =</span> predicted_hit<span class="sc">$</span>Estimate,</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">team =</span> dat<span class="sc">$</span>team,</span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> dat<span class="sc">$</span>position</span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb76-13"><a href="#cb76-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-14"><a href="#cb76-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> observed, <span class="at">y =</span> predicted, <span class="at">color =</span> team)) <span class="sc">+</span></span>
+<span id="cb76-15"><a href="#cb76-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb76-16"><a href="#cb76-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb76-17"><a href="#cb76-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb76-18"><a href="#cb76-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Observed Hit"</span>, <span class="at">y =</span> <span class="st">"Predicted Hit"</span>,</span>
+<span id="cb76-19"><a href="#cb76-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Predicted vs Observed Hit Count (2020年度)"</span>,</span>
+<span id="cb76-20"><a href="#cb76-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"Team"</span></span>
+<span id="cb76-21"><a href="#cb76-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb76-22"><a href="#cb76-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(team <span class="sc">~</span> position, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb76-23"><a href="#cb76-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb76-24"><a href="#cb76-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter13_files/figure-html/model_fit_visualize-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="課題" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="課題"><span class="header-section-number">13.5</span> 課題</h2>
+<section id="基本問題パラメータリカバリ" class="level3" data-number="13.5.1">
+<h3 data-number="13.5.1" class="anchored" data-anchor-id="基本問題パラメータリカバリ"><span class="header-section-number">13.5.1</span> 基本問題：パラメータリカバリ</h3>
+<p>brmsパッケージを使用してベイズ統計モデリングにおけるパラメータリカバリを実践してください。パラメータリカバリとは、既知のパラメータで生成したデータから、そのパラメータを正しく推定できるかを確認する手法のことです。</p>
+<section id="課題1-1-ロジスティック回帰のパラメータリカバリ" class="level4" data-number="13.5.1.1">
+<h4 data-number="13.5.1.1" class="anchored" data-anchor-id="課題1-1-ロジスティック回帰のパラメータリカバリ"><span class="header-section-number">13.5.1.1</span> 課題1-1: ロジスティック回帰のパラメータリカバリ</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ロジスティック回帰のパラメータリカバリ</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: 既知のパラメータでデータを生成</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>true_intercept <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>true_slope <span class="ot">&lt;-</span> <span class="fl">1.2</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plogis</span>(true_intercept <span class="sc">+</span> true_slope <span class="sc">*</span> x)  <span class="co"># logistic function</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> p)</span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a><span class="co"># データフレーム作成</span></span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>df_logistic <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-14"><a href="#cb77-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: brmsでベイズ推定</span></span>
+<span id="cb77-15"><a href="#cb77-15" aria-hidden="true" tabindex="-1"></a>model_logistic <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb77-16"><a href="#cb77-16" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x,</span>
+<span id="cb77-17"><a href="#cb77-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">bernoulli</span>(),</span>
+<span id="cb77-18"><a href="#cb77-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_logistic,</span>
+<span id="cb77-19"><a href="#cb77-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> <span class="fu">c</span>(</span>
+<span id="cb77-20"><a href="#cb77-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">2.5</span>), <span class="at">class =</span> Intercept),</span>
+<span id="cb77-21"><a href="#cb77-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">2.5</span>), <span class="at">class =</span> b)</span>
+<span id="cb77-22"><a href="#cb77-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb77-23"><a href="#cb77-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb77-24"><a href="#cb77-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">2000</span>,</span>
+<span id="cb77-25"><a href="#cb77-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb77-26"><a href="#cb77-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb77-27"><a href="#cb77-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb77-28"><a href="#cb77-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-29"><a href="#cb77-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: 結果の確認</span></span>
+<span id="cb77-30"><a href="#cb77-30" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_logistic)</span>
+<span id="cb77-31"><a href="#cb77-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_logistic)</span>
+<span id="cb77-32"><a href="#cb77-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-33"><a href="#cb77-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: パラメータリカバリの評価</span></span>
+<span id="cb77-34"><a href="#cb77-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 真の値との比較</span></span>
+<span id="cb77-35"><a href="#cb77-35" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(model_logistic)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>課題</strong>: 上記のコードを実行し、真の切片(0.5)と傾き(1.2)が適切に推定されているかを確認してください。また、事後分布の95%信頼区間に真の値が含まれているかを確認してください。</p>
+</section>
+<section id="課題1-2-ポアソン回帰のパラメータリカバリ" class="level4" data-number="13.5.1.2">
+<h4 data-number="13.5.1.2" class="anchored" data-anchor-id="課題1-2-ポアソン回帰のパラメータリカバリ"><span class="header-section-number">13.5.1.2</span> 課題1-2: ポアソン回帰のパラメータリカバリ</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 課題1-2: ポアソン回帰のパラメータリカバリ</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>true_intercept <span class="ot">&lt;-</span> <span class="fl">1.0</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>true_slope <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">3</span>)</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">exp</span>(true_intercept <span class="sc">+</span> true_slope <span class="sc">*</span> x)</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rpois</span>(n, <span class="at">lambda =</span> lambda)</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>df_poisson <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ベイズ推定</span></span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>model_poisson <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> x,</span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(),</span>
+<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_poisson,</span>
+<span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> <span class="fu">c</span>(</span>
+<span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">2.5</span>), <span class="at">class =</span> Intercept),</span>
+<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">2.5</span>), <span class="at">class =</span> b)</span>
+<span id="cb78-20"><a href="#cb78-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb78-21"><a href="#cb78-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb78-22"><a href="#cb78-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">2000</span>,</span>
+<span id="cb78-23"><a href="#cb78-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb78-24"><a href="#cb78-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb78-25"><a href="#cb78-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb78-26"><a href="#cb78-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-27"><a href="#cb78-27" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_poisson)</span>
+<span id="cb78-28"><a href="#cb78-28" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_poisson)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>課題</strong>: 真の切片(1.0)と傾き(0.8)が適切に推定されているかを確認してください。</p>
+</section>
+</section>
+<section id="応用問題野球データの階層モデリング" class="level3" data-number="13.5.2">
+<h3 data-number="13.5.2" class="anchored" data-anchor-id="応用問題野球データの階層モデリング"><span class="header-section-number">13.5.2</span> 応用問題：野球データの階層モデリング</h3>
+<p><a href="Baseball.csv">野球データBaseball.csv</a>を用いて、Year、Teamでネストされた階層構造を持つモデルを構築します。2018年度から2020年度の3年間のデータを使用し、投手のデータに限定します。変数には年俸(salary)、身長(height)、体重(weight)のほか、投手の成績として勝利数(Win)、負け数(Lose)、ホールドポイント(Hold)、セーブポイント(Save)があります。これらの変数を用いて、年度・チームの階層効果を考慮したモデリングを行います。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2018年度"</span>, <span class="st">"2019年度"</span>, <span class="st">"2020年度"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(position <span class="sc">==</span> <span class="st">"投手"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Win), <span class="sc">!</span><span class="fu">is.na</span>(Lose), <span class="sc">!</span><span class="fu">is.na</span>(Games), <span class="sc">!</span><span class="fu">is.na</span>(salary), <span class="sc">!</span><span class="fu">is.na</span>(height), <span class="sc">!</span><span class="fu">is.na</span>(weight)) <span class="sc">%&gt;%</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Year =</span> <span class="fu">as.factor</span>(Year),</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">team =</span> <span class="fu">as.factor</span>(team)</span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="モデルaポアソン回帰モデル" class="level4" data-number="13.5.2.1">
+<h4 data-number="13.5.2.1" class="anchored" data-anchor-id="モデルaポアソン回帰モデル"><span class="header-section-number">13.5.2.1</span> モデルA:ポアソン回帰モデル</h4>
+<p>次のモデルを実行してください。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  Win <span class="sc">~</span> height <span class="sc">+</span> weight <span class="sc">+</span> Games <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> team) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Year),</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>(),</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">2000</span>,</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>課題1</strong>: このモデルの構造を説明してください。以下の点について述べてください：</p>
+<ul>
+<li>従属変数と確率分布</li>
+<li>固定効果(説明変数)の意味</li>
+<li>変量効果(階層構造)の意味</li>
+<li>なぜこの確率分布を選んだのか</li>
+</ul>
+<p><strong>課題2</strong>: モデルの結果を解釈してください。以下の観点が含まれるといいでしょう。：</p>
+<ul>
+<li>各固定効果の係数の意味と統計的有意性</li>
+<li>変量効果の分散の大きさとその解釈</li>
+</ul>
+<p><strong>課題3</strong>: 以下の可視化を行ってください：</p>
+<ul>
+<li><code>plot(model1)</code> でMCMCの収束診断</li>
+<li><code>pp_check(model1)</code> で事後予測チェック</li>
+<li>チーム別・年度別の予測値と実測値の比較プロット</li>
+</ul>
+</section>
+<section id="モデルb対数正規モデル" class="level4" data-number="13.5.2.2">
+<h4 data-number="13.5.2.2" class="anchored" data-anchor-id="モデルb対数正規モデル"><span class="header-section-number">13.5.2.2</span> モデルB:対数正規モデル</h4>
+<p>次のモデルを実行してください。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(salary) <span class="sc">~</span> Win <span class="sc">+</span> Lose <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> Games <span class="sc">|</span> team) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Year),</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">2000</span>,</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>課題1</strong>: このモデルの構造を説明してください。以下の点について述べてください：</p>
+<ul>
+<li>従属変数の対数変換の理由</li>
+<li>固定効果(Win, Lose)の経済的意味</li>
+<li>変量効果の構造(ランダム切片・ランダム傾き)の意味</li>
+</ul>
+<p><strong>課題2</strong>: モデルの結果を解釈してください。以下の観点が含まれるといいでしょう。：</p>
+<ul>
+<li>勝利数・敗戦数が年俸に与える影響（%変化として）</li>
+<li>チーム間の年俸格差とGames効果の違い</li>
+<li>年度効果の大きさと経済的解釈</li>
+</ul>
+<p><strong>課題3</strong>: 以下の可視化を行ってください：</p>
+<ul>
+<li><code>plot(model2)</code> でMCMCの収束診断</li>
+<li>チーム別のGames効果の違いを可視化</li>
+<li>実際の年俸と予測年俸の散布図</li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Hox2002" class="csl-entry" role="listitem">
+Hox, J. 2002. <em>Multilevel Analysis: Techniques and Applications</em>. Lawrence Erlbaum Associates.
+</div>
+<div id="ref-Raudenbush2000" class="csl-entry" role="listitem">
+Raudenbush, S.W., and Liu.X. 2000. <span>“Statistical Power and Optimal Design for Multisite Randomnized Trials.”</span> <em>Psychological Methods</em> 5: 199–213.
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>エクスキューズが許されるなら，当時の統計学，計算機科学は現代に比べると貧弱で，理論的に正しくないことがわかっていても，ユーザにはそれ以上のことができなかったということがある。また心理学で測定されるデータは，あくまでも目に見えない心を表現したラフな近似値で，統計学上の仮定に違反したことで生じる問題よりも，そもそも本質的な問題があるのだから，統計の運用もあくまでもラフな近似値で良い，という風潮があったのかもしれない。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>一般化線型モデルと一般線型モデルは，一文字「化」が入るかどうかの微妙な違いである。英語ではgeneralとgeneralizedの違いなので，こちらで理解した方が間違いが少なくて良いかもしれない。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>もちろん正確には自由度で割った平均平方(Mean Squares)の比が検定統計量の<span class="math inline">\(F\)</span>値である。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>0.05を小，0.10を中，0.15. を大とする基準が最も一般的である(<span class="citation" data-cites="Hox2002">Hox (<a href="#ref-Hox2002" role="doc-biblioref">2002</a>)</span>,<span class="citation" data-cites="Raudenbush2000">Raudenbush and Liu.X (<a href="#ref-Raudenbush2000" role="doc-biblioref">2000</a>)</span>)。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter12.html" class="pagination-link" aria-label="ベイズ統計の活用">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chapter14.html" class="pagination-link" aria-label="多変量解析(その1)">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析(その1)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
