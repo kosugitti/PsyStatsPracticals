@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>16&nbsp; ベイジアンモデリング – 心理学統計実習</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./practices.html" rel="next">
+<link href="./chapter15.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter16.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">心理学統計実習</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめようR/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Rによるレポートの作成</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Rでプログラミング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析(その1)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">演習問題</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#ベイジアンモデリングの学習方法" id="toc-ベイジアンモデリングの学習方法" class="nav-link active" data-scroll-target="#ベイジアンモデリングの学習方法"><span class="header-section-number">16.1</span> ベイジアンモデリングの学習方法</a>
+  <ul class="collapse">
+  <li><a href="#学習のステップ1確率的プログラミング言語stanの学習" id="toc-学習のステップ1確率的プログラミング言語stanの学習" class="nav-link" data-scroll-target="#学習のステップ1確率的プログラミング言語stanの学習"><span class="header-section-number">16.1.1</span> 学習のステップ1;確率的プログラミング言語Stanの学習</a></li>
+  <li><a href="#学習のステップ2これまでの分析方法を書き直してみる" id="toc-学習のステップ2これまでの分析方法を書き直してみる" class="nav-link" data-scroll-target="#学習のステップ2これまでの分析方法を書き直してみる"><span class="header-section-number">16.1.2</span> 学習のステップ2;これまでの分析方法を書き直してみる</a></li>
+  </ul></li>
+  <li><a href="#正規分布を使ったモデル" id="toc-正規分布を使ったモデル" class="nav-link" data-scroll-target="#正規分布を使ったモデル"><span class="header-section-number">16.2</span> 正規分布を使ったモデル</a>
+  <ul class="collapse">
+  <li><a href="#分散を推定する" id="toc-分散を推定する" class="nav-link" data-scroll-target="#分散を推定する"><span class="header-section-number">16.2.1</span> 分散を推定する</a></li>
+  <li><a href="#欠測のあるデータを有効に使う" id="toc-欠測のあるデータを有効に使う" class="nav-link" data-scroll-target="#欠測のあるデータを有効に使う"><span class="header-section-number">16.2.2</span> 欠測のあるデータを有効に使う</a></li>
+  </ul></li>
+  <li><a href="#正規分布以外の分布を使う" id="toc-正規分布以外の分布を使う" class="nav-link" data-scroll-target="#正規分布以外の分布を使う"><span class="header-section-number">16.3</span> 正規分布以外の分布を使う</a>
+  <ul class="collapse">
+  <li><a href="#項目反応理論" id="toc-項目反応理論" class="nav-link" data-scroll-target="#項目反応理論"><span class="header-section-number">16.3.1</span> 項目反応理論</a></li>
+  <li><a href="#再捕獲法による全体の推論" id="toc-再捕獲法による全体の推論" class="nav-link" data-scroll-target="#再捕獲法による全体の推論"><span class="header-section-number">16.3.2</span> 再捕獲法による全体の推論</a></li>
+  </ul></li>
+  <li><a href="#分布を混ぜる" id="toc-分布を混ぜる" class="nav-link" data-scroll-target="#分布を混ぜる"><span class="header-section-number">16.4</span> 分布を混ぜる</a>
+  <ul class="collapse">
+  <li><a href="#分布を混ぜる変化点を検出する" id="toc-分布を混ぜる変化点を検出する" class="nav-link" data-scroll-target="#分布を混ぜる変化点を検出する"><span class="header-section-number">16.4.1</span> 分布を混ぜる(変化点を検出する)</a></li>
+  <li><a href="#分布を混ぜる0過剰ポアソン分布" id="toc-分布を混ぜる0過剰ポアソン分布" class="nav-link" data-scroll-target="#分布を混ぜる0過剰ポアソン分布"><span class="header-section-number">16.4.2</span> 分布を混ぜる(0過剰ポアソン分布)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>ここまでは定型的な統計モデルをいろいろ紹介してきた。定型的といったのは，モデルの形や求めるパラメータの数，その解釈の仕方が決まっていて，データの種類や型に合えば適用できるモデルという意味である。これに対してベイジアンモデリングは，データに合う形のモデルを形作る＝モデリングするということであり，その推定方法としてベイズ法をつかうというものである。推定法は必ずしもベイズ法である必要はなく，最尤法でも最小二乗法でも良いのだが，これらの手法による推定は推定手順も自らで開発しなければならない。これに対し，すでにみた確率的プログラミング言語によるベイズ推定は，確率モデルさえ記述できれば推定結果が得られる。これにより，研究者は自らのデータとその背景に合ったモデルを考えて記述するだけでよく，テクニカルな推定手順を考える必要がなくなる。確率的プログラミング言語は，その言葉にあるようにプログラミングの知識を必要とするが，逆に言えばこの知識・技能さえ習得しておけば，あとは分析者のアイデア次第で、自身のオリジナルな分析ができる。</p>
+<p>以下ではStanによるプログラミングと，その特徴的な利用例についてみていくが，その前にベイジアンモデリングを学ぶ上での指針を示しておく。</p>
+<section id="ベイジアンモデリングの学習方法" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="ベイジアンモデリングの学習方法"><span class="header-section-number">16.1</span> ベイジアンモデリングの学習方法</h2>
+<section id="学習のステップ1確率的プログラミング言語stanの学習" class="level3" data-number="16.1.1">
+<h3 data-number="16.1.1" class="anchored" data-anchor-id="学習のステップ1確率的プログラミング言語stanの学習"><span class="header-section-number">16.1.1</span> 学習のステップ1;確率的プログラミング言語Stanの学習</h3>
+<p>ここではRを使った統計分析を扱ってきたので，改めてプログラミングとは，という話をする必要はないだろう。ただ，確率的プログラミング言語としてここで取り上げるStanは，Rよりもやや上級者向けの，C++と呼ばれる言語に基づいたものである。初学者にとって大きな違いは，「インタプリタ型とコンパイル型」，および「型宣言」の2点だろう。</p>
+<section id="インタプリタ型とコンパイル型" class="level4" data-number="16.1.1.1">
+<h4 data-number="16.1.1.1" class="anchored" data-anchor-id="インタプリタ型とコンパイル型"><span class="header-section-number">16.1.1.1</span> インタプリタ型とコンパイル型</h4>
+<p>Rはインタプリタ型言語と呼ばれる。個人的には「一問一答型」と呼んでいる。コマンドプロンプト<code>&gt;</code>が表示されている時，Rは入力を待って聞き耳を立てているのであった。ここに計算式や命令文を入れると，結果を計算して返す。つまり，問いに対して答えが返ってくる，という形式の繰り返しである。</p>
+<p>これに対してコンパイル型言語というのがある。C言語やJava，Python，そしてStanはこの形である。すなわち，命令文全体をまず書いて，その文書(スクリプトファイル)全体を機械語に翻訳する。この作業を<em>コンパイル</em>という。コンパイルされたものを実行すると，その文書の内容が実行される。ここで命令文に誤りがある場合，1.コンパイルできないというエラーが表示される，2.コンパイルはできるが，実行時にエラーが表示される，という2つのケースがある。エラーは大抵，XX行目がおかしい，という形で表示される。インタプリタ型であれば，書いて実行した行でエラーだと言われるので気づきやすいが，コンパイル型は一旦書き切ってからでないとエラーかどうかわからないので<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>，不便に感じるかもしれない。</p>
+<p>コンパイル型の利点は，一旦機械語に翻訳し，計算機は計算機自身の母語(機械語)で計算をするので，計算速度が速いという点にある。この利点のために必要なこととして理解して欲しい。また，コンパイルは専用のツールを使い，そのツールによってコンパイルされたものは，そのツールの環境でしか動かないという制約がある。Windowsの場合はRtools，Macの場合はcommand line toolsを導入する必要がある。これらは計算機のより根源的なところにアクセスする。一般的なアプリケーションを使うのとは違い，むしろMCMCサンプリングを行うアプリケーションを作るようなものだから，ウィルス対策ソフトがその実行を妨げるようなことがある。環境の構築はすでに済んでいるものとして話を進めるが，その準備に一苦労する可能性があることは覚えておくと良い。困ったことがあれば，自身で検索するなどして対応する必要があるだろう。</p>
+<p>さて，Stanを使った分析では，Rファイルとは別に命令文全体をStanの言語で書いたStanファイルを準備することになる。このファイルをRの命令文で「Stanを使ってコンパイルせよ」と指示する。コンパイルが終われば，これまたR側から，「そのコンパイルされたオブジェクトを使ってMCMCサンプリングをせよ」と指示する。計算結果はRのオブジェクトとして環境に保存されるから，あとはRによるデータハンドリングの作業になってくる。StanファイルもRファイルもRStudioのエディタ機能を利用すれば良いが，両者を混ぜるようなことのないよう，この仕組みを理解して進めてほしい。</p>
+</section>
+<section id="型宣言" class="level4" data-number="16.1.1.2">
+<h4 data-number="16.1.1.2" class="anchored" data-anchor-id="型宣言"><span class="header-section-number">16.1.1.2</span> 型宣言</h4>
+<p>聞きなれない言葉かもしれないが，型宣言とは，変数の型を宣言することである。例えば，<code>int x;</code>というコードがあったとき，<code>int</code>は整数型を表している。整数型は整数であり，<code>x</code>に代入可能なのは<code>1.0</code>(実数)でも<code>1+0i</code>(複素数)でもなく，<code>1</code>(整数)である。</p>
+<p>このように，変数を使う前にその変数がどの型なのかを宣言することを<em>型宣言</em>という。このような型宣言は，コンパイル型言語では必須である。このように宣言しておくことで，本来整数しか入らないところに実数を入れてしまう，といったエラーが生じないように工夫されている。Rでは変数を事前に宣言する必要がなく，ただ<code>x &lt;- 1</code>と書き始めると，<code>x</code>が整数であれ実数であれ，自由に扱うことができた。このことに慣れていると，事前に宣言しなければならないことが非常に不便に思えるかもしれないが，型宣言をすることで言語の堅牢性を高めているという利点がある。</p>
+<p>Stanはこの型宣言をブロックごとに行う必要がある。ブロックとは，中括弧<code>{}</code>で囲われる領域のことであり，次の6つのブロックがある。</p>
+<ol type="1">
+<li>dataブロック</li>
+<li>transformed dataブロック</li>
+<li>parametersブロック</li>
+<li>transformed parametersブロック</li>
+<li>modelブロック</li>
+<li>generated quantitiesブロック</li>
+</ol>
+<p>もっともよく使われるのは1.dataブロックと，3.parametersブロック，5.modelブロックである。dataブロックはStan外部とのやりとり，すなわちStanが外部から受け取るデータを宣言，記述するところである。ここで型が異なるデータが与えられるとエラーになる。すなわち，Stanの側で<code>int x;</code>と宣言してあるのに対し，R側から<code>x &lt;- 1.2</code>のような実数が与えられると，実行時にエラーになる。このように，型宣言をすることで，エラーを防ぐものであると理解してほしい。</p>
+<p>parametersブロックは推定したいパラメータを宣言するものであり，ここで宣言されたパラメータについて，Stanはサンプリング結果を返すことになる。modelブロックは確率モデルを記述するところ(尤度関数を記述するところ)であるので，もっとも重要なブロックであると言えるだろう。</p>
+<p>そのほかのブロックは捕捉的なものであり，必ずしも使う必要があるわけではない。transformed dataブロックは，dataブロックで宣言されたデータを変換するところであり，transformed parametersブロックは，parametersブロックで宣言されたパラメータを変換するところである。なぜそのような変換をするかといえば，内部で以後の計算をやりやすくするためである。例えば複数のパラメータを組み合わせて，確率分布に与える場合は一旦返還しておいた方が可読性が高い。具体例として回帰分析のことを考えると，パラメータは切片<span class="math inline">\(\beta_0\)</span>と傾き<span class="math inline">\(\beta_1\)</span>であり，これが説明変数<span class="math inline">\(x_i\)</span>と組み合わさって予測値<span class="math inline">\(\hat{y}_i\)</span>を作るのであった。パラメータブロックには<span class="math inline">\(\beta_0\)</span>と<span class="math inline">\(\beta_1\)</span>を宣言するが，transformed parametersブロックで<code>yhat</code>を宣言して</p>
+<p><span class="math display">\[ yhat = \beta_0 + \beta_1 x\]</span></p>
+<p>とかいておくと，モデルブロックでは<code>yhat</code>を使って記述できる。このように，あるパラメータがほかのパラメータの組み合わせで作られる場合などは，一旦その置き換えられる形を書いておいた方がわかりやすだろう。</p>
+<p>generated quantitiesブロックは，サンプリングされた値を加工して使う場合に用いる。サンプリングされたものの加工は，結果を受け取ったRの側でも可能なので，このブロックは必ずしも必要ではない。しかし，サンプリングが終わった時に自分に必要な加工された値も(コンパイルして高速で)計算しておいてくれると便利である。他にも色々な用途があるので，このブロックに関しては続く実践例のところでみていこう。</p>
+</section>
+<section id="そのほかの細かな違い" class="level4" data-number="16.1.1.3">
+<h4 data-number="16.1.1.3" class="anchored" data-anchor-id="そのほかの細かな違い"><span class="header-section-number">16.1.1.3</span> そのほかの細かな違い</h4>
+<p>あとは，行の終わりにセミコロンをつける必要があるとか，コメントを書くときに//を使うとか，そういった細かなところが違うだけである。</p>
+<p>プログラミングの基本は<strong>思った通りに動くのではなく，書いた通りに動く</strong>ことである。もし思い通りにいかず，エラーが表示されれば，それもあなたが書いたコードに原因がある<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。そのためエラーがでたら恐れ慄くのではなく，<em>解決のためのヒントが表示された</em>ぐらいに理解すれば良い。問題点を一つ一つ解決していけば，必ず望むところに到達できるはずである。最近は生成AIが発達しているので，エラーメッセージを丸ごと生成AIに与えて，どこにどのような問題があるかを聞くという方法があるので，それを利用すると良い。</p>
+</section>
+</section>
+<section id="学習のステップ2これまでの分析方法を書き直してみる" class="level3" data-number="16.1.2">
+<h3 data-number="16.1.2" class="anchored" data-anchor-id="学習のステップ2これまでの分析方法を書き直してみる"><span class="header-section-number">16.1.2</span> 学習のステップ2;これまでの分析方法を書き直してみる</h3>
+<p>ここまで様々な統計モデルを見てきた。ベイジアンモデリングの学習のステップ2は，これまでの分析方法をStanに書き直してみることである。</p>
+<p>例えば回帰分析を，重回帰分析を，階層線形モデルをStanの言葉で書いたらどうなるだろうか。もちろん<code>brms</code>パッケージを使うとこうした苦労は必要ないのだが，改めて自分で既知のモデルを描いてみると，どのようなモデルがどのように記述されるかがわかるだろう。</p>
+<p>この時のポイントは，分析に際して<strong>データ生成メカニズム</strong>という視点を持つことである。我々はつい，データがあってそれに合う分析方法を探す，という発想になってしまう。あるいは分析方法のバリエーションがないばあい，分析方法に合うようなデータを取る，という考え方になってしまう。これはおかしなことだとは思わないだろうか。自分の購入した統計ソフトが回帰分析しかできないので，離散変数は諦めて研究計画を練り直そう，というのは大変貧しい話である。</p>
+<p>本来，自然な人間の振る舞いや反応の仕方を数値におとして，そこから意味を読み取ることが統計学であり，予算や環境の問題で人間の振る舞いの方を変えさせるというのはおかしいのである。なるべくデータは生のままで，これをどのように分析するかを考えるべきである。その時，「このデータはどのようなメカニズムで生まれてきたのか」という視点からアプローチする。ここでのメカニズムは確率分布と言い換えても良いかもしれない。すなわち，個々の反応は確定した一つの値しか取らないわけがないので，その反応のあり得るほかの値をかんがえ，その総覧を確率分布として表現するのである。その上で，その確率分布が持つパラメータが，どのような仕組みを持っているかを数式で記述する。</p>
+<p>回帰分析は，個々の値<span class="math inline">\(y_i\)</span>が，本来取りうる値<span class="math inline">\(\hat{y}_i\)</span>に誤差<span class="math inline">\(e_i\)</span>がついて生じた，と考えている。この誤差は正規分布に従うから，<span class="math inline">\(y_i \sim N(\hat{y}_i, \sigma^2)\)</span>と記述される。この<span class="math inline">\(\hat{y}_i\)</span>は説明変数<span class="math inline">\(x_i\)</span>の線形結合で表現されるから，<span class="math inline">\(y_i \sim N(\beta_0 + \beta_1 x_i, \sigma^2)\)</span>とする，といった具合である。</p>
+<p>回帰分析がこのようなメカニズムであったように，t検定や分散分析なども同様に記述することができる。こうした既存のモデルを改めて記述すると，これまで意識していなかったモデルの性質が見えてくる。例えば，確率分布として何を仮定していたのか，パラメータの制約として何をおいていたのか，事前分布として何を考えていたのか，といったことが，Stanの言語で逐一記述することでわかるようになる。これが，既存のモデルをStanの言語で書き直すことによる学習の利点である。</p>
+<ol start="3" type="1">
+<li>様々なモデルを試してみる</li>
+</ol>
+<p>既存のモデルが確率的プログラミング言語で表現できることがわかれば，つぎは確率的プログラミング言語でないと表現できないことに目を向けてみよう。</p>
+<p>例えばt検定や分散分析は「平均値の差の検定」である。ここで行われていたことは，正規分布に従うデータの，平均値の差があるかどうか，全ての群間に差がないと言って間違える可能性はどれぐらいあるか，ということであった。データ生成メカニズムの観点から見ると，この手法はごく限定的な一部分しか見ていなかったことに気づく。</p>
+<p>平均値以外のパラメータを考えることはできないのだろうか。特定の群間の差だけを考えることはできないのだろうか。差があるかないかだけではなく，どれぐらい差があるのかとか，一方が他方より大きい確率はどれぐらいか，といったことを考えることはできないのだろうか。</p>
+<p>これらの疑問に対して，ベイジアンモデリングは答えを与える。実験計画法によって得られたデータであっても，これまで以上に多角的な視点，様々な仮説を持って考えることができる。</p>
+<p>もちろん実験計画法による要因効果の特定だけがベイジアンモデリングではない。正規分布ではないデータに対しても，特定の離散的な区別をしていないデータに対しても，データ生成の観点からモデルを組み込んでいくことができる。以下ではこうした例をいくつか見ていくが，これらを見ることで統計分析の視点が一変することを感じてほしい。統計分析は，与えられたデータに既存の分析を制約の中で考えるのではなく，データの生成メカニズムをクリエイティブに考える楽しい営みなのである。</p>
+<ol start="4" type="1">
+<li>限界について知っておこう</li>
+</ol>
+<p>ベイジアンモデリングの自由さ，創造性に目覚めてしばらくすると，その限界に気づくこともあるだろう。まずは楽しんでいってほしいというところだが，先にどのような壁に直面しがちなのか，みておこう。</p>
+<p>一つはモデル評価の問題である。例えば帰無仮説検定の場合，これは評価・判断をするための技術であるから，「設定した有意水準を下回る<span class="math inline">\(p\)</span>値を得れば差があると言って良い」といった評価基準が明確であった。これに対して，ベイジアンモデリングを行うと，こうした「YesかNoか」といった答えは出しにくい。帰無仮説と対立仮説というモデル，あるいは自分が開発したモデルが既存のモデルに比べて，良いのか悪いのかといった判断基準をどう持てば良いのか。</p>
+<p>これについての答えは明確で，<strong>ベイズファクター(Bayes Factor)</strong>をみよ，というのがそれである。ベイズ的モデル評価はこのBFに一元化できるといっても過言ではない。BFはモデルとデータの当てはまりの良さを，モデル同士の相対比較で表現するものであるから，対立仮説よりも帰無仮説のほうが良い，という結論を出すこともできる。ただし，この「当てはまりのよさ」(周辺対数尤度)を計算するプロセスが少し複雑で，またモデルによっては解析的に計算できず推定するしかないこともある<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>。この点については，今後の計算機科学の発展が望まれる。</p>
+<p>t検定や分散分析など，定型的なモデルについてはBFを自動的に算出してくれるパッケージやアプリケーションがある。JASP<span class="citation" data-cites="JASP2025">(<a href="references.html#ref-JASP2025" role="doc-biblioref">JASP Team 2025</a>)</span>はその代表的なもので，GUIを備えた統計ソフトウェアでありながら，既存の分析結果と同時にベイズ推定の結果も出力し，BFも自動的に計算してくれる。</p>
+<p>ただし，BFも「3.0より大きければ優っていると判断して良い」という数値基準もあるが，こうした「YesかNoか！」という二値判断が，過大な解釈を許したり基準を超えるための不正を生んだりしてきたという歴史を鑑みると，使い方には注意が必要である。またBFは事前分布の置き方によっては同じモデルでも大きく値を変えることが知られており，客観的な事前分布の置き方については様々な議論がある。</p>
+<p>BFを離れてモデルを評価するのであれば，得られた事後分布やパラメータを見て色々判断するしかないだろう。<span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> は事前に判断するパラメータの領域を宣言しておく方法を考えているし，<span class="citation" data-cites="Toyoda202003">豊田 (<a href="references.html#ref-Toyoda202003" role="doc-biblioref">2020</a>)</span> は事後分布の関数の形で判断する方法を提示したりしている。これらは帰無仮説検定に対する代案として提示されているものである。今後どのような形で議論が進むのか，まだ確定していないというのが現状である。</p>
+<p>モデルの評価はBFでできるとして，次に初学者が直面する問題は，「自分でモデルを作るのが難しい」というものである。以下に続く様々なモデルはどれも魅力的であるが，自分では思いつかないよ，と思って挫けそうになるという相談をよく耳にすることがある。これについては特効薬があるわけではないが，そもそもゼロから全てのモデルを作り上げよう，とするのが大きすぎる野望のように思われる。まずは色々なモデルを知って，このモデルを自分のデータにはこのように応用できそうだ，と想像力を働かせるところから進めよう。あるいは非常に限定的な，小さなおもちゃのようなモデル(Toyモデル)を作って，それを徐々に発展させていくことで大きなモデルに育てる，という観点を持つことである。<span class="citation" data-cites="Hamada201812">浜田 (<a href="references.html#ref-Hamada201812" role="doc-biblioref">2018</a>)</span> や <span class="citation" data-cites="Hamada2020">浜田 (<a href="references.html#ref-Hamada2020" role="doc-biblioref">2020</a>)</span> を読むと，このステップの重要さがよくわかるだろう。</p>
+<p>そもそも，線形モデルでも十分なシーンというのも結構あるものである。ベイジアンモデリングで自分似合ったデータをカスタマイズする，と豪語しておいた後で言うのもおかしいが，はっきりした傾向があるのであれば線形モデルで大体うまくいく。線形モデルはピッタリとは言わないが大体当てはまっていて理解できるモデルであり，モデリングは細かな違いに当てはめていこうとする「作り込み」の技術であるから，実践的にはそこまで必要のないことも少なくない。もちろん線形モデルといってもただの単回帰分析で良い，といってるのではなく，データの生成メカニズムにあった一般化線形モデル，混合モデルなど工夫できるところは色々あるのだから。</p>
+<p>こうした問題やぶつかりそうな壁があると知ってもなお，ベイジアンモデリングはおすすめできる。この自由で創造的な世界を知らずして，統計分析が苦手だと思ってしまうのは非常にもったいないからである。以下の用例で，ベイジアンモデリングの様々な可能性を味わっていただきたい。</p>
+</section>
+</section>
+<section id="正規分布を使ったモデル" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="正規分布を使ったモデル"><span class="header-section-number">16.2</span> 正規分布を使ったモデル</h2>
+<p>まずはこれまでもよく用いられてきた，正規分布を使ったモデルについて見てみよう。</p>
+<section id="分散を推定する" class="level3" data-number="16.2.1">
+<h3 data-number="16.2.1" class="anchored" data-anchor-id="分散を推定する"><span class="header-section-number">16.2.1</span> 分散を推定する</h3>
+<p>正規分布を使ったモデルといえば，一般線形モデルのような平均値に関するモデルがほとんどである。正規分布は位置パラメータ<span class="math inline">\(\mu\)</span>と，スケールパラメータすなわち幅のパラメータ<span class="math inline">\(\sigma\)</span>でその形状が定まるが<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>，後者はブレの大きさ，誤差の大きさに関するものと考えられるから，そうした指標としてモデルを考えてみよう。</p>
+<p>カバーストーリーとして次のようなシーンを考える<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>。 ある牛丼チェーン店では，並盛り一人前につき150gの肉を載せて提供すること，という決まりになっている。ここである店舗で社員による抜き打ち検査があり，提供係10名に牛丼を作らせ，その肉の量を計測した。10名のうち2名はまだ日の浅いアルバイトであることがわかっている。計測した肉の量は以下の通りであった。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">151</span>, <span class="dv">149</span>, <span class="dv">152</span>, <span class="dv">150</span>, <span class="dv">151</span>, <span class="dv">148</span>, <span class="dv">151</span>, <span class="dv">150</span>, <span class="dv">221</span>, <span class="dv">245</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>ここから次のようなモデルを考えよう。全員平均<span class="math inline">\(\mu=150\)</span>のつもりで提供しているが，誤差が個人ごとに異なるものとする。これを数式で次のように表現する。</p>
+<p><span class="math display">\[ y_i \sim N(\mu, \sigma_i) \]</span></p>
+<p>添字を注意深く見るとわかるが，個人を識別する<span class="math inline">\(i\)</span>がデータ<span class="math inline">\(y_i\)</span>と標準偏差<span class="math inline">\(\sigma_i\)</span>についていて，平均値<span class="math inline">\(\mu\)</span>にはついていない。つまり平均値は全員で共通していると仮定し，そこからのブレが個人ごとに違うというモデルになっている。</p>
+<p>これがデータ<span class="math inline">\(y_i\)</span>を生成するデータ生成メカニズムである。ここでの未知数<span class="math inline">\(\mu,\sigma_i\)</span>をデータから推測するために，StanによるMCMC法を用いる。Stanのコードは次のようになる。このコードを，例えば<code>gyudon10.stan</code>とでも名前をつけて保存しておこう。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> N;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[N] <span class="dt">real</span> Y;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> mu;</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[N] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// likelihood</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N){</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        Y[i] ~ normal(mu, sigma[i]);</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// prior</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    mu ~ uniform(<span class="dv">0</span>, <span class="dv">200</span>);</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    sigma ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>コードが<code>data</code>と<code>parameters</code>，<code>model</code>の3つのブロックに分かれていることに注意してほしい。また，各ブロックで<code>int</code>や<code>array</code>などの型宣言があることに注意してほしい。</p>
+<p>まずは<code>data</code>ブロックを見よう。<code>int</code>は整数型で，まずデータのサイズを外部から入力するようにしている。これで，例えばデータが7件とか50件と変わった時でも同じコードが使えるようにしている。また<code>array</code>は配列の型宣言であり，同じ変数名で複数の値が入るようになっている。ここでは<code>N</code>人分のデータを扱うために<code>array[N] real Y;</code>というように宣言している。</p>
+<p>続く<code>paramters</code>ブロックでは，知りたい未知数の<span class="math inline">\(\mu\)</span>と<span class="math inline">\(\sigma_i\)</span>をそれぞれ<code>real mu;</code>と<code>array[N] real&lt;lower=0&gt; sigma;</code>としている。<code>real</code>は実数型，<code>array</code>はすでに述べたように配列で，<span class="math inline">\(\sigma_i\)</span>の<span class="math inline">\(i\)</span>によって異なる<span class="math inline">\(\sigma\)</span>である様を表現している。<code>&lt;lower=0&gt;</code>としているのは変数に対する制約で，この<span class="math inline">\(\sigma_i\)</span>は下限が<span class="math inline">\(0\)</span>，すなわち正の数しかとらないことにしている。分散は負になることがないので，こうしておくとStanがMCMCサンプリングにおいて可能な値の候補を探す領域が適切に制限されることになる。</p>
+<p>最後の<code>model</code>ブロックは，確率モデルを記述する。ベイズ的確率モデルは尤度と事前分布が必要で，まず尤度を記述している。 <code>Y[i] ~ normal(mu, sigma[i])</code>のところがそれで，<span class="math inline">\(i\)</span>がfor文によって繰り返されている。数式で言えば，次の計算と同じである。</p>
+<p><span class="math display">\[ \prod_{i=1}^{N} N(Y_i | \mu, \sigma_i) \]</span></p>
+<p>実際の計算は対数尤度をとって，次の計算を行っているが，Stanでは「データが次の確率分布に従う」という形で書けるので，確率分布を使ったモデルさえかければ誰でも推定ができる。</p>
+<p><span class="math display">\[ \sum _{i=1}^{N} \log\{N(Y_i | \mu, \sigma_i)\} \]</span></p>
+<p>また今回はそれぞれの事前分布として，<span class="math inline">\(\mu\)</span>に<span class="math inline">\(0\)</span>から<span class="math inline">\(200\)</span>までの一様分布を，<span class="math inline">\(\sigma\)</span>にコーシー分布を置いた。どのような事前分布をおくかは自由だし，特段指定がなければStanは十分にひろい一様分布を自動的に設定する。分散(標準偏差)パラメータの事前分布には裾の重い分布をおくことが一般的で，コーシー分布やStudentのt分布，指数分布などがよく用いられる。</p>
+<p>さてこのコードを，次のRコードから呼び出して実行する。手順は(必要なライブラリを読み込んだ上で)，stanファイルをコンパイルし，できたオブジェクトにサンプリングの設定を与えて出力する，というものである。</p>
+<p>サンプリングに際してはデータを外部から与える必要があるため，<code>dataSet</code>オブジェクトを作って渡すようにした。与えるデータはリスト型であり，stanファイル側の<code>data</code>ブロックと同じ変数名をつける必要がある。サンプリングのその他の設定は次のとおりである。</p>
+<ul>
+<li><code>data</code>…データを与える</li>
+<li><code>chains</code>…MCMCチェインを走らせる数</li>
+<li><code>parallel_chains</code>…MCMCチェインのうち，並列で走らせるチェインの数。実行環境のCPUが持っているコア数-1程度にするのが良い。</li>
+<li><code>iter_warmup</code>…サンプリングに入る前の調整期間。詳しくは@sec-mcmc-evaluation を参照</li>
+<li><code>iter_sampling</code>…サンプリングの数。詳しくは@sec-mcmc-evaluation を参照</li>
+<li><code>show_message</code>…メッセージの出力を抑制。必ずしも設定しなくても良い。</li>
+<li><code>reflesh</code>…サンプリングの途中経過をどの程度の頻度で出力するかの設定。必ずしも設定しなくとも良い。</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(cmdstanr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"gyudon10.stan"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">length</span>(y),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Y =</span> y</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dataSet,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_warmup =</span> <span class="dv">2000</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter_sampling =</span> <span class="dv">5000</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 1 finished in 0.4 seconds.
+Chain 2 finished in 0.3 seconds.
+Chain 3 finished in 0.3 seconds.
+Chain 4 finished in 0.3 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.3 seconds.
+Total execution time: 0.4 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> variable   mean median    sd  mad     q5    q95 rhat ess_bulk ess_tail
+ lp__     -18.68 -18.33  2.31 2.19 -23.03 -15.64 1.00     4045     5750
+ mu       150.56 150.72  0.66 0.58 149.39 151.41 1.00     3490     4234
+ sigma[1]   2.86   1.50  5.21 1.61   0.12   9.37 1.00     2762     1739
+ sigma[2]   4.55   2.86  7.50 2.15   0.73  12.91 1.00     6649     5311
+ sigma[3]   4.52   2.72  8.08 2.06   0.71  13.04 1.00     6423     5884
+ sigma[4]   3.46   1.78 17.69 1.68   0.21  10.21 1.00     5518     4246
+ sigma[5]   3.19   1.55  9.83 1.68   0.12  10.01 1.00     2281     1408
+ sigma[6]   5.99   3.87  9.59 2.63   1.32  15.76 1.00     6253     7784
+ sigma[7]   3.08   1.56  8.07 1.66   0.12   9.61 1.00     1673      739
+ sigma[8]   3.18   1.79  5.32 1.68   0.21  10.03 1.00     4228     2707
+
+ # showing 10 of 12 rows (change via 'max_rows' argument or 'cmdstanr_max_rows' option)</code></pre>
+</div>
+</div>
+<p>結果を見ると，<span class="math inline">\(\mu\)</span>は平均して150程度であり，店舗マニュアルに沿った結果が出ているといえよう。注目すべきは個々人の誤差であり，可視化してみるとその特徴がわかりやすい。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(bayesplot)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> result<span class="sc">$</span><span class="fu">draws</span>()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sigmaパラメータのみを可視化</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(draws, <span class="at">regex_pars =</span> <span class="st">"sigma"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter16_files/figure-html/gyudon10_visual-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>これをみると明らかなように，最後の2人が大きな値であり，明らかに未熟であることがわかる。 数値で出力するために，<code>bayestestR</code>パッケージの力も借りてみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(bayestestR)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sigmaパラメータのみを選択</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sigma_draws <span class="ot">&lt;-</span> draws[, , <span class="fu">grepl</span>(<span class="st">"sigma"</span>, <span class="fu">dimnames</span>(draws)<span class="sc">$</span>variable)]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># EAP(平均), MAP(最頻値), 中央値, 95%HDI</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(sigma_draws, <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                              <span class="at">ci =</span> <span class="fl">0.95</span>, <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median |   Mean |   MAP |          95% CI
+-----------------------------------------------------
+sigma[1]  |   1.50 |   2.86 |  0.21 | [ 0.03,   9.37]
+sigma[2]  |   2.86 |   4.55 |  1.70 | [ 0.04,  12.91]
+sigma[3]  |   2.72 |   4.52 |  1.50 | [ 0.06,  13.05]
+sigma[4]  |   1.78 |   3.46 |  2.27 | [ 0.04,  10.24]
+sigma[5]  |   1.55 |   3.19 |  0.68 | [ 0.03,  10.01]
+sigma[6]  |   3.87 |   5.99 |  2.52 | [ 0.33,  15.94]
+sigma[7]  |   1.56 |   3.08 |  0.41 | [ 0.02,   9.61]
+sigma[8]  |   1.79 |   3.18 |  0.64 | [ 0.03,  10.03]
+sigma[9]  |  60.45 |  89.20 | 45.20 | [18.67, 224.60]
+sigma[10] |  79.81 | 126.49 | 63.18 | [24.13, 312.17]</code></pre>
+</div>
+</div>
+<p>ここにあるように，結果は確率分布の形で得られるので，平均値(Mean, EAP)でみるのか，中央値(Median)でみるのか，密度が最大になるところ(MAP)でみるのかによって大きく値が異なる。特に分散パラメータは左右対称ではなく歪んだ分布になるので，EAP推定値は適切ではない。 また，確信区間は今回HDIを指定した。HDIはHighest Density Intervalsの略で，最高密度を含む95%の領域を指す。いわゆるパーセンタイルのように，上下2.5%を除外した領域を取る方法はETI(Equal-Tailed Intervals)と呼ばれるが，これだと歪んだ分布に対してやや偏った結果になることがある。詳しくは <span class="citation" data-cites="Maeda2017">クルシュケ (<a href="references.html#ref-Maeda2017" role="doc-biblioref">[2014] 2017</a>)</span> や <span class="citation" data-cites="bayestestR">Makowski, Ben-Shachar, and Lüdecke (<a href="references.html#ref-bayestestR" role="doc-biblioref">2019</a>)</span> ，あるいは単に<a href="https://easystats.github.io/bayestestR/">bayestestRのサイト</a>を参照して欲しい。</p>
+<p>さて，ともあれこのように幅のパラメータを推定するモデルを描くことができた。今回はたった10件の数字でもモデリングができること，平均パラメータ以外もモデリングの対象になることを確認してもらいたい。心理学において，特に反復測定を行う場合の個人の分散は，その人の持っている精度・誤差の大きさを表すと言える。今回のようにこの幅が，熟練度と解釈できるようなシーンであれば，立派に解釈可能なパラメータである。例えばこの<span class="math inline">\(\sigma_i\)</span>に，経験日数<span class="math inline">\(z_i\)</span>をつかって<span class="math inline">\(\sigma_i = \beta_0 + \beta_1 z_i\)</span>のようなモデリングをすれば，どの程度経験によって誤差がなくなっていくかといった意味のある考察もできるだろう。このように，心理学において考察できるパラメータは平均だけではなく，我々は自由にその発想で考えることができるということを味わってもらいたい。</p>
+</section>
+<section id="欠測のあるデータを有効に使う" class="level3" data-number="16.2.2">
+<h3 data-number="16.2.2" class="anchored" data-anchor-id="欠測のあるデータを有効に使う"><span class="header-section-number">16.2.2</span> 欠測のあるデータを有効に使う</h3>
+<p>続いては相関係数のモデリングを見てみよう。 例えば大学の入試の成績と，入学後の成績の間にはそれほど高い相関が見られない，という現象がある。 これは大学の入試が適切に学力を測定していない，という問題ではなく，いわゆる「選抜効果」とよばれるものだ。大学に入学できているのは一定のスコアを超えた者だけなので，得られたデータが本来の「入試の成績」の情報を含んでいないという問題である。</p>
+<p>具体的に数字で見てみよう。まずある程度の相関関係を持つデータを作り，その一部を欠損させてみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS,tidyverse)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">50</span>,<span class="dv">60</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>Sig <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow=</span><span class="dv">2</span>,<span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> sd[<span class="dv">1</span>]<span class="sc">*</span>sd[<span class="dv">1</span>]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> sd[<span class="dv">1</span>]<span class="sc">*</span>sd[<span class="dv">2</span>]<span class="sc">*</span>rho</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> sd[<span class="dv">2</span>]<span class="sc">*</span>sd[<span class="dv">1</span>]<span class="sc">*</span>rho</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">2</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> sd[<span class="dv">2</span>]<span class="sc">*</span>sd[<span class="dv">2</span>]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 乱数の発生</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(N,mu,Sig,<span class="at">empirical=</span>T)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>FLG <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(dat<span class="sc">$</span>X1<span class="sc">&gt;</span><span class="dv">60</span>,<span class="dv">1</span>,<span class="dv">2</span>),<span class="at">labels=</span><span class="fu">c</span>(<span class="st">"pass"</span>,<span class="st">"fail"</span>))</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 描画</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat,<span class="fu">aes</span>(<span class="at">x=</span>X1,<span class="at">y=</span>X2,<span class="at">group=</span>FLG,<span class="at">color=</span>FLG)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>g</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter16_files/figure-html/corrData-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ここでは60点以上の者が入学したとして切断してみた。この場合の相関係数を，欠測値を除く<code>use=complete.obs</code>のオプションをつけて確認しておく。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># フルデータの場合</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(dat<span class="sc">$</span>X1, dat<span class="sc">$</span>X2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 欠測値に置き換える</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dat[dat<span class="sc">$</span>FLG<span class="sc">==</span><span class="st">"fail"</span>,]<span class="sc">$</span>X2 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 改めて相関係数を算出</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(dat<span class="sc">$</span>X1, dat<span class="sc">$</span>X2, <span class="at">use=</span><span class="st">"complete.obs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4284751</code></pre>
+</div>
+</div>
+<p>不合格者が欠測値だとすると，相関係数は0.428にまで落ちてしまった。</p>
+<p>さてこれをベイジアンモデリングでできるだけ補正してみよう。コードは次のようなものになる。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nobs;</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nmiss;</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nobs] <span class="dt">vector</span>[<span class="dv">2</span>] obsX;</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nmiss] <span class="dt">real</span> missX;</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>[<span class="dv">2</span>] mu;</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd1;</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd2;</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">1</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; rho;</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span>{</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">cov_matrix</span>[<span class="dv">2</span>] Sig;</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">1</span>,<span class="dv">1</span>] = sd1 * sd1;</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">1</span>,<span class="dv">2</span>] = sd1 * sd2 * rho;</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">2</span>,<span class="dv">1</span>] = Sig[<span class="dv">1</span>,<span class="dv">2</span>];</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">2</span>,<span class="dv">2</span>] = sd2 * sd2;</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    obsX ~ multi_normal(mu, Sig);</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    missX ~ normal(mu[<span class="dv">1</span>], sd1);</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    mu[<span class="dv">1</span>] ~ uniform(<span class="dv">0</span>,<span class="dv">100</span>);</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    mu[<span class="dv">2</span>] ~ uniform(<span class="dv">0</span>,<span class="dv">100</span>);</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    sd1 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    sd2 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    rho ~ uniform(-<span class="dv">1</span>,<span class="dv">1</span>);</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>このコードでは，まずデータブロックで<code>Nobs</code>と<code>Nmiss</code>という二つの整数値をとっている。これは2つの変数が両方とも観測されたケースの数と，一方が欠測値であったケースの数である。Stanでは<code>NA</code>を直接扱うことができず，有効なデータの数だけ渡す必要があり，冒頭にその数を明示しておいた。</p>
+<p>次に<code>vector</code>型で<code>obsX[Nobs]</code>を宣言している。<code>vector[2]</code>とあるのは2つの要素を持つベクトルで1セットの変数であることを意味し，それが<code>Nobs</code>個あることを表している。最後に，一方の変数が欠落していたデータも活用するために，<code>Nmiss</code>個の配列変数を用意した。こちらはベクトルではなく，サイズをしていした実数の配列の扱いである。</p>
+<p>今回推定したいのは相関係数<code>rho</code>だが，これは2次元の多変量正規分布を想定した時の分散共分散行列の中に現れる。尤度のところにあるように，平均ベクトル<span class="math inline">\(\mathbb{\mu}\)</span>と，分散共分散行列<span class="math inline">\(\mathbb{\Sigma}\)</span>からデータは生成されている。</p>
+<p><span class="math display">\[ obsX \sim MN(\mathbb{\mu},\mathbb{\Sigma})\]</span></p>
+<p>ここで分散共分散行列の要素を紐解くと， <span class="math display">\[ \mathbb{\Sigma} = \begin{pmatrix}
+\sigma_1^2 &amp; \sigma_{12}\\
+\sigma_{21} &amp; \sigma_2^2
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sigma_1^2 &amp; \sigma_1 \sigma_2 \rho \\
+\sigma_1 \sigma_2 \rho &amp; \sigma_2^2
+\end{pmatrix}\]</span></p>
+<p>となる。ここで<span class="math inline">\(\sigma_1, \sigma_2\)</span>はそれぞれの変数の標準偏差であり，<span class="math inline">\(\rho\)</span>は相関係数である。</p>
+<p><code>parameters</code>ブロックでは，この<span class="math inline">\(\sigma_1,\sigma_2,\rho\)</span>を宣言しておき，これを<code>transformed parameters</code>ブロックで分散共分散行列に書き直している。なお<code>cov_matrix</code>型はStanのもつ分散共分散行列専用の型である。</p>
+<p><code>model</code>ブロックも注意深くみて欲しい。まず2つの変数が揃っている<code>obsX</code>は多変量正規分布から生成されている。そして1つの変数が欠如している<code>missX</code>も，<code>X1</code>側のデータは残っているので，これをいわゆる普通の(単変量の)正規分布から生成されたものとしている。<code>mu[1]</code>と<code>sd1</code>の尤度を追加することで補正を試みているのだ。</p>
+<p>平均値の事前分布には，テストなので0点から100点の間のどこかにあるから，<code>uniform(0,1)</code>を置いた。標準偏差の事前分布には裾の重いコーシー分布を，相関係数の事前分布には，Stanがもつ相関係数用の分布である<code>lkj_corr</code>を置いた。これのパラメータが<code>1</code>であれば，相関係数に適した無情報分布を置いたことと同義である。</p>
+<p>さて，このモデルをコンパイルし，データを与えて<code>rho</code>がどうなるかみてみよう。 データの与え方に注意して欲しい。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">'missing_corr.stan'</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Nobs =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>X2)),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Nmiss =</span> <span class="fu">NROW</span>(dat<span class="sc">$</span>X1)<span class="sc">-</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>X2)),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">obsX =</span> dat[<span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>X2),<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">missX =</span> dat[<span class="fu">is.na</span>(dat<span class="sc">$</span>X2),<span class="dv">1</span>]</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dataSet,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">refresh =</span> <span class="dv">0</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 1 finished in 1.0 seconds.
+Chain 2 finished in 1.0 seconds.
+Chain 3 finished in 0.9 seconds.
+Chain 4 finished in 0.9 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.9 seconds.
+Total execution time: 1.1 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(result<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"rho"</span>),</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>, <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median | Mean |  MAP |       95% CI
+-----------------------------------------------
+rho       |   0.73 | 0.71 | 0.76 | [0.50, 0.88]</code></pre>
+</div>
+</div>
+<p>今回推定された<code>rho</code>は0.711と，ほぼ理論通りの値を復元できている。 多変量正規分布は，各変数に限って見てみると一変数の正規分布と同じであり，今回欠測のない<code>X1</code>の情報を尤度に追加することで，持ちうるデータの情報全てを活用することができた。このように，得られたデータが限定的であってもそのデータ生成メカニズムを考えることで補正できることは少なくない。たとえば上限や下限の値が決まっているデータに対し，そうした打ち切りがなければ本当は何点だったのか，といったこともモデルの工夫で推定することができるようになる<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+</section>
+</section>
+<section id="正規分布以外の分布を使う" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="正規分布以外の分布を使う"><span class="header-section-number">16.3</span> 正規分布以外の分布を使う</h2>
+<section id="項目反応理論" class="level3" data-number="16.3.1">
+<h3 data-number="16.3.1" class="anchored" data-anchor-id="項目反応理論"><span class="header-section-number">16.3.1</span> 項目反応理論</h3>
+</section>
+<section id="再捕獲法による全体の推論" class="level3" data-number="16.3.2">
+<h3 data-number="16.3.2" class="anchored" data-anchor-id="再捕獲法による全体の推論"><span class="header-section-number">16.3.2</span> 再捕獲法による全体の推論</h3>
+</section>
+</section>
+<section id="分布を混ぜる" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="分布を混ぜる"><span class="header-section-number">16.4</span> 分布を混ぜる</h2>
+<section id="分布を混ぜる変化点を検出する" class="level3" data-number="16.4.1">
+<h3 data-number="16.4.1" class="anchored" data-anchor-id="分布を混ぜる変化点を検出する"><span class="header-section-number">16.4.1</span> 分布を混ぜる(変化点を検出する)</h3>
+</section>
+<section id="分布を混ぜる0過剰ポアソン分布" class="level3" data-number="16.4.2">
+<h3 data-number="16.4.2" class="anchored" data-anchor-id="分布を混ぜる0過剰ポアソン分布"><span class="header-section-number">16.4.2</span> 分布を混ぜる(0過剰ポアソン分布)</h3>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-JASP2025" class="csl-entry" role="listitem">
+JASP Team. 2025. <span>“<span class="nocase">JASP (Version 0.95.1)[Computer software]</span>.”</span> <a href="https://jasp-stats.org/">https://jasp-stats.org/</a>.
+</div>
+<div id="ref-kruschke2018rejecting" class="csl-entry" role="listitem">
+Kruschke, John K. 2018. <span>“Rejecting or Accepting Parameter Values in Bayesian Estimation.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 1 (2): 270–80.
+</div>
+<div id="ref-bayestestR" class="csl-entry" role="listitem">
+Makowski, Dominique, Mattan S. Ben-Shachar, and Daniel Lüdecke. 2019. <span>“: Describing Effects and Their Uncertainty, Existence and Significance Within the Bayesian Framework.”</span> <em>Journal of Open Source Software</em> 4 (40): 1541. <a href="https://doi.org/10.21105/joss.01541">https://doi.org/10.21105/joss.01541</a>.
+</div>
+<div id="ref-Maeda2017" class="csl-entry" role="listitem">
+クルシュケJ. K. (2014) 2017. <em>ベイズ統計モデリング: R, JAGS, Stanによるチュートリアル 原著第2版</em>. Translated by 前田和寛 and 小杉考司. 共立出版.
+</div>
+<div id="ref-Lee201709" class="csl-entry" role="listitem">
+リーM.D, and ワゲンメーカーズE-J. (2013) 2017. <em>ベイズ統計で実践モデリング: 認知モデルのトレーニング</em>. Translated by 井関龍太.
+</div>
+<div id="ref-Hamada201812" class="csl-entry" role="listitem">
+浜田宏. 2018. <em>その問題、数理モデルが解決します</em>. ベレ出版. <a href="http://amazon.co.jp/o/ASIN/4860645685/">http://amazon.co.jp/o/ASIN/4860645685/</a>.
+</div>
+<div id="ref-Hamada2020" class="csl-entry" role="listitem">
+———. 2020. <em>その問題、やっぱり数理モデルが解決します</em>. ベレ出版.
+</div>
+<div id="ref-Hamada201912" class="csl-entry" role="listitem">
+浜田宏, 石田淳, and 清水裕士. 2019. <em>社会科学のためのベイズ統計モデリング</em>. 朝倉書店. <a href="http://amazon.co.jp/o/ASIN/4254128428/">http://amazon.co.jp/o/ASIN/4254128428/</a>.
+</div>
+<div id="ref-Toyoda202003" class="csl-entry" role="listitem">
+豊田秀樹. 2020. <em>瀕死の統計学を救え！</em>. 朝倉書店.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>エディタがその言語に対応していたら，おかしな記述に下線が引かれるなど注意を促してくる機能もある。またRStudioでStan言語を書いていると，コンパイルの前に文法のチェックをする機能もある。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>とはいえ，コードに原因がない場合もある。それはStanを導入する際のシステム的なエラーであり，書かれた内容ではなく動かす環境全体の問題である。解決策としては，表示されるエラーを解読して問題を解決するか，環境を再構築する(Stanを再インストールする，最新バージョンに入れ替える等)必要がある。この場合も，生成AIが助力してくれるだろう。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>詳しくは<span class="citation" data-cites="Hamada201912">(<a href="references.html#ref-Hamada201912" role="doc-biblioref">浜田, 石田, and 清水 2019</a>)</span>を参照してほしい<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>正規分布の幅のパラメータは，テキストによっては分散<span class="math inline">\(\sigma^2\)</span>で記載されていることが多いが，ここでは標準偏差<span class="math inline">\(\sigma\)</span>で記述する。Stanでは標準偏差で記述するようになっているので，それに合わせたいからである。標準偏差を二乗したものが分散であるから，意味するところは本質的に変わりがない。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>このカバーストーリーとモデルは <span class="citation" data-cites="Lee201709">リー and ワゲンメーカーズ (<a href="references.html#ref-Lee201709" role="doc-biblioref">[2013] 2017</a>)</span> の「七人の科学者」P.48–49を参考に作ったものである。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>たとえば<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter15.html" class="pagination-link" aria-label="多変量解析(その2)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./practices.html" class="pagination-link" aria-label="演習問題">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">演習問題</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

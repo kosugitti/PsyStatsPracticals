@@ -172,6 +172,8 @@ $$ \sum _{i=1}^{N} \log\{N(Y_i | \mu, \sigma_i)\} $$
 + `reflesh`...サンプリングの途中経過をどの程度の頻度で出力するかの設定。必ずしも設定しなくとも良い。
 
 ```{r kick_gyudon10}
+#| echo: true
+#| message: false
 pacman::p_load(cmdstanr)
 model <- cmdstan_model("gyudon10.stan")
 dataSet <- list(
@@ -184,7 +186,6 @@ result <- model$sample(
     parallel_chains = 4,
     iter_warmup = 2000,
     iter_sampling = 5000,
-    show_messages = FALSE,
     refresh = 0
 )
 
@@ -259,7 +260,7 @@ cor(dat$X1, dat$X2, use="complete.obs")
 不合格者が欠測値だとすると，相関係数は`r round(cor(dat$X1, dat$X2, use="complete.obs"),3)`にまで落ちてしまった。
 
 さてこれをベイジアンモデリングでできるだけ補正してみよう。コードは次のようなものになる。
-```{r}
+```{r kick_corr}
 #| echo: false
 #| results: asis
 cat("```stan\n")
@@ -297,7 +298,10 @@ $$ \mathbb{\Sigma} = \begin{pmatrix}
 さて，このモデルをコンパイルし，データを与えて`rho`がどうなるかみてみよう。
 データの与え方に注意して欲しい。
 
-```{r corr_stan}
+```{r stan_corr}
+#| echo: true
+#| message: false
+
 model <- cmdstan_model('missing_corr.stan')
 
 dataSet <- list(
@@ -307,18 +311,31 @@ dataSet <- list(
     missX = dat[is.na(dat$X2),1]
 )
 
-model$sample(
+result <- model$sample(
     data = dataSet,
     chains = 4,
-    parallel_chains = 4
+    parallel_chains = 4,
+    refresh = 0
 )
+
+bayestestR::describe_posterior(result$draws("rho"),
+            centrality = c("mean", "median", "MAP"), ci = 0.95, ci_method = "hdi", test = NULL)
 ```
 
+今回推定された`rho`は`r round(result$summary("rho")$mean,4)`と，ほぼ理論通りの値を復元できている。
+多変量正規分布は，各変数に限って見てみると一変数の正規分布と同じであり，今回欠測のない`X1`の情報を尤度に追加することで，持ちうるデータの情報全てを活用することができた。このように，得られたデータが限定的であってもそのデータ生成メカニズムを考えることで補正できることは少なくない。たとえば上限や下限の値が決まっているデータに対し，そうした打ち切りがなければ本当は何点だったのか，といったこともモデルの工夫で推定することができるようになる。[^6]
 
+[^6]: たとえば @kinosada2018 が参考になる。
 
 ## 正規分布以外の分布を使う
-
+ベイジアンモデリングは，確率分布のパラメータに数式的構造を仮定することでもある。ここでは正規分布以外の確率分布を使った例を見てみよう。
 ### 項目反応理論
+すでに @sec-irt-model で見たように，項目反応理論はまさに正規分布以外のパラメータに数式的構造を持たせたものであった。すなわち，結果変数が0/1のバイナリデータであるから，確率分布としてはベルヌーイ分布を用い，パラメータ$\theta$は1が出る確率(正答する確率)と考えられるから，この$\theta$に潜在的な学力を仮定したロジスティックモデルを入れるのであった。
+
+この観点で数式を書き表すと，ある項目$j$に個人$i$が正答するかどうかは次のように表現できる。
+
+$$ Y_{ij} \sim Bernoulli(\theta_i)  $$
+
 ### 再捕獲法による全体の推論
 
 ## 分布を混ぜる
