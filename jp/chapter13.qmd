@@ -48,7 +48,7 @@ $$
 #| dev: "ragg_png"
 #| echo: false
 #| message: false
-#| 
+#|
 pacman::p_load(tidyverse, patchwork)
 
 # 単回帰分析モデルのダミーデータ
@@ -60,11 +60,11 @@ y <- 10 + 2 * x + rnorm(n, sd = 3)
 df_regression <- data.frame(x = x, y = y)
 
 p1 <- ggplot(df_regression, aes(x = x, y = y)) +
-    geom_point(alpha = 0.7, size = 2) +
-    geom_smooth(method = "lm", se = FALSE, color = "blue") +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "連続データの場合") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "連続データの場合") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 
 
@@ -76,47 +76,47 @@ x2 <- rnorm(N)
 
 # データフレームの作成
 df_exp <- data.frame(
-    group = factor(rep(c("統制群", "実験群"), each = N), levels = c("統制群", "実験群")),
-    value = c(x2, x1)
+  group = factor(rep(c("統制群", "実験群"), each = N), levels = c("統制群", "実験群")),
+  value = c(x2, x1)
 )
 
 
 # 散布図2：平均値を通る回帰直線（平均値バー付き）
 p2 <- ggplot(df_exp, aes(x = group, y = value)) +
-    geom_point(alpha = 0.6) +
-    geom_segment(
-        data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
-        aes(
-            x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
-            y = mean_value, yend = mean_value
-        ),
-        color = "gray", linewidth = 1
-    ) +
-    geom_segment(
-        x = 0.5, xend = 2.5,
-        y = mean(df_exp$value[df_exp$group == "統制群"]) - 0.65,
-        yend = mean(df_exp$value[df_exp$group == "実験群"]) + 0.65,
-        color = "blue", linewidth = 1
-    ) +
-    theme_minimal() +
-    labs(x = "群", y = "従属変数", title = "ダミーデータの場合") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.6) +
+  geom_segment(
+    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
+    aes(
+      x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
+      y = mean_value, yend = mean_value
+    ),
+    color = "gray", linewidth = 1
+  ) +
+  geom_segment(
+    x = 0.5, xend = 2.5,
+    y = mean(df_exp$value[df_exp$group == "統制群"]) - 0.65,
+    yend = mean(df_exp$value[df_exp$group == "実験群"]) + 0.65,
+    color = "blue", linewidth = 1
+  ) +
+  theme_minimal() +
+  labs(x = "群", y = "従属変数", title = "ダミーデータの場合") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # 散布図3：全体平均を通る直線（平均値バー付き）
 p3 <- ggplot(df_exp, aes(x = group, y = value)) +
-    geom_point(alpha = 0.6) +
-    geom_segment(
-        data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
-        aes(
-            x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
-            y = mean_value, yend = mean_value
-        ),
-        color = "gray", linewidth = 1
-    ) +
-    geom_hline(yintercept = mean(df_exp$value), linetype = "dashed", color = "blue", linewidth = 1) +
-    theme_minimal() +
-    labs(x = "群", y = "従属変数", title = "帰無仮説") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.6) +
+  geom_segment(
+    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
+    aes(
+      x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
+      y = mean_value, yend = mean_value
+    ),
+    color = "gray", linewidth = 1
+  ) +
+  geom_hline(yintercept = mean(df_exp$value), linetype = "dashed", color = "blue", linewidth = 1) +
+  theme_minimal() +
+  labs(x = "群", y = "従属変数", title = "帰無仮説") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 p4 <- p1 + p2
 plot(p4)
@@ -225,26 +225,26 @@ x <- runif(n, min = -10, max = 10)
 beta_0 <- 1
 beta_1 <- 2
 p <- beta_0 + x * beta_1
-prob <- 1/(1+exp(-p))
+prob <- 1 / (1 + exp(-p))
 y <- rbinom(n, size = 1, prob = prob)
 
 df_logistic <- data.frame(x = x, y = y)
 
 # p1: 線型回帰
 p1 <- ggplot(df_logistic, aes(x = x, y = y)) +
-    geom_point(alpha = 0.7, size = 2) +
-    geom_smooth(method = "lm", se = FALSE, color = "blue") +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "線型回帰") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "線型回帰") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ロジスティック回帰
 p2 <- ggplot(df_logistic, aes(x = x, y = y)) +
-    geom_point(alpha = 0.7, size = 2) +
-    geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE, color = "red") +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "ロジスティック回帰") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE, color = "red") +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "ロジスティック回帰") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # パッチワークで結合
 p1 + p2
@@ -258,13 +258,13 @@ p1 + p2
 #| message: false
 pacman::p_load(brms)
 result.bayes.logistic <- brm(
-    y ~ x,
-    family = bernoulli(),
-    data = df_logistic,
-    seed = 12345,
-    chains = 4, cores = 4, backend = "cmdstanr",
-    iter = 2000, warmup = 1000,
-    refresh = 0
+  y ~ x,
+  family = bernoulli(),
+  data = df_logistic,
+  seed = 12345,
+  chains = 4, cores = 4, backend = "cmdstanr",
+  iter = 2000, warmup = 1000,
+  refresh = 0
 )
 summary(result.bayes.logistic)
 plot(result.bayes.logistic)
@@ -317,7 +317,7 @@ poisson_data <- expand_grid(
 # プロット
 ggplot(poisson_data, aes(x = factor(x), y = prob)) +
   geom_col(width = 0.7, fill = "steelblue", alpha = 0.7) +
-  facet_wrap(~ lambda_label, scales = "free", ncol = 3) +
+  facet_wrap(~lambda_label, scales = "free", ncol = 3) +
   scale_x_discrete(breaks = function(x) x[seq(1, length(x), by = 2)]) +
   theme_classic() +
   labs(
@@ -367,19 +367,19 @@ df_pois <- data.frame(x = x, y = y)
 
 # p1: 線型回帰（不適切な例）
 p1 <- ggplot(df_pois, aes(x = x, y = y)) +
-    geom_point(alpha = 0.7, size = 2) +
-    geom_smooth(method = "lm", se = FALSE, color = "blue") +
-    theme_minimal() +
-    labs(x = "説明変数", y = "カウント変数", title = "線型回帰（不適切）") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  theme_minimal() +
+  labs(x = "説明変数", y = "カウント変数", title = "線型回帰（不適切）") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ポアソン回帰（適切な例）
 p2 <- ggplot(df_pois, aes(x = x, y = y)) +
-    geom_point(alpha = 0.7, size = 2) +
-    geom_smooth(method = "glm", method.args = list(family = "poisson"), se = FALSE, color = "red") +
-    theme_minimal() +
-    labs(x = "説明変数", y = "カウント変数", title = "ポアソン回帰（適切）") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "glm", method.args = list(family = "poisson"), se = FALSE, color = "red") +
+  theme_minimal() +
+  labs(x = "説明変数", y = "カウント変数", title = "ポアソン回帰（適切）") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # パッチワークで結合
 p1 + p2
@@ -392,13 +392,13 @@ p1 + p2
 ```{r poisson_regression}
 #| message: false
 result.bayes.pois <- brm(
-    y ~ x,
-    family = poisson(),
-    data = df_pois,
-    seed = 12345,
-    chains = 4, cores = 4, backend = "cmdstanr",
-    iter = 2000, warmup = 1000,
-    refresh = 0
+  y ~ x,
+  family = poisson(),
+  data = df_pois,
+  seed = 12345,
+  chains = 4, cores = 4, backend = "cmdstanr",
+  iter = 2000, warmup = 1000,
+  refresh = 0
 )
 summary(result.bayes.pois)
 plot(result.bayes.pois)
@@ -478,12 +478,12 @@ $$
 
 # データ生成
 set.seed(17)
-n_person <- 10  # 個人数
-n_obs <- 20     # 各個人の観測数
+n_person <- 10 # 個人数
+n_obs <- 20 # 各個人の観測数
 beta_0 <- 1
 beta_1 <- 2
-sigma_u <- 1    # 個人差の標準偏差
-sigma_e <- 0.5  # 誤差の標準偏差
+sigma_u <- 1 # 個人差の標準偏差
+sigma_e <- 0.5 # 誤差の標準偏差
 
 # 個人ごとのランダム切片
 person_intercepts <- rnorm(n_person, mean = 0, sd = sigma_u)
@@ -505,22 +505,22 @@ df_random_intercept %>% head()
 
 # p1: 線型回帰（全体で一つの回帰線）
 p1 <- ggplot(df_random_intercept, aes(x = x, y = y)) +
-    geom_point(alpha = 0.5, size = 1) +
-    geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ランダム切片モデル（個人ごとに異なる切片の回帰線）
 p2 <- ggplot(df_random_intercept, aes(x = x, y = y, color = person_factor)) +
-    geom_point(alpha = 0.6, size = 1) +
-    geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "ランダム切片モデル") +
-    theme(
-      text = element_text(family = "IPAexGothic"),
-      legend.position = "none"
-    )
+  geom_point(alpha = 0.6, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "ランダム切片モデル") +
+  theme(
+    text = element_text(family = "IPAexGothic"),
+    legend.position = "none"
+  )
 
 p1 + p2
 ```
@@ -530,13 +530,13 @@ p1 + p2
 ```{r random_intercept_model}
 #| message: false
 result.bayes.random_intercept <- brm(
-    y ~ x + (1 | person),
-    family = gaussian(),
-    data = df_random_intercept,
-    seed = 12345,
-    chains = 4, cores = 4, backend = "cmdstanr",
-    iter = 2000, warmup = 1000,
-    refresh = 0
+  y ~ x + (1 | person),
+  family = gaussian(),
+  data = df_random_intercept,
+  seed = 12345,
+  chains = 4, cores = 4, backend = "cmdstanr",
+  iter = 2000, warmup = 1000,
+  refresh = 0
 )
 summary(result.bayes.random_intercept)
 plot(result.bayes.random_intercept)
@@ -557,8 +557,8 @@ summary(result.ml.random_intercept.ordinal)
 bayes_estimates <- fixef(result.bayes.random_intercept)
 bayes_sigma_u <- VarCorr(result.bayes.random_intercept)$person$sd[1]
 bayes_variances <- VarCorr(result.bayes.random_intercept)
-bayes_sigma_u <- sqrt(bayes_variances$person$sd[1,1]^2)  # 個人間分散の標準偏差
-bayes_sigma_e <- bayes_variances$residual__$sd[1,1]
+bayes_sigma_u <- sqrt(bayes_variances$person$sd[1, 1]^2) # 個人間分散の標準偏差
+bayes_sigma_e <- bayes_variances$residual__$sd[1, 1]
 # ML推定値を抽出
 ml_estimates <- fixef(result.ml.random_intercept)
 ml_sigma_u <- as.data.frame(VarCorr(result.ml.random_intercept))$sdcor[1]
@@ -587,16 +587,16 @@ lm_estimates <- coef(result.ml.random_intercept.ordinal)
 random_effects <- ranef(result.bayes.random_intercept)
 print(random_effects)
 # 個人の切片の変量効果の事後分布(MCMCサンプル)を取得
-posterior_samples <- as_draws_df(result.bayes.random_intercept) %>% 
-  select(starts_with("r_person")) %>% 
-  rowid_to_column("iter") %>% 
-  pivot_longer(-iter) %>% 
-  mutate(person = str_extract(name,pattern="\\d+")) %>% 
-  mutate(person = factor(person, levels = as.character(1:10))) %>% 
+posterior_samples <- as_draws_df(result.bayes.random_intercept) %>%
+  select(starts_with("r_person")) %>%
+  rowid_to_column("iter") %>%
+  pivot_longer(-iter) %>%
+  mutate(person = str_extract(name, pattern = "\\d+")) %>%
+  mutate(person = factor(person, levels = as.character(1:10))) %>%
   select(-name)
 # MCMCサンプルを使った要約
-posterior_samples %>% 
-  group_by(person) %>% 
+posterior_samples %>%
+  group_by(person) %>%
   summarise(
     EAP = mean(value),
     median = quantile(value, 0.5),
@@ -609,7 +609,7 @@ posterior_samples %>%
 # 事後分布の描画
 p1 <- ggplot(posterior_samples, aes(x = value, fill = person)) +
   geom_density(alpha = 0.7) +
-  facet_wrap(~ person, scales = "free_y") +
+  facet_wrap(~person, scales = "free_y") +
   theme_minimal() +
   labs(x = "切片の変量効果", y = "事後密度", title = "個人ごとの切片変量効果の事後分布") +
   theme(text = element_text(family = "IPAexGothic"), legend.position = "none")
@@ -626,29 +626,31 @@ print(p1)
 individual_coefs <- coef(result.bayes.random_intercept)$person
 
 # 実際の切片の事後分布（固定効果+変量効果）
-total_intercept_samples <- as_draws_df(result.bayes.random_intercept) %>% 
-  select(b_Intercept, starts_with("r_person")) %>% 
-  rowid_to_column("iter") %>% 
-  pivot_longer(-c(iter, b_Intercept)) %>% 
-  mutate(person = str_extract(name, pattern="\\d+")) %>% 
-  mutate(person = factor(person, levels = as.character(1:10))) %>% 
-  mutate(total_intercept = b_Intercept + value) %>% 
+total_intercept_samples <- as_draws_df(result.bayes.random_intercept) %>%
+  select(b_Intercept, starts_with("r_person")) %>%
+  rowid_to_column("iter") %>%
+  pivot_longer(-c(iter, b_Intercept)) %>%
+  mutate(person = str_extract(name, pattern = "\\d+")) %>%
+  mutate(person = factor(person, levels = as.character(1:10))) %>%
+  mutate(total_intercept = b_Intercept + value) %>%
   select(iter, person, total_intercept)
 
 # 実際の切片の事後分布の描画
 p2 <- ggplot(total_intercept_samples, aes(x = total_intercept, fill = person)) +
   geom_density(alpha = 0.7) +
-  facet_wrap(~ person, scales = "free_y") +
+  facet_wrap(~person, scales = "free_y") +
   theme_minimal() +
-  labs(x = "実際の切片（固定効果+変量効果）", y = "事後密度", 
-       title = "個人ごとの実際の切片の事後分布") +
+  labs(
+    x = "実際の切片（固定効果+変量効果）", y = "事後密度",
+    title = "個人ごとの実際の切片の事後分布"
+  ) +
   theme(text = element_text(family = "IPAexGothic"), legend.position = "none")
 
 print(p2)
 
 # 実際の切片の信頼区間
-total_intercept_summary <- total_intercept_samples %>% 
-  group_by(person) %>% 
+total_intercept_summary <- total_intercept_samples %>%
+  group_by(person) %>%
   summarise(
     EAP = mean(total_intercept),
     median = quantile(total_intercept, 0.5),
@@ -693,12 +695,12 @@ $$
 
 # データ生成
 set.seed(17)
-n_person <- 10  # 個人数
-n_obs <- 20     # 各個人の観測数
+n_person <- 10 # 個人数
+n_obs <- 20 # 各個人の観測数
 beta_0 <- 1
 beta_1 <- 2
-sigma_u <- 0.5  # 傾きの個人差の標準偏差
-sigma_e <- 1.5  # 誤差の標準偏差
+sigma_u <- 0.5 # 傾きの個人差の標準偏差
+sigma_e <- 1.5 # 誤差の標準偏差
 
 # 個人ごとのランダム傾き
 person_slopes <- rnorm(n_person, mean = 0, sd = sigma_u)
@@ -720,22 +722,22 @@ df_random_slope %>% head()
 
 # p1: 線型回帰（全体で一つの回帰線）
 p1 <- ggplot(df_random_slope, aes(x = x, y = y)) +
-    geom_point(alpha = 0.5, size = 1) +
-    geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ランダム傾きモデル（個人ごとに異なる傾きの回帰線）
 p2 <- ggplot(df_random_slope, aes(x = x, y = y, color = person_factor)) +
-    geom_point(alpha = 0.6, size = 1) +
-    geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "ランダム傾きモデル") +
-    theme(
-      text = element_text(family = "IPAexGothic"),
-      legend.position = "none"
-    )
+  geom_point(alpha = 0.6, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "ランダム傾きモデル") +
+  theme(
+    text = element_text(family = "IPAexGothic"),
+    legend.position = "none"
+  )
 
 p1 + p2
 ```
@@ -747,13 +749,13 @@ p1 + p2
 ```{r random_slope_model}
 #| message: false
 result.bayes.random_slope <- brm(
-    y ~ x + (0 + x | person),
-    family = gaussian(),
-    data = df_random_slope,
-    seed = 12345,
-    chains = 4, cores = 4, backend = "cmdstanr",
-    iter = 2000, warmup = 1000,
-    refresh = 0
+  y ~ x + (0 + x | person),
+  family = gaussian(),
+  data = df_random_slope,
+  seed = 12345,
+  chains = 4, cores = 4, backend = "cmdstanr",
+  iter = 2000, warmup = 1000,
+  refresh = 0
 )
 summary(result.bayes.random_slope)
 plot(result.bayes.random_slope)
@@ -799,19 +801,23 @@ $$
 
 # データ生成
 set.seed(17)
-n_person <- 10  # 個人数
-n_obs <- 20     # 各個人の観測数
+n_person <- 10 # 個人数
+n_obs <- 20 # 各個人の観測数
 beta_0 <- 1
 beta_1 <- 2
-sigma_u0 <- 1.0  # 切片の個人差の標準偏差
-sigma_u1 <- 0.5  # 傾きの個人差の標準偏差
-rho <- 0.3       # 切片と傾きの相関
-sigma_e <- 0.5   # 誤差の標準偏差
+sigma_u0 <- 1.0 # 切片の個人差の標準偏差
+sigma_u1 <- 0.5 # 傾きの個人差の標準偏差
+rho <- 0.3 # 切片と傾きの相関
+sigma_e <- 0.5 # 誤差の標準偏差
 
 # 切片と傾きの共分散行列
-Sigma <- matrix(c(sigma_u0^2, rho*sigma_u0*sigma_u1, 
-                  rho*sigma_u0*sigma_u1, sigma_u1^2), 
-                nrow = 2)
+Sigma <- matrix(
+  c(
+    sigma_u0^2, rho * sigma_u0 * sigma_u1,
+    rho * sigma_u0 * sigma_u1, sigma_u1^2
+  ),
+  nrow = 2
+)
 
 # 個人ごとのランダム効果（切片と傾き）
 pacman::p_load(MASS)
@@ -837,22 +843,22 @@ df_random_both %>% head()
 
 # p1: 線型回帰（全体で一つの回帰線）
 p1 <- ggplot(df_random_both, aes(x = x, y = y)) +
-    geom_point(alpha = 0.5, size = 1) +
-    geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
-    theme(text = element_text(family = "IPAexGothic"))
+  geom_point(alpha = 0.5, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
+  theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ランダム切片ランダム傾きモデル（個人ごとに異なる切片と傾きの回帰線）
 p2 <- ggplot(df_random_both, aes(x = x, y = y, color = person_factor)) +
-    geom_point(alpha = 0.6, size = 1) +
-    geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
-    theme_minimal() +
-    labs(x = "説明変数", y = "目的変数", title = "ランダム切片ランダム傾きモデル") +
-    theme(
-      text = element_text(family = "IPAexGothic"),
-      legend.position = "none"
-    )
+  geom_point(alpha = 0.6, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  theme_minimal() +
+  labs(x = "説明変数", y = "目的変数", title = "ランダム切片ランダム傾きモデル") +
+  theme(
+    text = element_text(family = "IPAexGothic"),
+    legend.position = "none"
+  )
 
 p1 + p2
 ```
@@ -863,13 +869,13 @@ p1 + p2
 ```{r random_intercept_slope_model}
 #| message: false
 result.bayes.random_both <- brm(
-    y ~ x + (1 + x | person),
-    family = gaussian(),
-    data = df_random_both,
-    seed = 12345,
-    chains = 4, cores = 4, backend = "cmdstanr",
-    iter = 2000, warmup = 1000,
-    refresh = 0
+  y ~ x + (1 + x | person),
+  family = gaussian(),
+  data = df_random_both,
+  seed = 12345,
+  chains = 4, cores = 4, backend = "cmdstanr",
+  iter = 2000, warmup = 1000,
+  refresh = 0
 )
 summary(result.bayes.random_both)
 plot(result.bayes.random_both)
@@ -1003,11 +1009,11 @@ ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが�
 ```{r hlm}
 pacman::p_load(tidyverse, brms, bayesplot, multilevel)
 dat <- read_csv("Baseball.csv") %>%
-    filter(Year == "2020年度") %>%
-    mutate(
-        position = as.factor(position)
-    ) %>%
-    filter(position != "投手")
+  filter(Year == "2020年度") %>%
+  mutate(
+    position = as.factor(position)
+  ) %>%
+  filter(position != "投手")
 
 # Calculate ICC using multilevel package
 # チームレベルのICC
@@ -1038,12 +1044,12 @@ ICCの値が負になっているので，群内のばらつきの方が群間�
 # ネスト構造を考慮したポアソンモデル
 # (1 | team) + (1 | team:position) でポジションをチーム内にネスト
 model_hit <- brm(
-    Hit ~ Games + height + weight + (1 | team:position),
-    data = dat,
-    family = poisson(),
-    chains = 4,
-    iter = 10000,
-    cores = 4
+  Hit ~ Games + height + weight + (1 | team:position),
+  data = dat,
+  family = poisson(),
+  chains = 4,
+  iter = 10000,
+  cores = 4
 )
 
 # Model summary for Hit model
@@ -1073,30 +1079,29 @@ pp_check(model_hit, ndraws = 100)
 #| out-width: "100%"
 
 predicted_hit <- fitted(model_hit,
-    newdata = dat,
-    allow_new_levels = TRUE
+  newdata = dat,
+  allow_new_levels = TRUE
 ) %>% as.data.frame()
 
 
 plot_data <- data.frame(
-    observed = dat$Hit,
-    predicted = predicted_hit$Estimate,
-    team = dat$team,
-    position = dat$position
+  observed = dat$Hit,
+  predicted = predicted_hit$Estimate,
+  team = dat$team,
+  position = dat$position
 )
 
 ggplot(plot_data, aes(x = observed, y = predicted, color = team)) +
-    geom_point(alpha = 0.7, size = 2) +
-    geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
-    labs(
-        x = "Observed Hit", y = "Predicted Hit",
-        title = "Predicted vs Observed Hit Count (2020年度)",
-        color = "Team"
-    ) +
-    facet_wrap(team ~ position, scales = "free") +
-    theme_minimal() +
-    theme(legend.position = "bottom")
-
+  geom_point(alpha = 0.7, size = 2) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    x = "Observed Hit", y = "Predicted Hit",
+    title = "Predicted vs Observed Hit Count (2020年度)",
+    color = "Team"
+  ) +
+  facet_wrap(team ~ position, scales = "free") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
 ```
 
 ## 課題
@@ -1117,7 +1122,7 @@ n <- 200
 true_intercept <- 0.5
 true_slope <- 1.2
 x <- rnorm(n, mean = 0, sd = 1)
-p <- plogis(true_intercept + true_slope * x)  # logistic function
+p <- plogis(true_intercept + true_slope * x) # logistic function
 y <- rbinom(n, size = 1, prob = p)
 
 # データフレーム作成
@@ -1125,17 +1130,17 @@ df_logistic <- data.frame(x = x, y = y)
 
 # Step 2: brmsでベイズ推定
 model_logistic <- brm(
-    y ~ x,
-    family = bernoulli(),
-    data = df_logistic,
-    prior = c(
-        prior(normal(0, 2.5), class = Intercept),
-        prior(normal(0, 2.5), class = b)
-    ),
-    chains = 4,
-    iter = 2000,
-    cores = 4,
-    refresh = 0
+  y ~ x,
+  family = bernoulli(),
+  data = df_logistic,
+  prior = c(
+    prior(normal(0, 2.5), class = Intercept),
+    prior(normal(0, 2.5), class = b)
+  ),
+  chains = 4,
+  iter = 2000,
+  cores = 4,
+  refresh = 0
 )
 
 # Step 3: 結果の確認
@@ -1166,17 +1171,17 @@ df_poisson <- data.frame(x = x, y = y)
 
 # ベイズ推定
 model_poisson <- brm(
-    y ~ x,
-    family = poisson(),
-    data = df_poisson,
-    prior = c(
-        prior(normal(0, 2.5), class = Intercept),
-        prior(normal(0, 2.5), class = b)
-    ),
-    chains = 4,
-    iter = 2000,
-    cores = 4,
-    refresh = 0
+  y ~ x,
+  family = poisson(),
+  data = df_poisson,
+  prior = c(
+    prior(normal(0, 2.5), class = Intercept),
+    prior(normal(0, 2.5), class = b)
+  ),
+  chains = 4,
+  iter = 2000,
+  cores = 4,
+  refresh = 0
 )
 
 summary(model_poisson)

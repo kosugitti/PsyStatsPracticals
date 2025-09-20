@@ -168,7 +168,6 @@ $$ \sum _{i=1}^{N} \log\{N(Y_i | \mu, \sigma_i)\} $$
 + `parallel_chains`...MCMCチェインのうち，並列で走らせるチェインの数。実行環境のCPUが持っているコア数-1程度にするのが良い。
 + `iter_warmup`...サンプリングに入る前の調整期間。詳しくは@sec-mcmc-evaluation を参照
 + `iter_sampling`...サンプリングの数。詳しくは@sec-mcmc-evaluation を参照
-+ `show_message`...メッセージの出力を抑制。必ずしも設定しなくても良い。
 + `reflesh`...サンプリングの途中経過をどの程度の頻度で出力するかの設定。必ずしも設定しなくとも良い。
 
 ```{r kick_gyudon10}
@@ -177,26 +176,26 @@ $$ \sum _{i=1}^{N} \log\{N(Y_i | \mu, \sigma_i)\} $$
 pacman::p_load(cmdstanr)
 model <- cmdstan_model("gyudon10.stan")
 dataSet <- list(
-    N = length(y),
-    Y = y
+  N = length(y),
+  Y = y
 )
-result <- model$sample(
-    data = dataSet,
-    chains = 4,
-    parallel_chains = 4,
-    iter_warmup = 2000,
-    iter_sampling = 5000,
-    refresh = 0
+fit <- model$sample(
+  data = dataSet,
+  chains = 4,
+  parallel_chains = 4,
+  iter_warmup = 2000,
+  iter_sampling = 5000,
+  refresh = 0
 )
 
-print(result)
+print(fit)
 ```
 
 結果を見ると，$\mu$は平均して150程度であり，店舗マニュアルに沿った結果が出ているといえよう。注目すべきは個々人の誤差であり，可視化してみるとその特徴がわかりやすい。
 
 ```{r gyudon10_visual}
 pacman::p_load(bayesplot)
-draws <- result$draws()
+draws <- fit$draws()
 # sigmaパラメータのみを可視化
 bayesplot::mcmc_areas(draws, regex_pars = "sigma")
 ```
@@ -208,8 +207,10 @@ pacman::p_load(bayestestR)
 # sigmaパラメータのみを選択
 sigma_draws <- draws[, , grepl("sigma", dimnames(draws)$variable)]
 # EAP(平均), MAP(最頻値), 中央値, 95%HDI
-bayestestR::describe_posterior(sigma_draws, centrality = c("mean", "median", "MAP"), 
-                              ci = 0.95, ci_method = "hdi", test = NULL)
+bayestestR::describe_posterior(sigma_draws,
+  centrality = c("mean", "median", "MAP"),
+  ci = 0.95, ci_method = "hdi", test = NULL
+)
 ```
 
 ここにあるように，結果は確率分布の形で得られるので，平均値(Mean, EAP)でみるのか，中央値(Median)でみるのか，密度が最大になるところ(MAP)でみるのかによって大きく値が異なる。特に分散パラメータは左右対称ではなく歪んだ分布になるので，EAP推定値は適切ではない。
@@ -225,24 +226,25 @@ bayestestR::describe_posterior(sigma_draws, centrality = c("mean", "median", "MA
 
 具体的に数字で見てみよう。まずある程度の相関関係を持つデータを作り，その一部を欠損させてみよう。
 ```{r corrData}
-pacman::p_load(MASS,tidyverse)
+pacman::p_load(MASS, tidyverse)
 N <- 500
-mu <- c(50,60)
-sd <- c(10,10)
+mu <- c(50, 60)
+sd <- c(10, 10)
 rho <- 0.7
-Sig <- matrix(nrow=2,ncol=2)
-Sig[1,1] <- sd[1]*sd[1]
-Sig[1,2] <- sd[1]*sd[2]*rho
-Sig[2,1] <- sd[2]*sd[1]*rho
-Sig[2,2] <- sd[2]*sd[2]
+Sig <- matrix(nrow = 2, ncol = 2)
+Sig[1, 1] <- sd[1] * sd[1]
+Sig[1, 2] <- sd[1] * sd[2] * rho
+Sig[2, 1] <- sd[2] * sd[1] * rho
+Sig[2, 2] <- sd[2] * sd[2]
 # 乱数の発生
 set.seed(17)
-X <- mvrnorm(N,mu,Sig,empirical=T)
+X <- mvrnorm(N, mu, Sig, empirical = T)
 
 dat <- data.frame(X)
-dat$FLG <- factor(ifelse(dat$X1>60,1,2),labels=c("pass","fail"))
+dat$FLG <- factor(ifelse(dat$X1 > 60, 1, 2), labels = c("pass", "fail"))
 # 描画
-g <- ggplot(dat,aes(x=X1,y=X2,group=FLG,color=FLG)) + geom_point()
+g <- ggplot(dat, aes(x = X1, y = X2, group = FLG, color = FLG)) +
+  geom_point()
 g
 ```
 
@@ -252,9 +254,9 @@ g
 # フルデータの場合
 cor(dat$X1, dat$X2)
 # 欠測値に置き換える
-dat[dat$FLG=="fail",]$X2 <- NA
+dat[dat$FLG == "fail", ]$X2 <- NA
 # 改めて相関係数を算出
-cor(dat$X1, dat$X2, use="complete.obs")
+cor(dat$X1, dat$X2, use = "complete.obs")
 ```
 
 不合格者が欠測値だとすると，相関係数は`r round(cor(dat$X1, dat$X2, use="complete.obs"),3)`にまで落ちてしまった。
@@ -302,27 +304,28 @@ $$ \mathbb{\Sigma} = \begin{pmatrix}
 #| echo: true
 #| message: false
 
-model <- cmdstan_model('missing_corr.stan')
+model <- cmdstan_model("missing_corr.stan")
 
 dataSet <- list(
-    Nobs = sum(!is.na(dat$X2)),
-    Nmiss = NROW(dat$X1)-sum(!is.na(dat$X2)),
-    obsX = dat[!is.na(dat$X2),c(1,2)],
-    missX = dat[is.na(dat$X2),1]
+  Nobs = sum(!is.na(dat$X2)),
+  Nmiss = NROW(dat$X1) - sum(!is.na(dat$X2)),
+  obsX = dat[!is.na(dat$X2), c(1, 2)],
+  missX = dat[is.na(dat$X2), 1]
 )
 
-result <- model$sample(
-    data = dataSet,
-    chains = 4,
-    parallel_chains = 4,
-    refresh = 0
+fit <- model$sample(
+  data = dataSet,
+  chains = 4,
+  parallel_chains = 4,
+  refresh = 0
 )
 
-bayestestR::describe_posterior(result$draws("rho"),
-            centrality = c("mean", "median", "MAP"), ci = 0.95, ci_method = "hdi", test = NULL)
+bayestestR::describe_posterior(fit$draws("rho"),
+  centrality = c("mean", "median", "MAP"), ci = 0.95, ci_method = "hdi", test = NULL
+)
 ```
 
-今回推定された`rho`は`r round(result$summary("rho")$mean,4)`と，ほぼ理論通りの値を復元できている。
+今回推定された`rho`は`r round(fit$summary("rho")$mean,4)`と，ほぼ理論通りの値を復元できている。
 多変量正規分布は，各変数に限って見てみると一変数の正規分布と同じであり，今回欠測のない`X1`の情報を尤度に追加することで，持ちうるデータの情報全てを活用することができた。このように，得られたデータが限定的であってもそのデータ生成メカニズムを考えることで補正できることは少なくない。たとえば上限や下限の値が決まっているデータに対し，そうした打ち切りがなければ本当は何点だったのか，といったこともモデルの工夫で推定することができるようになる。[^6]
 
 [^6]: たとえば @kinosada2018 が参考になる。
@@ -332,14 +335,432 @@ bayestestR::describe_posterior(result$draws("rho"),
 ### 項目反応理論
 すでに @sec-irt-model で見たように，項目反応理論はまさに正規分布以外のパラメータに数式的構造を持たせたものであった。すなわち，結果変数が0/1のバイナリデータであるから，確率分布としてはベルヌーイ分布を用い，パラメータ$\theta$は1が出る確率(正答する確率)と考えられるから，この$\theta$に潜在的な学力を仮定したロジスティックモデルを入れるのであった。
 
-この観点で数式を書き表すと，ある項目$j$に個人$i$が正答するかどうかは次のように表現できる。
+この観点で数式を書き表すと，ある項目$j$に個人$i$が回答したパターン$Y_{ij}$は次のように表現できる。
 
-$$ Y_{ij} \sim Bernoulli(\theta_i)  $$
+$$ Y_{ij} \sim Bernoulli(p_i)  $$
+$$ p_i = \frac{1}{1+\exp(-a_j(\theta_i - b_j))} $$
+
+これをStanによるモデルで実装してみよう。コードは次のようになる。
+```{r irtmodel}
+#| echo: false
+#| results: asis
+cat("```stan\n")
+cat(readLines("irt2pl.stan"), sep = "\n")
+cat("\n```")
+```
+
+ここではデータがLong型の整然データになっていることが前提である。すなわち，一行には受験者ID，項目番号(項目ID)と正答誤答の反応が入った3列のデータである。
+
+これを受けて`data`ブロックでは，まずデータ全体の長さ`L`と，受験者数`N`，項目数`M`の値を整数型で受け取り，これらの数字に応じた配列の変数を用意している。受験者のIDは`Pid`，項目のIDは`Qid`，反応は`resp`であり，それぞれ長さ`L`の配列である。受け取る数値の範囲にも注意してもらいたい。
+
+`parameters`ブロックでは，項目パラメータの`a_j`と`b_j`をサイズ`M`で，受験者パラメータの`theta`をサイズ`N`で用意している。
+
+`model`ブロックでは`bernoulli_logit`という関数で表しているが，これはロジスティック関数とベルヌーイ関数を組み合わせたものがStanに最初から用意されているからである。`l`行目の反応`resp[l]`に対し，項目パラメータと受験者パラメータを使って数式が組み込まれている。`theta[Pid[l]]`のように二重の代入になっている。こうすることで`l`行目の`Pid[l]`が整数値を返し，`l`行目の`theta_i`を表している。事前分布に関して，`a_j`と`b_j`それぞれに対数正規分布と正規分布を，`theta_i`に標準正規分布をおいた。
+
+実際に推定してみよう。今回も`exametrika`パッケージの`J15S500`データセットを使うが，Long型に加工して用いていることに注意してほしい。
+
+```{r irt-stan}
+#| echo: true
+#| message: false
+
+pacman::p_load(exametrika, tidyverse)
+dat <- J15S500$U
+dat_long <- dat %>%
+  as.data.frame() %>%
+  rowid_to_column("ID") %>%
+  pivot_longer(-ID)
+
+model <- cmdstan_model("irt2pl.stan")
+dataSet <- list(
+  L = NROW(dat_long),
+  M = 15,
+  N = 500,
+  Pid = dat_long$ID,
+  Qid = as.numeric(as.factor(dat_long$name)),
+  resp = dat_long$value
+)
+
+fit <- model$sample(
+  data = dataSet,
+  chains = 4,
+  parallel_chains = 4,
+  refresh = 0
+)
+
+fit$draws(c("a", "b")) %>%
+  describe_posterior(
+    centrality = c("mean", "median", "MAP"), ci = 0.95,
+    ci_method = "hdi", test = NULL
+  )
+```
+
+`exametrika`やそのほかのIRTモデルでは一般に，数が多くなる受験者パラメータを積分消去することで計算を効率化し，EMアルゴリズムなどで解析的に解く。一方ここで示したMCMCによるベイズ推定は，全てのパラメータが同時に成立しうる可能な空間を探索しながら代表値(MCMCサンプル)を得るため，計算効率は非常に悪く，結果の出力まで少し時間を要する環境もあるだろう。しかしStanのコードを書くことによって，どのような計算がなされているかが確認できるし，データ生成メカニズムがわかれば，様々な加工，工夫もやりやすくなるだろう。
 
 ### 再捕獲法による全体の推論
 
+正規分布以外の分布を用いた例として，今度は少し特殊な例を見てみよう。
+その前に，どういうことを目的としているかのカバーストーリーを考える[^7]。
+
+ある時，あなたの友人はいつも同じような服を着ていることに気がついた。そこである一週間の服装をしっかり観察してみると，いちおう毎日違うコーディネートのようで，7種類のパターンがあることがわかった。同じく翌週もみてみると，5日間の観察のうち，4回は先週と同じコーディネートで着まわしていることがわかった。さて，この友人は全体で何パターンぐらいの服を着まわしているだろうか。
+
+[^7]: このカバーストーリーとモデルは @Lee201709 の「飛行機を再捕獲する」P.63--66を参考に作ったものである。なおこの本のStanコードは[こちら](https://github.com/fusaroli/CognitiveModelingRecoded)にあるので参考にしてほしい。書き写すだけでもかなりの勉強になることは間違いない。
+
+これはあくまでも身近な例で考えてみたものであって，同じような問いの構造を別の例で考えてみよう。
+
++ ある池に魚を釣りに行き，`X`匹釣れたとする。その`X`匹に印をつけリリースする。別の機会に魚を釣りに行くと今度は`N`匹釣り上げることができて，そのうち`K`匹は前回つけた印のある魚であった。このとき，この池には何匹ぐらいの魚がいるだろうか。
++ ある調査では，大学のイメージを自由記述で回答してもらうことにした。調査結果をまとめると，`X`件のカテゴリに分類できるようだ。また第二回調査を同様に行うと，今度は`N`件のカテゴリに分類することができ，第一回調査との重複は`K`件であった。このとき，この調査を続けて「回答の全体像」を考えるとすると，どれぐらいのカテゴリが得られるだろうか。
+
+第2の例，池の魚の総数を推定する方法は実際にも行われる調査方法であり，第3の例は質問紙調査における理論的飽和を参考にしたサンプルサイズ設計[@ToyodaRecapture2013]などに応用可能であることが議論されている。これらの手法は応用シーンが全く異なるものであるが，確率モデルとしては同じで一般に捕獲--再捕獲法と呼ばれている。
+
+さて，では捕獲--再捕獲問題を確率モデルを確率モデルとして考えよう。ここで用いるのは超幾何分布(Hypergeometric Distribution)である。超幾何分布は有限母集団から，非復元抽出を行う際の確率分布であり，次のように定式化される。
+
+$$ P(X=k) = \frac{{}_xC_k \times {}_{(t-k)}C_{n-k} }{ {}_tC_n }$$
+
+ここで`t`は母集団のサイズ，`x`は最初のサンプルサイズ，`n`が2回目のサンプルサイズで，`k`が再捕獲された標本の数である。また，`C`は組み合わせの数を表す。2回目のサンプル`n`は，全体`t`からとりうる組み合わせのうち，1回目のサンプル`x`から`k`が得られる組み合わせ，かつ，残りの`t-k`から印のない`n-k`を取り出す組み合わせ，から構成されていると言える。
+
+確率分布を使って表現すると，次のようになる[^8]。
+
+$$ k \sim Hypergeometric(n, x, t-x) $$
+
+
+[^8]: ここではStanのHypergeometric関数の書き方に従った。テキストによっては(例えば @Lee201709 )`Hypergeometric(n,x,t)`とかかれることもあるが，Stanでは`k \sim Hypergeometric(n, a, b)`で，`n`が2回目のサンプルサイズを指し，`a`が1回目のサンプルサイズ，`b`が1回目のサンプルで母集団から取り出せなかった数を表す。母集団全体の大きさは`a+b`であり，ここでの表記では`x + t-x`なので`t`である。
+
+
+Stanモデルで見てみよう。
+
+```{r recapture_model}
+#| echo: false
+#| results: asis
+cat("```stan\n")
+cat(readLines("recapture.stan"), sep = "\n")
+cat("\n```")
+```
+
+このStanモデルには色々なテクニックが内包されているので，順に確認していこう。
+
+#### 事前分布について
+
+データとしては，最初のサンプルサイズ`x`，2度目のサンプルサイズ`n`，再捕獲した個体数`t`と，推定に必要なおおよその最大数`maxT`を与える。たとえば例1のコーディネートパターンであれば，30もあれば十分だろう。
+
+事前分布としては，1から`maxT`のどこにでもありうるのだから，無情報事前分布として一様に`1.0/maxT`を置くといいだろう。
+
+#### target記法について
+
+尤度について説明する前に，Stanのtarget記法について説明しておかなければならない。
+これまで，尤度関数を例えば次のように記載してきた。
+
+` Y[i] ~ normal(mu, sigma)`
+
+この記法はSampling記法と呼ばれるが，これと同じモデルを別の記述で表現することができる。それがtarget記法で，上と同じモデルをtarget記法で書くと次のようになる。
+
+`target += normal_lpdf(Y[i]|mu,sigma)`
+
+MCMCの内部では尤度ではなく対数尤度を用いて計算することはすでに述べた。尤度は数字が小さくなりすぎるため，対数を取ることで計算上の安定化を図っているのである。target記法の`normal_lpdf`についている`lpdf`は`log-probability density function`で対数確率密度関数を表している。
+モデル全体としては，ケースごとの尤度を掛け合わせる(総積)が[^9]，対数で計算する場合は足し合わせる(総和)ことになる。
+
+[^9]: これは各ケースが独立に同じ分布(独立同分布，independent and identically distributed,i.i.d.)から得られているという仮定が成り立つときになされる計算である。サイコロの目が2回連続で1が出る場合などは，$1/6 \times 1/6$と計算するが，これは$1/6$の確率が独立しているから掛け合わせよう，ということに他ならない。
+
+足し合わせたモデル全体の対数尤度を`target`と呼ぶ。また，`+=`はプログラミング言語特有の表記法の一種で，`x = x + y`のように同じ変数`x`に`y`を加えてまた`x`に代入するという作業をするときに，`x += y`のように記載するのである。
+
+つまり`target += normal_lpdf(Y[i]|mu,sigma)`は，`N(mu, sigma)`から得られる`Y[i]`をloopなどでモデル全体の対数尤度`target`に追加していけ，という表現になっている。
+このような複雑な計算が存在する理由は2つある。ひとつは今回のように複雑なモデルで，対数尤度を直接記述したい場合や，確率的にモデルが異なるときに異なるモデルの可能性を分けて書いて後で足し合わせる，という工夫をする場合である。もうひとつは，Sampling記法が計算の高速化のためにカットした部分も省略せずに計算する場合[^10]である。
+
+[^10]: ベイズの公式にある右辺の分母，すなわち周辺尤度$P(D)$は，結果を確率分布にするための定数であり，事後分布の形状を算出するのには不要な要素である。Sampling記法はこの計算をしないことで高速化している。しかしベイズファクターなど周辺尤度をつかう必要がある時は，この計算をカットすることができないため，target記法が必要になる。
+
+#### 尤度について
+
+target記法について理解したところで，もう一度コードに目を向けてみよう。
+
+データの入力後に`transformed data`ブロックで，`minT`という値を定義してる。数式から，1度目のサンプルサイズ+2度目のサンプルサイズ-重複(再捕獲)した個体の数であることがわかる。すなわちオリジナルな(重複しない)個体が確認されている数を`minT`としている。
+
+続いて`paramters`ブロックが来るはずだが，ここにそれは存在しない。`paramters`ブロックに書くのは推定対象のパラメータであるが，今回はパラメータが推定対象ではない。特定の`n,x,t`の値から，データ`k`が得られたとするモデルだからである。
+
+`transformed paramters`ブロックで記述されているものが，実質的なモデルの対数尤度である。まず考えうる`1`から`maxT`までのベクトル`lp`を用意する。このベクトルのうち，少なくとも`minT`までは考えなくても良い。そこで
+
+1. `i`を`1`から`maxT`までのfor文で回しつつ，
+2. `i < minT`の間は確率ゼロとする。
+
+この「確率をゼロにする」というのは，対数を取ると$\log(0)=-\infty$だから，事前分布を加えて
+
+`lp[t] = log(1.0 / maxT) + negative_infinity();`
+
+とする(`negative_infinity()`はStanの$-\infty$表記)。
+
+また，
+
+3. `i >= minT` の間は，事前分布(`1.0/maxT`)と超幾何分布`hypergeometric(n, x, i - x)`のなかから`k`という値が観測される尤度
+
+の組み合わせである。ただし，対数を取るために事前分布に$\log$をとり，尤度を`hypergeometric_lpdf`で表して，積を和に変えている。
+
+このようにして`lp`を構成する要素はすでに準備したので，`model`ブロックではこれらを使うだけで良い。
+
+ここでもう一工夫必要なのだが，`lp[t]`には考えるべき`t`のそれぞれ(ここでは1,2,3,...,30)について，対数事後確率(対数尤度＋対数事前確率)が計算されている。これは対数を取った確率だから，`exp`関数(指数関数)で事後確率に置き換え，各パターンを足し合わせる(`sum`)ことで全体の事後確率とし，計算の安定性を保ちつつ尤度を計算するために対数を取って`log`をする，という作業が必要である。これを一つの関数`log_sum_exp`が担っている。
+
+#### 生成量について
+
+最後にもうひとつ，`generated quantities`ブロックについて見ておく。
+
+このブロックは，MCMCの推定が終わった後の変数を加工し，生成量とも呼ばれる出力を計算する箇所である。
+今回はここで，推定される総個体数`t`を計算している。`t`は少なくとも`minT`で多くとも`maxT`な整数値であるから，型宣言は理解できるだろう。
+
+続いて，`lp`を`softmax`関数に入れて`tp`を計算する。`lp`には対数事後確率が入っていたことを思い出そう。また，`softmax`関数は数学的には次のような操作をしている。
+
+$$ \mathbb{x} = \frac{\exp(\mathbb{x})}{\sum\exp(\mathbb{x})} $$
+
+ここで$\mathbb{x}$はベクトルであり，今回はサイズ `maxT` の`simplex`型で宣言した。`simplex`型とは，全ての要素を足し合わせると`1.0`になるという制約付きベクトルである。総和が1.0なので確率として解釈でき，`maxT`個のサイズであることから察せられるように，総数`t`が1,2,3,...,30の各ケースそれぞれでどの程度起こりやすいかを表している。カテゴリカルな分布の確率パラメータのベクトルとして用いられる型である。
+
+さて，総数`t`がどういう値をとりやすいかは，対数事後確率に寄るところである。対数事後確率も1,2,3,...,30の各ケースの起こりやすさであるから，指数関数で対数をとり，総和を取ったうちの当該要素の確率，すなっわち各ケースの相対確率に置き直すのが`softmax`関数の仕事である。
+
+ここで計算された`tp`は確率に置き換えられた，各ケースの出やすさ(確率質量)である。また，`categorical`はカテゴリカル分布であり，`categorical_rng`はStanの`categorical`分布を使った乱数発生関数である。[^11]
+
+例えばサイコロの目は1,2,3,4,5,6であり，各$1/6$の確率で生じるが，カテゴリカル分布では出目`x`を
+
+$$ x \sim Categorical(1/6,1/6,1/6,1/6,1/6,1/6) $$
+
+のように表す。今回は`tp`で`t`がどのようになるか，乱数で生成することで，MCMCサンプルの後でどのような出目が出やすいかを取り出すことにしている。
+
+[^11]: Stanはこのように確率分布の後ろに`_`をつけることで同じ確率分布の別の側面を表す。Rで正規分布を`norm`と表し，確率密度を`dnorm`，累積確率を`pnorm`，累積確率の逆関数を`qnorm`，正規乱数を`rnorm`としているように，Stanでは`normal`の対数確率密度を`normal_lpdf`，正規乱数を`normal_rng`とする。カテゴリカル分布の場合は，その対数確率質量を`categorical_lpmf`(log-probability mass function)とし，カテゴリカル乱数を`categorical_rng`としているのである。
+
+さぁ，長かったコードの説明もこれで終わり。実際にコンパイルして推定してみよう。
+推定の際には`parameters` ブロックをおいていないことから，`fixed_param = TRUE`のオプションを入れるのを忘れずに。
+
+```{r recapture-stan}
+#| echo: true
+#| message: false
+
+model <- cmdstan_model("recapture.stan")
+
+x <- 7 # 最初の観測
+n <- 5 # 二度目の観測
+k <- 4 # 同じ服だった回数
+maxT <- 30 # 上限
+
+dataSet <- list(x = x, k = k, n = n, maxT = maxT) 
+
+fit <- model$sample(
+  data = dataSet,
+  chains = 4,
+  parallel_chains = 4,
+  fixed_param = TRUE,
+  refresh = 0
+)
+
+MAP_value <- bayestestR::describe_posterior(fit$draws("t"),
+  centrality = c("mean", "median", "MAP"), ci = 0.95,
+  ci_method = "hdi", test = NULL
+)
+MAP_value
+bayesplot::mcmc_areas(fit$draws("t"), point_est = "none") +
+  geom_vline(xintercept = MAP_value$MAP, color = "red")
+```
+
+今回の結果から，あなたの友人の持っている服装コーディネートパターンは，せいぜい`r MAP_value$MAP`つであることがわかった。
+
+いかがだっただろうか。
+
+ここでのポイントは，超幾何分布を使ったということもさることながら，「アイデア次第で色々な分析ができる」という点にある。
+
+考えるべき問題を数学的に定式化することで抽象度が上がる(同時に難易度も上がったように感じられる)が，そのことによって同型の問題を特定できること，すなわち様々な応用が可能になる。目の前の問題を考えるときに，データ生成メカニズムや確率モデルで考えることが，クリエイティブな営みであることがわかってもらえただろうか。
+
+
 ## 分布を混ぜる
 
-### 分布を混ぜる(変化点を検出する)
-### 分布を混ぜる(0過剰ポアソン分布)
+今度は複数の分布を使うモデルを考えてみよう。
+
+### 変化点を検出する
+
+[こちらのデータ](myWeights.csv)をみてもらいたい。読み込んでプロットしたのが次の図である。
+
+```{r weights_data}
+#| dev: "ragg_png"
+#| message: false
+w <- read_csv("myWeights.csv")
+w |>  ggplot(aes(x=date,y=weight))+geom_point()
+```
+
+これは筆者の体重の推移で，2024年の1月1日から同年6月1日までの変化である。
+これを見ると明らかにある時期から推移の傾向が変わっているのが見て取れる。おそらく4月の初旬から下降傾向に入ったようだ。
+このデータに対してなんらかの生成モデルを考える時，4月までと4月からではメカニズムが異なるようなので，別のモデルが必要ではないだろうか。
+
+そこで，ある時点を境に異なるメカニズムであることをモデル化してみよう。Stanのコードは次のようになる。
+
+```{r changepoint_stan}
+#| echo: false
+#| results: asis
+cat("```stan\n")
+cat(readLines("change_point.stan"), sep = "\n")
+cat("\n```")
+```
+
+`data`ブロックはシンプルで，データの長さ`L`と体重`w`の値だけをとるようになっている。
+`parameters`ブロックの最初に，$\tau$というパラメータを用意した。
+データの長さ`L`の範囲内で，時点`tau`で動きが変わったこと考えるのである。もちろんこの`tau`がいつなのかはわからない。わからないので，パラメータとして推定するのである(ベイズではわからないことを確率として表現する！)。
+
+`model`ブロックの尤度には，`i`から`L`の間で，`i < tau`の時と`i >= tau`の時とで分けて書いている。データ自体の生成は単純な回帰モデルで，`i < tau`の時は`beta0a + beta1a * i`で平均が推移する。つまり2024年の`i`日目から傾き`beta1a`で変化するというモデルである。次に変化点を超えた`i>=tau`のときは`beta0b + beta1b * (i-tau+1)`，すなわち変化点から何日経ったか(`i-tau+1`)という日数を説明変数に，傾き`beta1b`で変化する。
+
+誤差に対してはいずれも同じ`sig`を置き，事前分布として`tau`には無情報分布を，`beta0a,0b`という切片は80kg付近の値を，`beta1a,1b`には正負どちらの値も取りうるような事前分布を置いた。
+
+このモデルを次のコードで実行する。
+```{r changepoint_est}
+#| echo: true
+#| message: false
+
+model <- cmdstan_model("change_point.stan")
+
+dataSet <- list(
+  L = nrow(w),
+  w = w$weight
+)
+
+fit <- model$sample(
+  data = dataSet,
+  chains = 4,
+  parallel_chains = 4,
+  iter_warmup = 3000,
+  iter_sampling = 2000,
+  refresh = 0
+)
+
+fit$summary()
+```
+
+```{r MAPS}
+# echo: false
+MAPs <- bayestestR::describe_posterior(fit$draws(),
+  centrality = c("mean", "median", "MAP"), ci = 0.95,
+  ci_method = "hdi", test = NULL
+)$MAP
+```
+
+分析の結果から，変化が生じたXデーである`tau`は`r round(MAPs[2],3)`，つまり`r round(MAPs[2])`日目であり，それまでは傾き`r round(MAPs[5],3)`で上昇傾向だったが，それ以後は`r round(MAPs[6],3)`で下降傾向に減じたことがわかる。
+
+データからMAP推定値を取り出して，図とともに確認してみよう。
+```{r tau_est}
+Xday <- bayestestR::describe_posterior(fit$draws("tau"),
+  centrality = c("mean", "median", "MAP"), ci = 0.95,
+  ci_method = "hdi", test = NULL
+)$MAP |> round()
+
+cat("変化したのは次の日から")
+print(w[Xday,])
+
+w |>  ggplot(aes(x=date,y=weight))+
+      geom_point()+
+      geom_vline(xintercept = w$date[Xday],
+      color = "red")
+```
+
+今回はデータの分布を見て，変化点が1点だろうと考えてモデリングを行った。もちろん分布を詳細に観察することで，違うモデルの立て方(変化点が複数あり得る，など)を考えることができる。また，今回は変化点までの体重の推移に単回帰モデルを当てはめたり，変化点前後で体重のブレ(`sig`)が一定であろう，という仮定も含まれている。このように，モデルの数式をよく見てどのような仮定が含まれているか，それらは妥当であるかといったことを吟味したり，何か気付きがあれば，それが改良の余地になることもあるだろう。
+
+変化点検出はデータに語らせることができるという点で重要で，目で見て主観的に「この辺りからおかしい」と断ずるのではなく，(仮定は多く含まれているものの)より客観的な統計モデルを活用する例を示した。実際に，測定値の異常値を検出するとか，状況が変わったことを検出するなどの際に用いることができるし，皮膚電位反応による隠匿情報に対する反応(一般に嘘発見器と呼ばれるもの)を診断するようなシーンにも使えるものである。
+
+一点注意を促しておくと，今回は回帰モデルを適用したが，正しくは回帰モデルを用いるべきではない。というのも，回帰モデルの前提として全ての観測点が独立であるという仮定があるからである。時系列データは，観測点は前の時点のデータに依存することが多く，誤差間に相関を仮定する必要がある。時系列データに対してはそうした自己相関を仮定した状態空間モデルを適用するべきであった。状態空間モデルもStanで記述することができるが，発展的な内容になるため今回は説明を省略する。興味がある人は @Komori2022 や @LOBSST2018 ，@kosugi2022b などを参考にされたい。
+
+### 異質な群を分けて考察する
+
+続いて，またも[野球のデータ]("Baseball.csv")を使った例をみてみよう。
+このデータの中から，2022年度のセリーグのチームを抜き出し，ヒットの本数をグラフにするのが次のコードである。
+
+```{r Hit_hist}
+#| dev: "ragg_png"
+#| message: false
+y <- read_csv("Baseball.csv") |> 
+  filter(Year == "2020年度") |> 
+  filter(team %in% c("Giants","Tigers","Carp","Swallows","DeNA","Dragons")) |> 
+  select(position, Hit, team) |>
+  mutate(Hit = ifelse(is.na(Hit),0,Hit))
+y |>  ggplot(aes(x=Hit)) + geom_histogram()
+summary(y$Hit)
+```
+
+これを見ると，ほとんどヒットを打たない人がかなりいることがわかる。これは当然で，2022年のセ・リーグは投手黙席に立つからである。投手は投げることが仕事なので，バットを振らないことがほとんどであり，当然安打数は基本的に0なのである[^12]。
+
+[^12]: 野球に詳しくない人のためにコメントしておくと，まず日本のプロ野球は129段あるが，セントラルリーグ(セ・リーグ)とパシフィックリーグ(パ・リーグ)に6チームずつ分かれて普段のリーグ戦を行っている。両リーグの違いとして，パ・リーグでは指名打者制を取っており，投手の打順のところに別の選手が打者として入るため，投手は打席に立たない。セ・リーグでも2027年のシーズンから指名打者制を取ることが決まった。野球は9人でやるものだが，投手は打ったり走ったりして体力を使わないようにするため，打席に立っても仕事をしないものなのである。そう，大谷翔平選手が異常なのだ。
+
+このヒストグラムに対してモデリングすることを考える。安打数(Hit)はカウント変数だから，理論的に言えばポアソン分布を当てはめるのがよかろう。しかし上で述べたように，打たない人もいるのだから，「打つ人なのかどうか」を判別してモデルを変えるべきである。もし安打数が0だというデータがあれば，それは「打たない人だから0」なのか，「打つ人なんだけど0」なのか，のどちらかであり，安打数が0でなければ「打つ人」であるはずだ。
+
+こうした「構造的な0の可能性」を考える混合分布モデルを**ゼロ過剰ポアソン分布**という。今回はこの「ゼロ過剰」のモデルを見ていく。
+
+その前に，ポアソン分布についてもう一つ。ポアソン分布のパラメータは$\lambda$だけである。これは平均値パラメータと言われるが，ポアソン分賦の平均値と分散は同じになるという特徴を持つ。そのため，単一のパラメータ$\lambda$だけでモデルを当てはめると，分散が大きい場合(過分散という)，得てしておかしな推定値になる。幸にして，ポアソン分布の特徴を持ちつつ，平均パラメータと分散パラメータの両方を持つ分布があり，これを負の二項分布という。
+
+負の二項分布は次のように定義される。
+
+$$ NegBinomial(n|\alpha,\beta) = \frac{\Gamma(\alpha + n)}{\Gamma(\alpha)\Gamma(n+1)} \left(\frac{\alpha}{\alpha + \beta}\right)^{\alpha} \left(\frac{\beta}{\alpha + \beta}\right)^{n} $$
+
+この定義から導出される平均と分散は次のようになる。
+
+$$ E[N] = \frac{\alpha \beta}{\alpha} = \beta $$
+$$ Var[N] = \beta + \frac{\beta^2}{\alpha} = \beta\left(1 + \frac{\beta}{\alpha}\right) $$
+
+ただ，この表現はややこしいし直感的でない。そこでStanでは平均$\mu$と過分散パラメータ$\phi$を用いた`neg_binomial_2`の書式が用意されている。
+
+$$ NegBinomial2(n|\mu,\phi) = \frac{\Gamma(\phi + n)}{\Gamma(\phi)\Gamma(n+1)} \left(\frac{\phi}{\phi + \mu}\right)^{\phi} \left(\frac{\mu}{\phi + \mu}\right)^{n} $$
+
+この場合の平均と分散は次のようになる。
+
+$$ E[N] = \mu $$
+$$ Var[N] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right) $$
+
+$\phi$が大きいほど分散は平均に近づき、$\phi \to \infty$でポアソン分布と一致する。
+
+さて今回はゼロ過剰な負の二項分布モデルでアプローチしよう。Stanのコードは次のようになる。
+
+
+```{r zero_inflated_negbinom}
+#| echo: false
+#| results: asis
+cat("```stan\n")
+cat(readLines("zero_inflated_negbinom.stan"), sep = "\n")
+cat("\n```")
+```
+
+`parameters`ブロックには，「打つ人なのかどうか」を判断するパラメータ`theta`を用意した。これは0から1の間に入る実数だからベルヌーイ分布のイメージで，コイントスをして表が出れば「打たない人」，裏が出れば「打つ人だけど0だった人」という分岐をすると考える。また負の二項分布のパラメータとして，平均`mu`と分散`phi`についてのパラメータを置いた。
+
+`model`ブロックをみると，この分岐がよくわかるだろう。もしデータ`y_i`が0なら，`log_mix`関数を通る。Stanの`log_mix`関数は混合率とそれぞれのケースの尤度を記載する。
+`log_mix(theta,0,neg_binomial_2_lpmf(0 | mu, phi)`の式が表すのは，
+
+$$p(y_i|\theta,\mu,\phi) =
+  \theta +
+  (1-\theta)\cdot NegBinomial2(0|\mu,\phi)
+$$
+
+であり，確率$\theta$で0が出ている[^13]か，$1-\theta$で負の二項分布から0が出ている確率か，を表している。
+
+
+[^13]: `log_mix`の第一引数は混合率であり，第2・第3引数には対数確率密度を記述する。第2引数の`0`は対数確率密度なので，`exp(0)=1`，すなわち100%の確率であることを意味する。第3引数は`neg_binomial_2_lpmf`であり，`lpmf`とあることから，これは負の二項分布(第二形態)の対数確率密度であることがわかる。
+
+もちろん`y_i > 0`の場合は「打つ人」であるから，`1-theta`の確率で負の二項分布から出るコースになる。両者ともtarget記法で，事後対数尤度に直接加えていることを確認しておこう。
+
+また今回は，生成量としてこのモデルから生み出されるデータを生成させてみた。メカニズムは同じで，`theta`をベルヌーイ分布にいれて`1`が出たら「打たない人」だから0だし，そうでなければ負の二項分布からある値が生成されるだおる，という形である。このように，モデルが生み出す予測データのことを**事後予測分布**といい，これを視認することで「モデルから今回と同じようなデータが生成されるか」を確認することができる。
+
+これを次のRコードで実行する。
+
+```{r kick_zero_inflated_negbinom}
+model <- cmdstan_model("zero_inflated_negbinom.stan")
+
+dataSet <- list(
+  N = length(y$Hit),
+  y = y$Hit
+)
+
+fit <- model$sample(
+  data = dataSet,
+  parallel_chains = 4,
+  refresh = 0
+)
+
+bayestestR::describe_posterior(fit$draws(c("theta","mu","phi")),
+  centrality = c("mean", "median", "MAP"), ci = 0.95,
+  ci_method = "hdi", test = NULL)
+
+y_pred <- fit$draws("y_pred", format = "matrix")
+bayesplot::ppc_dens_overlay(y$Hit, y_pred[1:50, ])
+```
+
+出力結果から，混合率`theta`や平均，分散の値が見て取れるだろう。
+加えて事後予測分布を見てみよう。`bayesplot`パッケージには事後予測分布に関する関数が複数用意されており，モデルが生み出すデータと実際のデータを重ねて描画してくれる。ここでは`ppc_dens_overlay`(posterior predictive distributionの密度を重ね書きする関数)を使って，最初の50個のデータを重ね書きしてみた。実際のデータとモデルの予測値がしっかり重なっており，うまく適合していることがわかるだろう。
+
+今回は「打つ人」と「打たない人」をデータから識別しながらモデルを適合するというモデルをみた。このモデルは例えば，「お店に初めて来る人とリピーターあるいは常連」で売上が異なるのではないかとか，例えば質問紙調査などで中心の回答(「どちらともいえない」など)を選びがちな群とそうでない群を分けるとか，健常者群と臨床群との違いを反応から見つけてモデルを変える，など色々な研究的応用も可能である。
+
+@Lee201709 もいうように，**ベイズモデルの限界はユーザの想像力だけ**である。皆さんも色々なデータ生成メカニズムを想像し，面白いモデルを創造してもらいたい。
 

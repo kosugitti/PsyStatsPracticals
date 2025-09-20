@@ -337,25 +337,31 @@ normal_df <- data.frame(
 # 1. 標準正規分布
 p1 <- ggplot(normal_df, aes(x = x, y = density)) +
   geom_line() +
-  labs(title = "標準正規分布",
-       x = "x",
-       y = "確率密度") +
+  labs(
+    title = "標準正規分布",
+    x = "x",
+    y = "確率密度"
+  ) +
   theme_minimal()
 
 # 2. 累積正規分布
 p2 <- ggplot(normal_df, aes(x = x, y = cdf)) +
   geom_line() +
-  labs(title = "累積正規分布",
-       x = "x",
-       y = "累積確率") +
+  labs(
+    title = "累積正規分布",
+    x = "x",
+    y = "累積確率"
+  ) +
   theme_minimal()
 
 # 3. ロジスティック曲線
 p3 <- ggplot(normal_df, aes(x = x, y = logistic)) +
   geom_line() +
-  labs(title = "ロジスティック曲線による近似",
-       x = "x",
-       y = "確率") +
+  labs(
+    title = "ロジスティック曲線による近似",
+    x = "x",
+    y = "確率"
+  ) +
   theme_minimal()
 
 # 3つのプロットを横に並べて表示
@@ -382,7 +388,7 @@ logistic_1pl <- function(theta, b) {
 x <- seq(-4, 4, length.out = 1000)
 normal_df <- data.frame(
   x = x,
-  default = logistic_1pl(x, 0), #deafult
+  default = logistic_1pl(x, 0), # deafult
   easy = logistic_1pl(x, -1),
   hard = logistic_1pl(x, 1)
 )
@@ -391,13 +397,15 @@ ggplot(normal_df) +
   geom_line(aes(x = x, y = default, color = "デフォルト(b=0)")) +
   geom_line(aes(x = x, y = easy, color = "易しい(b=-1)")) +
   geom_line(aes(x = x, y = hard, color = "難しい(b=1)")) +
-  scale_color_brewer(palette = "Set2") + 
-  labs(title = "1pl logistic model",
-       x = "theta",
-       y = "通過率",
-       color = "難易度") +  # 凡例のタイトルを追加
+  scale_color_brewer(palette = "Set2") +
+  labs(
+    title = "1pl logistic model",
+    x = "theta",
+    y = "通過率",
+    color = "難易度"
+  ) + # 凡例のタイトルを追加
   theme_minimal() +
-  theme(legend.position = "bottom")  # 凡例を下部に配置
+  theme(legend.position = "bottom") # 凡例を下部に配置
 ```
 
 #### 2PLモデル
@@ -417,22 +425,24 @@ logistic_2pl <- function(theta, a, b) {
 x <- seq(-4, 4, length.out = 1000)
 normal_df <- data.frame(
   x = x,
-  default = logistic_2pl(x, 1, 0), #deafult
-  easy = logistic_2pl(x,1.5, -1),
-  hard = logistic_2pl(x,0.5, 1)
+  default = logistic_2pl(x, 1, 0), # deafult
+  easy = logistic_2pl(x, 1.5, -1),
+  hard = logistic_2pl(x, 0.5, 1)
 )
 
 ggplot(normal_df) +
   geom_line(aes(x = x, y = default, color = "デフォルト(b=0,a=1)")) +
   geom_line(aes(x = x, y = easy, color = "b=-1, a=1.5")) +
   geom_line(aes(x = x, y = hard, color = "b=1, a=0.5")) +
-  scale_color_brewer(palette = "Set2") + 
-  labs(title = "1pl logistic model",
-       x = "theta",
-       y = "通過率",
-       color = "モデルと設定") +  # 凡例のタイトルを追加
+  scale_color_brewer(palette = "Set2") +
+  labs(
+    title = "1pl logistic model",
+    x = "theta",
+    y = "通過率",
+    color = "モデルと設定"
+  ) + # 凡例のタイトルを追加
   theme_minimal() +
-  theme(legend.position = "bottom")  # 凡例を下部に配置
+  theme(legend.position = "bottom") # 凡例を下部に配置
 ```
 
 #### 3,4,5PLモデル
@@ -576,7 +586,7 @@ pacman::p_load(psych, tidyverse)
 data(small.msq)
 summary(small.msq)
 
-dat <- small.msq %>% select(-gender,-drug)
+dat <- small.msq %>% select(-gender, -drug)
 ```
 
 
@@ -595,9 +605,9 @@ dat <- small.msq %>% select(-gender,-drug)
 #| echo: FALSE
 #| eval: FALSE
 # EFAの例
-fa.parallel(dat, cor="poly")
-result <- fa(dat, cor = "poly", nfactors = 2, rotate='geominQ')
-print(result, sort= T, cut = 0.3)
+fa.parallel(dat, cor = "poly")
+result <- fa(dat, cor = "poly", nfactors = 2, rotate = "geominQ")
+print(result, sort = T, cut = 0.3)
 ```
 
 ### 課題2：確認的因子分析の実践
@@ -619,12 +629,14 @@ print(result, sort= T, cut = 0.3)
 #| eval: FALSE
 # CFAの例
 pacman::p_load(lavaan)
-model <- '
+model <- "
 f1 =~ active + alert + aroused + sleepy + tired + drowsy
 f2 =~ anxious + jittery + nervous + calm + relaxed + at.ease
-'
-result.sem <- sem(model, data = dat,
-              ordered = TRUE)
+"
+result.sem <- sem(model,
+  data = dat,
+  ordered = TRUE
+)
 summary(result.sem, fit.measures = TRUE, standardized = TRUE)
 
 library(lavaanPlot)
@@ -671,8 +683,8 @@ result.mirt <- mirt(dat, model = 2, itemtype = "graded")
 summary(result.mirt, rotate = "geominQ")
 
 # 多次元ICCの描画
-plot(result.mirt, type = 'trace', which.items = 1)
+plot(result.mirt, type = "trace", which.items = 1)
 # 多次元IICの描画
-plot(result.mirt, type = 'info')
+plot(result.mirt, type = "info")
 ```
 

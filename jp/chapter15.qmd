@@ -637,7 +637,7 @@ dtm
 #| dev: "ragg_png"
 #| fig-width: 8
 #| fig-height: 6
-distance_matrix <- dist(t(dtm[,-1]))
+distance_matrix <- dist(t(dtm[, -1]))
 
 # 多次元尺度構成法（MDS）の実行
 mds_result <- cmdscale(distance_matrix, k = 2) # 2次元での古典的MDS
@@ -721,9 +721,9 @@ R_inv <- solve(cor_matrix) # 相関行列の逆行列を計算
 
 # 偏相関行列の各要素を計算
 partial_cor_matrix <- matrix(0, nrow = nrow(R_inv), ncol = ncol(R_inv))
-for(i in 1:nrow(R_inv)) {
-  for(j in 1:ncol(R_inv)) {
-    if(i != j) {
+for (i in 1:nrow(R_inv)) {
+  for (j in 1:ncol(R_inv)) {
+    if (i != j) {
       # 偏相関の公式: p_ij = -r^ij / sqrt(r^ii * r^jj)
       partial_cor_matrix[i, j] <- -R_inv[i, j] / sqrt(R_inv[i, i] * R_inv[j, j])
     }
@@ -747,27 +747,29 @@ colnames(partial_cor_matrix) <- colnames(cor_matrix)
 par(mfrow = c(1, 2))
 
 # 相関行列ヒートマップ
-corrplot(cor_matrix, 
-         method = "color",
-         order = "alphabet", # 同じ順序で比較
-         tl.cex = 0.6,
-         tl.col = "black",
-         col = brewer.pal(n = 8, name = "RdYlBu"),
-         title = "相関行列",
-         mar = c(0, 0, 2, 0),
-         cl.pos = "n") # カラーバーを非表示
+corrplot(cor_matrix,
+  method = "color",
+  order = "alphabet", # 同じ順序で比較
+  tl.cex = 0.6,
+  tl.col = "black",
+  col = brewer.pal(n = 8, name = "RdYlBu"),
+  title = "相関行列",
+  mar = c(0, 0, 2, 0),
+  cl.pos = "n"
+) # カラーバーを非表示
 
 # 偏相関行列ヒートマップ
-corrplot(partial_cor_matrix, 
-         method = "color", # 色で偏相関の強さを表示
-         order = "alphabet", # アルファベット順で表示（相関行列と同じ順序で比較）
-         tl.cex = 0.6, # 変数名のテキストサイズ
-         tl.col = "black", # 変数名の色
-         col = brewer.pal(n = 8, name = "RdYlBu"), # 青-黄-赤のカラーパレット
-         title = "偏相関行列", # 図のタイトル
-         mar = c(0, 0, 2, 0)) # 図の余白設定（下，左，上，右）
+corrplot(partial_cor_matrix,
+  method = "color", # 色で偏相関の強さを表示
+  order = "alphabet", # アルファベット順で表示（相関行列と同じ順序で比較）
+  tl.cex = 0.6, # 変数名のテキストサイズ
+  tl.col = "black", # 変数名の色
+  col = brewer.pal(n = 8, name = "RdYlBu"), # 青-黄-赤のカラーパレット
+  title = "偏相関行列", # 図のタイトル
+  mar = c(0, 0, 2, 0)
+) # 図の余白設定（下，左，上，右）
 
-par(mfrow = c(1, 1)) #環境を元に戻す
+par(mfrow = c(1, 1)) # 環境を元に戻す
 ```
 
 相関行列と偏相関行列を並べてみると，所々相関のパターンが違うところが見える。
@@ -781,10 +783,10 @@ par(mfrow = c(1, 1)) #環境を元に戻す
 pacman::p_load(qgraph)
 BICgraph <- qgraph(
   partial_cor_matrix, # 偏相関行列を入力データとして使用
-  graph = "glasso", 
+  graph = "glasso",
   sampleSize = nrow(bfi), # サンプルサイズを指定（統計的有意性の判定に使用）
   tuning = 0, # 正則化パラメータ（0=BIC基準で自動選択、大きいほどスパース）
-  layout = "spring", 
+  layout = "spring",
   title = "BIC", # グラフのタイトル
   threshold = TRUE, # 弱い結合を除去してスパースなネットワークを作成
   details = TRUE # 詳細な出力情報を表示
@@ -840,9 +842,9 @@ centralityPlot(
 set.seed(123)
 
 # 3つの潜在的な消費者グループを想定
-n1 <- 35  # 食品重視グループ
-n2 <- 30  # 技術・書籍重視グループ  
-n3 <- 35  # 旅行・衣料重視グループ
+n1 <- 35 # 食品重視グループ
+n2 <- 30 # 技術・書籍重視グループ
+n3 <- 35 # 旅行・衣料重視グループ
 
 # グループ1: 食品重視
 group1 <- data.frame(
@@ -873,7 +875,7 @@ group3 <- data.frame(
 
 # データ結合と負値を0に調整
 consumer_data <- rbind(group1, group2, group3) %>%
-  mutate(across(everything(), ~pmax(., 0.1))) %>%  # 最小値0.1に調整
+  mutate(across(everything(), ~ pmax(., 0.1))) %>% # 最小値0.1に調整
   mutate(消費者ID = paste0("C", sprintf("%03d", 1:100))) %>%
   select(消費者ID, everything())
 
@@ -897,21 +899,23 @@ head(consumer_data, 10)
 ```{r create_city_data}
 #| echo: false
 # 日本の主要都市
-cities <- c("東京", "大阪", "名古屋", "札幌", "仙台", 
-           "広島", "福岡", "京都", "神戸", "横浜")
+cities <- c(
+  "東京", "大阪", "名古屋", "札幌", "仙台",
+  "広島", "福岡", "京都", "神戸", "横浜"
+)
 
 # 地理的・文化的類似性を考慮した類似度行列
 similarity_matrix <- matrix(c(
-  10, 6, 7, 2, 5, 3, 3, 7, 5, 9,  # 東京
-  6, 10, 6, 2, 3, 4, 4, 8, 9, 5,  # 大阪
-  7, 6, 10, 2, 4, 4, 3, 6, 5, 6,  # 名古屋
-  2, 2, 2, 10, 7, 2, 3, 2, 2, 2,  # 札幌
-  5, 3, 4, 7, 10, 3, 3, 3, 3, 4,  # 仙台
-  3, 4, 4, 2, 3, 10, 7, 4, 4, 3,  # 広島
-  3, 4, 3, 3, 3, 7, 10, 4, 4, 3,  # 福岡
-  7, 8, 6, 2, 3, 4, 4, 10, 7, 6,  # 京都
-  5, 9, 5, 2, 3, 4, 4, 7, 10, 5,  # 神戸
-  9, 5, 6, 2, 4, 3, 3, 6, 5, 10   # 横浜
+  10, 6, 7, 2, 5, 3, 3, 7, 5, 9, # 東京
+  6, 10, 6, 2, 3, 4, 4, 8, 9, 5, # 大阪
+  7, 6, 10, 2, 4, 4, 3, 6, 5, 6, # 名古屋
+  2, 2, 2, 10, 7, 2, 3, 2, 2, 2, # 札幌
+  5, 3, 4, 7, 10, 3, 3, 3, 3, 4, # 仙台
+  3, 4, 4, 2, 3, 10, 7, 4, 4, 3, # 広島
+  3, 4, 3, 3, 3, 7, 10, 4, 4, 3, # 福岡
+  7, 8, 6, 2, 3, 4, 4, 10, 7, 6, # 京都
+  5, 9, 5, 2, 3, 4, 4, 7, 10, 5, # 神戸
+  9, 5, 6, 2, 4, 3, 3, 6, 5, 10 # 横浜
 ), nrow = 10, byrow = TRUE)
 
 rownames(similarity_matrix) <- cities
@@ -920,7 +924,7 @@ colnames(similarity_matrix) <- cities
 # データフレーム形式で保存
 city_data <- expand.grid(都市1 = cities, 都市2 = cities) %>%
   mutate(類似度 = as.vector(similarity_matrix)) %>%
-  filter(都市1 != 都市2)  # 対角線要素を除外
+  filter(都市1 != 都市2) # 対角線要素を除外
 
 write.csv(city_data, "city_similarity.csv", row.names = FALSE, fileEncoding = "UTF-8")
 
@@ -949,27 +953,29 @@ pacman::p_load(MASS)
 
 # 相関行列の設定（因子内は高相関，因子間は適度な相関）
 cor_matrix <- matrix(c(
-  1.0, 0.7, 0.2, 0.1, -0.3, -0.2, 0.3, 0.1, 0.2, 0.3,  # E1
-  0.7, 1.0, 0.1, 0.2, -0.2, -0.3, 0.2, 0.2, 0.3, 0.2,  # E2
-  0.2, 0.1, 1.0, 0.6, 0.1, 0.2, -0.1, -0.2, 0.1, 0.2,  # A1
-  0.1, 0.2, 0.6, 1.0, 0.2, 0.1, -0.2, -0.1, 0.2, 0.1,  # A2
+  1.0, 0.7, 0.2, 0.1, -0.3, -0.2, 0.3, 0.1, 0.2, 0.3, # E1
+  0.7, 1.0, 0.1, 0.2, -0.2, -0.3, 0.2, 0.2, 0.3, 0.2, # E2
+  0.2, 0.1, 1.0, 0.6, 0.1, 0.2, -0.1, -0.2, 0.1, 0.2, # A1
+  0.1, 0.2, 0.6, 1.0, 0.2, 0.1, -0.2, -0.1, 0.2, 0.1, # A2
   -0.3, -0.2, 0.1, 0.2, 1.0, 0.8, -0.1, 0.1, 0.1, -0.1, # C1
   -0.2, -0.3, 0.2, 0.1, 0.8, 1.0, -0.2, 0.2, -0.1, 0.1, # C2
   0.3, 0.2, -0.1, -0.2, -0.1, -0.2, 1.0, 0.5, 0.2, 0.1, # N1
-  0.1, 0.2, -0.2, -0.1, 0.1, 0.2, 0.5, 1.0, 0.1, -0.1,  # N2
-  0.2, 0.3, 0.1, 0.2, 0.1, -0.1, 0.2, 0.1, 1.0, 0.6,    # O1
-  0.3, 0.2, 0.2, 0.1, -0.1, 0.1, 0.1, -0.1, 0.6, 1.0    # O2
+  0.1, 0.2, -0.2, -0.1, 0.1, 0.2, 0.5, 1.0, 0.1, -0.1, # N2
+  0.2, 0.3, 0.1, 0.2, 0.1, -0.1, 0.2, 0.1, 1.0, 0.6, # O1
+  0.3, 0.2, 0.2, 0.1, -0.1, 0.1, 0.1, -0.1, 0.6, 1.0 # O2
 ), nrow = 10, byrow = TRUE)
 
 # 多変量正規分布からデータ生成
 personality_data <- mvrnorm(n, mu = rep(0, 10), Sigma = cor_matrix) %>%
   as.data.frame() %>%
-  setNames(c("外向性1", "外向性2", "協調性1", "協調性2", "誠実性1", "誠実性2",
-             "神経症傾向1", "神経症傾向2", "開放性1", "開放性2")) %>%
+  setNames(c(
+    "外向性1", "外向性2", "協調性1", "協調性2", "誠実性1", "誠実性2",
+    "神経症傾向1", "神経症傾向2", "開放性1", "開放性2"
+  )) %>%
   mutate(参加者ID = paste0("P", sprintf("%03d", 1:n))) %>%
   dplyr::select(参加者ID, everything()) %>%
   # 1-7のリッカート尺度に変換
-  mutate(across(-参加者ID, ~round(pnorm(.) * 6 + 1)))
+  mutate(across(-参加者ID, ~ round(pnorm(.) * 6 + 1)))
 
 write.csv(personality_data, "personality_data.csv", row.names = FALSE, fileEncoding = "UTF-8")
 
@@ -993,7 +999,7 @@ head(personality_data, 10)
 pacman::p_load(tidyverse)
 
 consumer_data <- read.csv("consumer_data.csv", fileEncoding = "UTF-8")
-consumer_scaled <- scale(consumer_data[, -1])  # ID列を除外して標準化
+consumer_scaled <- scale(consumer_data[, -1]) # ID列を除外して標準化
 
 # 階層的クラスター分析
 dist_matrix <- dist(consumer_scaled)
@@ -1032,8 +1038,9 @@ partial_cor <- -cov2cor(solve(cor_matrix))
 diag(partial_cor) <- 0
 
 # ネットワーク推定
-qgraph(partial_cor, 
-       layout = "spring",
-       nodeNames = colnames(personality_data)[-1],
-       title = "性格特性ネットワーク")
+qgraph(partial_cor,
+  layout = "spring",
+  nodeNames = colnames(personality_data)[-1],
+  title = "性格特性ネットワーク"
+)
 ```
