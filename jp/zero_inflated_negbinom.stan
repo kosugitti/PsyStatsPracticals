@@ -22,7 +22,7 @@ model {
                         0,
                         neg_binomial_2_lpmf(0 | mu, phi));
     } else {
-      target += log(1 - theta) + neg_binomial_2_lpmf(y[n] | mu, phi);
+      target += log(1 - theta) + neg_binomial_2_lpmf(y[i] | mu, phi);
     }
   }
 }

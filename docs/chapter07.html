@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>7&nbsp; 統計的仮説検定(Null Hypothesis Statistical Testing) – 心理学統計実習</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter08.html" rel="next">
+<link href="./chapter06.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter07.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">心理学統計実習</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめようR/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Rによるレポートの作成</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Rでプログラミング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">多変量解析(その1)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">演習問題</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#帰無仮説検定の理屈と手続き" id="toc-帰無仮説検定の理屈と手続き" class="nav-link active" data-scroll-target="#帰無仮説検定の理屈と手続き"><span class="header-section-number">7.1</span> 帰無仮説検定の理屈と手続き</a>
+  <ul class="collapse">
+  <li><a href="#帰無仮説検定の目的" id="toc-帰無仮説検定の目的" class="nav-link" data-scroll-target="#帰無仮説検定の目的"><span class="header-section-number">7.1.1</span> 帰無仮説検定の目的</a></li>
+  <li><a href="#帰無仮説検定の手続き" id="toc-帰無仮説検定の手続き" class="nav-link" data-scroll-target="#帰無仮説検定の手続き"><span class="header-section-number">7.1.2</span> 帰無仮説検定の手続き</a></li>
+  </ul></li>
+  <li><a href="#相関係数の検定" id="toc-相関係数の検定" class="nav-link" data-scroll-target="#相関係数の検定"><span class="header-section-number">7.2</span> 相関係数の検定</a></li>
+  <li><a href="#標本相関係数の分布と検定" id="toc-標本相関係数の分布と検定" class="nav-link" data-scroll-target="#標本相関係数の分布と検定"><span class="header-section-number">7.3</span> 標本相関係数の分布と検定</a></li>
+  <li><a href="#種類の検定のエラー確率" id="toc-種類の検定のエラー確率" class="nav-link" data-scroll-target="#種類の検定のエラー確率"><span class="header-section-number">7.4</span> 2種類の検定のエラー確率</a></li>
+  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">7.5</span> 課題</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定(Null Hypothesis Statistical Testing)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>帰無仮説検定は，心理学における統計の利用シーンの代表的なものだろう。 その手順は形式化されており，統計パッケージによってはデータの種類を指定するだけで自動的に結果の記述までしてくれるものもあるほどである。誰がやっても同じ結果になり，また，機械的に手続きを自動化できることは大きな利点ではある。欠点は，初学者がそのメカニズムを十分に理解せずに誤った結果を得たり，悪意のある利用者が自分に都合の良い数字を出させたりすることにある。科学的営みは悪意をもった実践者を想定しておらず，もしそのような悪例が露見した場合には事後的に摘発・対処するしかない。しかし残念なことながら，初学者の浅慮や意図せぬ悪用も多くみられる。</p>
+<p>心理学において，先行研究の結果が再現しないことを再現性問題というが，そのひとつは統計的手法の誤った使い方にあるとされる<span class="citation" data-cites="Ikeda2016">(<a href="references.html#ref-Ikeda2016" role="doc-biblioref">池田 and 平石 2016</a>)</span>。改めて，丁寧に帰無仮説検定の手続きやロジックを見ていくことにしよう。</p>
+<section id="帰無仮説検定の理屈と手続き" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="帰無仮説検定の理屈と手続き"><span class="header-section-number">7.1</span> 帰無仮説検定の理屈と手続き</h2>
+<section id="帰無仮説検定の目的" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="帰無仮説検定の目的"><span class="header-section-number">7.1.1</span> 帰無仮説検定の目的</h3>
+<p>帰無仮説検定は，実験や調査で得たデータから得られた知見が意味のあるものかどうか，母集団の性質として一般化可能かどうかを判定するための枠組みである。手法と判断基準が明確なゲームの一種だと考えたよう。というのも，帰無仮説検定は<strong>有意水準</strong>という基準を設けて，<strong>帰無仮説</strong>と<strong>対立仮説</strong>という2つの考え方(モデル)を対決させ，勝敗を決するものだからである。勝敗を決するとしたのは，帰無仮説と対立仮説は排他的な関係にあるからであり，どちらも正しいとかどちらも間違っているという結末にはならないからである。ただし，あくまでも推測統計的なロジックに基づく判定であるから，判定結果にも確率的な要素が含まれる。本当は帰無仮説が正しい時に，間違って「対立仮説が正しい」と判定してしまう確率はゼロではない。逆に帰無仮説が正しくない時に，間違って「対立仮説が正しくない(帰無仮説が正しい)」と判定してしまう可能性もある。前者を<strong>タイプ1エラー</strong>，後者を<strong>タイプ2エラー</strong>という。どちらの確率もゼロであってほしいが，そうはならないので，前者を<span class="math inline">\(\alpha\)</span>，後者を<span class="math inline">\(\beta\)</span>としたときに，それぞれを一定の水準以下に抑えたい。この目的のために手順を整え，一般化したのが帰無仮説検定である。なお，先に述べた有意水準は，この<span class="math inline">\(\alpha\)</span>の許容される水準であり，心理学では一般に5%に設定する。</p>
+<p>このように帰無仮説検定という考え方は，エラーの統制が本来の狙いであるから，「有意になるように工夫する」という発想は根本的に間違っている。また，統計的推定という数学的手続きに，人間が納得しやすい判定を下すという人為的手続きが組み合わさったものであるから，帰無仮説検定の結果に過剰な意味を持たせたり一喜一憂したりすることがないように注意しよう。</p>
+</section>
+<section id="帰無仮説検定の手続き" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="帰無仮説検定の手続き"><span class="header-section-number">7.1.2</span> 帰無仮説検定の手続き</h3>
+<p>帰無仮説検定の手続きを一般化すれば，次のようになる。</p>
+<ol type="1">
+<li>帰無仮説と対立仮説を設定する。</li>
+<li>検定統計量を選択する。</li>
+<li>判定基準を決定する。</li>
+<li>検定統計量を計算する。</li>
+<li>判定する。</li>
+</ol>
+<p>帰無仮説検定は，群間の平均値に差があるかどうか，相関係数に統計的な意味があるかどうかといった事例に対して適用される。 当然のことながら，これは標本から母集団を推定するという文脈における話で，物理学的な真偽を理論的に判断するとか，全数調査のように母集団全体の情報が手に入る場合といった場合の話ではない。また，標本のサンプルサイズが小さく，標本統計量の信頼区間が大きいことから，枠組みなしには判定できないという背景があることも再確認しておこう。</p>
+<p>母集団の状態がわからないので，仮説を設定する。帰無仮説Null Hypothesisは空っぽの仮説という意味で，母平均差がない(差がゼロ，<span class="math inline">\(\mu_1 - \mu_2 = 0\)</span>)とか，母相関がゼロ(<span class="math inline">\(\rho = 0\)</span>)である，とされる。対立仮説Alternative Hypothesisは帰無仮説と排他的な関係にある仮説としてつくられるから，「差が無くはない(<span class="math inline">\(\mu_1 - \mu_2 \neq 0\)</span>)」「相関がゼロではない(<span class="math inline">\(\rho \neq 0\)</span>)」という表現になる。なぜ帰無仮説がゼロであることから始められるかといえば，ふたつの排他的な仮説を考えた時にゼロでない状態というのは無数にあり得るので，仮説として特定できないからである(差が1のとき，1.1のとき，1.11のとき・・・と延々と検定し続けるわけにもいくまい)。</p>
+<p>検定統計量の選択は，二群の平均値差のときは<span class="math inline">\(t\)</span>，三群以上の時は<span class="math inline">\(F\)</span>，相関係数の検定も<span class="math inline">\(t\)</span>，と天下り的に示されることが一般的である。もちろんこれらの統計量が選ばれるのは，数理統計的な論拠に基づいている。判定基準は5%水準とすることが一般的だし，検定統計量の計算はアルゴリズムに沿って機械的に可能である。判定は客観的な指標に基づいて行われるから，「どの状況でどのような帰無仮説をおくか」が類型化できれば，この手続き全体が自動的に進められる。</p>
+<p>しかしここでは改めて，丁寧に手順を追いながらみてみよう。</p>
+</section>
+</section>
+<section id="相関係数の検定" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="相関係数の検定"><span class="header-section-number">7.2</span> 相関係数の検定</h2>
+<p>ここでは相関係数の検定を例に取り上げる。俗に「無相関検定」と呼ばれるように，相関がどれほど大きいとかどれほど意味があるということをチェックするのでは無く，無相関ではない，ということをチェックする。もちろん標本相関は計算してゼロでなければ，それは無相関ではない。ここで考えたいのは，母相関がゼロではないということである。言い換えると，母相関がゼロの状態であっても，標本相関がゼロでないことは，小標本のサンプリングという背景のもとでは当然のことである。</p>
+<p>確認してみよう。まず，無相関なデータセットを作ることを考える。Rの<code>MASS</code>パッケージを使い，多変量正規分布の確率分布関数から乱数を生成しよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(N,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sigma =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">2</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]        [,2]
+[1,] -0.4070308 -0.72271139
+[2,] -0.5774631 -0.57075167
+[3,]  0.2312929 -0.42458994
+[4,]  0.6242499 -0.55522146
+[5,] -0.7791585  0.55004824
+[6,]  1.8995860 -0.04899946</code></pre>
+</div>
+</div>
+<p>ここでは10^{5}個の乱数を生成した。つくられたオブジェクト<code>X</code>は表示されているように，2変数からなる。ここでは相関のある2変数を想定しており，各変数がそれぞれ標準正規分布に従っているという設定である。<code>rnorm</code>関数を2つ使って2変数をつくっても良いのだが，2変数セットで取り出すことを考えると多変量正規分布をかんがえることになる。多変量正規分布は，ひとつひとつの変数については正規分布として平均とSDをもち，かつ，変数の組み合わせとして共分散をもつものである。<code>mvrnorm</code>の引数をみると，<code>mu</code>は平均ベクトルであり，<code>Sigma</code>が分散共分散行列である。分散共分散行列とは，ここでは<span class="math inline">\(2\times 2\)</span>の正方行列であり，対角項に分散を，非対角項に共分散をもつ行列である。共分散は標準偏差と相関係数の積で表される。</p>
+<p><strong>分散</strong></p>
+<p><span class="math display">\[ s_x^2 = \frac{1}{n}\sum (x_i - \bar{x})^2 =  \frac{1}{n}\sum (x_i - \bar{x})(x_i - \bar{x})\]</span></p>
+<p><strong>標準偏差</strong></p>
+<p><span class="math display">\[ s_x = \sqrt{s_x^2} = \sqrt{\frac{1}{n}\sum (x_i - \bar{x})^2}\]</span></p>
+<p><strong>共分散</strong></p>
+<p><span class="math display">\[ s_{xy} = \frac{1}{n}\sum (x_i - \bar{x})(y_i - \bar{y})\]</span></p>
+<p><strong>相関係数</strong></p>
+<p><span class="math display">\[r_{xy} = \frac{s_{xy}}{s_xs_y} = \frac{\frac{1}{n}\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\frac{1}{n}\sum (x_i - \bar{x})^2}\sqrt{\frac{1}{n}\sum (y_i - \bar{y})^2}}\]</span></p>
+<p><strong>分散共分散行列</strong></p>
+<p><span class="math display">\[\Sigma = \begin{pmatrix} s_x^2 &amp; s_{xy} \\ s_{yx} &amp; s_y^2 \end{pmatrix}
+= \begin{pmatrix} s_x^2 &amp; r_{xy}s_xs_y \\ r_{xy}s_xs_y &amp; s_y^2 \end{pmatrix}\]</span></p>
+<p>今回<code>Sigma = matrix(c(1,0,0,1),ncol = 2)</code>としたのは，この2変数が無相関であること(SDはそれぞれ1であること)を指定している。ちなみに<code>empirical = TRUE</code>のオプションは，生成された乱数が設定した分散共分散行列のもつ相関係数と一致するように補正することを意味している。</p>
+<p>可視化しておこう。つくられた乱数が無相関であることを，散布図を使って確認する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter07_files/figure-html/ggR-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>数値的にも確認しておこう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    0
+[2,]    0    1</code></pre>
+</div>
+</div>
+<p>つくられた乱数が無相関であることが確認できた。さてこれが母集団であったとして，ここからたとえば<code>n = 20</code>のサンプルをとったとする。この時の相関はどうなるだろうか。 Rで計算してみよう。<code>sample</code>関数をつかって抜き出す行を決めて，該当する行だけ<code>s1</code>オブジェクトに代入する。その上で相関係数を計算してみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>selected_row <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>N, <span class="dv">20</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(selected_row)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  9647 80702 57543 93179 99032 82624 32672 53670 69698 42383 23801 69303
+[13]  9816 61803 69464 23107 76958 44447    10 27292</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> X[selected_row, ]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(s1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]      [,2]
+[1,] 1.0000000 0.1431698
+[2,] 0.1431698 1.0000000</code></pre>
+</div>
+</div>
+<p>今回の相関係数は0.1431698となった。母集団の相関係数が0であっても，適当に抜き出した20点が相関係数を持ってしまう(0でない)ことはあり得ることなのである。問題は，これがどの程度あり得ることなのか，である。いいかえると，研究者が<span class="math inline">\(n=20\)</span>のサンプルをとって相関を得た時，それが<span class="math inline">\(r = 0.14\)</span>であったとしても，母相関<span class="math inline">\(\rho = 0.0\)</span>からのサンプルである可能性がどれぐらいあるか，ということである。</p>
+</section>
+<section id="標本相関係数の分布と検定" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="標本相関係数の分布と検定"><span class="header-section-number">7.3</span> 標本相関係数の分布と検定</h2>
+<p>標本相関係数は確率変数なので，毎回標本を取る度に値が変わるし，どの実現値がどの程度出現するかは標本分布で表現できる。 ではどのような標本分布に従うのだろうか。先ほどのサンプリングを繰り返して，乱数によって近似してみよう<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  selected_row <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>N, <span class="dv">20</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  s_i <span class="ot">&lt;-</span> X[selected_row, ]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  cor_i <span class="ot">&lt;-</span> <span class="fu">cor</span>(s_i)[<span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  samples <span class="ot">&lt;-</span> <span class="fu">c</span>(samples, cor_i)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">R =</span> samples)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ヒストグラムの描画</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> R)) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter07_files/figure-html/sampleDist-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ヒストグラムを見ると，サンプルサイズが20の場合，母相関係数<span class="math inline">\(\rho = 0.0\)</span>であっても<span class="math inline">\(r = 0.3\)</span>や<span class="math inline">\(r=0.4\)</span>程度の標本相関が出現することはある程度みられることである。</p>
+<p>また，標本分布は左右対称の何らかの理論分布に従っていそうだ。数理統計学の知見から，相関係数の場合，標本相関係数を次の式によって変換することで，自由度が<span class="math inline">\(n-2\)</span>の<span class="math inline">\(t\)</span>分布に従うことが知られている。</p>
+<p><span class="math display">\[ t = \frac{r\sqrt{n-2}}{\sqrt{1-r^2}} \]</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">T =</span> R <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">18</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> R<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> T)) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">binwidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 自由度18のt分布の確率密度関数を追加</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dt, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> <span class="dv">18</span>), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Y軸のラベルを変更</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Density"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter07_files/figure-html/tprob-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>これを利用して相関係数の検定が行われる。以下，サンプルサイズ20で標本相関係数が<span class="math inline">\(r=0.5\)</span>だったとして，手順に沿って解説する。</p>
+<ol type="1">
+<li>帰無仮説は母相関<span class="math inline">\(\rho = 0.0\)</span>とする。対立仮説は<span class="math inline">\(\rho \neq 0.0\)</span>である。</li>
+<li>検定統計量は相関係数<span class="math inline">\(r\)</span>を変換した<span class="math inline">\(t\)</span>とする。</li>
+<li>判定基準として，<span class="math inline">\(\alpha = 0.05\)</span>とする。すなわち，母相関が0であるという仮説を棄却して間違える確率を5%以下に制御したい。</li>
+<li>検定統計量を計算する。<span class="math inline">\(n=20,r=0.5\)</span> より， <span class="math display">\[t = \frac{0.5\times(\sqrt{18})}{\sqrt{1-0.5^2}} = 2.449\]</span></li>
+<li>標本相関係数の<strong>絶対値が</strong>0.5を<strong>超える</strong>確率は，<span class="math inline">\(t\)</span>分布の理論値から，次のように計算できる。あるいは，<span class="math inline">\(t\)</span>分布の両端5%を切り出す<strong>臨界値</strong> を次のように計算できる。</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pt</span>(<span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">18</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">^</span><span class="dv">2</span>), <span class="at">df =</span> <span class="dv">18</span>)) <span class="sc">*</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02476956</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.100922</code></pre>
+</div>
+</div>
+<p>ここで注意してほしい点は，今回の検定の目的が「母相関が0であるという帰無仮説を棄却できるかどうか」であり，相関係数の符号については関心がなく絶対値で考える点である。<code>pt</code>関数は，ある確率点までの累積面積であるから，1から引くことでその確率点以上の値がでる確率が示される。<span class="math inline">\(t\)</span>分布は左右対称の分布なので，これを2倍した値が絶対値で考えた時の出現確率である。これが5%よりも小さければ，有意であると判断できる。今回は，統計的に有意であるといって良い。</p>
+<p>なお，表現上の細かい注意点になるが，この確率は今回の実現値「以上」のより極端な値が出る確率であり，この実現値が出る確率という言い方はしない。確率は面積であり，点に対する面積はないからである。</p>
+<p><code>qt</code>関数で示されるのは確率点なので，これ以上の値を今回の実現値が出していたら，統計的に有意であると判断できる。今回の実現値から算出した値は<span class="math inline">\(t(18)=2.449\)</span>であり，臨界値の<span class="math inline">\(2.100\)</span>よりも大きな値なので，有意であると判断できる。</p>
+</section>
+<section id="種類の検定のエラー確率" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="種類の検定のエラー確率"><span class="header-section-number">7.4</span> 2種類の検定のエラー確率</h2>
+<p>上では丁寧に計算過程をみてきたが，実践場面ではサンプルはひとつであり，標本統計量もひとつ算出されるだけである。自分の大切なデータであるから，標本分布から得られた特定のケースにすぎないことが直感的にわかりにくいかもしれない。</p>
+<p>相関係数の検定をするときは，Rの関数<code>cor.test</code>を使って次のように行う。ここでは<code>mvrnorm</code>関数を使って，相関係数0.5の仮想データを作っている。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>sampleData <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sigma =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">2</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">TRUE</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(sampleData[, <span class="dv">1</span>], sampleData[, <span class="dv">2</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  sampleData[, 1] and sampleData[, 2]
+t = 2.4495, df = 18, p-value = 0.02477
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.07381057 0.77176071
+sample estimates:
+cor 
+0.5 </code></pre>
+</div>
+</div>
+<p>結果として示されている，tの値や自由度，<span class="math inline">\(p\)</span>値が先ほど示した例と対応していることを確認できる。さらに，相関係数の信頼区間や標本相関係数そのものも示されている。この信頼区間が0を跨いでいないことからも，帰無仮説が棄却されることが見て取れるだろう。</p>
+<p>われわれは既に，母相関が0のデータセットの一部を取り出すと，その相関係数が0ではなく0.5のような数字になることも知っている。もちろん母相関が0であれば標本相関も0近い値が出やすいとしても，である。つまり標本から得られた値をあまり大事に考えすぎない方が良い(もちろん一般化を念頭においている時は，である)。 また，帰無仮説は「母相関が0である」なので，これが<strong>棄却</strong>されたとしても「母相関が0であるとは言えない」のに過ぎない。ここから，母相関も<span class="math inline">\(r=0.5\)</span>付近にあるはずだとか，<span class="math inline">\(p\)</span>値が2.4%なので5%よりもずいぶん低いのは証拠の重要さを物語っているのだ，と論じるのは適切ではない。母相関が0という仮想的な状況のもとでの話であって，母相関が実際にどの程度なのかを検討しているわけではない。この点が誤解されやすいので特に注意してほしい。</p>
+<p>ここに来るとタイプ1エラー，タイプ2エラーがより具体的に理解できるようになってきたではないだろうか。タイプ1エラーはこの帰無仮説が正しい時に，標本相関から計算した統計量で判断する確率であるから，上の手続きで見たことそのものである。</p>
+<p>別の角度で見てみよう。<code>cor.test</code>をつかうと標本統計量の信頼区間が算出できる。この信頼区間が母相関–ここでは帰無仮説である<span class="math inline">\(\rho =0\)</span>を「正しく」含んでいる割合を見てみよう。 <code>cor.test</code>関数が返すオブジェクトには，<code>conf.int</code>という名前のものがあり，デフォルトではここで95%の信頼区間が含まれている。 シミュレーションに先立って，結果を格納する2列のデータフレームを作っておき，シミュレーション後に<code>ifelse</code>関数で母相関が含まれているかどうかの判定をした。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>intervals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> iter, <span class="at">ncol =</span> <span class="dv">2</span>))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(intervals) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Lower"</span>, <span class="st">"Upper"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  selected_row <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>N, <span class="dv">20</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  s_i <span class="ot">&lt;-</span> X[selected_row, ]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  cor_i <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(s_i[, <span class="dv">1</span>], s_i[, <span class="dv">2</span>])</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  intervals[i, ] <span class="ot">&lt;-</span> cor_i<span class="sc">$</span>conf.int[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> intervals <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FLG =</span> <span class="fu">ifelse</span>(Lower <span class="sc">&lt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> Upper <span class="sc">&gt;=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">type1error =</span> <span class="fu">mean</span>(FLG)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  type1error
+1       0.95</code></pre>
+</div>
+</div>
+<p>今回の例では，95%の割合で正しく判断できていた。言い換えると，エラーが生じる割合は5%だったので，タイプ1エラー確率を5%以下にするという目的はしっかり達成できていたことが確認できた。</p>
+<p>同様に，タイプ2エラーは，帰無仮説が正しくないときに帰無仮説を採択する確率だから，シミュレーションするなら次のようになる。まず母相関が0でない状況を作り出そう。今回は母相関が0.5であるとして，母集団分布を描いてみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(N,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sigma =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">2</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">TRUE</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>X <span class="sc">%&gt;%</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2)) <span class="sc">+</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter07_files/figure-html/gg0.5-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>今度は，ここからサンプルサイズ20のデータセットを取り出し，検定することにしよう。検定の結果，有意になれば<code>1</code>，ならなければ<code>0</code>というオブジェクトを作って，判定の正しさを考えてみることにする。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>judges <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter) {</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  selected_row <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>N, <span class="dv">20</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  s_i <span class="ot">&lt;-</span> X[selected_row, ]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  cor_i <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(s_i[, <span class="dv">1</span>], s_i[, <span class="dv">2</span>])</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  judges <span class="ot">&lt;-</span> <span class="fu">c</span>(judges, cor_i<span class="sc">$</span>p.value)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p =</span> judges) <span class="sc">%&gt;%</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FLG =</span> <span class="fu">ifelse</span>(p <span class="sc">&lt;=</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sig =</span> <span class="fu">sum</span>(FLG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">non.sig =</span> <span class="fu">sum</span>(FLG <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">type2error =</span> non.sig <span class="sc">/</span> iter</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   sig non.sig type2error
+1 6442    3558     0.3558</code></pre>
+</div>
+</div>
+<p>今回は母相関が0.5であり，帰無仮説は棄却されて然るべきなのだが，有意でないと判断された割合が35.58%あったことになる。心理学の研究などでは，この確率<span class="math inline">\(\beta\)</span>が0.2未満，逆にいうと検出が0.8以上あることが望ましいとされているので，今回のこの事例では十分な件出力がなかった，と言えるだろう。</p>
+<p>もちろん実際には，母相関がどれぐらいなのかわからない。<span class="math inline">\(0.3\)</span>なのかもしれないし，<span class="math inline">\(-0.5\)</span>であるかもしれない。つまりタイプ2エラーは研究者が制御できるところではなく，せいぜい大きな相関が見込めそうな変数について標本を取ろうと心がけるだけである。</p>
+<p>タイプ1,2エラーの確率は，サンプルサイズや効果量(ここでは母相関の大きさ)の関数である。サンプルサイズは研究者が決定することができるので，効果を見積もり，制御したいエラー確率の基準を決めて，合理的にサンプルサイズを決めるべきである。</p>
+</section>
+<section id="課題" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="課題"><span class="header-section-number">7.5</span> 課題</h2>
+<ol type="1">
+<li>母相関が0の母集団から，サンプルサイズ10の標本を取り出して標本相関を見た時の標本分布を，乱数のヒストグラムで近似してみましょう。</li>
+<li>同じく，サンプルサイズ50の標本を取り出して標本相関を見た時の標本分布を，乱数のヒストグラムで近似してみましょう。サンプルサイズが20や10の時と比べてどういう違いがあるでしょうか。</li>
+<li>サンプルサイズ50の標本相関が<span class="math inline">\(r=-0.3\)</span>のとき，統計的に有意と言えるでしょうか。<code>cor.test</code> をつかって検定し，検定結果と判断結果を記述してください。</li>
+<li>標本相関が<span class="math inline">\(r=-0.3\)</span>だとします。サンプルサイズが10,20,50,1000のとき，統計的に有意と言えるでしょうか。<code>cor.test</code>を使って検定し，検定結果を一覧にしてみましょう。ここから何がわかるでしょうか。</li>
+<li>母相関が<span class="math inline">\(\rho = -0.3\)</span>だったとします。サンプルサイズ20のとき，どの程度の検出力があると見込めるでしょうか。シミュレーションで近似してください。</li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Ikeda2016" class="csl-entry" role="listitem">
+池田功毅, and 平石界. 2016. <span>“心理学における再現可能性危機：問題の構造と解決策.”</span> <em>心理学評論</em> 59 (1): 3–14. <a href="https://doi.org/10.24602/sjpr.59.1_3">https://doi.org/10.24602/sjpr.59.1_3</a>.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>このような二度手間を取らず，<code>mvrnorm</code>からサンプルサイズ20の乱数を反復生成しても良い。母集団を具体的なものとしてイメージするために，母相関が<code>0</code>の母集団からサンプリングを繰り返す方法をとった。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter06.html" class="pagination-link" aria-label="確率とシミュレーション">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chapter08.html" class="pagination-link" aria-label="平均値差の検定">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

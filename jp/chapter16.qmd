@@ -575,7 +575,9 @@ bayesplot::mcmc_areas(fit$draws("t"), point_est = "none") +
 #| dev: "ragg_png"
 #| message: false
 w <- read_csv("myWeights.csv")
-w |>  ggplot(aes(x=date,y=weight))+geom_point()
+w |>  ggplot(aes(x=date,y=weight))+
+  geom_point() +
+  scale_x_datetime(date_labels = "%Y-%m-%d")
 ```
 
 これは筆者の体重の推移で，2024年の1月1日から同年6月1日までの変化である。
@@ -647,7 +649,8 @@ print(w[Xday,])
 w |>  ggplot(aes(x=date,y=weight))+
       geom_point()+
       geom_vline(xintercept = w$date[Xday],
-      color = "red")
+      color = "red") +
+      scale_x_datetime(date_labels = "%Y-%m-%d")
 ```
 
 今回はデータの分布を見て，変化点が1点だろうと考えてモデリングを行った。もちろん分布を詳細に観察することで，違うモデルの立て方(変化点が複数あり得る，など)を考えることができる。また，今回は変化点までの体重の推移に単回帰モデルを当てはめたり，変化点前後で体重のブレ(`sig`)が一定であろう，という仮定も含まれている。このように，モデルの数式をよく見てどのような仮定が含まれているか，それらは妥当であるかといったことを吟味したり，何か気付きがあれば，それが改良の余地になることもあるだろう。
