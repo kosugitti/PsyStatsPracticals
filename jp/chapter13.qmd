@@ -1,1274 +1,479 @@
-# 線型モデルの展開
+# 線型代数の基礎
 
-この章では，線型モデルの展開を説明する。線型モデルは，説明変数と目的変数の関係を線型すなわち一次式で表現するモデルである。
-線型モデルは，一般化線型モデル(GLM)，一般化線型混合モデル(GLMM)，階層線型モデル(HLM)と拡張していくが，まずは一般線型モデル(LM)についてみておこう。
+多変量解析の章(14章，15章)では，因子分析，主成分分析，多次元尺度構成法，クラスター分析などさまざまな手法を紹介した。これらの手法に共通する数学的基盤が**線型代数**――ベクトルや行列の演算体系――である。統計パッケージが瞬時に結果を出してくれる時代ではあるが，その仕組みを知らなければ結果の意味を正しく理解できないし，出力の妥当性を判断することもできない。
 
-## 一般線型モデル(General Linear Model)
+行列を使う最大の利点は，**多くの数字のセットを簡潔な記号で一般的に表現できること**にある。心理学のデータは「$n$人の回答者 $\times$ $m$個の変数」という長方形の構造をしているが，これはまさに行列そのものである。行列の言葉で記述すると，平均や分散の計算も，回帰分析の推定も，因子分析の原理も，統一的な枠組みで表現できる。
 
-線型モデルの基本は回帰分析モデルである。単回帰モデルは次の式で表される。
+この章では，行列の基本的な計算規則とRでの操作方法を学ぶ。
 
-$$
-y_i = \beta_0 + \beta_1 x + e_i
-$$
-
-ここで，$y_i$は$i$番目の観測値，$\beta_0$は切片，$\beta_1$は回帰係数，$e_i$は誤差項である。
-この式を拡張したのが重回帰分析で，次の式で表される。
-
-$$
-y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + e_i
-$$
-
-ここで，$x_1, x_2, \cdots, x_p$は説明変数，$\beta_1, \beta_2, \cdots, \beta_p$は回帰係数である。
-
-この式をベクトルと行列で表現すると，次のようになる。
-
-$$
-y = X\beta + e
-$$
-
-ここで，$y$は$n$次元のベクトル，$X$は$n \times p$の**計画行列**(design matrix)，$\beta$は$p$次元のベクトル，$e$は$n$次元のベクトルである。
-
-計画行列は，説明変数のデータをまとめた行列であり，次のようになる。
-
-$$
-X = \begin{pmatrix}
-1 & x_1 & x_2 & \cdots & x_p\\
-1 & x_1 & x_2 & \cdots & x_p\\
-\vdots & \vdots & \vdots & \ddots & \vdots\\
-1 & x_1 & x_2 & \cdots & x_p
-\end{pmatrix}
-$$
-
-第一列目にあるのは切片にかかる係数であり，第二列目以降にあるのは説明変数にかかる係数である。
-ここに係数ベクトル$\beta= (\beta_0, \beta_1, \beta_2, \cdots, \beta_p)^T$をかけることで，説明変数の線型結合が得られる。
-
-この係数ベクトルにおいて，$x$の値がバイナリ(0/1)の場合，その説明変数はダミー変数と呼ばれる。線型回帰モデルにおいて説明変数$X$がダミー変数である場合は，横軸が2つの値しかとらないため散布図を描くと奇妙な形になることがわかるだろう。
-
-```{r image_glm}
-#| dev: "ragg_png"
-#| echo: false
-#| message: false
-#|
-pacman::p_load(tidyverse, patchwork)
-
-# 単回帰分析モデルのダミーデータ
-set.seed(123)
-n <- 30
-x <- rnorm(n, mean = 5, sd = 2)
-y <- 10 + 2 * x + rnorm(n, sd = 3)
-
-df_regression <- data.frame(x = x, y = y)
-
-p1 <- ggplot(df_regression, aes(x = x, y = y)) +
-  geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "連続データの場合") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-
-
-# データの準備
-set.seed(17)
-N <- 30
-x1 <- rnorm(N, mean = 1)
-x2 <- rnorm(N)
-
-# データフレームの作成
-df_exp <- data.frame(
-  group = factor(rep(c("統制群", "実験群"), each = N), levels = c("統制群", "実験群")),
-  value = c(x2, x1)
-)
-
-
-# 散布図2：平均値を通る回帰直線（平均値バー付き）
-p2 <- ggplot(df_exp, aes(x = group, y = value)) +
-  geom_point(alpha = 0.6) +
-  geom_segment(
-    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
-    aes(
-      x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
-      y = mean_value, yend = mean_value
-    ),
-    color = "gray", linewidth = 1
-  ) +
-  geom_segment(
-    x = 0.5, xend = 2.5,
-    y = mean(df_exp$value[df_exp$group == "統制群"]) - 0.65,
-    yend = mean(df_exp$value[df_exp$group == "実験群"]) + 0.65,
-    color = "blue", linewidth = 1
-  ) +
-  theme_minimal() +
-  labs(x = "群", y = "従属変数", title = "ダミーデータの場合") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# 散布図3：全体平均を通る直線（平均値バー付き）
-p3 <- ggplot(df_exp, aes(x = group, y = value)) +
-  geom_point(alpha = 0.6) +
-  geom_segment(
-    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
-    aes(
-      x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
-      y = mean_value, yend = mean_value
-    ),
-    color = "gray", linewidth = 1
-  ) +
-  geom_hline(yintercept = mean(df_exp$value), linetype = "dashed", color = "blue", linewidth = 1) +
-  theme_minimal() +
-  labs(x = "群", y = "従属変数", title = "帰無仮説") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-p4 <- p1 + p2
-plot(p4)
-```
-
-この散布図に対して回帰直線を引けば，2群の平均値を通る直線が引かれる。回帰分析においては，予測式$\hat{y}$を中心とした正規分布に従って誤差が生じると仮定されているのであった。ダミーデータの場合も，両群の平均値を中心に正規分布に従って誤差が生じると仮定したことになる。これはいわゆる2群の平均値の差を検定する時の仮定と同じであり，このことから平均値差の検定は説明変数が名義尺度水準の変数である回帰分析と同じ(一般)であることがわかる。回帰分析と平均値差の検定は数学的には同じ式で表現できるから，これを総称して**一般線型モデル**General Linear model という。
-
-## 一般化線型モデル(GLM)
-
-かつて心理学実践においては，要因計画法と帰無仮説検定の組み合わせによって研究を行うことが主流であった。平均値差の検定に落とし込むように研究をデザインし，帰無仮説検定でYESかNOか決着がつく。帰無仮説検定はデータの特性や生成メカニズムに依存せず，統計パッケージを用いれば誰にでも扱うことができ，$p$値という手垢のついてない数値だけで判断できると考えられてきた。
-
-このことに関する問題については置くとして，ともかく「正規分布の平均値の差」に持ち込めさえすれば良い，ということが当時の研究者の共通認識であった。そのため，例えば比率のデータやカウントデータなど，正規分布を想定することができないデータに対しても，対数変換・角変換などを行って分布を正規分布のそれに近づけ，検定を行うということが行われていた。
-
-正規分布は理論的に$\pm \infty$の範囲を取るのに対し，比率のデータは0から1の範囲にしかとらない。カウントデータは正の整数しかとらないデータであるから，こうしたデータに対して一般線型モデルをあてがうのは重大な仮定違反である[^1]。
-
-[^1]: エクスキューズが許されるなら，当時の統計学，計算機科学は現代に比べると貧弱で，理論的に正しくないことがわかっていても，ユーザにはそれ以上のことができなかったということがある。また心理学で測定されるデータは，あくまでも目に見えない心を表現したラフな近似値で，統計学上の仮定に違反したことで生じる問題よりも，そもそも本質的な問題があるのだから，統計の運用もあくまでもラフな近似値で良い，という風潮があったのかもしれない。
-
-このような背景から，正規分布以外の確率分布を用いた統計モデルが考えられた。これが**一般化線型モデル**(Generalized Linear Model, GLM)である[^2]。
-
-[^2]: 一般化線型モデルと一般線型モデルは，一文字「化」が入るかどうかの微妙な違いである。英語ではgeneralとgeneralizedの違いなので，こちらで理解した方が間違いが少なくて良いかもしれない。
-
-確率分布の多くは，位置パラメータとスケールパラメータを持つ。統計モデルは平均的な挙動について考えるモデルだから，位置パラメータに線型モデルが当てがえるように，数式を変形してやれば良い。以下に例として，ベルヌーイ分布とポアソン分布をGLMで表現したものを考えてみよう。
-
-### ベルヌーイ分布に対する線型モデル；ロジスティック回帰分析
-
-ベルヌーイ分布はコイントスの表/裏のような2値をとるデータに対して用いられる。ベルヌーイ分布の確率関数は次のように表される。
-
-$$
-P(Y = y) = p^y (1-p)^{1-y}
-$$
-
-ここで，$p$は成功確率であり，0から1の範囲の値を取る。
-こうしたデータは現実にも少なくない。生死，病気の有無，テストの正答/誤答のようなデータが代表的である。こうしたデータを目的変数にして，直線回帰を行うと当然おかしなことが生じる。すなわち，予測値が0と1の範囲を超えることがありえるからである。
-
-そこで，線型予測子と確率を適切に結びつけるリンク関数を用いる。ロジスティック回帰では**ロジット関数**（logit function）をリンク関数として使用する：
-
-$$
-\text{logit}(p) = \log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x
-$$
-
-この関係を$p$について解いてみよう。$\eta = \beta_0 + \beta_1 x$とおくと：
-
-$$
-\log\left(\frac{p}{1-p}\right) = \eta
-$$
-
-両辺の指数を取ると：
-
-$$
-\frac{p}{1-p} = e^{\eta}
-$$
-
-両辺に$(1-p)$をかけると：
-
-$$
-p = (1-p) \cdot e^{\eta}
-$$
-
-展開すると：
-
-$$
-p = e^{\eta} - p \cdot e^{\eta}
-$$
-
-$p$について整理すると：
-
-$$
-p + p \cdot e^{\eta} = e^{\eta}
-$$
-
-$$
-p(1 + e^{\eta}) = e^{\eta}
-$$
-
-$$
-p = \frac{e^{\eta}}{1 + e^{\eta}}
-$$
-
-分子分母を$e^{\eta}$で割ると：
-
-$$
-p = \frac{1}{e^{-\eta} + 1} = \frac{1}{1 + e^{-\eta}}
-$$
-
-$\eta = \beta_0 + \beta_1 x$を代入すると，**ロジスティック関数**（逆リンク関数）が得られる：
-
-$$
-p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}}
-$$
-
-このようにして得られた確率を用いて，ベルヌーイ分布の確率関数を次のように表現できる。
-
-$$ y \sim \text{Bernoulli}(p) $$
-
-サンプルデータを作って，線型回帰モデルとロジスティック回帰モデルの予測値を比較してみよう。
-
-```{r logistic_curve}
-#| dev: "ragg_png"
-#| message: false
-pacman::p_load(tidyverse, patchwork)
-
-# データ生成
-set.seed(17)
-n <- 200
-x <- runif(n, min = -10, max = 10)
-beta_0 <- 1
-beta_1 <- 2
-p <- beta_0 + x * beta_1
-prob <- 1 / (1 + exp(-p))
-y <- rbinom(n, size = 1, prob = prob)
-
-df_logistic <- data.frame(x = x, y = y)
-
-# p1: 線型回帰
-p1 <- ggplot(df_logistic, aes(x = x, y = y)) +
-  geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# p2: ロジスティック回帰
-p2 <- ggplot(df_logistic, aes(x = x, y = y)) +
-  geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE, color = "red") +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ロジスティック回帰") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# パッチワークで結合
-p1 + p2
-```
-
-線型回帰の予測値が不適切な範囲にまで延伸するのに対し，ロジスティック回帰はうまく適合していることがわかるだろう。
-
-データからロジスティック回帰モデルを推定するには，`glm`関数を用いることができるが，ここではすでに学んだ`brms`パッケージによるベイズ推定でアプローチしてみよう。`brm`関数の書き方は，`glm`関数の書き方とほぼ同じであり，推定法をMLからベイズに変えることできる。
-
-```{r logistic_regression}
-#| message: false
-pacman::p_load(brms)
-result.bayes.logistic <- brm(
-  y ~ x,
-  family = bernoulli(),
-  data = df_logistic,
-  seed = 12345,
-  chains = 4, cores = 4, backend = "cmdstanr",
-  iter = 2000, warmup = 1000,
-  refresh = 0
-)
-summary(result.bayes.logistic)
-plot(result.bayes.logistic)
-## 比較のためにML推定も行っておく
-result.ml <- glm(y ~ x, family = binomial(), data = df_logistic)
-summary(result.ml)
-```
-
-最尤推定の結果とベイズ推定の結果に多少のズレが見られるが，これはサンプルサイズの小ささによるものである。アウトプット変数が2値しか持たないため，分散がどうしても小さくなりがちであり，正確な推定値を得るためにはより多くのデータが必要である。
-
-また，回帰係数の解釈には注意が必要である。普通の回帰分析であれば，説明変数が1単位変わると目的変数がどれだけ変わるかを表すが，ロジスティック回帰ではこのような直接的な解釈はできない。ロジスティック関数によって変換されたものが意味を持つからである。
-
-線型モデルが表すのは次の関係なのであった。
-$$ \beta_0 + \beta_1 x = \log \frac{p}{1-p} $$
-
-この$\log \frac{p}{1-p}$は**ロジット**(logit)と呼ばれる。ロジスティック回帰では，確率$p$をロジットに変換することで線型関係を表現している。逆に言えば，線型モデルで表現されているのはログを取った確率の比であり，この比が説明変数の線型関係によって決まるということである。であるから，結果を解釈するには係数を指数関数$e$を取り，確率の比として理解する必要がある。
-
-今回のデータでは説明変数の係数が1.36と推定されたから，$e^{1.36} = 3.89$である。これは，説明変数が1単位増加すると，成功確率が3.89倍になる，ということを意味する。
-
-### ポアソン分布に対する線型モデル；ポアソン回帰
-
-今度はカウント変数に対するモデルを考えてみよう。カウント変数は正の整数をとるデータであり，ポアソン分布を用いることができる。ポアソン分布の確率関数は次のように表される。
-
-$$
-P(Y = y) = \frac{\lambda^y e^{-\lambda}}{y!}
-$$
-
-ここで，$\lambda$は平均である。ポアソン分布の形状も確認しておこう。
-
-```{r poisson_curve}
-#| dev: "ragg_png"
-#| message: false
-#| echo: false
+```{r}
+#| message: FALSE
 pacman::p_load(tidyverse)
+```
 
-# ポアソン分布のデータを生成
-lambdas <- c(1, 2, 3, 5, 10, 20)
-x_max <- 40
+## スカラー・ベクトル・行列
 
-# 各λに対してポアソン分布を計算
-poisson_data <- expand_grid(
-  lambda = lambdas,
-  x = 0:x_max
+### スカラー
+
+行列でもベクトルでもない，ただの1つの数値を**スカラー**(scalar)と呼ぶ。普段の計算で使っている$1, 2, 3.14$などはすべてスカラーである。
+
+### ベクトル
+
+複数の数値を一列にまとめたものを**ベクトル**と呼ぶ。横に並べたものを**行ベクトル**(row vector)，縦に並べたものを**列ベクトル**(column vector)という。
+
+$$
+\text{行ベクトル: } \boldsymbol{a} = \begin{pmatrix} 1 & 3 & 5 \end{pmatrix}, \quad
+\text{列ベクトル: } \boldsymbol{b} = \begin{pmatrix} 2 \\ 4 \\ 6 \end{pmatrix}
+$$
+
+$\boldsymbol{a}$はサイズ$1 \times 3$の行ベクトル，$\boldsymbol{b}$はサイズ$3 \times 1$の列ベクトルである。行列やベクトルは慣例として太字($\boldsymbol{A}$, $\boldsymbol{x}$)で書く。
+
+Rのベクトルには行・列の区別がないが，`matrix()`で明示できる。
+
+```{r}
+# Rのベクトル（行・列の区別なし）
+a <- c(1, 3, 5)
+a
+
+# 行ベクトル（1×3の行列として）
+matrix(a, nrow = 1)
+
+# 列ベクトル（3×1の行列として）
+matrix(a, ncol = 1)
+```
+
+### 行列
+
+**行列**(matrix)とは，数を長方形に並べたものである。横の並びを**行**(row)，縦の並びを**列**(column)と呼ぶ。
+
+$$
+\boldsymbol{A} = \begin{pmatrix} a_{11} & a_{12} & \cdots & a_{1m} \\ a_{21} & a_{22} & \cdots & a_{2m} \\ \vdots & \vdots & \ddots & \vdots \\ a_{n1} & a_{n2} & \cdots & a_{nm} \end{pmatrix}
+$$
+
+これは$n$行$m$列の行列で，サイズを$n \times m$と表す。成分$a_{ij}$の添え字は，最初が行番号，次が列番号である。心理学のデータ行列では，行が回答者(ケース)，列が変数(項目)に対応するのが一般的である。
+
+Rでは`matrix()`関数で行列を作る。デフォルトでは**列優先**(column-major order)で要素が埋められる。
+
+```{r}
+# 列優先（デフォルト）: 1列目→2列目の順に埋まる
+A <- matrix(1:6, nrow = 2)
+A
+
+# 行優先: byrow = TRUE で行方向に埋める
+B <- matrix(1:6, nrow = 2, byrow = TRUE)
+B
+```
+
+要素へのアクセスは`[行, 列]`で行う。
+
+```{r}
+A[2, 3]   # 2行3列目の要素
+A[1, ]    # 1行目全体（ベクトル）
+A[, 2]    # 2列目全体（ベクトル）
+```
+
+## 特殊な行列
+
+データ分析でよく登場する特殊な行列を紹介する。
+
+**正方行列**: 行数と列数が等しい行列($n \times n$)。
+
+**対称行列**: $a_{ij} = a_{ji}$を満たす正方行列。左上から右下の対角線を軸に対称で，**相関行列**や**分散共分散行列**はその代表例である。
+
+3変数$x_1, x_2, x_3$の相関行列は次のような形をしている。
+
+$$
+\boldsymbol{R} = \begin{pmatrix} 1 & r_{12} & r_{13} \\ r_{12} & 1 & r_{23} \\ r_{13} & r_{23} & 1 \end{pmatrix}
+$$
+
+対角成分は1(自分自身との相関)，非対角成分は対称($r_{ij} = r_{ji}$)である。分散共分散行列は対角成分が各変数の分散，非対角成分が共分散の対称行列となる。
+
+$$
+\boldsymbol{S} = \begin{pmatrix} s_1^2 & s_{12} & s_{13} \\ s_{12} & s_2^2 & s_{23} \\ s_{13} & s_{23} & s_3^2 \end{pmatrix}
+$$
+
+**対角行列**: 対角成分以外がすべて0の正方行列。**単位行列**$\boldsymbol{I}$は対角成分がすべて1の対角行列で，「どんな行列にかけても変わらない」という，スカラーにおける1のような存在である。
+
+```{r}
+# 3×3の単位行列
+diag(3)
+
+# ベクトルから対角行列を作成
+diag(c(2, 5, 3))
+
+# 行列から対角成分を取り出す
+M <- matrix(1:9, nrow = 3)
+diag(M)
+```
+
+`diag()`はスカラーを渡すと単位行列，ベクトルを渡すと対角行列を作り，行列を渡すと対角成分を取り出す。引数の型によって動作が変わる多機能な関数である。
+
+## 行列の演算
+
+### 加法・減法
+
+行列の足し算・引き算は，対応する位置にある成分どうしを加える(引く)だけである。**サイズが同じ行列でないと計算できない**。
+
+$$
+\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} + \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix} = \begin{pmatrix} 6 & 8 \\ 10 & 12 \end{pmatrix}
+$$
+
+```{r}
+A <- matrix(c(1, 3, 2, 4), nrow = 2)
+B <- matrix(c(5, 7, 6, 8), nrow = 2)
+A + B
+A - B
+```
+
+### スカラー倍
+
+行列にスカラーをかけると，各成分がスカラー倍される。
+
+```{r}
+2 * A
+```
+
+### 行列の積
+
+行列の掛け算は普通の掛け算とは異なる。**掛けて足す**という操作が入る。まず行ベクトルと列ベクトルの積(内積)から見てみよう。
+
+$$
+\begin{pmatrix} 1 & 2 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 4 \\ 2 \end{pmatrix} = 1 \times 3 + 2 \times 4 + 1 \times 2 = 13
+$$
+
+掛け算なのに足し算が入る。これが行列計算の特徴である。
+
+行列$\boldsymbol{A}$($n \times m$)と行列$\boldsymbol{B}$($m \times l$)の積は，$n \times l$の行列になる。**前の行列の列数と後ろの行列の行数が一致していないと計算できない**。結果の$(i,j)$要素は，$\boldsymbol{A}$の$i$行と$\boldsymbol{B}$の$j$列の内積である。
+
+$$
+\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \begin{pmatrix} 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \times 2 + 2 \times 1 \\ 3 \times 2 + 4 \times 1 \end{pmatrix} = \begin{pmatrix} 4 \\ 10 \end{pmatrix}
+$$
+
+スカラーの計算と違い，**かける順番を入れ替えると結果が変わる**($\boldsymbol{AB} \neq \boldsymbol{BA}$)。Rでは`%*%`が行列積，`*`は要素ごとの積である。この区別は非常に重要である。
+
+```{r}
+A <- matrix(c(1, 3, 2, 4), nrow = 2)
+b <- c(2, 1)
+
+# 行列積（%*%）
+A %*% b
+
+# 要素ごとの積（*）…行列積とはまったく異なる
+A * b
+```
+
+`*`を使うと各行に`b`の要素がリサイクルされてかかるだけで，行列積とは意味が異なる。
+
+### 転置
+
+行列の行と列を入れ替える操作を**転置**(transpose)と呼び，$\boldsymbol{A}'$や$\boldsymbol{A}^T$と書く。
+
+$$
+\boldsymbol{A} = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix} \quad \Rightarrow \quad \boldsymbol{A}' = \begin{pmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{pmatrix}
+$$
+
+$2 \times 3$の行列は転置すると$3 \times 2$になる。対称行列は転置しても変わらない($\boldsymbol{A}' = \boldsymbol{A}$)。
+
+```{r}
+A <- matrix(1:6, nrow = 2)
+A
+t(A)
+```
+
+転置にはいくつか重要な性質がある。特に積の転置$(\boldsymbol{AB})' = \boldsymbol{B}'\boldsymbol{A}'$は，順番が逆になることに注意してほしい。
+
+### 逆行列
+
+**逆行列**は，行列における「割り算」のような存在である。ある正方行列$\boldsymbol{A}$に対して，$\boldsymbol{A}\boldsymbol{A}^{-1} = \boldsymbol{I}$（単位行列）となる行列$\boldsymbol{A}^{-1}$を逆行列と呼ぶ。スカラーでいえば「逆数をかけると1になる」のと同じ考え方である。
+
+$2 \times 2$行列の場合，逆行列は次の公式で求められる。
+
+$$
+\boldsymbol{A} = \begin{pmatrix} a & b \\ c & d \end{pmatrix} のとき，\quad
+\boldsymbol{A}^{-1} = \frac{1}{ad - bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}
+$$
+
+分母の$ad - bc$は**行列式**と呼ばれ，これが0のとき逆行列は存在しない。Rでは`solve()`で計算する。
+
+```{r}
+A <- matrix(c(2, 5, 1, 3), nrow = 2)
+A
+
+# 逆行列
+solve(A)
+
+# AA^{-1} = I の確認（丸め誤差が出るので round する）
+round(A %*% solve(A), 10)
+```
+
+逆行列は**連立方程式の解法**に直結する。$\boldsymbol{Ax} = \boldsymbol{b}$の両辺に左から$\boldsymbol{A}^{-1}$をかけると$\boldsymbol{x} = \boldsymbol{A}^{-1}\boldsymbol{b}$が得られる。回帰分析の推定量$\hat{\boldsymbol{\beta}} = (\boldsymbol{X}'\boldsymbol{X})^{-1}\boldsymbol{X}'\boldsymbol{y}$も，この仕組みで成り立っている。
+
+### トレース
+
+正方行列の対角成分の総和を**トレース**(trace)と呼び，$\mathrm{tr}(\boldsymbol{A}) = \sum_{i=1}^{n} a_{ii}$と表す。後述する固有値と密接な関係がある。
+
+```{r}
+A <- matrix(c(1, 2, 6, 5), nrow = 2)
+# トレース = 対角成分の和
+sum(diag(A))
+```
+
+## データの行列表現
+
+心理学のデータを行列の言葉で扱ってみよう。$n$人の回答者に$m$個の変数を測定したとすると，データは$n \times m$の行列$\boldsymbol{X}$になる。
+
+### 平均ベクトルと平均偏差行列
+
+$\boldsymbol{1}$をすべて1のベクトルとすると，各変数の平均ベクトルは次のように書ける。
+
+$$
+\boldsymbol{m} = \frac{1}{n}\boldsymbol{X}'\boldsymbol{1}
+$$
+
+各成分から平均を引いた**平均偏差行列**は$\boldsymbol{V} = \boldsymbol{X} - \boldsymbol{1}\boldsymbol{m}'$であり，これを使って分散共分散行列は次の行列積で表される。
+
+$$
+\boldsymbol{S} = \frac{1}{n}\boldsymbol{V}'\boldsymbol{V}
+$$
+
+さらに各変数を標準偏差で割って標準化した行列$\boldsymbol{Z}$を使えば，相関行列は
+
+$$
+\boldsymbol{R} = \frac{1}{n}\boldsymbol{Z}'\boldsymbol{Z}
+$$
+
+と表される。記述統計量が行列の積で統一的に記述できるのが，行列を使う利点のひとつである。
+
+### Rでの確認
+
+`iris`データセットの数値4変数を使って，行列演算と組み込み関数の結果が一致することを確かめてみよう。
+
+```{r}
+# データ行列
+X <- as.matrix(iris[, 1:4])
+n <- nrow(X)
+
+# 平均ベクトル
+one <- rep(1, n)
+m <- t(X) %*% one / n
+as.vector(m)
+colMeans(X)
+
+# 平均偏差行列
+V <- X - one %*% t(m)
+
+# 分散共分散行列（nで割る = 標本分散）
+S <- t(V) %*% V / n
+
+# 標準偏差の対角行列
+Q <- diag(sqrt(diag(S)))
+
+# 標準化スコア行列
+Z <- V %*% solve(Q)
+
+# 相関行列
+R_manual <- t(Z) %*% Z / n
+round(R_manual, 6)
+round(cor(X), 6)
+```
+
+## 距離行列
+
+ケース(行)間の距離を正方行列にまとめたものが**距離行列**である。ユークリッド距離を使うのが標準的で，距離行列は対称行列(行き帰りの距離は同じ)，対角成分は0(自分自身との距離)という性質を持つ。
+
+距離行列は多次元尺度構成法(MDS)やクラスター分析の入力として用いられる。Rでは`dist()`で計算する。
+
+```{r}
+# 最初の5ケースだけで確認
+iris5 <- iris[1:5, 1:4]
+d <- dist(iris5)
+d
+
+# 正方行列として表示
+as.matrix(d)
+```
+
+## 固有値と固有ベクトル
+
+正方行列$\boldsymbol{A}$に対して，次の関係を満たすスカラー$\lambda$とベクトル$\boldsymbol{x}$を，それぞれ**固有値**(eigenvalue)と**固有ベクトル**(eigenvector)と呼ぶ。
+
+$$
+\boldsymbol{Ax} = \lambda \boldsymbol{x}
+$$
+
+左辺は「行列をかける」操作だが，右辺は「スカラーをかける」だけ。つまり，行列をかけても方向が変わらず，伸び縮みだけするような特別なベクトルがあるということである。$\lambda$がその伸び率を表す。
+
+具体例で確認しよう。
+
+$$
+\begin{pmatrix} 1 & 6 \\ 2 & 5 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 7 \\ 7 \end{pmatrix} = 7 \begin{pmatrix} 1 \\ 1 \end{pmatrix}
+$$
+
+確かに$\lambda = 7$，$\boldsymbol{x} = (1, 1)'$で成り立っている。
+
+```{r}
+A <- matrix(c(1, 2, 6, 5), nrow = 2)
+eig <- eigen(A)
+eig$values    # 固有値
+eig$vectors   # 固有ベクトル（各列が各固有値に対応）
+```
+
+### 固有値の重要な性質
+
+$n \times n$の正方行列からは$n$個の固有値が得られる。固有値にはいくつかの重要な性質がある。
+
+**トレースとの関係**: 固有値の総和は行列の対角成分の総和(トレース)に一致する。
+
+$$
+\sum_{i=1}^{n} \lambda_i = \mathrm{tr}(\boldsymbol{A}) = \sum_{i=1}^{n} a_{ii}
+$$
+
+```{r}
+sum(eig$values)    # 固有値の総和
+sum(diag(A))       # トレース
+```
+
+**対称行列の場合**: 対称行列の固有値はすべて実数であり，異なる固有値に対応する固有ベクトルは互いに直交する。分散共分散行列や相関行列は対称行列なので，この性質が保証される。
+
+### スペクトル分解
+
+対称行列$\boldsymbol{A}$は，固有値を対角に並べた行列$\boldsymbol{\Lambda}$と固有ベクトルを列に並べた行列$\boldsymbol{X}$を使って，次のように分解できる。
+
+$$
+\boldsymbol{A} = \boldsymbol{X}\boldsymbol{\Lambda}\boldsymbol{X}'
+$$
+
+これを**スペクトル分解**(spectral decomposition)あるいは固有値分解という。固有値分解は元の行列の情報を「方向(固有ベクトル)」と「大きさ(固有値)」に分離する操作であり，主成分分析や因子分析の数学的な基盤である。
+
+### 固有値分解と主成分分析
+
+相関行列を固有値分解するとどうなるか。相関行列の対角成分はすべて1なので，トレースは変数の数$m$に一致する。固有値分解はこの情報量を重要度順に再分配する操作である。
+
+```{r}
+# irisの相関行列を固有値分解
+R <- cor(iris[, 1:4])
+eig_R <- eigen(R)
+
+# 固有値
+eig_R$values
+
+# 寄与率（各固有値が全体に占める割合）
+eig_R$values / sum(eig_R$values)
+
+# 累積寄与率
+cumsum(eig_R$values) / sum(eig_R$values)
+```
+
+第1固有値が全体の約73%を説明している。つまり4変数の情報の大部分が1つの主成分(次元)でまとめられるということである。これが主成分分析(PCA)の原理であり，`prcomp()`の内部で行われている計算そのものである。
+
+```{r}
+#| dev: "ragg_png"
+# 固有値の大きさを可視化（スクリープロット）
+data.frame(
+  Component = 1:4,
+  Eigenvalue = eig_R$values
 ) %>%
-  mutate(
-    prob = dpois(x, lambda),
-    lambda_label = factor(paste("λ =", lambda), levels = paste("λ =", lambdas))
-  )
-
-# プロット
-ggplot(poisson_data, aes(x = factor(x), y = prob)) +
-  geom_col(width = 0.7, fill = "steelblue", alpha = 0.7) +
-  facet_wrap(~lambda_label, scales = "free", ncol = 3) +
-  scale_x_discrete(breaks = function(x) x[seq(1, length(x), by = 2)]) +
-  theme_classic() +
+  ggplot(aes(x = Component, y = Eigenvalue)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  scale_x_continuous(breaks = 1:4) +
   labs(
-    x = "値 (k)",
-    y = "確率 P(X = k)",
-    title = "ポアソン分布の確率質量関数"
+    title = "スクリープロット（iris 相関行列）",
+    x = "成分番号",
+    y = "固有値"
   ) +
-  theme(
-    text = element_text(family = "IPAexGothic"),
-    strip.background = element_blank(),
-    strip.text = element_text(size = 10)
-  )
+  theme_classic()
 ```
 
-このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよい。ポアソン回帰では**対数関数**をリンク関数として使用する：
-
-$$
-\log(\lambda_i) = \beta_0 + \beta_1 x_i
-$$
-
-この関係を$\lambda_i$について解くと，**指数関数**（逆リンク関数）が得られる：
-
-$$ \lambda_i = \exp(\beta_0 + \beta_1 x_i) $$
-
-として
-
-$$ y_i \sim \text{Pois}(\lambda_i) $$
-
-を考えるのである。
-
-以下にサンプルデータを作ったポアソン回帰の例を示す。
-
-```{r poisson_plot}
-#| dev: "ragg_png"
-#| message: false
-
-# データ生成
-set.seed(17)
-n <- 200
-x <- runif(n, min = 0, max = 10)
-beta_0 <- 0.5
-beta_1 <- 0.3
-lambda <- exp(beta_0 + beta_1 * x)
-y <- rpois(n, lambda = lambda)
-
-df_pois <- data.frame(x = x, y = y)
-
-# p1: 線型回帰（不適切な例）
-p1 <- ggplot(df_pois, aes(x = x, y = y)) +
-  geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  theme_minimal() +
-  labs(x = "説明変数", y = "カウント変数", title = "線型回帰（不適切）") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# p2: ポアソン回帰（適切な例）
-p2 <- ggplot(df_pois, aes(x = x, y = y)) +
-  geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "glm", method.args = list(family = "poisson"), se = FALSE, color = "red") +
-  theme_minimal() +
-  labs(x = "説明変数", y = "カウント変数", title = "ポアソン回帰（適切）") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# パッチワークで結合
-p1 + p2
-```
-
-線型回帰では負の値の予測値が出てしまう可能性があるのに対し，ポアソン回帰は指数関数による変換によって適切にカウントデータの特性を捉えていることがわかる。
-
-ポアソン回帰を実行するRコードの例を次に示す。
-
-```{r poisson_regression}
-#| message: false
-result.bayes.pois <- brm(
-  y ~ x,
-  family = poisson(),
-  data = df_pois,
-  seed = 12345,
-  chains = 4, cores = 4, backend = "cmdstanr",
-  iter = 2000, warmup = 1000,
-  refresh = 0
-)
-summary(result.bayes.pois)
-plot(result.bayes.pois)
-## 比較のためにML推定も行っておく
-result.ml.pois <- glm(y ~ x, family = poisson(), data = df_pois)
-summary(result.ml.pois)
-```
-
-
-## 一般化線型混合モデル(GLMM)
-
-線型モデルのさらなる拡張として，**一般化線型混合モデル(GLMM)**Generalized Linear Mixed Modelがある。ここまでの回帰モデルは，説明変数が目的変数に対して一貫した効果を持つと仮定してきた。この効果を特に**固定効果**fixed effectというが，GLMMでは固定効果に加えて**変量効果**random effectを考慮することができる。
-
-変量効果とは，説明変数が個体ごとに異なる値を持つことを意味する。たとえばWithinデザインの要因計画は個人差を考慮することができるが，これは変量効果を考慮したモデルであるといえる。すなわち，研究として見たい効果はWithin要因の水準ごとの固定効果であり，これとは別に個人の平均値が異なることを想定しているから，個人ごとの平均値を変量効果として考慮しているモデルといえる。
-
-このように変量効果は個人ごとに異なる影響を考えることであるが，仮定としてこうした個人差が確率分布，特に正規分布に従っていると考えるのである。個人差は確率分布からランダムに生じるものであり，個人同士の平均的な違いは交換可能であると考えられる。またこうした個人差の分散は，個人の平均値の分散として捉えられる。このように個人差を表す確率分布も混ぜ込むので，混合(Mixed)モデルと呼ばれるのである。
-
-### 個人差の分布を「混ぜる」
-
-分散分析のBetweenモデルとWithinモデルの違いについて考えてみよう。
-一要因の場合，Betweenモデルは次のように表される。
-$$ SS_T = SS_A + SS_e $$
-
-ここで$SS_T$とは全体の平方和(Sum of Squares)であり，これを右辺の要因Aで説明する平方和$SS_A$と誤差$SS_E$に分解するのであった。
-
-このときWithinモデルは，
-
-$$SS_T = SS_A + SS_s + SS_e$$
-
-と表され，ここで$SS_s$が個人差の平方和である。
-検定に際しては$SS_e$に対する$SS_A$の比率を考える[^3]ことになるから，効果の大きさが同じであればWithinデザインの方が有利である。Betweenデザインは誤差から個人差を分離できていないからで，これを分離して誤差を小さくできる方が効果vs誤差の比は大きくなるからである。
-
-[^3]: もちろん正確には自由度で割った平均平方(Mean Squares)の比が検定統計量の$F$値である。
-
-ここでは分散での記述であったが，個別の値$Y_{ij}$を考えると，Betweenデザインは
-
-$$ Y_{ij} = \beta_0 + \beta_1 x_{ij} + e_{ij} $$
-であり，Withinデザインは
-$$ Y_{ij} = \mu + \beta_{0i} + \beta_1 x_{ij} + e_{ij} $$
-である。ここで$\mu$は全平均であり，$\beta_{01}$は全平均から個人平均の差，つまり個人差を表している。個人$i$に対して反復測定がなされているからその平均を計算することができ，相対的な切片の違いを個人の効果として取り出していると言える。
-
-ここで確率変数を考えると，
-$$e_{ij} \sim N(0, \sigma_e)$$
-$$\beta_{0i} \sim N(0, \sigma_s)$$
-
-となるから，一つの値に対して複数の確率分布が混合(mix)されていることがわかる。
-
-ここでは個人差が平均値，すなわち切片が異なるものとして説明したが，傾きに対して個人差を考えることもできる。変量効果がどこにあるかによって，ランダム切片モデル，ランダム傾きモデル，ランダム切片ランダム傾きモデルなどと呼ばれることがある。
-
-### ランダム切片モデル
-
-ランダム切片モデルは，切片が個人ごとに異なるモデルである。切片が個人ごとに異なるということは，切片の個人差が正規分布に従うと考えることである。
-
-$$
-\beta_{0i} = \beta_0 + u_{0i}
-$$
-
-ここで，$\beta_0$は全体の切片，$u_{0i}$は個人$i$の切片の個人差である。個人差は正規分布に従うと考えるから，
-
-$$
-u_{0i} \sim N(0, \sigma_u)
-$$
-
-と表現できる。モデル全体としては
-
-$$
-y_{ij} = (\beta_0 + u_{0i}) + \beta_1 x_{ij} + e_{ij}
-$$
-
-となる。ここで，$e_{ij}$は誤差項であり，個人$i$の$j$番目の観測値に対する誤差を表す。
-
-具体的なデータを作って見てみよう。
-
-```{r random_intercept_model plot}
-#| dev: "ragg_png"
-#| message: false
-
-# データ生成
-set.seed(17)
-n_person <- 10 # 個人数
-n_obs <- 20 # 各個人の観測数
-beta_0 <- 1
-beta_1 <- 2
-sigma_u <- 1 # 個人差の標準偏差
-sigma_e <- 0.5 # 誤差の標準偏差
-
-# 個人ごとのランダム切片
-person_intercepts <- rnorm(n_person, mean = 0, sd = sigma_u)
-
-# データフレーム作成
-df_random_intercept <- expand_grid(
-  person = 1:n_person,
-  obs = 1:n_obs
-) %>%
-  mutate(
-    x = runif(n(), min = 0, max = 10),
-    u_0 = person_intercepts[person],
-    y = beta_0 + u_0 + beta_1 * x + rnorm(n(), mean = 0, sd = sigma_e),
-    person_factor = factor(person)
-  )
-
-## データの確認
-df_random_intercept %>% head()
-
-# p1: 線型回帰（全体で一つの回帰線）
-p1 <- ggplot(df_random_intercept, aes(x = x, y = y)) +
-  geom_point(alpha = 0.5, size = 1) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# p2: ランダム切片モデル（個人ごとに異なる切片の回帰線）
-p2 <- ggplot(df_random_intercept, aes(x = x, y = y, color = person_factor)) +
-  geom_point(alpha = 0.6, size = 1) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ランダム切片モデル") +
-  theme(
-    text = element_text(family = "IPAexGothic"),
-    legend.position = "none"
-  )
-
-p1 + p2
-```
-
-ランダム効果を含むモデルを推定するコード例を以下に示す。
-
-```{r random_intercept_model}
-#| message: false
-result.bayes.random_intercept <- brm(
-  y ~ x + (1 | person),
-  family = gaussian(),
-  data = df_random_intercept,
-  seed = 12345,
-  chains = 4, cores = 4, backend = "cmdstanr",
-  iter = 2000, warmup = 1000,
-  refresh = 0
-)
-summary(result.bayes.random_intercept)
-plot(result.bayes.random_intercept)
-
-## 比較のためにML推定も行っておく
-pacman::p_load(lmerTest)
-result.ml.random_intercept <- lmer(y ~ x + (1 | person), data = df_random_intercept)
-summary(result.ml.random_intercept)
-
-## さらに比較のために，普通の回帰分析も行ってみる
-result.ml.random_intercept.ordinal <- lm(y ~ x, data = df_random_intercept)
-summary(result.ml.random_intercept.ordinal)
-```
-```{r random_intercept_model coef}
-#| message: false
-#| echo: false
-## ベイズ推定値
-bayes_estimates <- fixef(result.bayes.random_intercept)
-bayes_sigma_u <- VarCorr(result.bayes.random_intercept)$person$sd[1]
-bayes_variances <- VarCorr(result.bayes.random_intercept)
-bayes_sigma_u <- sqrt(bayes_variances$person$sd[1, 1]^2) # 個人間分散の標準偏差
-bayes_sigma_e <- bayes_variances$residual__$sd[1, 1]
-# ML推定値を抽出
-ml_estimates <- fixef(result.ml.random_intercept)
-ml_sigma_u <- as.data.frame(VarCorr(result.ml.random_intercept))$sdcor[1]
-ml_sigma_e <- sigma(result.ml.random_intercept)
-# 普通の回帰分析の推定値を抽出
-lm_estimates <- coef(result.ml.random_intercept.ordinal)
-```
-
-変量効果のモデル表記は，固定効果に加えて`(1 | person)`のように表記する。ここで，`1`は切片を表し，`person`は個人を表す。このようにすることで，個人ごとに異なる切片を考慮することができる。
-
-設定したパラメタ（個人差の標準偏差$\sigma_u$ = `r sigma_u`，残差の標準偏差$\sigma_e$ = `r sigma_e`）に対して，ベイズ推定では個人差の標準偏差が`r round(bayes_sigma_u, 3)`，残差の標準偏差が`r round(bayes_sigma_e, 3)`と推定されている。ML推定では個人差の標準偏差が`r round(ml_sigma_u, 3)`，残差の標準偏差が`r round(ml_sigma_e, 3)`と推定された。両手法ともに設定値に近い値が得られており，適切にパラメタが推定されていることがわかる。
-
-このデータに対して，固定効果のみで推定すると切片が`r round(lm_estimates[1], 3)`，傾きが`r round(lm_estimates[2], 3)`と推定される。傾きに対しては同じ値になるが切片の変動を考慮するかどうかで推定値が異なっていることがわかる。固定効果のみのモデルの場合，切片に想定された正規分布の平均値のみ推定したことになっている。実践的な意味としては，Within計画をBetween計画と皆して推定しているようなものであり，せっかく綺麗に取り分けられる個人差分散を無視しているようなものである。
-
-#### 個人レベルの推定値の取得
-
-ベイズ推定の利点の一つは，個人ごとの推定値とその不確実性を定量化できることである。MCMCサンプルから個人の変量効果を取り出し，事後分布を可視化してみよう。
-
-`brms`パッケージの関数`ranef`を使うと面倒なことをしなくても直接取り出してくれるが，MCMCサンプルを取り出して加工して確認することは，MCMCによる推定の理解を深めるのに良い訓練となる。
-
-```{r individual_estimates}
-#| dev: "ragg_png"
-#| message: false
-
-# 個人ごとの変量効果を取得して表示してみる
-random_effects <- ranef(result.bayes.random_intercept)
-print(random_effects)
-# 個人の切片の変量効果の事後分布(MCMCサンプル)を取得
-posterior_samples <- as_draws_df(result.bayes.random_intercept) %>%
-  select(starts_with("r_person")) %>%
-  rowid_to_column("iter") %>%
-  pivot_longer(-iter) %>%
-  mutate(person = str_extract(name, pattern = "\\d+")) %>%
-  mutate(person = factor(person, levels = as.character(1:10))) %>%
-  select(-name)
-# MCMCサンプルを使った要約
-posterior_samples %>%
-  group_by(person) %>%
-  summarise(
-    EAP = mean(value),
-    median = quantile(value, 0.5),
-    q025 = quantile(value, 0.025),
-    q975 = quantile(value, 0.975),
-    sd = sd(value),
-    .groups = "drop"
-  )
-
-# 事後分布の描画
-p1 <- ggplot(posterior_samples, aes(x = value, fill = person)) +
-  geom_density(alpha = 0.7) +
-  facet_wrap(~person, scales = "free_y") +
-  theme_minimal() +
-  labs(x = "切片の変量効果", y = "事後密度", title = "個人ごとの切片変量効果の事後分布") +
-  theme(text = element_text(family = "IPAexGothic"), legend.position = "none")
-
-print(p1)
-```
-
-ここで抜き出された個人の効果は，全体平均からの偏差であり，実際の切片は固定効果＋変量効果の形で得られている。これについても`coef`関数あるいはMCMCサンプルを加工することで，より具体的にイメージしながら利用できるだろう。
-
-```{r individual_total_effects}
-#| dev: "ragg_png"
-#| message: false
-# 各個人の実際の切片（固定効果+変量効果）を取得
-individual_coefs <- coef(result.bayes.random_intercept)$person
-
-# 実際の切片の事後分布（固定効果+変量効果）
-total_intercept_samples <- as_draws_df(result.bayes.random_intercept) %>%
-  select(b_Intercept, starts_with("r_person")) %>%
-  rowid_to_column("iter") %>%
-  pivot_longer(-c(iter, b_Intercept)) %>%
-  mutate(person = str_extract(name, pattern = "\\d+")) %>%
-  mutate(person = factor(person, levels = as.character(1:10))) %>%
-  mutate(total_intercept = b_Intercept + value) %>%
-  select(iter, person, total_intercept)
-
-# 実際の切片の事後分布の描画
-p2 <- ggplot(total_intercept_samples, aes(x = total_intercept, fill = person)) +
-  geom_density(alpha = 0.7) +
-  facet_wrap(~person, scales = "free_y") +
-  theme_minimal() +
-  labs(
-    x = "実際の切片（固定効果+変量効果）", y = "事後密度",
-    title = "個人ごとの実際の切片の事後分布"
-  ) +
-  theme(text = element_text(family = "IPAexGothic"), legend.position = "none")
-
-print(p2)
-
-# 実際の切片の信頼区間
-total_intercept_summary <- total_intercept_samples %>%
-  group_by(person) %>%
-  summarise(
-    EAP = mean(total_intercept),
-    median = quantile(total_intercept, 0.5),
-    q025 = quantile(total_intercept, 0.025),
-    q975 = quantile(total_intercept, 0.975),
-    sd = sd(total_intercept),
-    .groups = "drop"
-  )
-
-print(total_intercept_summary)
-```
-
-このように，ベイズ推定では個人ごとの推定値とその不確実性を詳細に分析することができる。
-
-### ランダム傾きモデル
-
-ランダム傾きモデルは，傾きが個人ごとに異なるモデルである。傾きが個人ごとに異なるということは，傾きの個人差が正規分布に従うと考えることである。
-
-$$
-\beta_{1i} = \beta_1 + u_{1i}
-$$
-
-ここで，$\beta_1$は全体の傾き，$u_{1i}$は個人$i$の傾きの個人差である。個人差は正規分布に従うと考えるから，
-
-$$
-u_{1i} \sim N(0, \sigma_u)
-$$
-
-と表現できる。モデル全体としては
-
-$$
-y_{ij} = \beta_0  + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
-$$
-
-となる。
-
-これについても具体的なデータを作って見てみよう。
-
-```{r random_slope_model_plot}
-#| dev: "ragg_png"
-#| message: false
-
-# データ生成
-set.seed(17)
-n_person <- 10 # 個人数
-n_obs <- 20 # 各個人の観測数
-beta_0 <- 1
-beta_1 <- 2
-sigma_u <- 0.5 # 傾きの個人差の標準偏差
-sigma_e <- 1.5 # 誤差の標準偏差
-
-# 個人ごとのランダム傾き
-person_slopes <- rnorm(n_person, mean = 0, sd = sigma_u)
-
-# データフレーム作成
-df_random_slope <- expand_grid(
-  person = 1:n_person,
-  obs = 1:n_obs
-) %>%
-  mutate(
-    x = runif(n(), min = 0, max = 10),
-    u_1 = person_slopes[person],
-    y = beta_0 + (beta_1 + u_1) * x + rnorm(n(), mean = 0, sd = sigma_e),
-    person_factor = factor(person)
-  )
-
-## データの確認
-df_random_slope %>% head()
-
-# p1: 線型回帰（全体で一つの回帰線）
-p1 <- ggplot(df_random_slope, aes(x = x, y = y)) +
-  geom_point(alpha = 0.5, size = 1) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# p2: ランダム傾きモデル（個人ごとに異なる傾きの回帰線）
-p2 <- ggplot(df_random_slope, aes(x = x, y = y, color = person_factor)) +
-  geom_point(alpha = 0.6, size = 1) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ランダム傾きモデル") +
-  theme(
-    text = element_text(family = "IPAexGothic"),
-    legend.position = "none"
-  )
-
-p1 + p2
-```
-
-ランダム傾きモデルでは，個人ごとに回帰直線の傾きが異なることがわかる。これは，説明変数の効果が個人によって異なることを表している。
-
-ランダム傾きモデルを推定するコード例を以下に示す。
-
-```{r random_slope_model}
-#| message: false
-result.bayes.random_slope <- brm(
-  y ~ x + (0 + x | person),
-  family = gaussian(),
-  data = df_random_slope,
-  seed = 12345,
-  chains = 4, cores = 4, backend = "cmdstanr",
-  iter = 2000, warmup = 1000,
-  refresh = 0
-)
-summary(result.bayes.random_slope)
-plot(result.bayes.random_slope)
-
-## 比較のためにML推定も行っておく
-result.ml.random_slope <- lmer(y ~ x + (0 + x | person), data = df_random_slope)
-summary(result.ml.random_slope)
-```
-
-変量効果のモデル表記で，`(0 + x | person)`は傾きのみにランダム効果を考慮することを表す。`0`によって切片の固定効果を除き，`x`で傾きにランダム効果を指定している。それぞれの出力が，理論値のどこを反映したものであるか確認しておこう。
-
-また出力結果はランダム切片モデルの時と同様に，関数あるいはMCMCサンプルから推定値やその分布情報を得ることもできる。自分なりに加工して出力結果を確認してみてほしい。
-
-### ランダム切片ランダム傾きモデル
-
-ランダム切片ランダム傾きモデルは，切片と傾きの両方が個人ごとに異なるモデルである。これは最も複雑な変量効果モデルで，個人ごとに異なる切片と傾きを同時に考慮する。
-
-$$
-\beta_{0i} = \beta_0 + u_{0i}
-$$
-$$
-\beta_{1i} = \beta_1 + u_{1i}
-$$
-
-ここで，$u_{0i}$は個人$i$の切片の個人差，$u_{1i}$は個人$i$の傾きの個人差である。
-このランダム効果はいずれも個人に係るものであるから相関することが仮定されるため，それぞれに正規分布を仮定するのではなく多変量正規分布から得られるものと仮定する。当然のことながら，この相関係数も推定対象である。
-
-$$
-\begin{pmatrix} u_{0i} \\ u_{1i} \end{pmatrix} \sim MVN\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \sigma_{u0}^2 & \sigma_{u01} \\ \sigma_{u01} & \sigma_{u1}^2 \end{pmatrix} \right)
-$$
-
-モデル全体としては
-
-$$
-y_{ij} = (\beta_0 + u_{0i}) + (\beta_1 + u_{1i}) x_{ij} + e_{ij}
-$$
-
-となる。
-
-```{r random_intercept_slope_model_plot}
-#| dev: "ragg_png"
-#| message: false
-
-# データ生成
-set.seed(17)
-n_person <- 10 # 個人数
-n_obs <- 20 # 各個人の観測数
-beta_0 <- 1
-beta_1 <- 2
-sigma_u0 <- 1.0 # 切片の個人差の標準偏差
-sigma_u1 <- 0.5 # 傾きの個人差の標準偏差
-rho <- 0.3 # 切片と傾きの相関
-sigma_e <- 0.5 # 誤差の標準偏差
-
-# 切片と傾きの共分散行列
-Sigma <- matrix(
-  c(
-    sigma_u0^2, rho * sigma_u0 * sigma_u1,
-    rho * sigma_u0 * sigma_u1, sigma_u1^2
-  ),
-  nrow = 2
-)
-
-# 個人ごとのランダム効果（切片と傾き）
-pacman::p_load(MASS)
-random_effects <- mvrnorm(n_person, mu = c(0, 0), Sigma = Sigma)
-person_intercepts <- random_effects[, 1]
-person_slopes <- random_effects[, 2]
-
-# データフレーム作成
-df_random_both <- expand_grid(
-  person = 1:n_person,
-  obs = 1:n_obs
-) %>%
-  mutate(
-    x = runif(n(), min = 0, max = 10),
-    u_0 = person_intercepts[person],
-    u_1 = person_slopes[person],
-    y = (beta_0 + u_0) + (beta_1 + u_1) * x + rnorm(n(), mean = 0, sd = sigma_e),
-    person_factor = factor(person, levels = as.character(1:10))
-  )
-
-## データの確認
-df_random_both %>% head()
-
-# p1: 線型回帰（全体で一つの回帰線）
-p1 <- ggplot(df_random_both, aes(x = x, y = y)) +
-  geom_point(alpha = 0.5, size = 1) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
-  theme(text = element_text(family = "IPAexGothic"))
-
-# p2: ランダム切片ランダム傾きモデル（個人ごとに異なる切片と傾きの回帰線）
-p2 <- ggplot(df_random_both, aes(x = x, y = y, color = person_factor)) +
-  geom_point(alpha = 0.6, size = 1) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
-  theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ランダム切片ランダム傾きモデル") +
-  theme(
-    text = element_text(family = "IPAexGothic"),
-    legend.position = "none"
-  )
-
-p1 + p2
-```
-
-プロットを見ると，個人ごとに色分けしていない図(左；固定効果のみの線型回帰)だけ見て単純な線型回帰でもいいように思えるが，色分けした図(右；ランダム切片ランダム傾きモデル)をみると，より個体差をうまく捉えていることがわかる。データはまず可視化することが重要であることがわかるだろう。
-
-さて，これについての推定コードの書き方も見ておこう。切片と傾きの両方が変量効果として`()`の中に記述される。
-```{r random_intercept_slope_model}
-#| message: false
-result.bayes.random_both <- brm(
-  y ~ x + (1 + x | person),
-  family = gaussian(),
-  data = df_random_both,
-  seed = 12345,
-  chains = 4, cores = 4, backend = "cmdstanr",
-  iter = 2000, warmup = 1000,
-  refresh = 0
-)
-summary(result.bayes.random_both)
-plot(result.bayes.random_both)
-
-## 比較のためにML推定も行っておく
-result.ml.random_both <- lmer(y ~ x + (1 + x | person), data = df_random_both)
-summary(result.ml.random_both)
-```
-
-変量効果のモデル表記で，`(1 + x | person)`は切片と傾きの両方にランダム効果を考慮することを表す。`1`は切片，`x`は傾きのランダム効果を指定している。
-
-このモデルでは切片と傾きの相関も推定される。設定した相関（$\rho$ = `r rho`）がどの程度再現されているか確認してみよう。また，個人レベルの推定値も前述の方法で取り出すことができる。
-
-
-## 階層線型モデル(HLM)
-
-階層線型モデルは，さらに確率分布をMixしていくモデルである。
-個人差変数を変量効果として考えた時，ある個人$i$から複数の反応$j$を得てデータとしているのであった。これを個人に「ネストされた」データ(入子状のデータ。マトリョーシカのようなもの)として考えると，階層線型モデルのイメージに近い。
-
-階層線型モデルが扱うのは，階層構造を持つデータである。例えばある学級での教育効果を考えるとして，調査研究の範囲がひろがれば学級間比較，学校間比較となっていくだろう。学級は学校にネストされているし，学校は地区にネストされているし，地区は市区町村に，市区町村は都道府県にネストされている，という形で階層を考えることができる。
-
-また，学級の中の個人，個人の中の課題種別・・・と内側にネストしていくこともできる。ポイントはネストのレベルに対応した確率分布を仮定するから，そのネストレベルに含まれる各要素は質が同じで相互に交換可能なものであると考える点である。例えば記憶実験などにおいて，同程度の「無意味さ」を持った単語を覚えると言ったとき，「めぬそ」「ぬきは」といっった言葉はどちらを刺激として与えられても三文字の無意味な綴りであるという点では等質と皆しているのである。
-
-また階層線型モデルの面白いところは，上位の変数が下位の変数に影響を与えるようなモデルや，その逆のようなレベル間関係をモデリングできるところである。たとえば市区町村レベルの住民の数が，学級レベルの教育水準に影響をしているかもしれない。こういったレベル間関係も(理論的には)表現できるのである。
-
-どこにレベルを想定するか，そのレベルを想定する意味があるかどうかについても検証する必要がある。過度に複雑なモデルにしても意味がないので，そのレベルで一旦まとめる必要があるかどうかを，事前にチェックする必要がある。レベルでまとめることの意義は，級内相関(Interclass Correlation Coefficient)を見ることで判断する。
-
-### 2レベル階層線型モデル
-
-最も基本的な階層線型モデルは2レベルモデルである。ここでは学級（クラスター）にネストされた生徒の学習データを例に，2レベル階層線型モデルについて説明する。
-
-#### レベル1（個人レベル）のモデル
-
-個人$i$（$i = 1, 2, \ldots, n_j$）が学級$j$（$j = 1, 2, \ldots, J$）に属している場合，レベル1のモデルは以下のように表される：
-
-$$
-Y_{ij} = \beta_{0j} + \beta_{1j}X_{ij} + r_{ij}
-$$
-
-ここで：
-
-- $Y_{ij}$：学級$j$の生徒$i$の学習成績
-- $X_{ij}$：学級$j$の生徒$i$の説明変数（例：学習時間）
-- $\beta_{0j}$：学級$j$の切片（学級$j$の平均的な学習成績）
-- $\beta_{1j}$：学級$j$の傾き（学級$j$における説明変数の効果）
-- $r_{ij}$：個人レベルの誤差項，$r_{ij} \sim N(0, \sigma^2)$
-
-#### レベル2（学級レベル）のモデル
-
-学級レベルでは，レベル1の係数が学級レベルの変数の関数として表される：
-
-$$
-\beta_{0j} = \gamma_{00} + \gamma_{01}W_j + u_{0j}
-$$
-
-$$
-\beta_{1j} = \gamma_{10} + \gamma_{11}W_j + u_{1j}
-$$
-
-ここで：
-
-- $W_j$：学級$j$の説明変数（例：学級規模）
-- $\gamma_{00}$：全体の切片（全学級の平均的な学習成績）
-- $\gamma_{01}$：学級レベル変数$W_j$の切片への効果
-- $\gamma_{10}$：全体の傾き（全学級の平均的な効果の大きさ）
-- $\gamma_{11}$：学級レベル変数$W_j$の傾きへの効果
-- $u_{0j}, u_{1j}$：学級レベルの誤差項（変量効果）
-
-変量効果は多変量正規分布に従うと仮定される：
-
-$$
-\begin{pmatrix} u_{0j} \\ u_{1j} \end{pmatrix} \sim MVN\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \tau_{00} & \tau_{01} \\ \tau_{01} & \tau_{11} \end{pmatrix} \right)
-$$
-
-#### 統合モデル
-
-レベル1とレベル2のモデルを統合すると：
-
-$$
-Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij} + u_{0j} + u_{1j}X_{ij} + r_{ij}
-$$
-
-この式は以下のように分解できる：
-
-**固定効果（Fixed Effects）**：
-
-- $\gamma_{00}$：全体切片
-- $\gamma_{01}$：学級レベル変数の主効果
-- $\gamma_{10}$：個人レベル変数の主効果
-- $\gamma_{11}$：クロスレベル交互作用効果
-
-**変量効果（Random Effects）**：
-
-- $u_{0j}$：学級の切片における変量効果
-- $u_{1j}X_{ij}$：学級の傾きにおける変量効果
-- $r_{ij}$：個人レベルの誤差
-
-#### 級内相関係数（ICC）
-
-階層構造の意義を評価するために，級内相関係数（Intraclass Correlation Coefficient: ICC）を計算する。ICCは同じクラスター内の観測値間の相関を表す：
-
-$$
-\text{ICC} = \frac{\tau_{00}}{\tau_{00} + \sigma^2}
-$$
-
-ここで：
-
-- $\tau_{00}$：学級間分散（between-group variance）
-- $\sigma^2$：学級内分散（within-group variance）
-
-ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが大きい場合（一般的に0.05以上），階層モデルの適用が推奨される。
-
-### モデルの図解
-
-数式で表現することでわかりにくくなったかもしれないので，図解しておく。この図は下から順にみていくとよい。
-データ$Y_{ij}$が図の底にあり，これをある正規分布が生成していると考える。この正規分布の幅$\sigma_e^2$に応じて個人レベルの誤差$r_{ij}$が生成される。この正規分布の平均は会期モデルで表現されるが，その時の回帰係数が多次元正規分布によって生成される。多次元正規分布はそれぞれの位置(平均)と幅をもち，さらに両者の相関関係$\rho$も含まれる。切片$\beta_{0j}$および傾き$\beta_{1j}$に生じる誤差$u_{0j},u_{1j}$が幅$\tau_{00},\tau_{11}$に応じて生成され，またその平均は学級レベルの変数で説明される会期式になっている。ここでの切片と傾きについては事前情報がないので，無情報分布(一様分布)で表している。誤差の事前分布は負の数を取らないように，切断された分布をもちいる。cauchy分布やt分布など，裾の重い分布が用いられることが多い。
-
-![HLMのモデル図](images/hlm_model.png)
-
-### 具体例
-
-具体的な応用例を見ておこう。
-ここでは，これまで用いてきた野球のデータを用いる。このデータには選手の個人成績（身長，体重，安打数など）と，選手が所属するチーム，守備位置といった階層構造が含まれている。
-
-野球データの特徴として，選手は特定のチームに所属し，そのチーム内で特定の守備位置を担当するという階層構造がある。つまり，守備位置はチームにネストされた構造となっている。チームレベルでは戦術や指導方法が共通し，同じチーム内の守備位置レベルでは求められる技能や体格が類似する傾向がある。このような階層構造を無視して分析すると，個人差を過大評価したり，統計的推論に誤りが生じる可能性がある。
-
-本例では2020年度のデータに限定し，投手を除く野手のデータのみを使用する。投手は他の野手とは明らかに異なる特性を持つため，分析から除外することで，より一貫性のあるデータセットとする。
-
-まずは階層構造の意義を確認するため，チームおよび守備位置のICC（級内相関係数）を計算し，階層モデルの適用が適切かどうかを検証する。ICCの計算には`multilevel`パッケージを用いた。
-
-```{r hlm}
-pacman::p_load(tidyverse, brms, bayesplot, multilevel)
-dat <- read_csv("Baseball.csv") %>%
-  filter(Year == "2020年度") %>%
-  mutate(
-    position = as.factor(position)
-  ) %>%
-  filter(position != "投手")
-
-# Calculate ICC using multilevel package
-# チームレベルのICC
-icc_team <- multilevel::ICC1(aov(Hit ~ team, data = dat))
-
-# ネスト構造を考慮したICC計算
-# チーム内ポジションのICC
-dat$team_position <- paste(dat$team, dat$position, sep = "_")
-icc_team_position <- multilevel::ICC1(aov(Hit ~ team_position, data = dat))
-
-# 参考：ポジション単独のICC
-icc_position <- multilevel::ICC1(aov(Hit ~ position, data = dat))
-
-print(paste("Team ICC1:", round(icc_team, 3)))
-print(paste("Team:Position ICC1:", round(icc_team_position, 3)))
-print(paste("Position ICC1:", round(icc_position, 3)))
-```
-
-ICCの値が負になっているので，群内のばらつきの方が群間のばらつきよりも大きいことがわかる。つまり群に分けた意味がないことを意味している。本来はある程度の正の大きさのICCを持つことが望ましい[^4]。ただし，チーム$\times$ポジションの組み合わせで群をつくると，群内の類似性が現れるため，これを群わけ変数として用いることにしよう。
-
-
-[^4]: 0.05を小，0.10を中，0.15. を大とする基準が最も一般的である(@Hox2002,@Raudenbush2000)。
-
-従属変数を安打数(`Hit`)，説明変数をゲーム出場回数(`Games`)ならびに選手の体躯(`height`と`weight`)とする。
-これらがチームの中でのポジションでネストされていて切片が異なるとしたモデルを構成する。なお安打数は正の整数しか取らないから，ポアソン分布を用いた。
-
-```{r brm_HLM}
-# ネスト構造を考慮したポアソンモデル
-# (1 | team) + (1 | team:position) でポジションをチーム内にネスト
-model_hit <- brm(
-  Hit ~ Games + height + weight + (1 | team:position),
-  data = dat,
-  family = poisson(),
-  chains = 4,
-  iter = 10000,
-  cores = 4
-)
-
-# Model summary for Hit model
-summary(model_hit)
-```
-
-MCMCのチェックのプロットを見ておく。Rhatなどの数値も良好である。
-
-```{r mcmc_check_hlm}
-plot(model_hit)
-```
-
-モデルがデータにあっているかどうかを確認する一つの方法が，**事後予測分布**による可視化である。モデルから生成されるデータの分布を実際のデータに重ねてみて，同じような分布が得られているかを見ておく。
-`bayesplot`パッケージの`pp_check`関数は，事後予測分布の一部とデータとの重なり具合を可視化してくれる。これを見ると，安打数がごく少ないあたりの分布はうまく適合していない。モデルとして改良の余地があるところだろう。
-
-```{r pp_check}
-# Posterior predictive check for Hit model
-pp_check(model_hit, ndraws = 100)
-```
-
-最後に，グループごとのプロットを見てみよう。チーム差，ポジションの違いといった細かい調整により，よりうまくデータに適合している様子が見てとれるだろう。
-
-```{r model_fit_visualize}
-#| dev: "ragg_png"
-#| fig-height: 16
-#| fig-width: 16
-#| out-width: "100%"
-
-predicted_hit <- fitted(model_hit,
-  newdata = dat,
-  allow_new_levels = TRUE
-) %>% as.data.frame()
-
-
-plot_data <- data.frame(
-  observed = dat$Hit,
-  predicted = predicted_hit$Estimate,
-  team = dat$team,
-  position = dat$position
-)
-
-ggplot(plot_data, aes(x = observed, y = predicted, color = team)) +
-  geom_point(alpha = 0.7, size = 2) +
-  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
-  labs(
-    x = "Observed Hit", y = "Predicted Hit",
-    title = "Predicted vs Observed Hit Count (2020年度)",
-    color = "Team"
-  ) +
-  facet_wrap(team ~ position, scales = "free") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
-```
+赤い破線は固有値=1のラインで，これを下回る成分は変数1つ分の情報量にも満たないことを意味する。固有値の大きさから成分数を決めるのがスクリープロットの読み方である。
+
+因子分析では，相関行列$\boldsymbol{R}$の構造を$\boldsymbol{R} \approx \boldsymbol{A}\boldsymbol{A}' + \boldsymbol{D}^2$($\boldsymbol{A}$は因子負荷行列，$\boldsymbol{D}^2$は独自分散)というモデルで近似する。この推定にも固有値分解が基礎となっている。
+
+## 用語のまとめ
+
+| 用語 | 意味 | Rの関数/演算子 |
+|------|------|----------------|
+| スカラー | ただの数値 | — |
+| ベクトル | 数値の1次元の並び | `c()` |
+| 行列 | 数値の2次元の並び | `matrix()` |
+| 転置 | 行と列を入れ替える | `t()` |
+| 行列積 | 掛けて足す乗法 | `%*%` |
+| 要素ごとの積 | 対応する位置の掛け算 | `*` |
+| 逆行列 | かけると単位行列になる | `solve()` |
+| 対角成分 | 正方行列の$a_{ii}$ | `diag()` |
+| トレース | 対角成分の総和 | `sum(diag())` |
+| 固有値分解 | $\boldsymbol{Ax} = \lambda\boldsymbol{x}$を求める | `eigen()` |
+| 相関行列 | 変数間の相関係数の行列 | `cor()` |
+| 分散共分散行列 | 分散と共分散の行列 | `cov()` |
+| 距離行列 | ケース間の距離の行列 | `dist()` |
 
 ## 課題
 
-### 基本問題：パラメータリカバリ
+1. `iris`データセットの数値4変数について，相関行列と分散共分散行列を計算し，それぞれの対角成分に何が入っているか確認しよう。また，数値4変数を標準化(`scale()`)したデータの分散共分散行列が相関行列と一致することを確かめよう。
 
-brmsパッケージを使用してベイズ統計モデリングにおけるパラメータリカバリを実践してください。パラメータリカバリとは、既知のパラメータで生成したデータから、そのパラメータを正しく推定できるかを確認する手法のことです。
+2. 次の2つの行列$\boldsymbol{A}$，$\boldsymbol{B}$について，$\boldsymbol{AB}$と$\boldsymbol{BA}$を計算し，結果が異なることを確認しよう。
+$$
+\boldsymbol{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}, \quad
+\boldsymbol{B} = \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix}
+$$
+さらに，積の転置$(\boldsymbol{AB})' = \boldsymbol{B}'\boldsymbol{A}'$が成り立つことも確認しよう。
 
+3. `iris`の数値4変数のうち最初の5ケースについて，中心化(各列から平均を引く)した行列$\boldsymbol{V}$を`scale(center = TRUE, scale = FALSE)`で作成し，$\frac{1}{n}\boldsymbol{V}'\boldsymbol{V}$が`cov()`の結果と近い値になることを確認しよう。ヒント: `cov()`は$n$ではなく$n-1$で割る不偏分散を返す。
 
-#### 課題1-1: ロジスティック回帰のパラメータリカバリ
+4. `iris`の相関行列を固有値分解し，各成分の寄与率を求めよう。次に`prcomp(iris[, 1:4], scale. = TRUE)`を実行し，その`sdev`の二乗(各主成分の分散)が固有値と一致することを確かめよう。
 
-```{r exercise-logistic}
-#| eval: false
-# ロジスティック回帰のパラメータリカバリ
-# Step 1: 既知のパラメータでデータを生成
-set.seed(123)
-n <- 200
-true_intercept <- 0.5
-true_slope <- 1.2
-x <- rnorm(n, mean = 0, sd = 1)
-p <- plogis(true_intercept + true_slope * x) # logistic function
-y <- rbinom(n, size = 1, prob = p)
+5. 距離行列と相関行列のどちらも対称行列だが，対角成分の意味が異なる。`iris`の数値4変数の最初の10ケースについて距離行列を求め，対角成分がすべて0であること，相関行列の対角成分がすべて1であることを確認しよう。その違いがなぜ生じるか考察してみよう。
 
-# データフレーム作成
-df_logistic <- data.frame(x = x, y = y)
+```{r}
+#| include: FALSE
+#| echo: FALSE
+#| eval: FALSE
 
-# Step 2: brmsでベイズ推定
-model_logistic <- brm(
-  y ~ x,
-  family = bernoulli(),
-  data = df_logistic,
-  prior = c(
-    prior(normal(0, 2.5), class = Intercept),
-    prior(normal(0, 2.5), class = b)
-  ),
-  chains = 4,
-  iter = 2000,
-  cores = 4,
-  refresh = 0
-)
+## 課題1
+iris_num <- iris[, 1:4]
+# 相関行列
+cor(iris_num)
+# 分散共分散行列
+cov(iris_num)
+# 対角成分
+diag(cor(iris_num))  # すべて1
+diag(cov(iris_num))  # 各変数の分散
+# 標準化後の分散共分散行列 = 相関行列
+iris_scaled <- scale(iris_num)
+round(cov(iris_scaled) - cor(iris_num), 10)
 
-# Step 3: 結果の確認
-summary(model_logistic)
-plot(model_logistic)
+## 課題2
+A <- matrix(c(1, 3, 2, 4), nrow = 2)
+B <- matrix(c(5, 7, 6, 8), nrow = 2)
+A %*% B
+B %*% A
+# 積の転置の性質
+t(A %*% B)
+t(B) %*% t(A)
 
-# Step 4: パラメータリカバリの評価
-# 真の値との比較
-posterior_summary(model_logistic)
+## 課題3
+iris5 <- as.matrix(iris[1:5, 1:4])
+V <- scale(iris5, center = TRUE, scale = FALSE)
+n <- nrow(iris5)
+S_n <- t(V) %*% V / n        # nで割る（標本分散）
+S_n1 <- t(V) %*% V / (n - 1) # n-1で割る（不偏分散）
+round(S_n1 - cov(iris5), 10)  # 一致
+
+## 課題4
+R <- cor(iris[, 1:4])
+eig <- eigen(R)
+eig$values / sum(eig$values)
+
+pca <- prcomp(iris[, 1:4], scale. = TRUE)
+pca$sdev^2  # 固有値と一致するはず
+round(eig$values - pca$sdev^2, 10)
+
+## 課題5
+iris10 <- iris[1:10, 1:4]
+d <- as.matrix(dist(iris10))
+diag(d)           # すべて0
+diag(cor(iris10)) # すべて1
+# 距離は「自分自身との離れ具合 = 0」
+# 相関は「自分自身との一致度 = 1」
 ```
-
-**課題**: 上記のコードを実行し、真の切片(0.5)と傾き(1.2)が適切に推定されているかを確認してください。また、事後分布の95%信頼区間に真の値が含まれているかを確認してください。
-
-#### 課題1-2: ポアソン回帰のパラメータリカバリ
-
-```{r exercise-poisson}
-#| eval: false
-# 課題1-2: ポアソン回帰のパラメータリカバリ
-set.seed(456)
-n <- 300
-true_intercept <- 1.0
-true_slope <- 0.8
-x <- runif(n, min = 0, max = 3)
-lambda <- exp(true_intercept + true_slope * x)
-y <- rpois(n, lambda = lambda)
-
-df_poisson <- data.frame(x = x, y = y)
-
-# ベイズ推定
-model_poisson <- brm(
-  y ~ x,
-  family = poisson(),
-  data = df_poisson,
-  prior = c(
-    prior(normal(0, 2.5), class = Intercept),
-    prior(normal(0, 2.5), class = b)
-  ),
-  chains = 4,
-  iter = 2000,
-  cores = 4,
-  refresh = 0
-)
-
-summary(model_poisson)
-plot(model_poisson)
-```
-
-**課題**: 真の切片(1.0)と傾き(0.8)が適切に推定されているかを確認してください。
-
-### 応用問題：野球データの階層モデリング
-
-[野球データBaseball.csv](Baseball.csv)を用いて、Year、Teamでネストされた階層構造を持つモデルを構築します。2018年度から2020年度の3年間のデータを使用し、投手のデータに限定します。変数には年俸(salary)、身長(height)、体重(weight)のほか、投手の成績として勝利数(Win)、負け数(Lose)、ホールドポイント(Hold)、セーブポイント(Save)があります。これらの変数を用いて、年度・チームの階層効果を考慮したモデリングを行います。
-
-```{r prac_data_handling}
-#| eval: false
-#| message: false
-dat <- read_csv("Baseball.csv") %>%
-  filter(Year %in% c("2018年度", "2019年度", "2020年度")) %>%
-  filter(position == "投手") %>%
-  filter(!is.na(Win), !is.na(Lose), !is.na(Games), !is.na(salary), !is.na(height), !is.na(weight)) %>%
-  mutate(
-    Year = as.factor(Year),
-    team = as.factor(team)
-  )
-```
-
-#### モデルA:ポアソン回帰モデル
-
-次のモデルを実行してください。
-```{r hlm_poisson}
-#| eval: false
-model1 <- brm(
-  Win ~ height + weight + Games + (1 | team) + (1 | Year),
-  family = poisson(),
-  data = dat,
-  iter = 2000,
-  cores = 4
-)
-```
-
-**課題1**: このモデルの構造を説明してください。以下の点について述べてください：
-
-- 従属変数と確率分布
-- 固定効果(説明変数)の意味
-- 変量効果(階層構造)の意味
-- なぜこの確率分布を選んだのか
-
-**課題2**: モデルの結果を解釈してください。以下の観点が含まれるといいでしょう。：
-
-- 各固定効果の係数の意味と統計的有意性
-- 変量効果の分散の大きさとその解釈
-
-**課題3**: 以下の可視化を行ってください：
-
-- `plot(model1)` でMCMCの収束診断
-- `pp_check(model1)` で事後予測チェック
-- チーム別・年度別の予測値と実測値の比較プロット
-
-#### モデルB:対数正規モデル
-
-次のモデルを実行してください。
-```{r hlm_lognormal}
-#| eval: false
-model2 <- brm(
-  log(salary) ~ Win + Lose + (1 + Games | team) + (1 | Year),
-  family = gaussian(),
-  data = dat,
-  iter = 2000,
-  cores = 4
-)
-```
-
-
-**課題1**: このモデルの構造を説明してください。以下の点について述べてください：
-
-- 従属変数の対数変換の理由
-- 固定効果(Win, Lose)の経済的意味
-- 変量効果の構造(ランダム切片・ランダム傾き)の意味
-
-**課題2**: モデルの結果を解釈してください。以下の観点が含まれるといいでしょう。：
-
-- 勝利数・敗戦数が年俸に与える影響（%変化として）
-- チーム間の年俸格差とGames効果の違い
-- 年度効果の大きさと経済的解釈
-
-**課題3**: 以下の可視化を行ってください：
-
-- `plot(model2)` でMCMCの収束診断
-- チーム別のGames効果の違いを可視化
-- 実際の年俸と予測年俸の散布図
-
