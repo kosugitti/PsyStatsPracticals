@@ -185,7 +185,8 @@ fit <- model$sample(
   parallel_chains = 4,
   iter_warmup = 2000,
   iter_sampling = 5000,
-  refresh = 0
+  refresh = 0,
+  save_cmdstan_config = TRUE
 )
 
 print(fit)
@@ -317,7 +318,8 @@ fit <- model$sample(
   data = dataSet,
   chains = 4,
   parallel_chains = 4,
-  refresh = 0
+  refresh = 0,
+  save_cmdstan_config = TRUE
 )
 
 bayestestR::describe_posterior(fit$draws("rho"),
@@ -387,7 +389,8 @@ fit <- model$sample(
   data = dataSet,
   chains = 4,
   parallel_chains = 4,
-  refresh = 0
+  refresh = 0,
+  save_cmdstan_config = TRUE
 )
 
 fit$draws(c("a", "b")) %>%
@@ -545,7 +548,8 @@ fit <- model$sample(
   chains = 4,
   parallel_chains = 4,
   fixed_param = TRUE,
-  refresh = 0
+  refresh = 0,
+  save_cmdstan_config = TRUE
 )
 
 MAP_value <- bayestestR::describe_posterior(fit$draws("t"),
@@ -623,7 +627,8 @@ fit <- model$sample(
   parallel_chains = 4,
   iter_warmup = 3000,
   iter_sampling = 2000,
-  refresh = 0
+  refresh = 0,
+  save_cmdstan_config = TRUE
 )
 
 fit$summary()
@@ -679,7 +684,7 @@ y |>  ggplot(aes(x=Hit)) + geom_histogram()
 summary(y$Hit)
 ```
 
-これを見ると，ほとんどヒットを打たない人がかなりいることがわかる。これは当然で，2022年のセ・リーグは投手黙席に立つからである。投手は投げることが仕事なので，バットを振らないことがほとんどであり，当然安打数は基本的に0なのである[^12]。
+これを見ると，ほとんどヒットを打たない人がかなりいることがわかる。これは当然で，2022年のセ・リーグは投手も打席に立つからである。投手は投げることが仕事なので，バットを振らないことがほとんどであり，当然安打数は基本的に0なのである[^12]。
 
 [^12]: 野球に詳しくない人のためにコメントしておくと，まず日本のプロ野球は129段あるが，セントラルリーグ(セ・リーグ)とパシフィックリーグ(パ・リーグ)に6チームずつ分かれて普段のリーグ戦を行っている。両リーグの違いとして，パ・リーグでは指名打者制を取っており，投手の打順のところに別の選手が打者として入るため，投手は打席に立たない。セ・リーグでも2027年のシーズンから指名打者制を取ることが決まった。野球は9人でやるものだが，投手は打ったり走ったりして体力を使わないようにするため，打席に立っても仕事をしないものなのである。そう，大谷翔平選手が異常なのだ。
 
@@ -754,7 +759,8 @@ dataSet <- list(
 fit <- model$sample(
   data = dataSet,
   parallel_chains = 4,
-  refresh = 0
+  refresh = 0,
+  save_cmdstan_config = TRUE
 )
 
 bayestestR::describe_posterior(fit$draws(c("theta","mu","phi")),

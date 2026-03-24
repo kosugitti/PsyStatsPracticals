@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>6&nbsp; 確率とシミュレーション – 心理学統計実習</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -59,7 +62,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -89,15 +91,14 @@ div.csl-indent {
 <link href="./chapter05.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -127,7 +128,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -516,16 +517,16 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 48.12575 48.88820 57.92310 48.95183 59.00161 36.35625 67.81236 53.25260
- [9] 49.85840 55.56346</code></pre>
+<pre><code> [1] 45.75079 42.76951 56.07795 51.27225 49.18283 44.20072 42.03082 35.01658
+ [9] 52.53018 69.37779</code></pre>
 </div>
 </div>
 <p>たとえば諸君が心理統計の練習問題を作ろうとして，適当な数列が欲しければこのようにすれば良いかもしれない。しかし，同じ問題をもう一度作ろうとすると，乱数なのでまた違う数字が出てしまう。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 44.84084 37.81803 37.45155 68.54822 45.67503 24.02383 57.03190 52.67952
- [9] 53.77215 43.07792</code></pre>
+<pre><code> [1] 55.08358 41.37765 61.41350 36.87879 47.34070 22.55674 40.70317 35.37597
+ [9] 37.39466 34.68521</code></pre>
 </div>
 </div>
 <p>疑似乱数に過ぎないのだから，再現性のある乱数を生じさせたいと思うかもしれない。そのような場合は，<code>set.seed</code>関数を使う。疑似乱数は内部の乱数生成の種(seed)から計算して作られているため，その数字を固定してやると同じ乱数が再現できる。</p>
@@ -796,7 +797,7 @@ window.Quarto = {
 </div>
 </div>
 <p>標本分散を計算したオブジェクト<code>vars</code>の平均すなわち期待値は95.0853144であり，設定した値(真値)の100からは幾分はなれている。これに対して，Rの埋め込み関数である<code>var</code>をつかった不偏分散の平均すなわち期待値は100.0898047であり，母分散の推定量としてはこちらの方が好ましいことがわかる。このように標本分散にはバイアスが生じることがわかっているので，あらかじめバイアスを補正するために元の計算式を修正していたのである。この説明で，苛立ちを感じていた人の溜飲が下がればよいのだが。</p>
-<p>他にも推定量の望ましい性質として有効性efficacyがあるが，詳細は <span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> を参照してほしい。この本には正規分布以外の例や，相関係数など他の標本統計量の例なども載っているが，いずれも乱数生成による近似で理解を進めるものである。諸君も数理統計的な説明に疲れたなら，ぜひ参考にしてもらいたい。</p>
+<p>他にも推定量の望ましい性質として有効性efficacyがあるが，詳細は <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> を参照してほしい。この本には正規分布以外の例や，相関係数など他の標本統計量の例なども載っているが，いずれも乱数生成による近似で理解を進めるものである。諸君も数理統計的な説明に疲れたなら，ぜひ参考にしてもらいたい。</p>
 </section>
 <section id="信頼区間" class="level2" data-number="6.8">
 <h2 data-number="6.8" class="anchored" data-anchor-id="信頼区間"><span class="header-section-number">6.8</span> 信頼区間</h2>
@@ -877,7 +878,7 @@ window.Quarto = {
 </section>
 <section id="正規母集団分布の母分散が不明な場合の信頼区間" class="level3" data-number="6.8.2">
 <h3 data-number="6.8.2" class="anchored" data-anchor-id="正規母集団分布の母分散が不明な場合の信頼区間"><span class="header-section-number">6.8.2</span> 正規母集団分布の母分散が不明な場合の信頼区間</h3>
-<p>先ほどの例では母分散がわかっている場合の例であったが，母平均や母分散がわかっていれば推測する必要はないわけで，実践的には母分散がわからない場合の推定が必要になってくる。幸いにしてそのような場合，すなわち母分散を不偏分散(標本統計量)で置き換えた場合は，標本平均が自由度<span class="math inline">\(n-1\)</span>のt分布に従うことがわかっている。(詳細は <span class="citation" data-cites="kosugi2023">小杉, 紀ノ定, and 清水 (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> を参照) ただその場合，標準正規分布のように95%区間が<span class="math inline">\(\pm 1.96\)</span>に限らず，サンプルサイズに応じてt分布の形が変わるから，それを考慮して以下の式で信頼区間を算出する。 <span class="math display">\[ \bar{X} + T_{0.025}\frac{U}{\sqrt{n}} \le \mu \le \bar{X} + T_{0.975}\frac{U}{\sqrt{n}} \]</span></p>
+<p>先ほどの例では母分散がわかっている場合の例であったが，母平均や母分散がわかっていれば推測する必要はないわけで，実践的には母分散がわからない場合の推定が必要になってくる。幸いにしてそのような場合，すなわち母分散を不偏分散(標本統計量)で置き換えた場合は，標本平均が自由度<span class="math inline">\(n-1\)</span>のt分布に従うことがわかっている。(詳細は <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> を参照) ただその場合，標準正規分布のように95%区間が<span class="math inline">\(\pm 1.96\)</span>に限らず，サンプルサイズに応じてt分布の形が変わるから，それを考慮して以下の式で信頼区間を算出する。 <span class="math display">\[ \bar{X} + T_{0.025}\frac{U}{\sqrt{n}} \le \mu \le \bar{X} + T_{0.975}\frac{U}{\sqrt{n}} \]</span></p>
 <p>ここで<span class="math inline">\(T_{0.025}\)</span>はt分布の2.5パーセンタイル，<span class="math inline">\(T_{0.975}\)</span>は97.5パーセンタイルを指す。t分布は(平均が0であれば)左右対称なので，<span class="math inline">\(T_{0.025}=-T_{0.975}\)</span>と考えても良い。また<span class="math inline">\(U^2\)</span>は不偏分散である(<span class="math inline">\(U\)</span>はその平方根)。</p>
 <p>これも乱数による近似計算で確認しておこう。同じく95％ちかい割合で，区間内に真値が含まれていることがわかる。</p>
 <div class="cell">
@@ -927,7 +928,7 @@ window.Quarto = {
 </ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-Sato1994-02-25" class="csl-entry" role="listitem">
 佐藤坦. 1994. <em>はじめての確率論: 測度から確率へ</em>. 共立出版.
 </div>

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>15&nbsp; 多変量解析(その1) – 心理学統計実習</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -59,7 +62,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -89,15 +91,14 @@ div.csl-indent {
 <link href="./chapter14.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -127,7 +128,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -722,7 +723,7 @@ Minimum correlation of possible factor scores     0.32 0.59 0.33 0.44 0.34 0.09<
 </div>
 <p>ここでは6件法の評定値を逆転させるために，7から引くという操作をして，欠測を除いて平均するようにしている。 こうすることで，尺度値の持つ意味(中点以上が賛成，未満が反対といったような)を踏まえて考えることができるし，全てが欠測でない限りスコアの算出ができるという利点がある。</p>
 <p>ただしこの方法は，因子負荷量による項目ごとの重みづけを考えないこと，因子分析法によって除外したはずの誤差分散の情報を含んだスコアにしていること，といった短所をもつ。また，そもそも評定値が尺度構成法で正しくスコアリングされたものであるべきだが，実践的にそのような工夫をしている例はほとんど見られないため，非常に精度の低い，荒い推定値になっていると言わざるを得ない。</p>
-<p>とはいえ，推定法でもとめたものと簡便法で求めたものは，非常に高く相関するので，心理学のデータがそれほどの精度を持つものでないと割り切れるのであれば，勘弁法でも十分だろう。</p>
+<p>とはいえ，推定法でもとめたものと簡便法で求めたものは，非常に高く相関するので，心理学のデータがそれほどの精度を持つものでないと割り切れるのであれば，簡便法でも十分だろう。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(result.fa<span class="sc">$</span>scores[, <span class="dv">1</span>], Fscore1, <span class="at">use =</span> <span class="st">"pairwise"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1017,7 +1018,7 @@ Variances:
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>normal_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x,</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">default =</span> <span class="fu">logistic_1pl</span>(x, <span class="dv">0</span>), <span class="co"># deafult</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">default =</span> <span class="fu">logistic_1pl</span>(x, <span class="dv">0</span>), <span class="co"># default</span></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">easy =</span> <span class="fu">logistic_1pl</span>(x, <span class="sc">-</span><span class="dv">1</span>),</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">hard =</span> <span class="fu">logistic_1pl</span>(x, <span class="dv">1</span>)</span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -1057,7 +1058,7 @@ Variances:
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>normal_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">default =</span> <span class="fu">logistic_2pl</span>(x, <span class="dv">1</span>, <span class="dv">0</span>), <span class="co"># deafult</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">default =</span> <span class="fu">logistic_2pl</span>(x, <span class="dv">1</span>, <span class="dv">0</span>), <span class="co"># default</span></span>
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">easy =</span> <span class="fu">logistic_2pl</span>(x, <span class="fl">1.5</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">hard =</span> <span class="fu">logistic_2pl</span>(x, <span class="fl">0.5</span>, <span class="dv">1</span>)</span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -1094,7 +1095,7 @@ Variances:
 </section>
 <section id="ロジスティックモデルと分析の実際" class="level4" data-number="15.3.1.4">
 <h4 data-number="15.3.1.4" class="anchored" data-anchor-id="ロジスティックモデルと分析の実際"><span class="header-section-number">15.3.1.4</span> ロジスティックモデルと分析の実際</h4>
-<p>項目の特徴を表現するロジスティック曲線は，<strong>項目反応関数</strong>(Item Responose Function)あるいは<strong>項目特性曲線</strong>(Item Characteristic Curve)と呼ばれる。<code>ltm</code>パッケージや<code>exametrika</code> パッケージなど，IRTモデルを実行するためのRパッケージは複数あり，これを使って実践例を見てみよう。</p>
+<p>項目の特徴を表現するロジスティック曲線は，<strong>項目反応関数</strong>(Item Response Function)あるいは<strong>項目特性曲線</strong>(Item Characteristic Curve)と呼ばれる。<code>ltm</code>パッケージや<code>exametrika</code> パッケージなど，IRTモデルを実行するためのRパッケージは複数あり，これを使って実践例を見てみよう。</p>
 <p>ここでは著者が開発した<code>exametrika</code>パッケージとそのサンプルデータを用いて，実際にIRTを実行してみよう。<code>exametrika</code>パッケージにはサンプルデータが複数含まれている。今回用いるJ15S500は，500人の被験者が15問の項目に回答したサンプルデータである。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika)</span>
@@ -1252,12 +1253,12 @@ BIC             -457.330</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result<span class="fl">.2</span>pl<span class="sc">$</span>ability)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          ID         EAP       PSD
-1 Student001 -0.66456789 0.5457047
-2 Student002 -0.14853711 0.5626979
-3 Student003  0.01362521 0.5699764
-4 Student004  0.58775678 0.6012839
-5 Student005 -0.97796873 0.5415528
-6 Student006  0.85892495 0.6187224</code></pre>
+1 Student001 -0.66456783 0.5457047
+2 Student002 -0.14853705 0.5626979
+3 Student003  0.01362523 0.5699764
+4 Student004  0.58775679 0.6012839
+5 Student005 -0.97796867 0.5415527
+6 Student006  0.85892497 0.6187224</code></pre>
 </div>
 </div>
 </section>
@@ -1378,12 +1379,12 @@ Log.Lik: -2998.129</code></pre>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-GPArotation" class="csl-entry" role="listitem">
 Bernaards, Coen A., and Robert I. Jennrich. 2005. <span>“Gradient Projection Algorithms and Software for Arbitrary Rotation Criteria in Factor Analysis.”</span> <em>Educational and Psychological Measurement</em> 65: 676–96. <a href="https://doi.org/10.1177/0013164404272507">https://doi.org/10.1177/0013164404272507</a>.
 </div>
 <div id="ref-Network2024" class="csl-entry" role="listitem">
-アデラ＝マリアイスヴォラヌ, サシャエプスカンプ, ローレンスウォルドープ, and デニーボースブーム. (2022) 2024. <em>心理ネットワークアプローチ入門:行動科学者と社会科学者のためのガイド</em>. Translated by 樫原潤 and 小杉考司. 勁草書房.
+アデラ＝マリアイスヴォラヌ, サシャエプスカンプ, ローレンスウォルドープ, and デニーボースブーム. (2022) 2024. <em>心理ネットワークアプローチ入門:行動科学者と社会科学者のためのガイド</em>. Translated by 樫原潤 and 小杉考司. 勁草書房. Originally published as <em>Network Psychometriks with r:a Guide for Behavioral and Social Scientists</em> (Routledge).
 </div>
 <div id="ref-Miyagawa1997" class="csl-entry" role="listitem">
 宮川雅巳. 1997. <em>グラフィカルモデリング (統計ライブラリー)</em>. 朝倉書店.

@@ -210,7 +210,7 @@ summary(Fscore1)
 
 ただしこの方法は，因子負荷量による項目ごとの重みづけを考えないこと，因子分析法によって除外したはずの誤差分散の情報を含んだスコアにしていること，といった短所をもつ。また，そもそも評定値が尺度構成法で正しくスコアリングされたものであるべきだが，実践的にそのような工夫をしている例はほとんど見られないため，非常に精度の低い，荒い推定値になっていると言わざるを得ない。
 
-とはいえ，推定法でもとめたものと簡便法で求めたものは，非常に高く相関するので，心理学のデータがそれほどの精度を持つものでないと割り切れるのであれば，勘弁法でも十分だろう。
+とはいえ，推定法でもとめたものと簡便法で求めたものは，非常に高く相関するので，心理学のデータがそれほどの精度を持つものでないと割り切れるのであれば，簡便法でも十分だろう。
 
 ```{r}
 cor(result.fa$scores[, 1], Fscore1, use = "pairwise")
@@ -388,7 +388,7 @@ logistic_1pl <- function(theta, b) {
 x <- seq(-4, 4, length.out = 1000)
 normal_df <- data.frame(
   x = x,
-  default = logistic_1pl(x, 0), # deafult
+  default = logistic_1pl(x, 0), # default
   easy = logistic_1pl(x, -1),
   hard = logistic_1pl(x, 1)
 )
@@ -425,7 +425,7 @@ logistic_2pl <- function(theta, a, b) {
 x <- seq(-4, 4, length.out = 1000)
 normal_df <- data.frame(
   x = x,
-  default = logistic_2pl(x, 1, 0), # deafult
+  default = logistic_2pl(x, 1, 0), # default
   easy = logistic_2pl(x, 1.5, -1),
   hard = logistic_2pl(x, 0.5, 1)
 )
@@ -462,7 +462,7 @@ $$ P(Y_{ij}=1|\theta_i,a_j,b_j,c_j,d_j,e_j) = c_j + \frac{d_j-c_j}{\{1+exp(-1.70
 
 #### ロジスティックモデルと分析の実際
 
-項目の特徴を表現するロジスティック曲線は，**項目反応関数**(Item Responose Function)あるいは**項目特性曲線**(Item Characteristic Curve)と呼ばれる。`ltm`パッケージや`exametrika` パッケージなど，IRTモデルを実行するためのRパッケージは複数あり，これを使って実践例を見てみよう。
+項目の特徴を表現するロジスティック曲線は，**項目反応関数**(Item Response Function)あるいは**項目特性曲線**(Item Characteristic Curve)と呼ばれる。`ltm`パッケージや`exametrika` パッケージなど，IRTモデルを実行するためのRパッケージは複数あり，これを使って実践例を見てみよう。
 
 ここでは著者が開発した`exametrika`パッケージとそのサンプルデータを用いて，実際にIRTを実行してみよう。`exametrika`パッケージにはサンプルデータが複数含まれている。今回用いるJ15S500は，500人の被験者が15問の項目に回答したサンプルデータである。
 

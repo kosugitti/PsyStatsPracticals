@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>1&nbsp; はじめようR/RStudio – 心理学統計実習</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -24,7 +27,6 @@ ul.task-list li input[type="checkbox"] {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -54,15 +56,14 @@ div.csl-indent {
 <link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-99913b7803b80b0c1d2b970a25816663.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -455,7 +456,7 @@ div.csl-indent {
 <li><em>styler</em>パッケージ；スタイルを整えてくれるパッケージ。スクリプトの清書に便利。</li>
 <li><em>lavaan</em>パッケージ<span class="citation" data-cites="lavaan">(<a href="references.html#ref-lavaan" role="doc-biblioref">Rosseel 2012</a>)</span>；潜在変数を含んだモデル(LAtent VAriable ANalysis)の分析，要するに構造方程式モデリング(Structural Equation Modeling;SEM，共分散構造分析ともいう)を実行するパッケージ。</li>
 <li><em>ctv</em>パッケージ<span class="citation" data-cites="CTV">(<a href="references.html#ref-CTV" role="doc-biblioref">Zeileis 2005</a>)</span>; CRAN Task Viewsの略で，膨大に膨れ上がったCRANから必要なパッケージを見つけ出すのは困難であることから，ある程度のジャンルごとに関連しそうなパッケージをまとめて導入してくれるのがこのパッケージ。例えば，このパッケージをインストールした後で，<code>install.views("Psychometrics")</code>とすると，心理統計関係の多くのパッケージを次々導入してくれる。</li>
-<li><em>cmdstanr</em>パッケージ<span class="citation" data-cites="cmdstanr">(<a href="references.html#ref-cmdstanr" role="doc-biblioref">Gabry, Češnovar, and Johnson 2023</a>)</span>；複雑な統計モデルで利用される，確率的プログラミング言語stanをRから使うことができるようになるパッケージ。導入にはこのパッケージの他にもstanやコンパイル環境の準備が必要なので，<a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html">公式の導入サイト</a>も参考にしてほしい。</li>
+<li><em>cmdstanr</em>パッケージ<span class="citation" data-cites="cmdstanr">(<a href="references.html#ref-cmdstanr" role="doc-biblioref">Gabry et al. 2023</a>)</span>；複雑な統計モデルで利用される，確率的プログラミング言語stanをRから使うことができるようになるパッケージ。導入にはこのパッケージの他にもstanやコンパイル環境の準備が必要なので，<a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html">公式の導入サイト</a>も参考にしてほしい。</li>
 <li><em>pacman</em>パッケージ<span class="citation" data-cites="pacman">(<a href="references.html#ref-pacman" role="doc-biblioref">Rinker and Kurkiewicz 2018</a>)</span>；パッケージマネージャ，というパッケージ。パッケージは<code>library</code>で呼び出して使うが，インストールされていないと<code>install.packages</code> でインストールしてから使うことになる。また，パッケージをA,B,C…と複数呼び出す時は，<code>library</code>関数を数行にわたって書く必要がある。<code>pacman</code>の<code>p_load</code>関数を使うと，もし環境にそのパッケージが含まれていなければ自動的にインストールが始まるし，<code>p_load(A,B,C)</code>のように並べて書くこともできる。この資料は基本的に<code>pacman::p_load</code>でパッケージを呼び出すようにしているので，<code>pacman</code>パッケージだけは先に入れておいてほしい。</li>
 </ul>
 </section>
@@ -490,7 +491,7 @@ div.csl-indent {
 </ul>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-GPArotation" class="csl-entry" role="listitem">
 Bernaards, Coen A., and Robert I. Jennrich. 2005. <span>“Gradient Projection Algorithms and Software for Arbitrary Rotation Criteria in Factor Analysis.”</span> <em>Educational and Psychological Measurement</em> 65: 676–96. <a href="https://doi.org/10.1177/0013164404272507">https://doi.org/10.1177/0013164404272507</a>.
 </div>
@@ -498,7 +499,7 @@ Bernaards, Coen A., and Robert I. Jennrich. 2005. <span>“Gradient Projection A
 Gabry, Jonah, Rok Češnovar, and Andrew Johnson. 2023. <em>Cmdstanr: R Interface to ’CmdStan’</em>.
 </div>
 <div id="ref-psych" class="csl-entry" role="listitem">
-Revelle, William. 2021. <em>Psych: Procedures for Psychological, Psychometric, and Personality Research</em>. Evanston, Illinois: Northwestern University. <a href="https://CRAN.R-project.org/package=psych">https://CRAN.R-project.org/package=psych</a>.
+Revelle, William. 2021. <em>Psych: Procedures for Psychological, Psychometric, and Personality Research</em>. Northwestern University. <a href="https://CRAN.R-project.org/package=psych">https://CRAN.R-project.org/package=psych</a>.
 </div>
 <div id="ref-pacman" class="csl-entry" role="listitem">
 Rinker, Tyler W., and Dason Kurkiewicz. 2018. <em><span class="nocase">pacman</span>: <span>P</span>ackage Management for <span>R</span></em>. Buffalo, New York. <a href="http://github.com/trinker/pacman">http://github.com/trinker/pacman</a>.
@@ -507,7 +508,7 @@ Rinker, Tyler W., and Dason Kurkiewicz. 2018. <em><span class="nocase">pacman</s
 Rosseel, Yves. 2012. <span>“<span class="nocase">lavaan</span>: An <span>R</span> Package for Structural Equation Modeling.”</span> <em>Journal of Statistical Software</em> 48 (2): 1–36. <a href="https://doi.org/10.18637/jss.v048.i02">https://doi.org/10.18637/jss.v048.i02</a>.
 </div>
 <div id="ref-tidyverse" class="csl-entry" role="listitem">
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
+Wickham, Hadley, Mara Averick, Jennifer Bryan, et al. 2019. <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
 </div>
 <div id="ref-CTV" class="csl-entry" role="listitem">
 Zeileis, Achim. 2005. <span>“<span>CRAN</span> Task Views.”</span> <em>R News</em> 5 (1): 39–40. <a href="https://CRAN.R-project.org/doc/Rnews/">https://CRAN.R-project.org/doc/Rnews/</a>.
