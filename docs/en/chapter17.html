@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>17&nbsp; Bayesian Modelling – Exercises in Psychological Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./practices.html" rel="next">
+<link href="./chapter16.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter17.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modelling</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exercises in Psychological Statistics</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="日本語版 (Japanese)" class="quarto-navigation-tool px-1" aria-label="日本語版 (Japanese)"><i class="bi bi-translate"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Exercises-in-Psychological-Statistics.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Exercises-in-Psychological-Statistics.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with R/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Fundamentals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Authoring Reports in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Programming in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Null Hypothesis Significance Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Tests of Mean Differences</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Multi-group Tests of Mean Differences</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Questionable Research Practices and Sample-Size Planning</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Multiple Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Bayesian Statistics in Practice</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Foundations of Linear Algebra</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Extensions of the Linear Model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Multivariate Analysis I</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Multivariate Analysis II</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter17.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modelling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./afterword.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Afterword</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./install_guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Installation Guide</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#how-to-learn-bayesian-modelling" id="toc-how-to-learn-bayesian-modelling" class="nav-link active" data-scroll-target="#how-to-learn-bayesian-modelling"><span class="header-section-number">17.1</span> How to learn Bayesian modelling</a>
+  <ul class="collapse">
+  <li><a href="#step-1-learn-the-probabilistic-programming-language-stan" id="toc-step-1-learn-the-probabilistic-programming-language-stan" class="nav-link" data-scroll-target="#step-1-learn-the-probabilistic-programming-language-stan"><span class="header-section-number">17.1.1</span> Step 1: learn the probabilistic programming language (Stan)</a></li>
+  <li><a href="#step-2-rewrite-analyses-you-already-know" id="toc-step-2-rewrite-analyses-you-already-know" class="nav-link" data-scroll-target="#step-2-rewrite-analyses-you-already-know"><span class="header-section-number">17.1.2</span> Step 2: rewrite analyses you already know</a></li>
+  <li><a href="#step-3-try-various-models" id="toc-step-3-try-various-models" class="nav-link" data-scroll-target="#step-3-try-various-models"><span class="header-section-number">17.1.3</span> Step 3: try various models</a></li>
+  <li><a href="#step-4-know-the-limitations" id="toc-step-4-know-the-limitations" class="nav-link" data-scroll-target="#step-4-know-the-limitations"><span class="header-section-number">17.1.4</span> Step 4: know the limitations</a></li>
+  </ul></li>
+  <li><a href="#models-based-on-the-normal-distribution" id="toc-models-based-on-the-normal-distribution" class="nav-link" data-scroll-target="#models-based-on-the-normal-distribution"><span class="header-section-number">17.2</span> Models based on the normal distribution</a>
+  <ul class="collapse">
+  <li><a href="#estimating-variances" id="toc-estimating-variances" class="nav-link" data-scroll-target="#estimating-variances"><span class="header-section-number">17.2.1</span> Estimating variances</a></li>
+  <li><a href="#making-use-of-missing-data" id="toc-making-use-of-missing-data" class="nav-link" data-scroll-target="#making-use-of-missing-data"><span class="header-section-number">17.2.2</span> Making use of missing data</a></li>
+  </ul></li>
+  <li><a href="#models-with-non-normal-distributions" id="toc-models-with-non-normal-distributions" class="nav-link" data-scroll-target="#models-with-non-normal-distributions"><span class="header-section-number">17.3</span> Models with non-normal distributions</a>
+  <ul class="collapse">
+  <li><a href="#item-response-theory" id="toc-item-response-theory" class="nav-link" data-scroll-target="#item-response-theory"><span class="header-section-number">17.3.1</span> Item response theory</a></li>
+  <li><a href="#population-inference-via-capturerecapture" id="toc-population-inference-via-capturerecapture" class="nav-link" data-scroll-target="#population-inference-via-capturerecapture"><span class="header-section-number">17.3.2</span> Population inference via capture–recapture</a></li>
+  </ul></li>
+  <li><a href="#mixing-distributions" id="toc-mixing-distributions" class="nav-link" data-scroll-target="#mixing-distributions"><span class="header-section-number">17.4</span> Mixing distributions</a>
+  <ul class="collapse">
+  <li><a href="#detecting-a-change-point" id="toc-detecting-a-change-point" class="nav-link" data-scroll-target="#detecting-a-change-point"><span class="header-section-number">17.4.1</span> Detecting a change point</a></li>
+  <li><a href="#modelling-a-heterogeneous-group" id="toc-modelling-a-heterogeneous-group" class="nav-link" data-scroll-target="#modelling-a-heterogeneous-group"><span class="header-section-number">17.4.2</span> Modelling a heterogeneous group</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modelling</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>So far we have introduced “off-the-shelf” statistical models — models with fixed forms, fixed parameter sets, and standard interpretations, applicable whenever the data fit the right shape. <strong>Bayesian modelling</strong> is different: it builds the model to fit the data, and then uses Bayesian methods to estimate it. Strictly speaking the estimation method need not be Bayesian — MLE or least squares would work — but those approaches require the analyst to develop the estimation procedure as well. With probabilistic programming languages and Bayesian estimation, by contrast, the analyst writes down the probabilistic model and lets the language deliver the estimates. The researcher then focuses on designing a model that fits their data and their background, without working out the technical estimation procedure. Probabilistic programming languages require programming knowledge, but once you have that knowledge, original analyses become a matter of imagination.</p>
+<p>The remainder of this chapter covers programming in Stan and a few characteristic examples. Before that, a few guidelines on how to learn Bayesian modelling.</p>
+<section id="how-to-learn-bayesian-modelling" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="how-to-learn-bayesian-modelling"><span class="header-section-number">17.1</span> How to learn Bayesian modelling</h2>
+<section id="step-1-learn-the-probabilistic-programming-language-stan" class="level3" data-number="17.1.1">
+<h3 data-number="17.1.1" class="anchored" data-anchor-id="step-1-learn-the-probabilistic-programming-language-stan"><span class="header-section-number">17.1.1</span> Step 1: learn the probabilistic programming language (Stan)</h3>
+<p>You have already met R, so we need not lecture on “what programming is.” The probabilistic programming language we use here — <strong>Stan</strong> — is rather more advanced than R, being built on C++. Two differences will jump out at the beginner: <strong>interpreted vs.&nbsp;compiled</strong> languages, and <strong>type declarations</strong>.</p>
+<section id="interpreted-vs.-compiled" class="level4" data-number="17.1.1.1">
+<h4 data-number="17.1.1.1" class="anchored" data-anchor-id="interpreted-vs.-compiled"><span class="header-section-number">17.1.1.1</span> Interpreted vs.&nbsp;compiled</h4>
+<p>R is an <em>interpreted</em> language. In personal shorthand, “question-and-answer style.” When R shows the <code>&gt;</code> prompt, it is waiting for input; you type a calculation or instruction, and R immediately returns the result. The cycle of question and answer repeats.</p>
+<p>A <em>compiled</em> language is different. C, Java, Python, and Stan all work this way. You write the entire program first, and then the source file is translated into machine code — <strong>compiled</strong>. Running the compiled artefact executes the program. If there is an error in the source: either (1) the source fails to compile, or (2) it compiles but errors at run time. Errors typically come with a line number. An interpreted language flags the offending line immediately, which is convenient for catching errors; a compiled language only finds them after you finish writing,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> which can feel inconvenient.</p>
+<p>The advantage of compilation is speed: the source is translated into the machine’s native language, and the machine then operates in that language. To make this possible, the language requires a dedicated compilation toolchain, and the resulting artefact runs only in environments that the toolchain supports. On Windows you need <strong>Rtools</strong>; on macOS, the command-line developer tools. These tap into lower layers of the system, more akin to <em>building</em> an MCMC application than to running an ordinary application, and antivirus software occasionally interferes. We assume the environment is set up; setting it up may take some effort. If you get stuck, Web search or asking an AI assistant should help.</p>
+<p>In a Stan analysis you write the program in a Stan file separate from the R file. The R side instructs Stan to compile this file, and then to use the compiled object to sample by MCMC. The results are returned as an R object, after which downstream work is plain R. RStudio’s editor handles both file types; just don’t mix the two languages within a single file.</p>
+</section>
+<section id="type-declarations" class="level4" data-number="17.1.1.2">
+<h4 data-number="17.1.1.2" class="anchored" data-anchor-id="type-declarations"><span class="header-section-number">17.1.1.2</span> Type declarations</h4>
+<p>A possibly unfamiliar concept: declaring a variable’s type before using it. <code>int x;</code>, for example, declares <code>x</code> to be an integer. Integers cannot accept <code>1.0</code> (a real) or <code>1 + 0i</code> (a complex number); only <code>1</code>.</p>
+<p>Compiled languages require type declarations. They prevent the silent error of assigning a real to a variable that was supposed to be an integer. R lets you assign <code>x &lt;- 1</code> without ceremony, and <code>x</code> is treated as whatever type the value carries. Coming from R, mandatory type declarations may feel cumbersome — but they make the language considerably more robust.</p>
+<p>Stan needs type declarations in each <strong>block</strong>. A block is a region delimited by braces <code>{}</code>. Stan has six:</p>
+<ol type="1">
+<li>data block</li>
+<li>transformed data block</li>
+<li>parameters block</li>
+<li>transformed parameters block</li>
+<li>model block</li>
+<li>generated quantities block</li>
+</ol>
+<p>The most frequently used are 1, 3, and 5. The <strong>data block</strong> declares everything Stan receives from outside; a type mismatch raises an error (e.g., a Stan-side <code>int x;</code> but an R-side <code>x &lt;- 1.2</code> will fail).</p>
+<p>The <strong>parameters block</strong> declares the quantities to be estimated; Stan returns posterior samples for these. The <strong>model block</strong> describes the probability model (the likelihood) and is the heart of the file.</p>
+<p>The remaining blocks are supplementary and not always needed. The <strong>transformed data block</strong> modifies data declared in the data block; the <strong>transformed parameters block</strong> transforms parameters declared in the parameters block. Such transformations make subsequent computation more readable. For example, in regression the parameters are the intercept <span class="math inline">\(\beta_0\)</span> and the slope <span class="math inline">\(\beta_1\)</span>, combined with the predictor <span class="math inline">\(x_i\)</span> to form the fitted value <span class="math inline">\(\hat{y}_i\)</span>. With <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> declared as parameters and <code>yhat</code> declared in transformed parameters as</p>
+<p><span class="math display">\[ yhat = \beta_0 + \beta_1 x, \]</span></p>
+<p>the model block uses <code>yhat</code> directly. When a derived parameter is a combination of others, writing it as a transformed parameter often improves clarity.</p>
+<p>The <strong>generated quantities block</strong> processes the sampled values. The same processing can be done on the R side after sampling, so this block is optional — but if you need certain transformed quantities, computing them inside (compiled, fast) Stan can be convenient. We will see uses below.</p>
+</section>
+<section id="other-small-differences" class="level4" data-number="17.1.1.3">
+<h4 data-number="17.1.1.3" class="anchored" data-anchor-id="other-small-differences"><span class="header-section-number">17.1.1.3</span> Other small differences</h4>
+<p>Lines end with semicolons; comments are <code>//</code>-style; that sort of thing.</p>
+<p>The first rule of programming is that <strong>the code does what you wrote, not what you intended</strong>. Any unexpected error is in the code you wrote.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Take errors as <strong>hints toward the solution</strong> rather than something to fear. Address each problem one at a time and you will get there. AI assistants are remarkably useful here too — paste the entire error message and ask where the problem is.</p>
+</section>
+</section>
+<section id="step-2-rewrite-analyses-you-already-know" class="level3" data-number="17.1.2">
+<h3 data-number="17.1.2" class="anchored" data-anchor-id="step-2-rewrite-analyses-you-already-know"><span class="header-section-number">17.1.2</span> Step 2: rewrite analyses you already know</h3>
+<p>We have covered many statistical models. Step 2 of Bayesian-modelling learning is to rewrite those analyses in Stan.</p>
+<p>What does a regression, a multiple regression, an HLM look like in Stan? <code>brms</code> would spare you that effort, but writing the model yourself reveals exactly how each model is expressed.</p>
+<p>The key shift in perspective is to view analysis as describing a <strong>data-generating mechanism</strong>. We often start with data and search for a method to fit, or — if our analytic methods are limited — collect data that fit the methods we have. This is backwards. If your statistical package only does regression, “give up on the discrete variable and redesign the study” is an impoverished move.</p>
+<p>The goal of statistics is to turn natural human behaviour and responses into numbers and read meaning out of them; budget or environment should not be allowed to bend the behaviour itself. Keep the data as raw as possible, and <em>think</em> about how to analyse them. Approach the question from “what mechanism generated this data?” The “mechanism” can equally be called a probability distribution. A single response cannot be deterministic; the possible alternative values, together, form a probability distribution. The parameters of that distribution are then specified by a mathematical structure.</p>
+<p>In regression, each observation <span class="math inline">\(y_i\)</span> is the true value <span class="math inline">\(\hat{y}_i\)</span> plus error <span class="math inline">\(e_i\)</span>. The error is normal, so <span class="math inline">\(y_i \sim N(\hat{y}_i, \sigma^2)\)</span>. The mean <span class="math inline">\(\hat{y}_i\)</span> is the linear combination of predictors <span class="math inline">\(x_i\)</span>: <span class="math inline">\(y_i \sim N(\beta_0 + \beta_1 x_i, \sigma^2)\)</span>. And so on.</p>
+<p>The <span class="math inline">\(t\)</span>-test and ANOVA can be described the same way. Rewriting them clarifies aspects of the model you had not noticed: which distribution does the model assume? What constraints sit on the parameters? What priors are in play? Writing it all explicitly in Stan brings these to light. That is the educational value of rewriting.</p>
+</section>
+<section id="step-3-try-various-models" class="level3" data-number="17.1.3">
+<h3 data-number="17.1.3" class="anchored" data-anchor-id="step-3-try-various-models"><span class="header-section-number">17.1.3</span> Step 3: try various models</h3>
+<p>Once you can express familiar models in a probabilistic programming language, look at what <em>only</em> a probabilistic programming language can express.</p>
+<p>The <span class="math inline">\(t\)</span>-test and ANOVA are tests of mean differences. From a data-generation perspective they cover only a tiny slice of the space: data from a normal distribution, with mean differences across groups.</p>
+<p>Can we model parameters other than the mean? Can we ask about a particular pair of groups? Can we ask not just whether there is a difference but how large it is, or what the probability is that one group’s mean exceeds the other’s?</p>
+<p>Bayesian modelling answers all of these. Even data from a factorial design can be examined with new angles and new hypotheses.</p>
+<p>Bayesian modelling is not limited to factor-effect identification under designed experiments. For data that are not normal, or that do not partition into discrete groups, you can build models from the data-generating-mechanism perspective. The examples below should convey how the analytic viewpoint changes. Statistical analysis is not the constrained application of pre-existing analyses to handed-over data; it is the creative work of imagining the data-generating mechanism.</p>
+</section>
+<section id="step-4-know-the-limitations" class="level3" data-number="17.1.4">
+<h3 data-number="17.1.4" class="anchored" data-anchor-id="step-4-know-the-limitations"><span class="header-section-number">17.1.4</span> Step 4: know the limitations</h3>
+<p>Once the freedom and creativity of Bayesian modelling sink in, you may hit its limits. Enjoy the modelling first, but here is a preview.</p>
+<p>The first issue is <strong>model evaluation</strong>. NHST gives a clear criterion: “if <span class="math inline">\(p\)</span> is below the chosen <span class="math inline">\(\alpha\)</span>, declare a difference.” Bayesian modelling does not yield a clean “yes or no” of that kind. How do we compare a null-hypothesis model against an alternative, or our novel model against an existing one?</p>
+<p>The standard answer is the <strong>Bayes factor (BF)</strong>. Bayesian model assessment is essentially unified under BF. The BF expresses the relative fit of two models to the same data and so admits “the null is better than the alternative” as a valid conclusion. The “fit” (marginal log-likelihood) is, however, computationally awkward and sometimes not analytically tractable, requiring estimation.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Computational advances are awaited.</p>
+<p>For routine models (e.g., <span class="math inline">\(t\)</span>-tests, ANOVA), packages and applications compute BFs automatically. JASP <span class="citation" data-cites="JASP2025">(<a href="references.html#ref-JASP2025" role="doc-biblioref">JASP Team 2025</a>)</span> is a well-known GUI tool that supplies Bayesian results alongside classical ones, with BFs computed automatically.</p>
+<p>A common threshold is “BF &gt; 3.0 means one model is superior,” but the binary mindset has, historically, encouraged over-interpretation and threshold-chasing — so use thresholds with care. The BF is also known to depend strongly on the prior, even within the same model; the proper choice of “objective” prior remains debated.</p>
+<p>When the BF is not the right tool, evaluation falls back on inspecting the posterior. <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> proposes declaring a region of practical equivalence in advance; <span class="citation" data-cites="Toyoda202003">豊田 (<a href="references.html#ref-Toyoda202003" role="doc-biblioref">2020</a>)</span> proposes evaluating via functional features of the posterior. Both are offered as alternatives to NHST. The wider debate is unresolved.</p>
+<p>Assuming model evaluation is handled, the next stumbling block is “I cannot design my own model.” The models below are appealing, but designing them is intimidating. There is no shortcut, but “build the entire model from scratch” is an unnecessarily large ambition. Familiarise yourself with many models first, and imagine how each might fit your data. Or start with a tiny <strong>toy model</strong> and grow it incrementally — <span class="citation" data-cites="Hamada201812">浜田 (<a href="references.html#ref-Hamada201812" role="doc-biblioref">2018</a>)</span> and <span class="citation" data-cites="Hamada2020">浜田 (<a href="references.html#ref-Hamada2020" role="doc-biblioref">2020</a>)</span> make this point well.</p>
+<p>Often a plain linear model is sufficient. After all this talk of customisation, that may sound contradictory, but if the trend is clear, a linear model will mostly do. Linear models are not perfect but are widely understandable; modelling refines the fine details, and finer detail is often unnecessary in practice. “Linear” need not mean “simple regression”: GLMs, mixed models, and various other extensions cover much ground.</p>
+<p>Even with these limitations in mind, Bayesian modelling is well worth learning. To dismiss statistics without ever experiencing this free and creative world is a waste. The examples that follow will give a taste of what is possible.</p>
+</section>
+</section>
+<section id="models-based-on-the-normal-distribution" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="models-based-on-the-normal-distribution"><span class="header-section-number">17.2</span> Models based on the normal distribution</h2>
+<p>We start with the well-trodden normal-distribution models.</p>
+<section id="estimating-variances" class="level3" data-number="17.2.1">
+<h3 data-number="17.2.1" class="anchored" data-anchor-id="estimating-variances"><span class="header-section-number">17.2.1</span> Estimating variances</h3>
+<p>Normal-distribution models in psychology almost always concern means via general linear models. The normal is parameterised by a location <span class="math inline">\(\mu\)</span> and a scale <span class="math inline">\(\sigma\)</span>;<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> the scale captures spread or measurement error. Let us model that.</p>
+<p>A cover story:<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> a <em>gyudon</em> (beef bowl) restaurant requires 150 g of meat per regular bowl. During a spot inspection, ten servers (two of them recent part-timers) each prepare a bowl. The measured meat weights:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">151</span>, <span class="dv">149</span>, <span class="dv">152</span>, <span class="dv">150</span>, <span class="dv">151</span>, <span class="dv">148</span>, <span class="dv">151</span>, <span class="dv">150</span>, <span class="dv">221</span>, <span class="dv">245</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Model: every server <em>aims</em> for <span class="math inline">\(\mu = 150\)</span>, but the per-individual error variance differs:</p>
+<p><span class="math display">\[ y_i \sim N(\mu, \sigma_i). \]</span></p>
+<p>The mean is shared (<span class="math inline">\(\mu\)</span> has no subscript <span class="math inline">\(i\)</span>); the spread varies (<span class="math inline">\(\sigma_i\)</span> does).</p>
+<p>The unknowns are <span class="math inline">\(\mu\)</span> and the <span class="math inline">\(\sigma_i\)</span>, estimated by Stan via MCMC. Save the Stan source as, say, <code>gyudon10.stan</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> N;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[N] <span class="dt">real</span> Y;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> mu;</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[N] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// likelihood</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:N){</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        Y[i] ~ normal(mu, sigma[i]);</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// prior</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    mu ~ uniform(<span class="dv">0</span>, <span class="dv">200</span>);</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    sigma ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Three blocks: <code>data</code>, <code>parameters</code>, <code>model</code>. Note the <code>int</code>, <code>array</code>, and <code>real</code> type declarations.</p>
+<p>The <code>data</code> block first declares the sample size as an integer, so the same code works for 7, 50, or any other sample size. <code>array[N] real Y;</code> declares a length-<code>N</code> real array.</p>
+<p><code>parameters</code> declares the unknowns <span class="math inline">\(\mu\)</span> (a single real) and <span class="math inline">\(\sigma_i\)</span> (a real array of length <code>N</code>). The constraint <code>&lt;lower=0&gt;</code> restricts <span class="math inline">\(\sigma_i\)</span> to non-negative values — variances cannot be negative, and the constraint helps the sampler explore appropriate regions.</p>
+<p><code>model</code> is the probabilistic model. Bayesian models require a likelihood and a prior. The line <code>Y[i] ~ normal(mu, sigma[i])</code> inside a <code>for</code> loop is:</p>
+<p><span class="math display">\[ \prod_{i=1}^{N} N(Y_i \mid \mu, \sigma_i). \]</span></p>
+<p>Internally Stan works with the log-likelihood:</p>
+<p><span class="math display">\[ \sum_{i=1}^{N} \log N(Y_i \mid \mu, \sigma_i). \]</span></p>
+<p>Anyone who can write down a probabilistic model can therefore obtain estimates from Stan.</p>
+<p>Here the priors are uniform on <span class="math inline">\([0, 200]\)</span> for <span class="math inline">\(\mu\)</span> and Cauchy for <span class="math inline">\(\sigma_i\)</span>. Any prior is acceptable; without specification Stan supplies a wide uniform automatically. Heavy-tailed priors — Cauchy, Student’s <span class="math inline">\(t\)</span>, exponential — are typical for scale parameters.</p>
+<p>Run from R:</p>
+<ul>
+<li><code>data</code>…the data</li>
+<li><code>chains</code>…number of MCMC chains</li>
+<li><code>parallel_chains</code>…how many to run in parallel (one less than the available CPU cores is a sensible default)</li>
+<li><code>iter_warmup</code>…warm-up iterations (see <a href="chapter12.html#sec-mcmc-evaluation" class="quarto-xref"><span>Section 12.4.2</span></a>)</li>
+<li><code>iter_sampling</code>…sampling iterations (see <a href="chapter12.html#sec-mcmc-evaluation" class="quarto-xref"><span>Section 12.4.2</span></a>)</li>
+<li><code>refresh</code>…how often to print sampling progress (optional)</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(cmdstanr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"gyudon10.stan"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">length</span>(y),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y =</span> y</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">2000</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_sampling =</span> <span class="dv">5000</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 4 finished in 0.2 seconds.
+Chain 1 finished in 0.3 seconds.
+Chain 2 finished in 0.3 seconds.
+Chain 3 finished in 0.3 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.3 seconds.
+Total execution time: 0.4 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> variable   mean median   sd  mad     q5    q95 rhat ess_bulk ess_tail
+ lp__     -18.69 -18.36 2.29 2.15 -22.93 -15.63 1.00     5244    10026
+ mu       150.55 150.72 0.67 0.57 149.36 151.42 1.00     4424     5381
+ sigma[1]   2.98   1.55 5.75 1.65   0.13   9.88 1.00     3362     2147
+ sigma[2]   4.60   2.84 8.18 2.14   0.73  13.30 1.00     7318     7300
+ sigma[3]   4.65   2.78 8.01 2.16   0.73  13.79 1.00     5579     4064
+ sigma[4]   3.50   1.80 9.21 1.66   0.23  10.34 1.00     6755     5847
+ sigma[5]   2.98   1.50 8.25 1.63   0.11   9.31 1.01     1411      580
+ sigma[6]   5.97   3.81 9.46 2.54   1.32  16.74 1.00     7548     4588
+ sigma[7]   3.05   1.55 6.17 1.66   0.14  10.24 1.00     3804     3159
+ sigma[8]   3.20   1.79 5.52 1.69   0.21  10.00 1.00     6166     4928
+
+ # showing 10 of 12 rows (change via 'max_rows' argument or 'cmdstanr_max_rows' option)</code></pre>
+</div>
+</div>
+<p>The estimated <span class="math inline">\(\mu\)</span> is near 150 — consistent with the manual. The per-individual errors are the point of interest; visualise them:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(bayesplot)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># visualise sigma only</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(draws, <span class="at">regex_pars =</span> <span class="st">"sigma"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter17_files/figure-html/gyudon10_visual-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The last two values are conspicuously large — the two unexperienced part-timers.</p>
+<p>For numerical summaries, <code>bayestestR</code> is handy:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(bayestestR)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sigma_draws <span class="ot">&lt;-</span> draws[, , <span class="fu">grepl</span>(<span class="st">"sigma"</span>, <span class="fu">dimnames</span>(draws)<span class="sc">$</span>variable)]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># EAP, MAP, median, 95% HDI</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(sigma_draws,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci =</span> <span class="fl">0.95</span>, <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median |   Mean |   MAP |          95% CI
+-----------------------------------------------------
+sigma[1]  |   1.55 |   2.98 |  0.20 | [ 0.03,   9.88]
+sigma[2]  |   2.84 |   4.60 |  1.34 | [ 0.04,  13.30]
+sigma[3]  |   2.78 |   4.65 |  1.39 | [ 0.05,  13.79]
+sigma[4]  |   1.80 |   3.50 |  0.90 | [ 0.04,  10.36]
+sigma[5]  |   1.50 |   2.98 |  0.42 | [ 0.01,   9.31]
+sigma[6]  |   3.81 |   5.97 |  2.33 | [ 0.16,  16.78]
+sigma[7]  |   1.55 |   3.05 |  0.28 | [ 0.03,  10.24]
+sigma[8]  |   1.79 |   3.20 |  0.81 | [ 0.03,  10.01]
+sigma[9]  |  60.12 |  89.72 | 47.44 | [18.73, 226.97]
+sigma[10] |  80.58 | 118.00 | 57.32 | [24.52, 304.54]</code></pre>
+</div>
+</div>
+<p>Because the posterior is a distribution, mean (EAP), median, and mode (MAP) give different summaries. Variance parameters in particular tend to have skewed posteriors, for which the EAP is not the best summary.</p>
+<p>The interval here is <strong>HDI</strong> (Highest Density Interval) — the 95% region around the densest part of the posterior — rather than the percentile-based <strong>ETI</strong> (Equal-Tailed Interval). For skewed posteriors ETI can be misleading. See <span class="citation" data-cites="Maeda2017">クルシュケ (<a href="references.html#ref-Maeda2017" role="doc-biblioref">[2014] 2017</a>)</span>, <span class="citation" data-cites="bayestestR">Makowski et al. (<a href="references.html#ref-bayestestR" role="doc-biblioref">2019</a>)</span>, or the <a href="https://easystats.github.io/bayestestR/">bayestestR site</a>.</p>
+<p>We have estimated a spread parameter from ten observations. Beyond mean parameters, modelling targets include any parameter of the distribution. In psychology, the per-individual error variance under repeated measurement reflects that individual’s precision; in the gyudon example it reads as expertise. With auxiliary data <span class="math inline">\(z_i\)</span> (e.g., days of experience), one could model <span class="math inline">\(\sigma_i = \beta_0 + \beta_1 z_i\)</span> and study how experience reduces error. The take-home is that psychology need not confine itself to means — we are free to model many other quantities.</p>
+</section>
+<section id="making-use-of-missing-data" class="level3" data-number="17.2.2">
+<h3 data-number="17.2.2" class="anchored" data-anchor-id="making-use-of-missing-data"><span class="header-section-number">17.2.2</span> Making use of missing data</h3>
+<p>Next, modelling a correlation.</p>
+<p>It is sometimes noted that the correlation between university entrance scores and university-life grades is not as high as one might expect. This is not because entrance exams fail to measure ability; it is the <strong>selection effect</strong>. Only those with scores above a cut-off are admitted, so the observed data contain only part of the original “entrance score” information.</p>
+<p>Simulate this. First make correlated data, then drop part of it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(MASS, tidyverse)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">60</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>Sig <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> sd[<span class="dv">1</span>] <span class="sc">*</span> sd[<span class="dv">1</span>]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">1</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> sd[<span class="dv">1</span>] <span class="sc">*</span> sd[<span class="dv">2</span>] <span class="sc">*</span> rho</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">2</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> sd[<span class="dv">2</span>] <span class="sc">*</span> sd[<span class="dv">1</span>] <span class="sc">*</span> rho</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>Sig[<span class="dv">2</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> sd[<span class="dv">2</span>] <span class="sc">*</span> sd[<span class="dv">2</span>]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># generate</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(N, mu, Sig, <span class="at">empirical =</span> T)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>FLG <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(dat<span class="sc">$</span>X1 <span class="sc">&gt;</span> <span class="dv">60</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"pass"</span>, <span class="st">"fail"</span>))</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, <span class="at">group =</span> FLG, <span class="at">color =</span> FLG)) <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>g</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter17_files/figure-html/corrData-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Suppose those who scored 60 or more “passed.” The correlation in the full data and in the truncated data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># full data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(dat<span class="sc">$</span>X1, dat<span class="sc">$</span>X2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace failed-group X2 with missing</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dat[dat<span class="sc">$</span>FLG <span class="sc">==</span> <span class="st">"fail"</span>, ]<span class="sc">$</span>X2 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># correlation excluding missing</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(dat<span class="sc">$</span>X1, dat<span class="sc">$</span>X2, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4284751</code></pre>
+</div>
+</div>
+<p>If those who failed are missing on <span class="math inline">\(X_2\)</span>, the correlation drops to about 0.428.</p>
+<p>A Bayesian model can correct for this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nobs;</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nmiss;</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nobs] <span class="dt">vector</span>[<span class="dv">2</span>] obsX;</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nmiss] <span class="dt">real</span> missX;</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>[<span class="dv">2</span>] mu;</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd1;</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd2;</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">1</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; rho;</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span>{</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">cov_matrix</span>[<span class="dv">2</span>] Sig;</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">1</span>,<span class="dv">1</span>] = sd1 * sd1;</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">1</span>,<span class="dv">2</span>] = sd1 * sd2 * rho;</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">2</span>,<span class="dv">1</span>] = Sig[<span class="dv">1</span>,<span class="dv">2</span>];</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    Sig[<span class="dv">2</span>,<span class="dv">2</span>] = sd2 * sd2;</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    obsX ~ multi_normal(mu, Sig);</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    missX ~ normal(mu[<span class="dv">1</span>], sd1);</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    mu[<span class="dv">1</span>] ~ uniform(<span class="dv">0</span>,<span class="dv">100</span>);</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    mu[<span class="dv">2</span>] ~ uniform(<span class="dv">0</span>,<span class="dv">100</span>);</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    sd1 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    sd2 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    rho ~ uniform(-<span class="dv">1</span>,<span class="dv">1</span>);</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In the data block, <code>Nobs</code> and <code>Nmiss</code> are integer counts: the number of cases observed on both variables, and the number missing on one. Stan does not represent <code>NA</code> directly, so only the valid data are passed; the counts make sure both groups are handled.</p>
+<p><code>vector[2] obsX[Nobs]</code> declares an array of length <code>Nobs</code> of 2-vectors — pairs of observed values. The data with one variable missing are passed as <code>Nmiss</code> real values (not vectors).</p>
+<p>The target is the correlation <code>rho</code>, which appears in the variance–covariance matrix of a bivariate normal. The likelihood is</p>
+<p><span class="math display">\[ obsX \sim MN(\mathbb{\mu}, \mathbb{\Sigma}), \]</span></p>
+<p>with</p>
+<p><span class="math display">\[ \mathbb{\Sigma} = \begin{pmatrix}
+\sigma_1^2 &amp; \sigma_{12}\\
+\sigma_{21} &amp; \sigma_2^2
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sigma_1^2 &amp; \sigma_1 \sigma_2 \rho \\
+\sigma_1 \sigma_2 \rho &amp; \sigma_2^2
+\end{pmatrix}, \]</span></p>
+<p>where <span class="math inline">\(\sigma_1, \sigma_2\)</span> are the per-variable SDs and <span class="math inline">\(\rho\)</span> the correlation.</p>
+<p>The <code>parameters</code> block declares <span class="math inline">\(\sigma_1\)</span>, <span class="math inline">\(\sigma_2\)</span>, <span class="math inline">\(\rho\)</span>, and the <code>transformed parameters</code> block rebuilds the covariance matrix from them. Stan has a dedicated <code>cov_matrix</code> type for this.</p>
+<p>Now look at the <code>model</code> block carefully. For complete pairs <code>obsX</code> we use the multivariate normal. For the half-missing <code>missX</code> we still have the <span class="math inline">\(X_1\)</span> values, which under the model are univariate normal with mean <span class="math inline">\(\mu_1\)</span> and SD <span class="math inline">\(\sigma_1\)</span>; we add that likelihood to leverage the remaining information.</p>
+<p>The priors: a <code>uniform(0, 100)</code> on each mean (a test score), Cauchy on the SDs, and Stan’s <code>lkj_corr</code> (with shape 1) on the correlation — a non-informative prior for correlations.</p>
+<p>Compile, fit, and inspect <code>rho</code>. Mind how the data are passed:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"missing_corr.stan"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Nobs =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>X2)),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Nmiss =</span> <span class="fu">NROW</span>(dat<span class="sc">$</span>X1) <span class="sc">-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>X2)),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">obsX =</span> dat[<span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>X2), <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)],</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">missX =</span> dat[<span class="fu">is.na</span>(dat<span class="sc">$</span>X2), <span class="dv">1</span>]</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 2 finished in 0.8 seconds.
+Chain 4 finished in 0.8 seconds.
+Chain 1 finished in 0.8 seconds.
+Chain 3 finished in 0.8 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.8 seconds.
+Total execution time: 0.9 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"rho"</span>),</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>, <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median | Mean |  MAP |       95% CI
+-----------------------------------------------
+rho       |   0.73 | 0.71 | 0.76 | [0.50, 0.88]</code></pre>
+</div>
+</div>
+<p>The recovered correlation is 0.711 — essentially the true value. Because each margin of a bivariate normal is itself a (univariate) normal, adding the <span class="math inline">\(X_1\)</span> information to the likelihood lets us use all the data we have. Even when observed data are limited, modelling the generating mechanism can recover the missing information. Truncated or censored data — say, scores capped at an upper or lower bound — can be similarly modelled to estimate what the “uncensored” value would have been.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+</section>
+</section>
+<section id="models-with-non-normal-distributions" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="models-with-non-normal-distributions"><span class="header-section-number">17.3</span> Models with non-normal distributions</h2>
+<p>Bayesian modelling sets a mathematical structure on the parameters of a probability distribution. Here are some non-normal examples.</p>
+<section id="item-response-theory" class="level3" data-number="17.3.1">
+<h3 data-number="17.3.1" class="anchored" data-anchor-id="item-response-theory"><span class="header-section-number">17.3.1</span> Item response theory</h3>
+<p>As we saw in <a href="chapter15.html#sec-irt-model" class="quarto-xref"><span>Section 15.3</span></a>, IRT is exactly a non-normal model in this sense: the response variable is binary, the distribution is Bernoulli, and the success probability is given a logistic structure on a latent ability <span class="math inline">\(\theta\)</span>.</p>
+<p>In symbols, the response of person <span class="math inline">\(i\)</span> to item <span class="math inline">\(j\)</span> is</p>
+<p><span class="math display">\[ Y_{ij} \sim \text{Bernoulli}(p_i), \]</span> <span class="math display">\[ p_i = \frac{1}{1 + \exp\bigl(-a_j (\theta_i - b_j)\bigr)}. \]</span></p>
+<p>In Stan:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; <span class="co">// data length</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// number of persons</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; M; <span class="co">// number of questions</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Pid;  <span class="co">// personal ID</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Qid;  <span class="co">// question ID</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; resp; <span class="co">// response</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; a;</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">5</span>,<span class="kw">upper</span>=<span class="dv">5</span>&gt; b;</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">real</span> theta;</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">//likelihood</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(l <span class="cf">in</span> <span class="dv">1</span>:L){</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    resp[l] ~ bernoulli_logit(<span class="fl">1.7</span>*a[Qid[l]]*(theta[Pid[l]]-b[Qid[l]]));</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">//prior</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  a ~ lognormal(<span class="dv">0</span>,sqrt(<span class="fl">0.5</span>));</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  b ~ normal(<span class="dv">0</span>,<span class="dv">3</span>);</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  theta ~ normal(<span class="dv">0</span>,<span class="dv">1</span>);</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We assume long-format tidy data: one row per response, with columns for person ID, item ID, and the binary outcome.</p>
+<p>The <code>data</code> block receives the total number of rows <code>L</code>, the number of persons <code>N</code>, the number of items <code>M</code>, and length-<code>L</code> vectors of person IDs (<code>Pid</code>), item IDs (<code>Qid</code>), and responses (<code>resp</code>). Note the allowed ranges.</p>
+<p><code>parameters</code> declares item parameters <code>a_j</code> and <code>b_j</code> of length <code>M</code> and the person parameters <code>theta</code> of length <code>N</code>.</p>
+<p>The <code>model</code> block uses <code>bernoulli_logit</code>, a fused Bernoulli + logistic that Stan provides for convenience. The double indexing <code>theta[Pid[l]]</code> — <code>Pid[l]</code> returns an integer that picks out the corresponding <span class="math inline">\(\theta\)</span>. The priors are log-normal on <code>a_j</code>, normal on <code>b_j</code>, and standard normal on <code>theta_i</code>.</p>
+<p>Fit on <code>exametrika</code>’s <code>J15S500</code>, reshaped to long format:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika, tidyverse)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> J15S500<span class="sc">$</span>U</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>dat_long <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"irt2pl.stan"</span>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">NROW</span>(dat_long),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">M =</span> <span class="dv">15</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="dv">500</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pid =</span> dat_long<span class="sc">$</span>ID,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Qid =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(dat_long<span class="sc">$</span>name)),</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">resp =</span> dat_long<span class="sc">$</span>value</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 4 finished in 46.0 seconds.
+Chain 2 finished in 55.0 seconds.
+Chain 1 finished in 60.6 seconds.
+Chain 3 finished in 64.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 56.4 seconds.
+Total execution time: 64.3 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_posterior</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median |  Mean |   MAP |         95% CI
+---------------------------------------------------
+a[1]      |   0.40 |  0.41 |  0.41 | [ 0.25,  0.58]
+a[2]      |   0.47 |  0.48 |  0.47 | [ 0.30,  0.66]
+a[3]      |   0.31 |  0.31 |  0.29 | [ 0.17,  0.46]
+a[4]      |   0.87 |  0.88 |  0.83 | [ 0.61,  1.18]
+a[5]      |   0.39 |  0.39 |  0.39 | [ 0.23,  0.55]
+a[6]      |   0.58 |  0.59 |  0.57 | [ 0.36,  0.84]
+a[7]      |   0.65 |  0.65 |  0.65 | [ 0.45,  0.86]
+a[8]      |   0.40 |  0.41 |  0.41 | [ 0.25,  0.56]
+a[9]      |   0.18 |  0.18 |  0.17 | [ 0.09,  0.29]
+a[10]     |   0.27 |  0.27 |  0.26 | [ 0.15,  0.40]
+a[11]     |   0.68 |  0.69 |  0.66 | [ 0.47,  0.92]
+a[12]     |   0.74 |  0.75 |  0.74 | [ 0.50,  0.99]
+a[13]     |   0.51 |  0.52 |  0.49 | [ 0.35,  0.70]
+a[14]     |   0.73 |  0.73 |  0.69 | [ 0.48,  0.96]
+a[15]     |   0.48 |  0.49 |  0.48 | [ 0.32,  0.66]
+b[1]      |  -1.73 | -1.79 | -1.65 | [-2.56, -1.11]
+b[2]      |  -1.56 | -1.61 | -1.50 | [-2.22, -1.09]
+b[3]      |  -1.95 | -2.05 | -1.82 | [-3.08, -1.14]
+b[4]      |  -1.16 | -1.17 | -1.12 | [-1.48, -0.90]
+b[5]      |  -2.33 | -2.41 | -2.20 | [-3.51, -1.56]
+b[6]      |  -2.18 | -2.26 | -2.08 | [-3.07, -1.54]
+b[7]      |  -1.03 | -1.05 | -1.00 | [-1.38, -0.75]
+b[8]      |  -0.57 | -0.59 | -0.56 | [-0.95, -0.23]
+b[9]      |   1.85 |  1.95 |  1.64 | [ 0.86,  3.20]
+b[10]     |  -1.52 | -1.60 | -1.45 | [-2.53, -0.85]
+b[11]     |   1.00 |  1.01 |  0.98 | [ 0.72,  1.35]
+b[12]     |   1.01 |  1.02 |  0.98 | [ 0.75,  1.35]
+b[13]     |  -0.73 | -0.74 | -0.68 | [-1.06, -0.43]
+b[14]     |  -1.22 | -1.23 | -1.20 | [-1.59, -0.89]
+b[15]     |  -1.21 | -1.23 | -1.15 | [-1.71, -0.84]</code></pre>
+</div>
+</div>
+<p><code>exametrika</code> and most IRT software integrate out the (numerous) person parameters and use EM for efficient analytic estimation. MCMC explores the entire joint parameter space and so is much slower, but writing the Stan code makes the underlying computation explicit and gives you the freedom to customise.</p>
+</section>
+<section id="population-inference-via-capturerecapture" class="level3" data-number="17.3.2">
+<h3 data-number="17.3.2" class="anchored" data-anchor-id="population-inference-via-capturerecapture"><span class="header-section-number">17.3.2</span> Population inference via capture–recapture</h3>
+<p>Now a more unusual example. A cover story.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> A friend always seems to wear similar outfits. Over the first week you note seven distinct outfits. The next week — five days of observation — you see four outfits already seen and one new one. How many outfits does your friend have in total?</p>
+<p>The same problem in other guises:</p>
+<ul>
+<li>You fish in a pond and catch <span class="math inline">\(X\)</span> fish. You mark each and release them. On a later trip you catch <span class="math inline">\(N\)</span> fish, of which <span class="math inline">\(K\)</span> carry your mark. How many fish are in the pond?</li>
+<li>A survey collects free-text impressions of a university and the first wave produces <span class="math inline">\(X\)</span> categories. The second wave produces <span class="math inline">\(N\)</span> categories, of which <span class="math inline">\(K\)</span> overlap with the first. If the survey continues, how many distinct categories would the “complete” set contain?</li>
+</ul>
+<p>The fish-pond version is an actual sampling method; the survey version is connected to sample-size planning by theoretical saturation <span class="citation" data-cites="ToyodaRecapture2013">(<a href="references.html#ref-ToyodaRecapture2013" role="doc-biblioref">豊田 et al. 2013</a>)</span>. Application domains differ wildly, but the probability model — the <strong>capture–recapture</strong> model — is the same.</p>
+<p>The relevant distribution is the <strong>hypergeometric</strong>, the distribution arising in sampling without replacement from a finite population:</p>
+<p><span class="math display">\[ P(X = k) = \frac{\binom{x}{k} \binom{t - x}{n - k}}{\binom{t}{n}}, \]</span></p>
+<p>where <span class="math inline">\(t\)</span> is the population size, <span class="math inline">\(x\)</span> the first-sample size, <span class="math inline">\(n\)</span> the second-sample size, and <span class="math inline">\(k\)</span> the number of recaptured units. The second sample consists of <span class="math inline">\(k\)</span> drawn from the first <span class="math inline">\(x\)</span> marked and <span class="math inline">\(n - k\)</span> from the <span class="math inline">\(t - x\)</span> unmarked.</p>
+<p>In distributional notation,</p>
+<p><span class="math display">\[ k \sim \text{Hypergeometric}(n, x, t - x). \]</span><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<p>The Stan model:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; x;  <span class="co">// size of first sample (captures)</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; n;  <span class="co">// size of second sample</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>, <span class="kw">upper</span> = n&gt; k;  <span class="co">// number of recaptures from n</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = x&gt; maxT;  <span class="co">// maximum population size</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=x&gt; minT;</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  minT = x + n - k;</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[maxT] lp;</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:maxT){ </span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i &lt; minT)</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + negative_infinity();</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + hypergeometric_lpmf(k | n, x, i - x);</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> log_sum_exp(lp);</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = minT, <span class="kw">upper</span> = maxT&gt; t;</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">simplex</span>[maxT] tp;</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  tp = softmax(lp);</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  t = categorical_rng(tp);</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The model bundles several techniques worth reviewing.</p>
+<section id="priors" class="level4" data-number="17.3.2.1">
+<h4 data-number="17.3.2.1" class="anchored" data-anchor-id="priors"><span class="header-section-number">17.3.2.1</span> Priors</h4>
+<p>The data: first-sample size <code>x</code>, second-sample size <code>n</code>, recapture count <code>t</code>, and a maximum value <code>maxT</code> for the population (e.g., 30 outfits is plenty).</p>
+<p>The prior is uniform on <span class="math inline">\(\{1, 2, \ldots, \text{maxT}\}\)</span>: <span class="math inline">\(1/\text{maxT}\)</span>.</p>
+</section>
+<section id="target-notation" class="level4" data-number="17.3.2.2">
+<h4 data-number="17.3.2.2" class="anchored" data-anchor-id="target-notation"><span class="header-section-number">17.3.2.2</span> <code>target</code> notation</h4>
+<p>A word about Stan’s <code>target</code> notation before we describe the likelihood.</p>
+<p>So far we have written likelihoods as <code>Y[i] ~ normal(mu, sigma)</code>. This <strong>sampling notation</strong> can be rewritten in <code>target</code> notation:</p>
+<p><code>target += normal_lpdf(Y[i] | mu, sigma)</code>.</p>
+<p>MCMC computes with log-likelihoods, since raw likelihoods underflow. In <code>target</code> notation, <code>normal_lpdf</code> is the log probability density function (<code>lpdf</code>). The whole-model likelihood is the product of per-observation likelihoods; in log space it is the sum.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
+<p>The whole-model log-likelihood is called <code>target</code>. The <code>+=</code> operator adds to the accumulator: <code>x += y</code> is shorthand for <code>x = x + y</code>. Hence <code>target += normal_lpdf(Y[i] | mu, sigma)</code> adds the per-observation log-likelihood to <code>target</code>.</p>
+<p>Why bother with this verbose form? Two reasons. First, complex models — particularly those with mixtures over alternative components — are sometimes easier to express by writing the log-likelihood directly. Second, the sampling-notation form drops a constant for speed; computations that need that constant (e.g., Bayes factors) require the <code>target</code> form.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
+</section>
+<section id="the-likelihood" class="level4" data-number="17.3.2.3">
+<h4 data-number="17.3.2.3" class="anchored" data-anchor-id="the-likelihood"><span class="header-section-number">17.3.2.3</span> The likelihood</h4>
+<p>Back to the model. The <code>transformed data</code> block defines <code>minT</code> — the minimum possible population size given the data, namely (first sample) + (second sample) − (overlap). The number of distinct observed individuals.</p>
+<p>There is no <code>parameters</code> block. The model has no continuous parameter to estimate; the data <span class="math inline">\(k\)</span>, given <span class="math inline">\(n\)</span>, <span class="math inline">\(x\)</span>, and the unknown <span class="math inline">\(t\)</span>, drive the inference, and we represent the discrete <span class="math inline">\(t\)</span> via the log-probability of each candidate.</p>
+<p><code>transformed parameters</code> builds the per-candidate log-posterior <code>lp</code>, a vector of length <code>maxT</code>. Values below <code>minT</code> are impossible. We:</p>
+<ol type="1">
+<li>loop <span class="math inline">\(i\)</span> from 1 to <code>maxT</code>,</li>
+<li>for <span class="math inline">\(i &lt; \text{minT}\)</span>, set <code>lp[i]</code> to the prior plus <span class="math inline">\(-\infty\)</span>:</li>
+</ol>
+<p><code>lp[t] = log(1.0 / maxT) + negative_infinity();</code></p>
+<p>(<code>negative_infinity()</code> is Stan’s <span class="math inline">\(-\infty\)</span>), and</p>
+<ol start="3" type="1">
+<li>for <span class="math inline">\(i \geq \text{minT}\)</span>, set <code>lp[i]</code> to the prior plus the hypergeometric log-likelihood <span class="math inline">\(\log \text{Hypergeometric}(k \mid n, x, i - x)\)</span>.</li>
+</ol>
+<p>Sums of log-probabilities replace products of probabilities.</p>
+<p>The <code>model</code> block reuses these. To combine candidate values into a single target log-likelihood we use <code>log_sum_exp(lp)</code> — convert to the log of the sum of exponentials, numerically stable.</p>
+</section>
+<section id="generated-quantities" class="level4" data-number="17.3.2.4">
+<h4 data-number="17.3.2.4" class="anchored" data-anchor-id="generated-quantities"><span class="header-section-number">17.3.2.4</span> Generated quantities</h4>
+<p>The <code>generated quantities</code> block processes the MCMC results. It computes the estimated total <code>t</code>. By type, <code>t</code> is an integer bounded between <code>minT</code> and <code>maxT</code>.</p>
+<p><code>tp</code> is obtained by applying <code>softmax</code> to <code>lp</code>. Recall that <code>lp</code> is a vector of log-posteriors; softmax turns it into normalised probabilities:</p>
+<p><span class="math display">\[ \mathbf{x} = \frac{\exp(\mathbf{x})}{\sum \exp(\mathbf{x})}. \]</span></p>
+<p><code>tp</code> has Stan’s <code>simplex</code> type — a non-negative vector summing to 1 — and can be read as the probabilities that the true <span class="math inline">\(t\)</span> takes each candidate value.</p>
+<p><code>categorical_rng(tp)</code> then draws categorical samples whose probabilities are <code>tp</code>, giving us MCMC draws for the discrete unknown <span class="math inline">\(t\)</span>.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<p>For a die,</p>
+<p><span class="math display">\[ x \sim \text{Categorical}(1/6, 1/6, 1/6, 1/6, 1/6, 1/6). \]</span></p>
+<p>Long explanation aside — compile and fit. No <code>parameters</code> block means we pass <code>fixed_param = TRUE</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"recapture.stan"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">7</span>  <span class="co"># first observation</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span>  <span class="co"># second observation</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span>  <span class="co"># number of repeats</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>maxT <span class="ot">&lt;-</span> <span class="dv">30</span>  <span class="co"># upper bound</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x =</span> x, <span class="at">k =</span> k, <span class="at">n =</span> n, <span class="at">maxT =</span> maxT)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_param =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.0 seconds.
+Chain 2 finished in 0.0 seconds.
+Chain 3 finished in 0.0 seconds.
+Chain 4 finished in 0.0 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.0 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>MAP_value <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>),</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>MAP_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median |  Mean | MAP |        95% CI
+------------------------------------------------
+t         |     10 | 11.44 |   8 | [8.00, 20.00]</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>), <span class="at">point_est =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> MAP_value<span class="sc">$</span>MAP, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter17_files/figure-html/recapture-stan-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The result: your friend owns about 8 outfit patterns.</p>
+<p>How did that feel? Beyond the technical content (the use of the hypergeometric), the point is that <em>any</em> kind of analysis is possible if you have the right idea.</p>
+<p>Mathematical formalisation can feel abstract (and harder), but the abstraction lets you recognise problems that are structurally the same. Approaching a problem from “what is the data-generating mechanism?” or “what probability model fits?” is a creative act.</p>
+</section>
+</section>
+</section>
+<section id="mixing-distributions" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="mixing-distributions"><span class="header-section-number">17.4</span> Mixing distributions</h2>
+<p>Now to models that combine distributions.</p>
+<section id="detecting-a-change-point" class="level3" data-number="17.4.1">
+<h3 data-number="17.4.1" class="anchored" data-anchor-id="detecting-a-change-point"><span class="header-section-number">17.4.1</span> Detecting a change point</h3>
+<p>Inspect <a href="myWeights.csv">this dataset</a>. Loaded and plotted:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"myWeights.csv"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter17_files/figure-html/weights_data-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The author’s weight from 1 January to 1 June 2024. The trend obviously changes at some point — apparently downwards around early April. A generative model assuming a single regime throughout would misfit; different mechanisms before and after the change call for different models.</p>
+<p>Treat the change point as itself unknown. The Stan model:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[L] <span class="dt">real</span> w;</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=L&gt; tau;</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0a;</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0b;</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta1a;</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">upper</span>=<span class="dv">0</span>&gt; beta1b;</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sig;</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:L){</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(i &lt; tau){</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0a + beta1a * i, sig);</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0b + beta1b * (i-tau+<span class="dv">1</span>), sig);</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    tau ~ uniform(<span class="dv">1</span>,L);</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    beta0a ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    beta0b ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    beta1a ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    beta1b ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>    sig ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The data block is minimal: data length <code>L</code> and the weights <code>w</code>.</p>
+<p>The <code>parameters</code> block starts with a parameter <span class="math inline">\(\tau\)</span> — the change point in <span class="math inline">\(\{1, \ldots, L\}\)</span>. We do not know when the regime changed; that is exactly what we estimate (in Bayes, we represent “don’t know” as a probability!).</p>
+<p>The <code>model</code> block writes the likelihood in two pieces: for <span class="math inline">\(i &lt; \tau\)</span>, the mean follows <code>beta0a + beta1a * i</code> (a slope of <code>beta1a</code> from day 1); for <span class="math inline">\(i \geq \tau\)</span>, the mean follows <code>beta0b + beta1b * (i - tau + 1)</code> (a slope of <code>beta1b</code> indexed by days <em>since</em> the change point).</p>
+<p>A single residual SD <code>sig</code> is used. The prior on <span class="math inline">\(\tau\)</span> is non-informative; the intercepts <code>beta0a</code> and <code>beta0b</code> are centred near 80 kg; the slopes <code>beta1a</code> and <code>beta1b</code> are wide enough to permit either sign.</p>
+<p>Run:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"change_point.stan"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">nrow</span>(w),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> w<span class="sc">$</span>weight</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">3000</span>,</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 32.3 seconds.
+Chain 3 finished in 32.2 seconds.
+Chain 2 finished in 32.5 seconds.
+Chain 4 finished in 32.5 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 32.4 seconds.
+Total execution time: 32.6 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 10
+  variable    mean  median      sd     mad      q5     q95  rhat ess_bulk
+  &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1 lp__     22.9    23.2    1.97    1.87    19.3    25.5     1.01    283. 
+2 tau      87.1    88.3    3.35    1.55    79.4    90.3     1.06     61.2
+3 beta0a   84.5    84.5    0.118   0.112   84.3    84.7     1.11     36.8
+4 beta0b   85.4    85.4    0.322   0.245   85.0    86.1     1.13     27.4
+5 beta1a    0.0179  0.0180 0.00243 0.00237  0.0137  0.0217  1.09     55.0
+6 beta1b   -0.0575 -0.0575 0.00566 0.00595 -0.0667 -0.0484  1.10     32.7
+7 sig       0.509   0.508  0.0325  0.0301   0.456   0.562   1.04     92.8
+# ℹ 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># echo: false</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>MAPs <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(),</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Recovered values: the change point <span class="math inline">\(\tau\)</span> at MAP 88.589 (day 89); before that day, slope 0.018 (upward trend); after, slope -0.056 (downward).</p>
+<p>Locate the change-point date and overlay it on the plot:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Xday <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"tau"</span>),</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP <span class="sc">|&gt;</span> <span class="fu">round</span>()</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Change began at:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Change began at:</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(w[Xday, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  date                weight
+  &lt;dttm&gt;               &lt;dbl&gt;
+1 2024-04-07 08:21:32   85.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> w<span class="sc">$</span>date[Xday], <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter17_files/figure-html/tau_est-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We modelled a single change point. Closer inspection of the data might suggest multiple change points or different functional forms. We also assumed simple linear regressions in each regime and a constant noise level across both. Scrutinise the equations, ask which assumptions they embed, and consider whether they are reasonable; the answers point toward refinements.</p>
+<p>Change-point detection lets the data tell us when the regime changed instead of relying on subjective visual inspection. It applies to outlier detection, regime change in time series, and even to galvanic-skin-response analysis (so-called “lie detection”) for guilty knowledge.</p>
+<p>A caveat: regression is not strictly appropriate for time series because regression assumes independent observations. Time series typically have serial dependence, requiring a <strong>state-space model</strong>. State-space models can also be written in Stan but are an advanced topic and we skip the details here. See <span class="citation" data-cites="Komori2022">小森 (<a href="references.html#ref-Komori2022" role="doc-biblioref">2022</a>)</span>, <span class="citation" data-cites="LOBSST2018">馬場 (<a href="references.html#ref-LOBSST2018" role="doc-biblioref">2018</a>)</span>, and <span class="citation" data-cites="kosugi2022b">小杉 (<a href="references.html#ref-kosugi2022b" role="doc-biblioref">2022</a>)</span>.</p>
+</section>
+<section id="modelling-a-heterogeneous-group" class="level3" data-number="17.4.2">
+<h3 data-number="17.4.2" class="anchored" data-anchor-id="modelling-a-heterogeneous-group"><span class="header-section-number">17.4.2</span> Modelling a heterogeneous group</h3>
+<p>Another baseball example. Restrict the <a href="Baseball.csv">baseball data</a> to the 2020 Central League teams and plot the histogram of hits:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2020年度"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Giants"</span>, <span class="st">"Tigers"</span>, <span class="st">"Carp"</span>, <span class="st">"Swallows"</span>, <span class="st">"DeNA"</span>, <span class="st">"Dragons"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(position, Hit, team) <span class="sc">|&gt;</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Hit =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Hit), <span class="dv">0</span>, Hit))</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>y <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Hit)) <span class="sc">+</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter17_files/figure-html/Hit_hist-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y<span class="sc">$</span>Hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00    0.00    0.00   17.94   14.25  146.00 </code></pre>
+</div>
+</div>
+<p>A large number of players have essentially zero hits. The reason is that the 2020 Central League required pitchers to bat. Pitchers’ job is pitching, not hitting; they rarely swing, so their hit counts are essentially zero.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
+<p>The hit count is a count variable, so the Poisson would be the textbook choice — but with non-hitters mixed in, the model should distinguish “this is a hitter” from “this is a non-hitter.” A zero observation could mean “this person never bats” or “this person bats but happened to get zero hits”; a non-zero observation must come from a hitter.</p>
+<p>A mixture distribution that includes this “structural zero” possibility is the <strong>zero-inflated Poisson</strong> (or zero-inflated negative binomial). We will use the latter below.</p>
+<p>A word about the Poisson: its only parameter, <span class="math inline">\(\lambda\)</span>, is the mean — and also the variance, by construction. When the data are over-dispersed (variance greater than the mean), a single-<span class="math inline">\(\lambda\)</span> Poisson fits poorly. The <strong>negative binomial</strong> distribution generalises the Poisson with a separate dispersion parameter:</p>
+<p><span class="math display">\[ \text{NegBinomial}(n \mid \alpha, \beta) = \frac{\Gamma(\alpha + n)}{\Gamma(\alpha)\,\Gamma(n + 1)} \left(\frac{\alpha}{\alpha + \beta}\right)^{\alpha} \left(\frac{\beta}{\alpha + \beta}\right)^{n}. \]</span></p>
+<p>Its mean and variance are</p>
+<p><span class="math display">\[ E[N] = \beta, \]</span> <span class="math display">\[ \text{Var}[N] = \beta + \frac{\beta^2}{\alpha} = \beta\left(1 + \frac{\beta}{\alpha}\right). \]</span></p>
+<p>This parameterisation is hard to read. Stan supplies the alternative <code>neg_binomial_2</code>, parameterised by the mean <span class="math inline">\(\mu\)</span> and a dispersion <span class="math inline">\(\phi\)</span>:</p>
+<p><span class="math display">\[ \text{NegBinomial2}(n \mid \mu, \phi) = \frac{\Gamma(\phi + n)}{\Gamma(\phi)\,\Gamma(n + 1)} \left(\frac{\phi}{\phi + \mu}\right)^{\phi} \left(\frac{\mu}{\phi + \mu}\right)^{n}, \]</span></p>
+<p>with</p>
+<p><span class="math display">\[ E[N] = \mu, \]</span> <span class="math display">\[ \text{Var}[N] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right). \]</span></p>
+<p>Large <span class="math inline">\(\phi\)</span> pushes the variance toward the mean; in the limit <span class="math inline">\(\phi \to \infty\)</span>, the negative binomial coincides with the Poisson.</p>
+<p>The zero-inflated negative-binomial model in Stan:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;           <span class="co">// データ数</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; y;  <span class="co">// 観測値</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; theta;</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; mu;              <span class="co">// 負の二項分布の平均</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; phi;             <span class="co">// 負の二項分布の過分散パラメータ</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 事前分布</span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  theta ~ beta(<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  mu ~ gamma(<span class="dv">5</span>, <span class="fl">0.1</span>);</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  phi ~ gamma(<span class="dv">2</span>, <span class="fl">0.1</span>);</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 尤度関数 (0過剰負の二項分布)</span></span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (y[i] == <span class="dv">0</span>) {</span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log_mix(theta,</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">0</span>,</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>                        neg_binomial_2_lpmf(<span class="dv">0</span> | mu, phi));</span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log(<span class="dv">1</span> - theta) + neg_binomial_2_lpmf(y[i] | mu, phi);</span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span> y_pred;     <span class="co">// 事後予測分布</span></span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 事後予測分布の生成</span></span>
+<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (bernoulli_rng(theta) == <span class="dv">1</span>) {</span>
+<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = <span class="dv">0</span>;  <span class="co">// 構造的ゼロ</span></span>
+<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = neg_binomial_2_rng(mu, phi);  <span class="co">// 負の二項分布から生成</span></span>
+<span id="cb48-39"><a href="#cb48-39" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb48-40"><a href="#cb48-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-41"><a href="#cb48-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>parameters</code> block declares a mixing probability <code>theta</code> ∈ [0, 1] (a Bernoulli-flavoured coin flip: heads = “non-hitter,” tails = “hitter who happened to get zero”) and the negative-binomial parameters <code>mu</code> and <code>phi</code>.</p>
+<p>The <code>model</code> block makes the branching explicit. If <code>y_i = 0</code>, use <code>log_mix(theta, 0, neg_binomial_2_lpmf(0 | mu, phi))</code>:</p>
+<p><span class="math display">\[
+p(y_i \mid \theta, \mu, \phi) =
+  \theta + (1 - \theta) \cdot \text{NegBinomial2}(0 \mid \mu, \phi),
+\]</span></p>
+<p>with probability <span class="math inline">\(\theta\)</span> for “structural zero”<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a> and <span class="math inline">\(1 - \theta\)</span> for “negative binomial gives zero.”</p>
+<p>If <code>y_i &gt; 0</code>, the contribution is the <span class="math inline">\(1 - \theta\)</span> branch times the negative-binomial likelihood. We use <code>target +=</code> to add to the log posterior directly.</p>
+<p>In <code>generated quantities</code> we also draw posterior-predictive data from the model: flip the Bernoulli with <code>theta</code>, and if “non-hitter” output 0, else draw from <code>neg_binomial_2</code>. These predictive draws form the <strong>posterior predictive distribution</strong>, used to check whether the model can produce data resembling what we observed.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"zero_inflated_negbinom.stan"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">length</span>(y<span class="sc">$</span>Hit),</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> y<span class="sc">$</span>Hit</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 1 finished in 0.6 seconds.
+Chain 2 finished in 0.6 seconds.
+Chain 3 finished in 0.6 seconds.
+Chain 4 finished in 0.6 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.6 seconds.
+Total execution time: 0.7 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"theta"</span>, <span class="st">"mu"</span>, <span class="st">"phi"</span>)),</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median |  Mean |   MAP |         95% CI
+---------------------------------------------------
+theta     |   0.45 |  0.44 |  0.45 | [ 0.35,  0.52]
+mu        |  33.26 | 33.50 | 32.37 | [25.66, 41.85]
+phi       |   0.43 |  0.43 |  0.42 | [ 0.27,  0.59]</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"y_pred"</span>, <span class="at">format =</span> <span class="st">"matrix"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(y<span class="sc">$</span>Hit, y_pred[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter17_files/figure-html/kick_zero_inflated_negbinom-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The output reports the mixing proportion <code>theta</code>, the mean <code>mu</code>, and the dispersion <code>phi</code>. The posterior predictive plot overlays draws from the model on the observed data and the two should overlap closely — they do, so the fit is good.</p>
+<p>This model classifies “hitters” and “non-hitters” while fitting. The same template applies far afield: a store’s first-time customers vs.&nbsp;repeat customers, modal vs.&nbsp;avoidant survey responders (“neutral” stalwarts), control vs.&nbsp;clinical groups — any case in which a heterogeneous population mixes structurally distinct sub-populations.</p>
+<p>As <span class="citation" data-cites="Lee201709">リー and ワゲンメーカーズ (<a href="references.html#ref-Lee201709" role="doc-biblioref">[2013] 2017</a>)</span> puts it, <strong>the limit of Bayesian modelling is the user’s imagination.</strong> Imagine many data-generating mechanisms and build interesting models.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-JASP2025" class="csl-entry" role="listitem">
+JASP Team. 2025. <em><span class="nocase">JASP (Version 0.95.1)[Computer software]</span></em>. <a href="https://jasp-stats.org/">https://jasp-stats.org/</a>.
+</div>
+<div id="ref-kruschke2018rejecting" class="csl-entry" role="listitem">
+Kruschke, John K. 2018. <span>“Rejecting or Accepting Parameter Values in Bayesian Estimation.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 1 (2): 270–80.
+</div>
+<div id="ref-bayestestR" class="csl-entry" role="listitem">
+Makowski, Dominique, Mattan S. Ben-Shachar, and Daniel Lüdecke. 2019. <span>“bayestestR: Describing Effects and Their Uncertainty, Existence and Significance Within the Bayesian Framework.”</span> <em>Journal of Open Source Software</em> 4 (40): 1541. <a href="https://doi.org/10.21105/joss.01541">https://doi.org/10.21105/joss.01541</a>.
+</div>
+<div id="ref-Maeda2017" class="csl-entry" role="listitem">
+クルシュケJ. K. (2014) 2017. <em>ベイズ統計モデリング: R, JAGS, Stanによるチュートリアル 原著第2版</em>. Translated by 前田和寛 and 小杉考司. 共立出版. Originally published as <em>Doing Bayesian Data Analysis</em> (Elsevier).
+</div>
+<div id="ref-Lee201709" class="csl-entry" role="listitem">
+リーM.D, and ワゲンメーカーズE-J. (2013) 2017. <em>ベイズ統計で実践モデリング: 認知モデルのトレーニング</em>. Translated by 井関龍太. 北大路書房. Originally published as <em>Bayesian Cognitive Modeling: A Practical Course</em> (Cambridge University Press).
+</div>
+<div id="ref-kosugi2022b" class="csl-entry" role="listitem">
+小杉考司. 2022. <em>心理学データ解析応用: RとStanで学ぶフリーで楽しい心理統計の世界</em>. Independently published.
+</div>
+<div id="ref-Komori2022" class="csl-entry" role="listitem">
+小森政嗣. 2022. <em>RとStanではじめる　心理学のための時系列分析入門 (Ｋｓ専門書)</em>. 講談社.
+</div>
+<div id="ref-Hamada201812" class="csl-entry" role="listitem">
+浜田宏. 2018. <em>その問題、数理モデルが解決します</em>. ベレ出版. <a href="http://amazon.co.jp/o/ASIN/4860645685/">http://amazon.co.jp/o/ASIN/4860645685/</a>.
+</div>
+<div id="ref-Hamada2020" class="csl-entry" role="listitem">
+浜田宏. 2020. <em>その問題、やっぱり数理モデルが解決します</em>. ベレ出版.
+</div>
+<div id="ref-Hamada201912" class="csl-entry" role="listitem">
+浜田宏, 石田淳, and 清水裕士. 2019. <em>社会科学のためのベイズ統計モデリング</em>. 朝倉書店. <a href="http://amazon.co.jp/o/ASIN/4254128428/">http://amazon.co.jp/o/ASIN/4254128428/</a>.
+</div>
+<div id="ref-kinosada2018" class="csl-entry" role="listitem">
+紀ノ定保礼. 2018. <span>“己の「歌唱力」を推定する.”</span> In <em>たのしいベイズモデリング</em>, edited by 豊田秀樹. 北大路書房.
+</div>
+<div id="ref-Toyoda202003" class="csl-entry" role="listitem">
+豊田秀樹. 2020. <em>瀕死の統計学を救え！</em>. 朝倉書店.
+</div>
+<div id="ref-ToyodaRecapture2013" class="csl-entry" role="listitem">
+豊田秀樹, 大橋洸太郎, and 池原一哉. 2013. <span>“自由記述のカテゴリ化に伴う観点の飽和度としての捕獲率.”</span> <em>データ分析の理論と応用</em> 3 (1): 49–61. <a href="https://doi.org/10.32146/bdajcs.3.49">https://doi.org/10.32146/bdajcs.3.49</a>.
+</div>
+<div id="ref-LOBSST2018" class="csl-entry" role="listitem">
+馬場真哉. 2018. <em>時系列分析と状態空間モデルの基礎: RとStanで学ぶ理論と実装</em>. プレアデス出版.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Editors aware of the language can flag obviously bad code with underlines and so on; RStudio, for instance, syntax-checks Stan code before compilation.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>That said, the code is not always the culprit: errors can come from the environment setup. Either decode the error or rebuild the environment (reinstall Stan, upgrade to the latest version). An AI assistant helps here too.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>See <span class="citation" data-cites="Hamada201912">(<a href="references.html#ref-Hamada201912" role="doc-biblioref">浜田 et al. 2019</a>)</span> for details.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Some texts parameterise by the variance <span class="math inline">\(\sigma^2\)</span>; we use the standard deviation <span class="math inline">\(\sigma\)</span> to match Stan’s convention.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Adapted from “The seven scientists” in <span class="citation" data-cites="Lee201709">リー and ワゲンメーカーズ (<a href="references.html#ref-Lee201709" role="doc-biblioref">[2013] 2017</a>)</span>, pp.&nbsp;48–49.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>See, e.g., <span class="citation" data-cites="kinosada2018">紀ノ定 (<a href="references.html#ref-kinosada2018" role="doc-biblioref">2018</a>)</span>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Adapted from “Recapturing aeroplanes” in <span class="citation" data-cites="Lee201709">リー and ワゲンメーカーズ (<a href="references.html#ref-Lee201709" role="doc-biblioref">[2013] 2017</a>)</span>, pp.&nbsp;63–66. The book’s Stan code is in <a href="https://github.com/fusaroli/CognitiveModelingRecoded">this repository</a>; just transcribing it is excellent practice.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Stan’s <code>hypergeometric</code> is <code>hypergeometric(n, a, b)</code> where <code>n</code> is the second-sample size, <code>a</code> the first-sample size, and <code>b</code> the number not in the first sample. The total population is <span class="math inline">\(a + b\)</span>; here, <span class="math inline">\(x + (t - x) = t\)</span>. Some texts (e.g., <span class="citation" data-cites="Lee201709">リー and ワゲンメーカーズ (<a href="references.html#ref-Lee201709" role="doc-biblioref">[2013] 2017</a>)</span>) write <code>Hypergeometric(n, x, t)</code> instead.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>This requires the i.i.d. assumption — each observation is independent of the others and drawn from the same distribution. The probability of two consecutive 1s on a die is <span class="math inline">\(1/6 \times 1/6\)</span>; the multiplication is justified by independence.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>The denominator of Bayes’s theorem, <span class="math inline">\(P(D)\)</span>, is a normalising constant unnecessary for the <em>shape</em> of the posterior. Sampling notation drops it for speed; <code>target</code> notation does not, so it is needed when the marginal likelihood matters.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Stan suffixes distribution names: <code>normal_lpdf</code> is the log-pdf of the normal, <code>normal_rng</code> generates normal random samples. Likewise <code>categorical_lpmf</code> for the categorical log-pmf and <code>categorical_rng</code> for the random samples.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>For non-baseball readers: Japan’s professional baseball has 12 teams divided between the Central League (CL) and the Pacific League (PL), six teams each. The PL uses a designated hitter; the CL did not (until the 2027 season). Pitchers in the CL therefore had to bat, but typically did not perform meaningfully at the plate. Yes, Shohei Ohtani is an exception.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p><code>log_mix</code>’s first argument is the mixing proportion; the second and third are log-probability densities. A second argument of <code>0</code> corresponds to <span class="math inline">\(\exp(0) = 1\)</span> — i.e., 100% — so the structural-zero branch contributes its full prior weight. The third argument, <code>neg_binomial_2_lpmf</code>, is the log-pmf of <code>neg_binomial_2</code>.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter16.html" class="pagination-link" aria-label="Multivariate Analysis II">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Multivariate Analysis II</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./practices.html" class="pagination-link" aria-label="Exercises">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exercises</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

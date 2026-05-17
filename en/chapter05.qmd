@@ -1,0 +1,331 @@
+# Programming in R
+
+In this chapter we treat R as a programming language. A companion text in Japanese is @kosugi2023. For more substantial treatments of programming itself, see @Jared_P_Lander2018-12-28, @Ren_Kun2017-11-23, and @Hadley_Wickham2016-02-10.
+
+Among programming languages, C and Java are the established names; Python and Julia are more recent favourites. R, too, is perhaps best thought of as a programming language rather than as merely a statistical package. R is more forgiving than most languages for the beginner: variables need not be declared with explicit types, and indentation and other formatting are loose. On the other hand, as we saw with vector recycling ([Section @sec-vector]), R sometimes "helpfully" fills in values you did not ask for; later in this chapter we will see that user-defined functions reach into the surrounding environment by default if a value is not specified. Coming from a stricter language, this can feel like uninvited helpfulness. On balance, however, R is friendly to the beginner.
+
+There are many programming languages,[^5.1] but you neither need nor can master all of them. Far more productive is to understand the concepts that programming languages share in common, treating each language's specifics as a "dialect." Three such concepts stand out: **assignment**, **iteration**, and **conditional branching**.
+
+[^5.1]: @Language2016 catalogues 117 computer languages.
+
+## Assignment
+
+Assignment, in essence, means storing a value in an object (a piece of memory). We have already covered the basics in @sec-Rbase and will not repeat them here — it is enough to remember that variables have types and that assignment unconditionally overwrites.
+
+One additional pattern worth noting:
+
+```{r, override}
+a <- 0
+a <- a + 1
+print(a)
+```
+
+We have deliberately used `=` for assignment here. The line `a = a + 1` looks like a mathematical equation, and reading it as one will only confuse you: it is plainly nonsense as a mathematical identity. It is, however, a fundamental programming idiom: "take the current value of `a`, add 1, and store the result back in `a` (overwriting it)." This pattern is the basis of **counter variables**. To reduce the risk of misreading, this textbook uses `<-` rather than `=` for assignment.
+
+Because overwriting is unconditional in essentially every programming language, **initialisation** — setting an explicit starting value — is good practice. In the snippet above we wrote `a <- 0` immediately before the increment, ensuring that `a` begins at zero. Without explicit initialisation, you risk inheriting a stray value from a previous use of the variable.
+
+To delete a variable from memory explicitly, use `remove()`:
+
+```{r}
+remove(a)
+```
+
+After this runs, `a` disappears from RStudio's *Environment* tab. To clear all objects at once, click the broom in the *Environment* tab or run `remove(list = ls())`.[^5.2]
+
+[^5.2]: `ls()` ("list objects") returns the list of objects currently in memory.
+
+## Iteration
+
+### `for` loops
+
+A defining feature of computers is that, absent hardware failure, they can perform calculations indefinitely without tiring. Humans grow weary or distracted under repetitive tasks and start to make mistakes; computers do not.
+
+Iteration is therefore at the heart of programming. The canonical iteration construct is the **`for` loop**. In R:
+
+```r
+for (value in sequence) {
+    # code to execute
+}
+```
+
+`value` is the **loop index variable** and takes each successive element of `sequence` on consecutive iterations. `sequence` is typically a vector or list. The body inside braces contains the statements executed on each iteration.
+
+An example:
+
+```{r, forLoopExam}
+for (i in 1:5) {
+  cat("The current value is", i, ".\n")
+}
+```
+
+`for` declares an index variable in its parentheses (`i` here) and assigns it values drawn from the supplied sequence (here `1:5`, i.e., 1, 2, 3, 4, 5). The braced body is executed on each iteration; multiple statements may appear inside the braces. Here we use `cat()` to write to the console.
+
+The sequence need not be consecutive integers:
+
+```{r, forLoopExam2}
+for (i in c(2, 4, 12, 3, -6)) {
+  cat("The current value is", i, ".\n")
+}
+```
+
+Loops can also be nested:
+
+```{r, forLoopExam3}
+# define a 3x3 matrix
+A <- matrix(1:9, nrow = 3)
+
+# outer loop over rows
+for (i in 1:nrow(A)) {
+  # inner loop over columns
+  for (j in 1:ncol(A)) {
+    cat("Element [", i, ", ", j, "] is ", A[i, j], "\n")
+  }
+}
+```
+
+Note that the inner and outer indices have different names (`i` and `j`); reusing the same name across nested loops makes it impossible to tell which one is which. More technically, R reallocates a fresh memory location for the index variable each time a `for` is entered, so name collisions of this sort do not actually error in R — but in many other languages the inner loop would clobber the outer, and you would observe a subtle bug where the loop "never finishes." `i`, `j`, and `k` are conventional names for loop indices; using them as one-letter object names elsewhere in your script is best avoided.
+
+### `while` loops
+
+A **`while` loop** repeatedly executes a block of code as long as a specified condition remains true. The name is intuitively suggestive.
+
+The basic syntax in R:
+
+```r
+while (condition) {
+    # code to execute
+}
+```
+
+`condition` is the stopping condition; the body is the code to execute. A `while` loop that prints 1 through 5:
+
+```{r,whileExample}
+i <- 1
+while (i <= 5) {
+  print(i)
+  i <- i + 1
+}
+```
+
+The loop continues as long as `i` is at most 5. `print(i)` displays the current value, and `i <- i + 1` increments it. Once `i` exceeds 5, the condition becomes false and the loop terminates.
+
+A common pitfall with `while` is the **infinite loop**: a condition that never becomes false. To avoid this, ensure that somewhere inside the body the state advances toward making the condition false.
+
+Note also that R, unlike many other languages, is designed for efficient vectorised computation. Wherever you can replace a `for` or `while` loop with a vectorised expression, the result will typically be much faster.
+
+## Conditional branching
+
+Conditional branching means executing different code depending on whether some condition holds. In R this is expressed with `if`–`else`.
+
+### Basic `if`
+
+The basic form:
+
+```r
+if (condition) {
+    # executed if condition is TRUE
+}
+```
+
+If the parenthesised condition is `TRUE`, the braced body is executed. To add an alternative for the `FALSE` case, use `else`:
+
+```r
+if (condition) {
+    # executed if condition is TRUE
+} else {
+    # executed if condition is FALSE
+}
+```
+
+A concrete example:
+
+```{r, ifExample}
+x <- 10
+
+if (x > 0) {
+  print("x is positive")
+} else {
+  print("x is not positive")
+}
+```
+
+This prints one message when `x` is positive and another otherwise.
+
+Conditions may be logical expressions (e.g., `x > 0`, `y == 1`) or any expression that returns a logical (e.g., `is.numeric(x)`). Multiple conditions can be combined with the logical operators `&&` (AND) and `||` (OR).
+
+In the example below, the message depends on both `x` being positive and `y` being negative. Try changing the values:
+
+```{r}
+x <- 10
+y <- -3
+
+if (x > 0 && y < 0) {
+  print("x is positive and y is negative")
+} else {
+  print("Other case")
+}
+```
+
+## Exercises on iteration and branching
+
+1. Write a program that prints only the even numbers from 1 to 20.
+2. Write a program that prints the numbers 1 to 40, appending the suffix "san!" to any number that either is a multiple of 3 *or* contains the digit 3 (in the ones or tens place).
+3. For the vector `c(1, -2, 3, -4, 5)`, print `"positive"` or `"negative"` for each element according to its sign.
+4. Compute the matrix product of $A$ and $B$ below. R has a built-in operator `%*%` for matrix products, but for this exercise implement the calculation explicitly with `for` loops. The element at row $i$, column $j$ of the result is $c_{ij} = \sum_k a_{ik} b_{kj}$. The reference computation is provided below.
+
+```{r,matrixCalc}
+A <- matrix(1:6, nrow = 3)
+B <- matrix(3:10, nrow = 2)
+## the matrices for the exercise
+print(A)
+print(B)
+## the expected answer
+C <- A %*% B
+print(C)
+```
+
+## Defining functions
+
+Any complex program is built from combinations of assignment, iteration, and branching. When you use a statistical procedure such as regression or factor analysis from a package, you supply data to a function and receive a result; under the hood, those algorithms are themselves stitched together from these same building blocks.
+
+Here we will write our own functions. There is no need to be intimidated. Just as a spreadsheet macro records a repeated sequence of operations, an R function packages a sequence of code that you would otherwise type out repeatedly. Defining functions encapsulates a procedure, decomposes a project into manageable pieces, and makes parallel development and bug isolation easier.
+
+### The basics
+
+Input to a function is called an **argument**; output is called the **return value**. The expression $y = f(x)$ describes a function $f$ taking argument $x$ and returning value $y$.
+
+The basic syntax for defining a function in R:
+
+```R
+function_name <- function(argument) {
+   # function body
+   return(value)
+}
+```
+
+`function body` is the computation. As an example, here is `add3`, which adds 3 to its argument:
+
+```{r,myFunc}
+add3 <- function(x) {
+  x <- x + 3
+  return(x)
+}
+# usage
+add3(5)
+```
+
+A function adding two numbers:
+
+```{r,myFunc2}
+add_numbers <- function(a, b) {
+  sum <- a + b
+  return(sum)
+}
+# usage
+add_numbers(2, 5)
+```
+
+Functions can take more than one argument, and arguments can have **default values**:
+
+```{r,myFunc3}
+add_numbers2 <- function(a, b = 1) {
+  sum <- a + b
+  return(sum)
+}
+# usage
+add_numbers2(2, 5)
+add_numbers2(4)
+```
+
+Setting `b = 1` in the signature gives `b` a default of 1. In the calls above, when both arguments are supplied (`2 + 5`), both are used; when only the first is supplied, the default value of `b` is used (`4 + 1`).
+
+By extension, every "user-facing" statistical function in R typically has many more arguments than the few you provide explicitly, all with sensible defaults. You can override the defaults selectively when you need to. These extra arguments tend to control fine-grained behaviour and are surfaced through documentation. Reading the help page for a function to see the complete argument list is well worth your time.
+
+### Multiple return values
+
+R functions return a single object. To return multiple values, package them into a structure such as a list:
+
+```{r}
+calculate_values <- function(a, b) {
+  sum <- a + b
+  diff <- a - b
+  # return a named list
+  result <- list("sum" = sum, "diff" = diff)
+  return(result)
+}
+# usage
+result <- calculate_values(10, 5)
+# display the result
+print(result)
+```
+
+## Exercises
+
+1. Write a function that, given a number, prints `"positive"` if it is positive, `"negative"` if it is negative, and `"Zero"` if it is zero.
+2. Write a function that, given two numbers, returns their sum, difference, product, and quotient.
+3. Write a function that, given a vector, returns the arithmetic mean, median, maximum, minimum, and range.
+4. Write a function that returns the **sample variance** of a vector. Note that R's built-in `var()` returns the unbiased variance $\hat{\sigma}^2$ (dividing by $n-1$), which differs from the sample variance $v$ (dividing by $n$). The formulae:
+$$\hat{\sigma}^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2 $$
+$$v = \frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2 $$
+
+```{r}
+#| eval: FALSE
+#| include: FALSE
+#| echo: FALSE
+
+
+# Exercise 1: function definition
+check_value <- function(x) {
+  if (x > 0) {
+    return("positive")
+  } else if (x < 0) {
+    return("negative")
+  } else {
+    return("Zero")
+  }
+}
+
+# example
+check_value(5) # "positive"
+check_value(-3) # "negative"
+check_value(0) # "Zero"
+
+# Exercise 2
+calculate_operations <- function(a, b) {
+  sum <- a + b
+  difference <- a - b
+  product <- a * b
+  quotient <- ifelse(b != 0, a / b, NA) # return NA if b is zero
+
+  return(list(sum = sum, difference = difference, product = product, quotient = quotient))
+}
+
+# example
+calculate_operations(10, 5)
+
+# Exercise 3
+calculate_statistics <- function(vec) {
+  mean_val <- mean(vec)
+  median_val <- median(vec)
+  max_val <- max(vec)
+  min_val <- min(vec)
+  range_val <- range(vec)
+
+  return(list(mean = mean_val, median = median_val, max = max_val, min = min_val, range = range_val))
+}
+
+# example
+calculate_statistics(c(1, 2, 3, 4, 5))
+
+# Exercise 4
+sample_variance <- function(vec) {
+  n <- length(vec)
+  mean_val <- mean(vec)
+  variance <- sum((vec - mean_val)^2) / n
+
+  return(variance)
+}
+
+# example
+sample_variance(c(1, 2, 3, 4, 5))
+```

@@ -1,0 +1,474 @@
+# Foundations of Linear Algebra
+
+The chapters on multivariate analysis (Chapters 14 and 15) cover factor analysis, principal-components analysis, multidimensional scaling, cluster analysis, and other techniques. Their common mathematical foundation is **linear algebra** — the calculus of vectors and matrices. Statistical packages deliver results instantly, but without the underlying picture it is hard to interpret those results correctly or judge their plausibility.
+
+The chief virtue of using matrices is that **collections of many numbers can be written compactly and generically**. Psychological data have the rectangular structure "$n$ respondents $\times$ $m$ variables" — exactly a matrix. In matrix language, means and variances, regression estimation, and the principles of factor analysis are all expressible within one framework.
+
+This chapter covers the basic operations on matrices and their use in R.
+
+```{r}
+#| message: FALSE
+pacman::p_load(tidyverse)
+```
+
+## Scalars, vectors, matrices
+
+### Scalars
+
+A single number — neither a vector nor a matrix — is a **scalar**. Everyday values like $1, 2, 3.14$ are all scalars.
+
+### Vectors
+
+A one-dimensional sequence of numbers is a **vector**. Written horizontally it is a **row vector**; written vertically it is a **column vector**.
+
+$$
+\text{row vector: } \boldsymbol{a} = \begin{pmatrix} 1 & 3 & 5 \end{pmatrix}, \quad
+\text{column vector: } \boldsymbol{b} = \begin{pmatrix} 2 \\ 4 \\ 6 \end{pmatrix}
+$$
+
+$\boldsymbol{a}$ is a $1 \times 3$ row vector and $\boldsymbol{b}$ is a $3 \times 1$ column vector. Vectors and matrices are conventionally written in bold ($\boldsymbol{A}$, $\boldsymbol{x}$).
+
+R's plain vector has no row/column distinction; `matrix()` makes the orientation explicit.
+
+```{r}
+# plain R vector (no row/column)
+a <- c(1, 3, 5)
+a
+
+# row vector (1x3 matrix)
+matrix(a, nrow = 1)
+
+# column vector (3x1 matrix)
+matrix(a, ncol = 1)
+```
+
+### Matrices
+
+A **matrix** is a rectangular array of numbers. The horizontal lines are **rows** and the vertical lines are **columns**.
+
+$$
+\boldsymbol{A} = \begin{pmatrix} a_{11} & a_{12} & \cdots & a_{1m} \\ a_{21} & a_{22} & \cdots & a_{2m} \\ \vdots & \vdots & \ddots & \vdots \\ a_{n1} & a_{n2} & \cdots & a_{nm} \end{pmatrix}
+$$
+
+This is an $n \times m$ matrix. Subscripts on $a_{ij}$ are row-then-column. In a psychology data matrix, rows are typically respondents (cases) and columns are variables (items).
+
+`matrix()` builds a matrix in R, filling in **column-major** order by default.
+
+```{r}
+# column-major (default): column 1 first, then column 2, ...
+A <- matrix(1:6, nrow = 2)
+A
+
+# row-major: byrow = TRUE
+B <- matrix(1:6, nrow = 2, byrow = TRUE)
+B
+```
+
+Index elements with `[row, column]`.
+
+```{r}
+A[2, 3]   # element at row 2, column 3
+A[1, ]    # entire row 1 (as a vector)
+A[, 2]    # entire column 2 (as a vector)
+```
+
+## Special matrices
+
+A few special forms appear repeatedly in data analysis.
+
+**Square matrix**: equal numbers of rows and columns ($n \times n$).
+
+**Symmetric matrix**: a square matrix with $a_{ij} = a_{ji}$. The entries are mirrored about the main diagonal. **Correlation matrices** and **variance–covariance matrices** are the canonical examples.
+
+For three variables $x_1, x_2, x_3$, the correlation matrix has the form
+
+$$
+\boldsymbol{R} = \begin{pmatrix} 1 & r_{12} & r_{13} \\ r_{12} & 1 & r_{23} \\ r_{13} & r_{23} & 1 \end{pmatrix}.
+$$
+
+The diagonal entries are 1 (self-correlations) and the off-diagonal entries are symmetric ($r_{ij} = r_{ji}$). A variance–covariance matrix similarly has variances on the diagonal and covariances off-diagonal.
+
+$$
+\boldsymbol{S} = \begin{pmatrix} s_1^2 & s_{12} & s_{13} \\ s_{12} & s_2^2 & s_{23} \\ s_{13} & s_{23} & s_3^2 \end{pmatrix}
+$$
+
+**Diagonal matrix**: a square matrix whose off-diagonal entries are all zero. The **identity matrix** $\boldsymbol{I}$ — the diagonal matrix with 1s on the diagonal — is the matrix analogue of the scalar 1: multiplying any matrix by $\boldsymbol{I}$ leaves it unchanged.
+
+```{r}
+# 3x3 identity
+diag(3)
+
+# diagonal matrix from a vector
+diag(c(2, 5, 3))
+
+# extract diagonal entries from a matrix
+M <- matrix(1:9, nrow = 3)
+diag(M)
+```
+
+`diag()` is overloaded: a scalar argument builds the identity, a vector builds a diagonal matrix, and a matrix returns its diagonal.
+
+## Matrix operations
+
+### Addition and subtraction
+
+Addition and subtraction work elementwise. **Both operands must have the same shape**.
+
+$$
+\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} + \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix} = \begin{pmatrix} 6 & 8 \\ 10 & 12 \end{pmatrix}
+$$
+
+```{r}
+A <- matrix(c(1, 3, 2, 4), nrow = 2)
+B <- matrix(c(5, 7, 6, 8), nrow = 2)
+A + B
+A - B
+```
+
+### Scalar multiplication
+
+Multiplying a matrix by a scalar multiplies every entry by that scalar.
+
+```{r}
+2 * A
+```
+
+### Matrix multiplication
+
+Matrix multiplication is not entry-by-entry: it involves **multiply-then-sum**. Start with a row vector times a column vector (a dot product):
+
+$$
+\begin{pmatrix} 1 & 2 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 4 \\ 2 \end{pmatrix} = 1 \times 3 + 2 \times 4 + 1 \times 2 = 13
+$$
+
+It is "multiplication," but it involves addition — a hallmark of matrix arithmetic.
+
+The product of an $n \times m$ matrix $\boldsymbol{A}$ and an $m \times l$ matrix $\boldsymbol{B}$ is an $n \times l$ matrix. **The number of columns of the left operand must equal the number of rows of the right operand**, or the product is undefined. The $(i, j)$ entry of the result is the dot product of $\boldsymbol{A}$'s row $i$ with $\boldsymbol{B}$'s column $j$.
+
+$$
+\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \begin{pmatrix} 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \times 2 + 2 \times 1 \\ 3 \times 2 + 4 \times 1 \end{pmatrix} = \begin{pmatrix} 4 \\ 10 \end{pmatrix}
+$$
+
+Unlike scalar multiplication, **matrix multiplication is not commutative**: in general $\boldsymbol{AB} \neq \boldsymbol{BA}$. In R, `%*%` is matrix multiplication; `*` is elementwise multiplication. The distinction matters.
+
+```{r}
+A <- matrix(c(1, 3, 2, 4), nrow = 2)
+b <- c(2, 1)
+
+# matrix product (%*%)
+A %*% b
+
+# elementwise product (*) -- not the same as a matrix product
+A * b
+```
+
+`*` simply recycles `b` across the rows; this is not a matrix product.
+
+### Transpose
+
+The **transpose** of a matrix swaps its rows and columns, written $\boldsymbol{A}'$ or $\boldsymbol{A}^T$.
+
+$$
+\boldsymbol{A} = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix} \quad \Rightarrow \quad \boldsymbol{A}' = \begin{pmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{pmatrix}
+$$
+
+A $2 \times 3$ matrix becomes a $3 \times 2$ matrix after transposition. Symmetric matrices are invariant under transposition ($\boldsymbol{A}' = \boldsymbol{A}$).
+
+```{r}
+A <- matrix(1:6, nrow = 2)
+A
+t(A)
+```
+
+Among the useful identities, note especially that $(\boldsymbol{AB})' = \boldsymbol{B}'\boldsymbol{A}'$ — the order is reversed.
+
+### Inverse
+
+The **inverse matrix** is the matrix analogue of division. For a square matrix $\boldsymbol{A}$, the inverse $\boldsymbol{A}^{-1}$ is defined by $\boldsymbol{A}\boldsymbol{A}^{-1} = \boldsymbol{I}$, mirroring the scalar identity "multiplying by the reciprocal gives 1."
+
+For a $2 \times 2$ matrix the inverse is given by
+
+$$
+\boldsymbol{A} = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \implies
+\boldsymbol{A}^{-1} = \frac{1}{ad - bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}.
+$$
+
+The denominator $ad - bc$ is the **determinant**; if it is zero the inverse does not exist. In R, use `solve()`.
+
+```{r}
+A <- matrix(c(2, 5, 1, 3), nrow = 2)
+A
+
+# inverse
+solve(A)
+
+# verify A A^{-1} = I (round to suppress floating-point noise)
+round(A %*% solve(A), 10)
+```
+
+The inverse links directly to **solving linear systems**. Pre-multiplying both sides of $\boldsymbol{Ax} = \boldsymbol{b}$ by $\boldsymbol{A}^{-1}$ gives $\boldsymbol{x} = \boldsymbol{A}^{-1}\boldsymbol{b}$. The closed-form OLS estimator $\hat{\boldsymbol{\beta}} = (\boldsymbol{X}'\boldsymbol{X})^{-1}\boldsymbol{X}'\boldsymbol{y}$ follows the same pattern.
+
+### Trace
+
+The **trace** of a square matrix is the sum of its diagonal entries: $\mathrm{tr}(\boldsymbol{A}) = \sum_{i=1}^{n} a_{ii}$. It has a close relationship with eigenvalues, discussed below.
+
+```{r}
+A <- matrix(c(1, 2, 6, 5), nrow = 2)
+# trace = sum of the diagonal
+sum(diag(A))
+```
+
+## Data as matrices
+
+Express psychological data in matrix language. With $n$ respondents and $m$ variables, the data form an $n \times m$ matrix $\boldsymbol{X}$.
+
+### Mean vector and centred matrix
+
+Let $\boldsymbol{1}$ be the vector of ones. The mean of each variable is
+
+$$
+\boldsymbol{m} = \frac{1}{n}\boldsymbol{X}'\boldsymbol{1}.
+$$
+
+Subtracting the mean from each entry gives the **centred matrix** $\boldsymbol{V} = \boldsymbol{X} - \boldsymbol{1}\boldsymbol{m}'$. The variance–covariance matrix is then
+
+$$
+\boldsymbol{S} = \frac{1}{n}\boldsymbol{V}'\boldsymbol{V}.
+$$
+
+Standardising each variable by its SD gives a matrix $\boldsymbol{Z}$, and the correlation matrix is
+
+$$
+\boldsymbol{R} = \frac{1}{n}\boldsymbol{Z}'\boldsymbol{Z}.
+$$
+
+That descriptive statistics can be expressed as matrix products is one of the benefits of the matrix language.
+
+### Cross-check in R
+
+Use the four numeric variables of `iris` to confirm that the manual matrix computations agree with the built-in functions.
+
+```{r}
+# data matrix
+X <- as.matrix(iris[, 1:4])
+n <- nrow(X)
+
+# mean vector
+one <- rep(1, n)
+m <- t(X) %*% one / n
+as.vector(m)
+colMeans(X)
+
+# centred matrix
+V <- X - one %*% t(m)
+
+# variance--covariance (divided by n = sample variance)
+S <- t(V) %*% V / n
+
+# diagonal matrix of SDs
+Q <- diag(sqrt(diag(S)))
+
+# standardised matrix
+Z <- V %*% solve(Q)
+
+# correlation matrix
+R_manual <- t(Z) %*% Z / n
+round(R_manual, 6)
+round(cor(X), 6)
+```
+
+## Distance matrices
+
+A square matrix collecting pairwise distances among cases (rows) is a **distance matrix**. Euclidean distance is the standard choice. Distance matrices are symmetric (the distance is the same both ways) and have zeros on the diagonal (zero distance from a point to itself).
+
+Distance matrices feed multidimensional scaling (MDS) and cluster analysis. In R, `dist()` computes them.
+
+```{r}
+# show only the first 5 cases
+iris5 <- iris[1:5, 1:4]
+d <- dist(iris5)
+d
+
+# as a square matrix
+as.matrix(d)
+```
+
+## Eigenvalues and eigenvectors
+
+For a square matrix $\boldsymbol{A}$, a scalar $\lambda$ and a vector $\boldsymbol{x}$ satisfying
+
+$$
+\boldsymbol{Ax} = \lambda \boldsymbol{x}
+$$
+
+are called an **eigenvalue** and an **eigenvector**. The left side multiplies $\boldsymbol{x}$ by the matrix; the right side multiplies it only by a scalar. In other words, there exist special vectors that, when multiplied by $\boldsymbol{A}$, do not change direction — they only stretch or shrink. $\lambda$ is the scaling factor.
+
+Verify with a concrete example:
+
+$$
+\begin{pmatrix} 1 & 6 \\ 2 & 5 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 7 \\ 7 \end{pmatrix} = 7 \begin{pmatrix} 1 \\ 1 \end{pmatrix}.
+$$
+
+So $\lambda = 7$ and $\boldsymbol{x} = (1, 1)'$ satisfy the equation.
+
+```{r}
+A <- matrix(c(1, 2, 6, 5), nrow = 2)
+eig <- eigen(A)
+eig$values    # eigenvalues
+eig$vectors   # eigenvectors (columns correspond to eigenvalues)
+```
+
+### Key properties
+
+An $n \times n$ matrix has $n$ eigenvalues. A few important facts:
+
+**Relation to the trace**: the sum of the eigenvalues equals the trace.
+
+$$
+\sum_{i=1}^{n} \lambda_i = \mathrm{tr}(\boldsymbol{A}) = \sum_{i=1}^{n} a_{ii}
+$$
+
+```{r}
+sum(eig$values)    # sum of eigenvalues
+sum(diag(A))       # trace
+```
+
+**Symmetric matrices**: their eigenvalues are all real, and eigenvectors for distinct eigenvalues are mutually orthogonal. Variance–covariance and correlation matrices are symmetric, so this is guaranteed.
+
+### Spectral decomposition
+
+A symmetric matrix $\boldsymbol{A}$ can be decomposed using its eigenvalues on the diagonal (forming $\boldsymbol{\Lambda}$) and its eigenvectors as the columns (forming $\boldsymbol{X}$):
+
+$$
+\boldsymbol{A} = \boldsymbol{X}\boldsymbol{\Lambda}\boldsymbol{X}'.
+$$
+
+This is the **spectral decomposition** (or eigenvalue decomposition). It separates the information in the original matrix into "directions" (the eigenvectors) and "magnitudes" (the eigenvalues), and is the mathematical foundation of principal-components analysis and factor analysis.
+
+### Eigenvalue decomposition and PCA
+
+What happens when you decompose a correlation matrix? Its diagonal entries are all 1, so its trace equals the number of variables, $m$. Eigenvalue decomposition redistributes that total information by importance.
+
+```{r}
+# eigenvalue decomposition of the iris correlation matrix
+R <- cor(iris[, 1:4])
+eig_R <- eigen(R)
+
+# eigenvalues
+eig_R$values
+
+# proportion of variance explained by each eigenvalue
+eig_R$values / sum(eig_R$values)
+
+# cumulative proportion
+cumsum(eig_R$values) / sum(eig_R$values)
+```
+
+The first eigenvalue accounts for about 73% of the total. That is, the information across the four variables can be largely summarised by a single component. This is the principle of **principal-components analysis (PCA)**, and exactly the computation done inside `prcomp()`.
+
+```{r}
+#| dev: "ragg_png"
+# visualise eigenvalues (scree plot)
+data.frame(
+  Component = 1:4,
+  Eigenvalue = eig_R$values
+) %>%
+  ggplot(aes(x = Component, y = Eigenvalue)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  scale_x_continuous(breaks = 1:4) +
+  labs(
+    title = "Scree plot (iris correlation matrix)",
+    x = "Component",
+    y = "Eigenvalue"
+  ) +
+  theme_classic()
+```
+
+The dashed red line marks eigenvalue 1; components below it carry less than one variable's worth of information. The size of the eigenvalues is used to decide how many components to retain — the standard reading of a scree plot.
+
+Factor analysis approximates the correlation matrix $\boldsymbol{R}$ by $\boldsymbol{R} \approx \boldsymbol{A}\boldsymbol{A}' + \boldsymbol{D}^2$ (with $\boldsymbol{A}$ the factor-loading matrix and $\boldsymbol{D}^2$ the unique variances). Its estimation also rests on eigenvalue decomposition.
+
+## Glossary recap
+
+| Term | Meaning | R function/operator |
+|------|---------|---------------------|
+| scalar | a single number | — |
+| vector | a one-dimensional sequence | `c()` |
+| matrix | a two-dimensional array | `matrix()` |
+| transpose | swap rows and columns | `t()` |
+| matrix product | multiply-and-sum | `%*%` |
+| elementwise product | multiply matching entries | `*` |
+| inverse | matrix that gives the identity when multiplied | `solve()` |
+| diagonal | $a_{ii}$ of a square matrix | `diag()` |
+| trace | sum of diagonal entries | `sum(diag())` |
+| eigen-decomposition | solve $\boldsymbol{Ax} = \lambda\boldsymbol{x}$ | `eigen()` |
+| correlation matrix | matrix of correlation coefficients | `cor()` |
+| variance--covariance matrix | matrix of variances and covariances | `cov()` |
+| distance matrix | matrix of pairwise distances | `dist()` |
+
+## Exercises
+
+1. For the four numeric variables of `iris`, compute the correlation matrix and the variance–covariance matrix, and check what is on the diagonals. Also confirm that after standardising the four variables with `scale()`, the variance–covariance matrix of the standardised data equals the correlation matrix.
+
+2. For the two matrices below, compute $\boldsymbol{AB}$ and $\boldsymbol{BA}$ and confirm that they differ.
+$$
+\boldsymbol{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}, \quad
+\boldsymbol{B} = \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix}
+$$
+Also confirm the identity $(\boldsymbol{AB})' = \boldsymbol{B}'\boldsymbol{A}'$.
+
+3. Take the first five cases of `iris`'s four numeric variables. Use `scale(center = TRUE, scale = FALSE)` to construct the centred matrix $\boldsymbol{V}$, and confirm that $\frac{1}{n}\boldsymbol{V}'\boldsymbol{V}$ is close to the result of `cov()`. Hint: `cov()` divides by $n - 1$, returning the unbiased estimator.
+
+4. Eigen-decompose the correlation matrix of `iris` and obtain each component's proportion of variance explained. Then run `prcomp(iris[, 1:4], scale. = TRUE)` and confirm that the squared standard deviations (`sdev^2`) of each principal component match the eigenvalues.
+
+5. Both correlation and distance matrices are symmetric, but the meaning of their diagonals differs. For the first 10 cases of `iris`'s four numeric variables, compute the distance matrix and confirm that its diagonal is all zeros while the correlation matrix's diagonal is all ones. Discuss why the two differ.
+
+```{r}
+#| include: FALSE
+#| echo: FALSE
+#| eval: FALSE
+
+## Exercise 1
+iris_num <- iris[, 1:4]
+cor(iris_num)
+cov(iris_num)
+diag(cor(iris_num))  # all 1
+diag(cov(iris_num))  # variances
+iris_scaled <- scale(iris_num)
+round(cov(iris_scaled) - cor(iris_num), 10)
+
+## Exercise 2
+A <- matrix(c(1, 3, 2, 4), nrow = 2)
+B <- matrix(c(5, 7, 6, 8), nrow = 2)
+A %*% B
+B %*% A
+t(A %*% B)
+t(B) %*% t(A)
+
+## Exercise 3
+iris5 <- as.matrix(iris[1:5, 1:4])
+V <- scale(iris5, center = TRUE, scale = FALSE)
+n <- nrow(iris5)
+S_n <- t(V) %*% V / n         # divide by n
+S_n1 <- t(V) %*% V / (n - 1)  # divide by n-1 (unbiased)
+round(S_n1 - cov(iris5), 10)  # should match
+
+## Exercise 4
+R <- cor(iris[, 1:4])
+eig <- eigen(R)
+eig$values / sum(eig$values)
+
+pca <- prcomp(iris[, 1:4], scale. = TRUE)
+pca$sdev^2  # should match eigenvalues
+round(eig$values - pca$sdev^2, 10)
+
+## Exercise 5
+iris10 <- iris[1:10, 1:4]
+d <- as.matrix(dist(iris10))
+diag(d)           # all 0
+diag(cor(iris10)) # all 1
+# distance: "how far from itself" = 0
+# correlation: "how perfectly tracks itself" = 1
+```

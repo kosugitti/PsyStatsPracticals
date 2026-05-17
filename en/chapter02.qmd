@@ -1,0 +1,367 @@
+# R Fundamentals {#sec-Rbase}
+
+We now begin actual exercises with R/RStudio. As mentioned in the previous chapter, the course assumes that you have set up an RStudio project for the course and that RStudio is open with that project loaded.
+
+## Computation in R
+
+We start with arithmetic. Open an R script file and enter the following four lines. Run each (with the *Run* button, or Ctrl/Cmd+Enter) and confirm the output in the console.
+
+```{r}
+1 + 2
+2 - 3
+3 * 4
+6 / 3
+```
+
+Confirm that addition, subtraction, multiplication, and division all produce the expected results. The `[1]` prefix on each output reflects the fact that R takes vectors as its primitive object: the printed value is the first element of the returned vector.
+
+Beyond the four basic operations, the following are also available.
+
+```{r}
+# integer division
+8 %/% 3
+# remainder
+7 %% 3
+# exponentiation
+2^3
+```
+
+Lines beginning with `#` are **comments**: they are sent to the console but not evaluated. For very simple scripts comments are unnecessary, but for complex computations or shared code, annotating "what we are computing here" is invaluable.
+
+A practical tip: it is often convenient to comment out (or uncomment) several lines at once. Select multiple lines in the editor and use *Code > Comment/Uncomment Lines*, or the shortcut Ctrl+Shift+C (Cmd+Shift+C on macOS).
+
+One more tip. You may sometimes want a more substantial section divider rather than a plain comment. *Code > Insert Section* (Ctrl+Shift+R / Cmd+Shift+R) opens a small dialog where you can name a section; an inserted section looks like this:
+
+```{r}
+# Computation -------------------------------------------------------
+```
+
+This has no effect on execution, but as a script grows you can jump between sections (lower left of the editor pane) and view the outline (the three-bar icon at the upper right of the editor).
+
+## Objects
+
+In R, everything — variables, functions, and so on — is an **object**. Objects can be given arbitrary names (a leading digit is not permitted). Below, values are **assigned** to objects:
+
+```{r}
+a <- 1
+b <- 2
+A <- 3
+a + b # same as 1 + 2
+A + b # same as 3 + 2
+```
+
+Numbers are stored in objects, and objects are then used in computation. Case matters: `a` and `A` are different objects.
+
+The assignment operator `<-` consists of a less-than sign and a hyphen, but is intended to evoke a left-pointing arrow. `=` and `->` can also be used:
+
+```{r}
+B <- 5
+7 -> A
+```
+
+In the second line, `7 -> A` assigns 7 to `A`, overwriting the previous value (`A <- 3`).
+
+```{r}
+A + b # same as 7 + 2
+```
+
+Assignment overwrites without warning, so reusing similar object names risks holding values different from those you intended.
+
+To inspect an object, type its name; for a more deliberate print, use `print()`.
+
+```{r}
+a
+print(A)
+```
+
+Alternatively, the *Environment* tab in RStudio shows the objects currently in memory, with scalar values displayed in the *Value* column.
+
+The following names are reserved and cannot be used as object names: `break`, `else`, `for`, `if`, `in`, `next`, `function`, `repeat`, `return`, `while`, `TRUE`, `FALSE`. These are R's **reserved words**. In particular, `TRUE` and `FALSE` denote the Boolean truth values; their abbreviations `T` and `F` are not reserved words, so technically you can assign to them — but doing so is strongly discouraged, since it introduces a source of subtle bugs.
+
+## Functions
+
+Mathematically, a function $y = f(x)$ is a rule that maps $x$ to $y$. In programming, $x$ is called an **argument** and $y$ a **return value**. Two examples:
+
+```{r}
+sqrt(16)
+help("sqrt")
+```
+
+The first calls `sqrt()` — the square-root function — passing a number and receiving its square root. The second calls `help()`, which displays a function's documentation in the Help pane.
+
+## Variable types
+
+The argument `"sqrt"` passed to `help()` is a character string. The double quotes mark it as such; single quotes work too. R distinguishes among at least three primitive types: **numeric**, **character**, and **logical**.
+
+```{r}
+obj1 <- 1.5
+obj2 <- "Hello"
+obj3 <- TRUE
+```
+
+The numeric type encompasses both **integer** and **double** (double-precision floating-point).[^2.1] Related values include the missing-value marker `NA`, the non-numeric marker `NaN`, and the infinity marker `Inf`. A complex type is also supported.
+
+[^2.1]: One might expect the second to be called "real" rather than "double." Here "double" refers to the IEEE 754 double-precision floating-point representation used in digital computers: a single number is stored in 64 bits, twice the 32 bits of single precision.
+
+The character type was introduced above; the closing quotation mark is essential. Without it, R will treat subsequent input as continuing the same string, and the console will display a `+` prompt to indicate that the line is incomplete.
+
+Character values cannot be arithmetically combined, but logical values can: `TRUE` corresponds to 1 and `FALSE` to 0, so logical values participate in arithmetic. Run the following to verify:
+
+```{r}
+#| eval: FALSE
+obj1 + obj2
+obj1 + obj3
+```
+
+
+## Object types
+
+Beyond individual numeric or character **literals**, anything that stores values is an **object**. You can think of an object as a variable, with the caveat that functions are also objects.
+
+### Vectors {#sec-vector}
+
+R's objects are not restricted to a single value; in fact, the ability to carry several elements together is a defining feature of the language. The following are examples of **vector** objects.
+
+```{r}
+vec1 <- c(2, 4, 5)
+vec2 <- 1:3
+vec3 <- 7:5
+vec4 <- seq(from = 1, to = 7, by = 2)
+vec5 <- c(vec2, vec3)
+```
+
+Inspect the contents of each. `c()` is the **combine** function. The colon (`:`) produces a sequence of integers. `seq()` builds an arithmetic sequence given a start, an end, and a step.
+
+Arithmetic on vectors is performed element-wise. Run the following to see how this works:
+
+```{r}
+vec1 + vec2
+vec3 * 2
+vec1 + vec5
+```
+
+Note that the last expression does **not** raise an error: `vec1` has length 3 and `vec5` length 6 — mathematically the addition is undefined for unequal lengths, but **R recycles the shorter vector** as long as its length divides the longer. Here the computation is
+
+$$ (2,4,5,2,4,5) + (1,2,3,7,6,5) = (3,6,8,9,10,10). $$
+
+Be aware of recycling, lest it produce unintended results.
+
+Square brackets (`[ ]`) access elements of a vector. The bracket may contain either positional indices or a logical vector; the latter is especially useful when combined with `if`-style conditions to select elements.
+
+```{r}
+vec1[2]
+vec2[c(1, 3)]
+vec2[c(TRUE, FALSE, TRUE)]
+```
+
+Vectors may hold characters as well as numbers:
+
+```{r}
+words1 <- c("Hello!", "Mr.", "Monkey", "Magic", "Orchestra")
+words1[3]
+words2 <- LETTERS[1:10]
+words2[8]
+```
+
+`LETTERS` is a built-in vector containing the 26 capital letters.
+
+Many R functions take a vector argument. Standard descriptive statistics — mean, variance, standard deviation, sum — are computed as follows:
+
+```{r}
+dat <- c(12, 18, 23, 35, 22)
+mean(dat) # mean
+var(dat) # variance
+sd(dat) # standard deviation
+sum(dat) # sum
+```
+
+Other available functions include `max()`, `min()`, and `median()`.
+
+### Matrices
+
+Linear algebra builds on vectors and introduces two-dimensional arrays — matrices. R provides matrix objects accordingly.
+
+Inspect the matrices $A$ and $B$ produced by the following code:
+
+```{r}
+A <- matrix(1:6, ncol = 2)
+B <- matrix(1:6, ncol = 2, byrow = T)
+```
+
+The `matrix()` function takes the elements as its first argument, then `ncol` (number of columns), `nrow` (number of rows), and `byrow` (whether to fill row by row). Here we supply `1:6` as the data and specify two columns; `nrow` is then determined automatically. Setting `byrow = TRUE` changes how the elements are arranged — print the matrices to see.
+
+If the number of elements supplied does not equal `nrow × ncol`, and is not a divisor either (so recycling cannot save us), an error is raised.
+
+As with vectors, square brackets index a matrix; rows come first, columns second, and either may be omitted to select an entire row or column:
+
+```{r}
+A[2, 2]
+A[1, ]
+A[, 2]
+```
+
+### Lists
+
+A matrix is a collection of vectors of equal length. To hold elements of differing sizes together as a single object, use a **list**.
+
+```{r}
+Obj1 <- list(1:4, matrix(1:6, ncol = 2), 3)
+```
+
+The first element of this object (`[[1]]`) is a vector, the second is a matrix, and the third is a scalar (a length-one vector). How would you access an element within a nested element — say, the element at row 2, column 1 of the matrix that is the second element of `Obj1`?
+
+Accessing list elements by numeric index is workable but unwieldy. Naming the elements is much more convenient:
+
+```{r}
+Obj2 <- list(
+  vec1 = 1:5,
+  mat1 = matrix(1:10, nrow = 5),
+  char1 = "YMO"
+)
+```
+
+Named list elements can be accessed with the `$` operator:
+
+```{r}
+Obj2$vec1
+```
+
+Now consider how to access a sub-element of a named list element.
+
+Lists impose no constraint on the sizes or types of their elements, which makes them suitable for heterogeneous collections. Results returned by statistical functions in R are typically structured as lists and often have a deep nested structure. To inspect such a structure, `str()` is invaluable.
+
+```{r}
+str(Obj2)
+```
+
+The output of `str()` is essentially what RStudio's *Environment* tab displays when you expand an object. Lists may themselves contain lists, giving a hierarchical structure; consider how to reach elements deep within such a structure.
+
+```{r}
+Obj3 <- list(Obj1, Second = Obj2)
+str(Obj3)
+```
+
+### Data frames
+
+A list places no constraint on element sizes, but data for analysis is usually rectangular — one row per observation, one column per variable. A list with this rectangular structure and with named columns is a **data frame**. An example:
+
+```{r}
+df <- data.frame(
+  name = c("Ishino", "Pierre", "Marin"),
+  origin = c("Shizuoka", "Shizuoka", "Hokkaido"),
+  height = c(170, 180, 160),
+  salary = c(1000, 20, 800)
+)
+# display contents
+df
+# inspect structure
+str(df)
+```
+
+You will recall Stevens's [@stevens1946] taxonomy of **levels of measurement** — nominal, ordinal, interval, and ratio — which classifies numeric variables by the operations they admit. Interval and ratio variables may be subjected to ordinary arithmetic; nominal and ordinal variables may not. (Even if a "second favourite" and a "third favourite" are combined, they do not equal a "favourite.")
+
+R provides types corresponding to these levels. Interval and ratio variables are stored as `numeric`. Nominal variables are stored as `factor` (sometimes called "factor type" or "categorical type"). Ordinal variables are stored as `ordered.factor`.
+
+The example below converts an existing character variable to a factor with `as.factor()`:
+
+```{r}
+df$origin <- as.factor(df$origin)
+df$origin
+```
+
+Three values (`Shizuoka`, `Shizuoka`, `Hokkaido`) are present, but the levels are only two (`Shizuoka`, `Hokkaido`). Treating the variable as a factor makes it useful as a category.
+
+An ordered factor is constructed as follows:
+
+```{r}
+# ordered factor example
+ratings <- factor(c("low", "high", "moderate", "high", "low"),
+  levels = c("low", "moderate", "high"),
+  ordered = TRUE
+)
+# inspect contents and type
+print(ratings)
+```
+
+For tabulation purposes ordered factors behave like unordered factors, so they may seem redundant. However, some statistical procedures in R adjust their behaviour based on whether a factor is ordered, so taking the trouble to encode the level of measurement properly is worthwhile.
+
+Data-frame elements are typically accessed by variable name. For example, to apply a statistic to a numeric variable in the `df` object above:
+
+```{r}
+mean(df$height)
+sum(df$salary)
+```
+
+A summary of an entire data frame is also available:
+
+```{r}
+summary(df)
+```
+
+## Reading external files
+
+In practice, datasets are rarely entered by hand; they are imported from a database or read from a file.
+
+Many statistical packages have their own native file formats and R provides functions to read each of them. Here we illustrate the simplest case: reading a CSV file.
+
+We will read the sample dataset [Baseball.csv](Baseball.csv), saved in UTF-8 encoding.[^2.2] The base R function `read.csv()` suffices:
+
+```{r}
+dat <- read.csv("Baseball.csv")
+head(dat)
+str(dat)
+```
+
+`head()` displays the first few rows (six by default). As `str()` confirms, the imported data is automatically a data frame.
+
+In this sample dataset, missing entries are coded as the literal string `NA`, which is `read.csv()`'s default. In practice, missing values may be coded as a period, as a sentinel number (e.g., 9999), or otherwise; the `na.strings` argument specifies which values to treat as missing.
+
+## Bonus: tidying up scripts
+
+By this point you will have written a reasonably long script. While "it works" is the bare minimum, it is preferable that the code also reads cleanly. Definitions of "clean code" vary, but most communities adopt a **style guide**. We will not go into the details here; instead, try *Code > Reformat Code* in RStudio and see how it tidies your file.
+
+Clean code helps with debugging. Reformatting periodically is a good habit.
+
+## Exercises
+
++ Launch R and create a new script file. In it, declare two integers, add them, and print the result to the console.
+
++ Write and execute the following calculations in a script:
+    + $\frac{5}{6} + \frac{1}{3}$
+    + $9.6 \div 4$
+    + $2.3 + \frac{1}{2}$
+    + $3\times (2.2 + \frac{4}{5})$
+    + $(-2)^4$
+    + $2\sqrt{2} \times \sqrt{3}$
+    + $2\log_e 25$
+
++ In an R script, create a vector containing the integers from 1 to 10. Compute the sum (`sum()`) and the mean (`mean()`) of its elements.
+
++ Construct the following table as a list object named `Tbl`:
+
+
+| Name    | Pop   | Area   | Density |
+|:--------|------:|-------:|--------:|
+| Tokyo   | 1,403 |  2,194 |  6,397  |
+| Beijing | 2,170 | 16,410 |  1,323  |
+| Seoul   |   949 |    605 | 15,688  |
+
++ Display the *Area* value for Tokyo from the `Tbl` object (i.e., practise accessing list elements).
+
++ Compute the mean of the *Pop* variable in `Tbl`.
+
++ Convert `Tbl` to a data frame named `df2`. Either rebuild it directly as a data frame, or use `as.data.frame()`.
+
++ Read the sample file [Baseball2022.csv](Baseball2022.csv) into a data frame named `dat`. Note that in this file missing values are coded as the numeric value $999$.
+
++ Display the first 10 rows of `dat`.
+
++ Apply `summary()` to `dat`.
+
++ The variable `team` is on a nominal scale. Convert it to a factor. Two other variables in the dataset should also be converted to factors; convert those as well.
+
++ For each numeric variable in the dataset, compute the mean, variance, standard deviation, maximum, minimum, and median.
+
++ Apply *Reformat Code* (or similar tooling) to clean up your script.
+
+[^2.2]: UTF-8 is a character encoding — a scheme for translating the 0s and 1s of computer storage into human-readable text — and is the de facto worldwide standard. Windows, however, still defaults to Shift-JIS (a Japan-specific encoding), so a CSV opened first in Windows Excel may be silently re-encoded and become mojibake (garbled). When using files in this course, read them directly from R rather than opening them in Excel first.

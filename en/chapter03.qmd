@@ -1,0 +1,353 @@
+# Data Wrangling in R
+
+In the data sciences — psychology included — there is a stage between data collection and the communication of analytic results that consists of "transforming the data into a usable form, visualising it, and analysing it." This transformation step is known as **data wrangling**. "Statistics" is often equated with "analysis," but in practice data wrangling and visualisation typically consume the bulk of the time and are among the most consequential parts of the workflow.
+
+## Introducing the tidyverse
+
+This course uses the `tidyverse` for data wrangling. The tidyverse is both a design philosophy for working with data and a concrete package implementing that philosophy. Install the `tidyverse` package and load it as follows:
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+You will see "Attaching core tidyverse packages," with check marks next to several package names. The tidyverse is a meta-package that bundles a number of sub-packages: `dplyr` and `tidyr` handle reshaping; `readr` handles file I/O; `forcats` handles factor variables; `stringr` handles strings; `lubridate` handles dates; `tibble` provides a modern data-frame variant; `purrr` provides functional-programming utilities; and `ggplot2` handles visualisation.
+
+You will also see a message about *Conflicts*. This warning, which appears for many packages and not only the tidyverse, signals "function-name collisions." Up to now you have used base functions such as `sqrt()` and `mean()` without any explicit `library()` call — these are loaded automatically at R startup from the `base` package. When a subsequently loaded package defines a function of the same name as an already-loaded one, the new definition shadows the old one. The conflict message lists those shadowings. For instance, `dplyr::filter() masks stats::filter()` means that `dplyr`'s `filter()` (loaded as part of the tidyverse) takes precedence over `stats`'s `filter()`, which was previously available.
+
+Such name collisions can be confusing. When you need to disambiguate, write `package::function` — for instance, `stats::filter()` — as the warning message itself illustrates.
+
+## The pipe operator
+
+Next, the pipe operator. The pipe was introduced by the `magrittr` package (since included in the tidyverse) and revolutionised data wrangling in R. As of R 4.2, a native pipe is built into the language itself, with no package required. We distinguish the built-in operator as the **native pipe** when needed.
+
+Let us see why this operator is so useful. The following script computes the (uncorrected) standard deviation of a small dataset.[^3.1] In equations, where $\bar{x}$ is the arithmetic mean of $x$:
+$$v = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2}$$
+
+
+[^3.1]: Of course one could simply call `sd(dat)`; we expand each step here for illustration. Note also that `sd()` computes the *unbiased* (n−1) standard deviation, which differs from the maximum-likelihood (sample) standard deviation shown here.
+
+```{r}
+dat <- c(10, 13, 15, 12, 14) # data
+M <- mean(dat) # mean
+dev <- dat - M # deviations
+pow <- dev^2 # squared deviations
+variance <- mean(pow) # mean of squared deviations is the variance
+standardDev <- sqrt(variance) # square root of variance is the standard deviation
+```
+
+
+To arrive at `standardDev`, we introduced four intermediate objects: `M`, `dev`, `pow`, and `variance`. The objects being created sit on the left of `<-`, and the operations applied to them sit on the right; mentally, the reader processes each line as "create this object, by performing this computation."
+
+The pipe operator makes that flow explicit. Written `%>%`, it passes the result of its left-hand operand as the first argument of the function on its right. Rewritten with pipes, the calculation above becomes (note that `Ctrl/Cmd+Shift+M` inserts `%>%`):
+
+```{r}
+dat <- c(10, 13, 15, 12, 14)
+standardDev <- dat %>%
+  {
+    . - mean(.)
+  } %>%
+  {
+    .^2
+  } %>%
+  mean() %>%
+  sqrt()
+```
+
+The period (`.`) is the **placeholder** that refers to whatever was passed in by the previous stage; the second line is therefore `{dat - mean(dat)}`, the deviations from the mean. The subsequent stages square the deviations, take the mean, and take the square root. The placeholder is omitted where its position is unambiguous (e.g., as the first argument to `mean()` and `sqrt()`).
+
+Reading the piped version, the script flow — data → deviations → squared → mean → square root — matches the conceptual flow of the calculation, making it easier to follow.
+
+The same computation can also be written in nested form:
+
+```{r}
+standardDev <- sqrt(mean((dat - mean(dat))^2))
+```
+
+This style — $y = h(g(f(x)))$ — requires the reader to peel back the parentheses from the inside out, reversing the natural reading order. The pipe version, by contrast, reads `x %>% f() %>% g() %>% h() -> y`, in the same order as the underlying thought.
+
+From here on we use the pipe extensively. Get comfortable with it (and with its keyboard shortcut).
+
+## Exercises 1. The pipe operator
+
++ Confirm via the help system that `sqrt()` and `mean()` belong to the `base` package. Where in the help page is this information shown? What about `filter()` and `lag()`?
++ After loading the tidyverse, `dplyr::filter()` takes precedence over `stats::filter()`. View the help for `dplyr::filter()`.
++ View the help for `stats::filter()`, the function that has been shadowed.
++ Using the data above, compute the **mean absolute deviation (MeanAD)** and the **median absolute deviation (MAD)** with the pipe. R's absolute-value function is `abs()`. The definitions are:
+
+$$MeanAD = \frac{1}{n}\sum_{i=1}^n|x_i - \bar{x}|$$
+$$MAD = \mathrm{median}(|x_1-\mathrm{median}(x)|,\cdots,|x_n-\mathrm{median}(x)|)$$
+
+## Column and row selection
+
+Now to more substantive data wrangling with the tidyverse. We begin by selecting subsets of columns and rows — a basic operation for narrowing the data to which an analysis is applied.
+
+### Column selection
+
+Column selection is performed by `select()`, from `dplyr` in the tidyverse. Note that several other packages (notably `MASS`) define a function of the same name, so be alert for conflicts.
+
+We illustrate with `iris`, a sample dataset included in base R. Since `iris` has 150 rows, we use `head()` to show only the first few rows in the snippets that follow; in your own exercises `head()` is not strictly required.
+
+```{r}
+# inspect the iris dataset
+iris %>% head()
+# extract a subset of variables
+iris %>%
+  select(Sepal.Length, Species) %>%
+  head()
+```
+
+A minus sign drops variables:
+
+```{r}
+iris %>%
+  select(-Species) %>%
+  head()
+# dropping several variables
+iris %>%
+  select(-c(Petal.Length, Petal.Width)) %>%
+  head()
+```
+
+`select()` also accepts pattern-matching helpers:
+
++ `starts_with()`
++ `ends_with()`
++ `contains()`
++ `matches()`
+
+Examples:
+
+```{r}
+# variables starting with a given string
+iris %>%
+  select(starts_with("Petal")) %>%
+  head()
+# variables ending with a given string
+iris %>%
+  select(ends_with("Length")) %>%
+  head()
+# variables containing a substring
+iris %>%
+  select(contains("etal")) %>%
+  head()
+# selection by regular expression
+iris %>%
+  select(matches(".t.")) %>%
+  head()
+```
+
+**Regular expressions** are a notation for specifying string patterns, common to many programming languages and even widely used in bibliographic search systems. Patterns are constructed from ordinary characters together with **metacharacters** denoting "any character," "start of string," "end of string," and so on. A Web search for "regular expression" will surface many tutorials.
+
+### Row selection
+
+If columns of a data frame correspond to variables, then rows correspond to observations (cases). Row selection is performed by `dplyr::filter()`.
+
+```{r}
+# rows where Sepal.Length exceeds 6
+iris %>%
+  filter(Sepal.Length > 6) %>%
+  head()
+# rows of a particular species
+iris %>%
+  filter(Species == "versicolor") %>%
+  head()
+# combining conditions
+iris %>%
+  filter(Species != "versicolor", Sepal.Length > 6) %>%
+  head()
+```
+
+`==` is the equality operator: a single `=` would be interpreted as assignment, so equality testing requires the doubled form. Likewise, `!=` is the inequality operator, true when the operands differ.
+
+## Creating and reassigning variables
+
+Creating new variables from existing ones — or reassigning values — is among the most common operations in data wrangling. One may, for instance, dichotomise a continuous variable at some threshold to produce a categorical "high/low" variable, or apply a linear transformation to change units. Such variable manipulations — "engineering features from existing variables" — are performed with `dplyr::mutate()`. An example:
+
+```{r}
+mutate(iris, Twice = Sepal.Length * 2) %>% head()
+```
+
+A new variable `Twice` has been created. `mutate()` is typically used inside a pipe (in fact that is its primary mode of use). The next example partitions `Sepal.Length` into "high" and "low" groups at the mean:
+
+```{r}
+iris %>%
+  select(Sepal.Length) %>%
+  mutate(Sepal.HL = ifelse(Sepal.Length > mean(Sepal.Length), 1, 2)) %>%
+  mutate(Sepal.HL = factor(Sepal.HL, label = c("High", "Low"))) %>%
+  head()
+```
+
+`ifelse(condition, value_if_true, value_if_false)` is a conditional that returns the second argument when the condition holds and the third otherwise. Here we return 1 when above the mean and 2 otherwise, assign the result to a new variable `Sepal.HL` via `mutate()`, and then in a second `mutate()` overwrite that variable with a factor version of itself. Assigning back to the same variable name is the idiom for type conversion as well (character → numeric, numeric → factor, and so on).
+
+## Exercises 2. select, filter, mutate
+
++ Read `Baseball.csv` into a data frame named `df`.
++ The data frame `df` contains many variables. `names(df)` returns the variable names. List them.
++ From `df`, retain only `Year` (year), `Name` (player name), `team` (team), `height`, `weight`, `salary`, and `position`. Assign the result to `df2`.
++ `df2` covers several seasons; we want only the 2020 data. Filter accordingly.
++ Now filter further to keep only the 2020 *Hanshin Tigers* records.
++ Conversely, filter to the 2020 data *excluding* the Hanshin Tigers.
++ Create a body-mass-index variable, BMI = weight (kg) / height (m)². Note that `height` is in centimetres.
++ Create a new factor variable `position2` distinguishing pitchers from fielders. Fielders are everyone who is not a pitcher (infielders, outfielders, and catchers).
++ Japanese professional baseball is divided into the *Central League* and the *Pacific League*. The Central League teams are Giants, Carp, Tigers, Swallows, Dragons, and DeNA; the Pacific League is everything else. Add a factor variable `League` to `df2` accordingly.
++ The `Year` variable is stored as a string because each value ends in 年度 ("season"). Strip that suffix and convert the variable to numeric.
+
+## Long and wide formats {#sec-Long_and_Wide}
+
+So far the data we have seen have been stored as a two-dimensional array of cases × variables. This layout is convenient for humans but not always for machines. Indeed, spreadsheet software is sometimes (in)famously mis-used in Japan in a way nicknamed "*kami Excel*" (god-like Excel), in which a spreadsheet is treated as graph paper or manuscript-style ruled paper. Visually intuitive, perhaps; but the data become structurally opaque to a computer and very difficult to analyse. Many such datasets are still in circulation.
+
+In response, in December 2020 Japan's Ministry of Internal Affairs and Communications issued a unified set of rules for machine-readable data layout [@soumu], including a checklist:
+
++ Is the file format Excel or CSV?
++ Is there one datum per cell?
++ Are numeric data stored as numeric (no embedded strings)?
++ Are there no merged cells?
++ Are spaces and line breaks not used for cosmetic layout?
++ Are no column headings omitted?
++ Are formulas converted to their numeric results?
++ Are no embedded objects (images, etc.) used?
++ Are units of measurement recorded?
++ Are no platform-specific characters used?
++ Is the data not split into fragments?
++ Is there only one table per sheet?
+
+The basic rule is: **build a single self-contained dataset with one case per row, with neither omissions nor extras.**
+
+Independently, @Hadley2014 proposed the notion of **tidy data** as a canonical form for analysis. Tidy data have four properties:
+
+- Each variable forms one column.
+- Each observation forms one row.
+- Each type of observational unit forms one table.
+- Each value forms one cell.
+
+In tidy form, the correspondence between variables and values is unambiguous to a computer and the data are straightforward to analyse. It is no exaggeration to say that the goal of data wrangling is to take messy, irregular data and put them into tidy form.
+
+A subtle but important observation: variable names themselves can also be regarded as a variable. Consider a matrix-style table of the form:
+
+
+|       | Morning | Afternoon | Evening | Night |
+|-------|---------|-----------|---------|-------|
+| Tokyo | clear   | clear     | rain    | rain  |
+| Osaka | clear   | cloudy    | clear   | clear |
+| Fukuoka | clear | cloudy    | cloudy  | rain  |
+: Wide-format data
+
+
+
+To read the evening weather in Osaka, one finds the Osaka row and the Evening column. That is, locating a single cell requires referencing both a row label and a column label.
+
+The same data can be rearranged like this:
+
+
+| Region   | Time      | Weather |
+|----------|-----------|---------|
+| Tokyo    | Morning   | clear   |
+| Tokyo    | Afternoon | clear   |
+| Tokyo    | Evening   | rain    |
+| Tokyo    | Night     | rain    |
+| Osaka    | Morning   | clear   |
+| Osaka    | Afternoon | cloudy  |
+| Osaka    | Evening   | clear   |
+| Osaka    | Night     | clear   |
+| Fukuoka  | Morning   | clear   |
+| Fukuoka  | Afternoon | cloudy  |
+| Fukuoka  | Evening   | cloudy  |
+| Fukuoka  | Night     | rain    |
+: Long-format data
+
+The information content is identical, but locating the "Osaka, evening" record requires only row selection — easier for a machine to handle. This second layout is the **long format** (or "vertical" layout); the original is the **wide format** ("horizontal" layout).
+
+One advantage of the long format is the handling of missing values. In a wide table, dropping a whole row or column when only one cell is missing is wasteful; targeting both a row and a column for partial deletion is technically awkward. In a long table, the missing record is a single row to be dropped.
+
+The `tidyverse` (specifically `tidyr`) provides functions for moving between long and wide layouts. First, `pivot_longer()` converts wide to long:
+
+```{r}
+iris %>% pivot_longer(-Species)
+```
+
+Here we pivot the `iris` data around `Species`: all other variables are stacked into a `name`/`value` pair.
+
+Conversely, `pivot_wider()` reshapes long back to wide:
+
+```{r}
+iris %>%
+  select(-Species) %>%
+  rowid_to_column("ID") %>%
+  pivot_longer(-ID) %>%
+  pivot_wider(id_cols = ID, names_from = name, values_from = value)
+```
+
+Here `Species` is dropped and a per-row `ID` column is added. With `ID` as the key, the variable names come from `name` and the values from `value`, restoring the wide layout.[^3.2]
+
+[^3.2]: `Species` is dropped because it would not serve as a useful identifier for pivoting back (it has only three levels), and a separate row-level identifier is needed. Note also that `Species` information is lost in the round-trip: the long-format `value` column cannot simultaneously hold both character and numeric data. A workaround is to numerically encode the factor with `as.numeric()` before pivoting.
+
+## Grouping and summary statistics
+
+Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine `group_by()` with `summarise()` (or `reframe()`). An example:
+
+```{r}
+iris %>% group_by(Species)
+```
+
+The displayed contents look unchanged, but the output now shows `Species[3]`, indicating that the data are grouped into three levels of `Species`. Now `summarise()`:
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    n = n(),
+    Mean = mean(Sepal.Length),
+    Max = max(Sepal.Length),
+    IQR = IQR(Sepal.Length)
+  )
+```
+
+We compute the sample size (`n`), mean, maximum, and interquartile range (`IQR`).[^3.3]
+
+[^3.3]: The interquartile range is the difference between the 75th and 25th percentiles.
+
+The example above summarises only `Sepal.Length`. To apply the same calculation to multiple numeric variables at once, use `across()`:
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(across(
+    c(Sepal.Length, Sepal.Width, Petal.Length),
+    ~ mean(.x)
+  ))
+```
+
+A note on the `~ mean(.x)` syntax. Expressions beginning with a tilde (`~`) are *lambda functions* (or *lambda expressions*) in R — a compact way to define an anonymous function on the fly. The same thing can be written with an explicit `function`:
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(across(
+    c(Sepal.Length, Sepal.Width, Petal.Length),
+    function(x) {
+      mean(x)
+    }
+  ))
+```
+
+We will return to functions and lambdas in detail later; for now, focus on the pattern for applying a function across multiple variables. The variable-selection helpers introduced with `select()` (`starts_with()`, etc.) also work inside `across()`. Here is an example combining multi-variable selection with multi-function application; multiple functions are provided as a named list of lambdas.
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(across(starts_with("Sepal"),
+    .fns = list(
+      M = ~ mean(.x),
+      Q1 = ~ quantile(.x, 0.25),
+      Q3 = ~ quantile(.x, 0.75)
+    )
+  ))
+```
+
+## Exercises 3. Reshaping data
+
++ Use the `df2` object built above. If it is no longer in your environment, return to the previous exercises and recreate it.
++ Group by year and compute, for each year, the number of registered players (count of rows) and the mean salary.
++ Group by year *and* team and compute the same two statistics for each year–team combination.
++ Convert the resulting summary to wide format with `pivot_wider()`, with one row per year and one column per team-variable combination.
++ Convert the wide-format result back to long format using `pivot_longer()` with `Year` as the key.

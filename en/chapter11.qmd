@@ -1,0 +1,407 @@
+# Multiple Regression
+
+## Regression basics
+
+We turn to regression analysis. Simple linear regression fits the linear functional relationship $y = f(x)$ between a predictor $x$ and a response $y$ via
+
+$$ y_i = \beta_0 + \beta_1 x_i + e_i = \hat{y}_i + e_i.$$
+
+The linear part $\hat{y}_i$ is the **fitted value**, and the gap $e_i = y_i - \hat{y}_i$ is the **residual**.
+
+Finding the intercept and slope of a line in the plane is the basic problem. Two points determine a unique line; data analysis, however, fits a line to many points, so an external criterion is needed. The criterion "minimise the variance of the residuals" leads to **ordinary least squares (OLS)**; the criterion "assume normal residuals and maximise their likelihood" leads to **maximum likelihood estimation (MLE)**. The former has a descriptive-statistics flavour; the latter is more thoroughly a probability model. A third option, popular when an informative prior is available, is **Bayesian estimation**.
+
+The OLS estimates have the closed form below. We refer to other texts [@kosugi2018; @Nishiuchi201712] for proofs; in outline, minimise the residual sum of squares $\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2$ by expansion or partial differentiation. It is gratifying that the result is expressible purely in terms of sample statistics — the means $\bar{x}, \bar{y}$, the variances $s_x, s_y$, and the correlation $r_{xy}$:
+
+$$\beta_0 = \bar{y} - \beta_1\bar{x},\quad \beta_1 = r_{xy} \frac{s_y}{s_x}.$$
+
+We have assumed $x$ and $y$ are both continuous; if $x$ is binary or otherwise categorical, the "line" passes through the group means of $y$, and "slope = 0" becomes the null hypothesis "all group means are equal" — the same null that drives the $t$-test. From this angle, the $t$-test and ANOVA are special cases of regression, and the unified framework is the **general linear model**: the response is continuous, the linear part gives the mean, and a normal residual is added.
+
+ANOVA also accommodates several factors. Setting interactions aside, a two-factor model is
+
+$$ y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + e_i.$$
+
+A regression with more than one predictor is called **multiple regression**. The model is linear in each predictor, so it sits inside the linear-model family. In a multiple regression one often wants to compare predictors by "which has the larger effect on $y$," but raw coefficients depend on the unit of each $x$ and are awkward in that role. The remedy is to standardise all variables first and report the **standardised coefficients**.
+
+
+## Properties of regression
+We now use concrete data to explore the properties of regression.
+
+### Parameter recovery
+Generate data from the regression model and then "recover" the parameters by fitting.
+
+We draw the predictor from a uniform distribution and add normal noise with SD $\sigma$:
+```{r}
+#| message: FALSE
+pacman::p_load(tidyverse)
+set.seed(123)
+n <- 500
+beta0 <- 2
+beta1 <- 3
+sigma <- 1
+# generate data
+x <- runif(n, -10, 10)
+e <- rnorm(n, 0, sigma)
+y <- beta0 + beta1 * x + e
+
+dat <- data.frame(x, y)
+# inspect
+head(dat)
+dat %>% ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = "y~x") # draw the linear fit
+```
+
+Regress $y$ on $x$:
+
+```{r}
+result.lm <- lm(y ~ x, data = dat)
+summary(result.lm)
+```
+
+We set $\beta_0 = 2, \beta_1 = 3, \sigma = 1$; the fitted coefficients are essentially those true values. Recovery accuracy depends on the linearity of the data; with large residual variance or small samples, recovery may not be as clean.
+
+### Normality of residuals and residual correlations
+
+`lm()` returns an object with much more information than is printed. Fitted values and residuals, for instance, are stored on it, and we can use them to study the fit.
+
+```{r}
+dat <- bind_cols(dat, yhat = result.lm$fitted.values, residuals = result.lm$residuals)
+summary(dat)
+```
+
+The fitted values $\hat{y}$ are stored in `fitted.values`. Their mean equals the mean of the response $y$ — natural, since regression stretches ($\times \beta_1$) and shifts ($+\beta_0$) $x$ to fit $y$, and any such linear map preserves the centre when fitted by OLS.[^11.1]
+
+Likewise the mean of the residuals is zero. If it were some constant $c \neq 0$, the intercept would be systematically off by $c$, and that systematic offset would be absorbed into the best linear fit.[^11.2]
+
+[^11.1]: Provably: from $\beta_0 = \bar{y} - \beta_1\bar{x}$ and $\beta_1 = r_{xy} \frac{s_y}{s_x}$, we have $\bar{\hat{y}} = \frac{1}{n}\sum(\bar{y} - \beta_1\bar{x} + \beta_1 x_i) = \bar{y} - \beta_1\bar{x} + \beta_1 \frac{1}{n}\sum x_i = \bar{y}$.
+
+[^11.2]: Provably: $\bar{e} = \frac{1}{n}\sum e_i = \frac{1}{n}\sum (y_i - \hat{y}_i) = \bar{y} - \bar{\hat{y}} = 0$.
+
+
+The regression model also assumes the residuals are normally distributed. A **Q-Q plot** lets us check this.
+
+```{r}
+dat %>%
+  ggplot(aes(sample = residuals)) +
+  stat_qq() +
+  stat_qq_line()
+```
+
+A Q-Q plot compares two distributions by plotting their quantiles against each other. The x-axis shows quantiles of the theoretical distribution; the y-axis the empirical quantiles. Points lying on a 45° line indicate that the empirical distribution matches the theoretical one; departures from the line indicate departures from the theoretical distribution. Here the points fall close to the line, so no major non-normality.
+
+Depending on how data are generated, the response may be binary, ordinal, or a count — not normally distributed. In such cases forcing a regression is inappropriate. **Always visualise the data** and check that the model assumptions are reasonable before trusting the output.
+
+You can also pass the fitted object directly to `plot()`, which produces a set of diagnostic plots: residuals vs fitted values, the Q-Q plot, scale-location, and leverage vs standardised residuals.[^11.3]
+
+[^11.3]: Large standardised residuals indicate likely outliers requiring careful interpretation. *Leverage* indicates a point's influence on the regression coefficients; observations near the edges of this plot also deserve attention.
+
+```{r}
+plot(result.lm)
+```
+
+As the residuals-vs-fitted plot suggests, the correlation between them is zero. Visualise it:
+
+```{r}
+#| message: FALSE
+pacman::p_load(GGally) # install if not yet available
+ggpairs(dat)
+```
+
+Residuals are uncorrelated with both the predictor and the fitted values.[^11.4] A non-zero residual–predictor correlation would mean that variance in $y$ explainable by $x$ is still unexplained; a non-zero residual–fitted correlation would mean that residuals depend systematically on the size of the fitted value (heteroscedasticity, for instance). Bearing these properties in mind, we now look at multiple regression.
+
+[^11.4]: Provably; see @kosugi2018 for details.
+
+
+## Properties of multiple regression
+
+In a multiple regression the coefficients are called **partial regression coefficients**. The word "partial" is meaningful.
+
+### Regression vs partial regression coefficients
+
+In a simple regression the slope is "the change in $y$ per unit change in $x$." In a multiple regression the partial coefficient is **not** "the change in $y$ per unit change in $x_1$"; with multiple predictors $x_2, x_3, \ldots$ also present, that interpretation ignores variation along those other dimensions.
+
+If the predictors were exactly orthogonal (uncorrelated), the changes due to $x_1$ and $x_2$ could be cleanly separated, but in practice they are correlated. The partial regression coefficient is the regression coefficient **controlling for** the other predictors.
+
+We saw above that the residual from a simple regression is uncorrelated with the predictor: all the variance in $y$ explainable by $x$ has been removed, leaving as the residual the part of $y$'s variance not explainable by $x$ — i.e., $y$'s variance net of the effect of $x$. (Total variance of $y$ = variance explained by $x$ + variance of the residual.)
+
+Now bring in a second predictor $x_2$. The correlation between $e_y$ (the residual from regressing $y$ on $x_1$) and $e_{x_2}$ (the residual from regressing $x_2$ on $x_1$) is the **partial correlation**. Both residuals have had $x_1$'s effect removed, so the partial correlation is the correlation between $y$ and $x_2$ controlling for $x_1$. Partial correlations are important for ruling out "spurious" relationships.
+
+Compute a partial correlation:
+```{r}
+#| message: FALSE
+pacman::p_load(MASS)
+pacman::p_load(psych)
+Sigma <- matrix(c(1, 0.3, 0.5, 0.3, 1, 0.8, 0.5, 0.8, 1), ncol = 3)
+X <- mvrnorm(1000, c(0, 0, 0), Sigma, empirical = TRUE) %>% as.data.frame()
+## correlation matrix
+cor(X)
+## obtain residuals from two simple regressions
+result.lm1 <- lm(V2 ~ V1, data = X)
+result.lm2 <- lm(V3 ~ V1, data = X)
+cor(result.lm1$residuals, result.lm2$residuals)
+## verify with psych::partial.r
+psych::partial.r(X)[2, 3]
+```
+
+The last line uses `psych::partial.r()` to cross-check; the partial correlation indeed equals the correlation of the two residuals.
+
+The same logic applies to partial regression coefficients themselves: a partial coefficient *is* the coefficient one would obtain by regressing one residual on another. Confirm this for the dataset above, using $V_1$ as the response in a multiple regression:
+
+```{r}
+result.mra <- lm(V1 ~ V2 + V3, data = X)
+# retrieve the coefficients
+result.mra$coefficients
+# verify the partial coefficient using residuals
+result.lm3 <- lm(V1 ~ V3, data = X)
+result.lm4 <- lm(V2 ~ V3, data = X)
+result.lm5 <- lm(result.lm3$residuals ~ result.lm4$residuals)
+result.lm5$coefficients
+```
+
+The multiple regression's `V2` coefficient is `r round(result.mra$coefficients[2],4)`. The coefficient obtained by regressing the residuals (each net of `V3`) is `r round(result.lm5$coefficients[2],4)` — the same.
+
+The partial coefficient for `V3` follows analogously, by removing the effect of `V2` from both `V1` and `V3` and regressing the residuals. In short, partial regression coefficients are coefficients *controlling for the other predictors*: "the effect of this variable, conditional on the other variables being equal."
+
+This belaboured framing is intentional. The "conditional on" qualifier is frequently dropped in reports and interpretations, often misleadingly. @yoshidaMRA recently sparked discussion on this point.[^11.5] In our example, the partial coefficient for `V2` is `r round(result.mra$coefficients[2],4)`, whereas the simple correlation between `V1` and `V2` is `r round(cor(X$V1,X$V2),4)`. The signs disagree — interpretations of the two would be directly opposed. The actual simple correlation is positive, so reporting (without qualifier) "`V2` has a negative effect, `V3` a positive one" would mislead.
+
+@Toyoda201706 argues that to avoid this trap, one should use **conjoint analysis** with orthogonalised predictors. If we are not capable of using multiple regression carefully, such alternative designs are well worth considering.
+
+[^11.5]: After the paper appeared in early-access form, the Japanese Psychological Association hosted an online symposium with the author and the authors of the paper criticised (Japan Psychological Association YouTube Live, "Conversations with Authors of Notable Papers," 2 July 2021, 20:00–21:40 JST). Despite the weekday-evening slot and the not-yet-final article, nearly 1,700 viewers attended.
+
+### Multicollinearity
+
+One reason partial coefficients are hard to interpret is that the predictors are themselves correlated. When that inter-predictor correlation is very high, it gives rise to **multicollinearity** — inflation of the standard errors of the regression coefficients.
+
+In the example above, `V2` and `V3` had correlation $0.8$. Check the standard errors:
+
+```{r}
+summary(result.mra)
+```
+
+The standard error is `r round(sqrt(diag(vcov(result.mra)))[2],4)`, not problematically large. But as the inter-predictor correlation rises further and one predictor becomes nearly linearly dependent on another, the coefficient estimates become unstable.
+
+The diagnostic for this inflation is the **variance inflation factor (VIF)**. In R, `car::vif()` accepts a fitted multiple regression and returns each predictor's VIF. A common rule of thumb is that a VIF above 3 — or above 10 — indicates multicollinearity meriting attention.[^11.6]
+```{r}
+#| message: FALSE
+pacman::p_load(car) # install if not available
+vif(result.mra)
+```
+
+The values here are below those thresholds, so we are within an acceptable range.
+
+[^11.6]: In a two-predictor multiple regression, VIF $= 3$ corresponds to inter-predictor correlation $r \approx 0.81$; VIF $= 10$ corresponds to $r \approx 0.97$. See @kosugi2023 for details.
+
+### Variable-entry order
+
+Multiple regression has many predictors, and they can be entered all at once (**forced entry**) or one at a time. The latter approach, **stepwise selection**, adds (or removes) predictors based on whether some goodness-of-fit measure improves significantly.
+
+The correlation between $\hat{y}$ (the fitted values from a multiple regression) and $y$ is called the **multiple correlation coefficient**, $R_{y\hat{y}}$. It is one measure of fit. Like any correlation it lies in $[-1, 1]$, but a value of $-1$ would be just as good a fit as $+1$, so the sign is uninformative. Squaring it gives $R^2$, the **coefficient of determination**, the fraction of variance in the response explained by the fitted values.[^11.7]
+
+[^11.7]: Provably; see @kosugi2018.
+
+Stepwise selection comes in **forward** (start with no predictors and add) and **backward** (start with all and drop) variants. The forward step asks whether adding a candidate predictor significantly increases $R^2$; the backward step asks whether removing one significantly decreases it. The procedure finds the combination of predictors best fitting the data in hand, but the repeated testing has the usual multiple-comparisons issues, and the procedure is also questioned for weak generalisability.
+
+A different motivation for stepwise entry is **hierarchical regression**, developed for examining interactions. Multiple regression prefers uncorrelated predictors, but interactions are essential effects of combinations between predictors — and they are correlated with the main effects by construction. Regression and ANOVA are unified under the general linear model, and regression too can express interaction effects between continuously varying predictors. Because interactions imply non-zero inter-predictor correlations, their inclusion can trip the basic assumption of regression and so deserves care.
+
+The recommendation, then, is to enter the main effects first, then add interaction terms, and check whether model fit improves significantly. This stepwise procedure is called **hierarchical regression**. Here "hierarchical" refers to the *ordering* of steps by importance, not to a hierarchical structure of the data.[^11.8]
+
+[^11.8]: A linear model that *does* explicitly model hierarchical data structure (e.g., classroom ⊂ municipality ⊂ prefecture) is the **hierarchical linear model** (HLM).
+
+## Standard errors of coefficients and tests
+
+### Testing the coefficients
+
+Because the sample is a random variable drawn from a population, the (partial) regression coefficients are also random variables: they vary from sample to sample, and that variability has some probability distribution. We can study that distribution by simulation.
+
+```{r}
+set.seed(123)
+n <- 500
+beta0 <- 2
+beta1 <- 3
+sigma <- 1
+# data-generation helper
+dataMake <- function(n, beta0, beta1, sigma) {
+  x <- runif(n, -10, 10)
+  e <- rnorm(n, 0, sigma)
+  y <- beta0 + beta1 * x + e
+  dat <- data.frame(x, y)
+  return(dat)
+}
+
+# storage
+iter <- 2000
+beta0.est <- rep(NA, iter)
+beta1.est <- rep(NA, iter)
+# simulation
+for (i in 1:iter) {
+  sample <- dataMake(n, beta0, beta1, sigma)
+  result.lm <- lm(y ~ x, data = sample)
+  beta0.est[i] <- result.lm$coefficients[1]
+  beta1.est[i] <- result.lm$coefficients[2]
+}
+
+data.frame(x = beta0.est) %>% ggplot(aes(x = x)) +
+  geom_histogram()
+data.frame(x = beta1.est) %>% ggplot(aes(x = x)) +
+  geom_histogram()
+```
+
+Coefficients do indeed vary; their average lies near the true value.
+
+```{r}
+mean(beta0.est)
+mean(beta1.est)
+```
+
+The width of this distribution is the standard error of the coefficient.
+
+```{r}
+sd(beta0.est)
+sd(beta1.est)
+```
+
+A regression coefficient follows a $t$-distribution with $n - p$ degrees of freedom (sample size minus number of fitted coefficients). Standardise the histogram and overlay the theoretical density:
+
+```{r}
+data.frame(x = beta1.est) %>%
+  scale() %>%
+  ggplot(aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 100) +
+  stat_function(fun = function(x) dt(x, df = n - 2), color = "red", linewidth = 2)
+```
+
+This $t$ distribution provides the basis for testing whether the population coefficient is zero.
+
+### Testing overall model fit
+
+Note that the output also reports an $F$-statistic. Here is a multiple-regression example:
+```{r}
+set.seed(123)
+n <- 500
+beta0 <- 2
+beta1 <- 0
+beta2 <- 0
+sigma <- 1
+x1 <- runif(n, -10, 10)
+x2 <- runif(n, -10, 10)
+e <- rnorm(n, 0, sigma)
+y <- beta0 + beta1 * x1 + beta2 * x2 + e
+sample <- data.frame(y, x1, x2)
+result.lm <- lm(y ~ x1 + x2, data = sample)
+summary(result.lm)
+```
+
+The $F$-statistic on $($`r summary(result.lm)$fstatistic[2]`, `r summary(result.lm)$fstatistic[3]`$)$ degrees of freedom is `r round(summary(result.lm)$fstatistic[1],4)`, not significant (p = `r round(pf(summary(result.lm)$fstatistic[1], summary(result.lm)$fstatistic[2], summary(result.lm)$fstatistic[3], lower.tail = FALSE),4)`, n.s.).
+
+This is a test of the multiple correlation: the null is that the model as a whole has no explanatory power in the population. With $p$ predictors, sample size $n$, and multiple correlation $R^2$, the test statistic is [@Haebara2014]
+
+$$ F = \frac{R^2}{1-R^2}\cdot\frac{n-p-1}{p}. $$
+
+The first factor, $f^2 = R^2/(1 - R^2)$, is **Cohen's $f^2$**, the effect size used for sample-size planning.
+
+## Sample-size planning
+
+If the effect sizes of the predictors (the regression coefficients) are known in advance, sample-size planning can proceed by a simulation that gradually increases $n$. In practice, however, those are rarely known, and one uses the $R^2$ test to find the sample size that delivers the desired power at a given effect size.
+
+The relevant distribution is the **non-central F-distribution**. Its non-centrality parameter is the effect size $f^2$ times $n$.
+
+```{r}
+f2 <- 0.15 # effect size
+alpha <- 0.05 # Type I error rate
+beta <- 0.2 # Type II error rate
+p <- 5 # number of predictors
+
+for (n in 10:500) {
+  lambda <- f2 * n
+  df1 <- p
+  df2 <- n - p - 1
+  cv <- qf(p = 1 - alpha, df1, df2)
+  t2error <- pf(q = cv, df1, df2, ncp = lambda)
+  if (t2error < beta) {
+    break
+  }
+}
+
+print(n)
+```
+
+Under these settings, $n \geq$ `r n` is sufficient to claim that the model has non-zero explanatory power.
+
+## Summary
+
+Multiple regression is heavily used in the humanities and social sciences, but the technique often outruns understanding. We recap the cautionary points.
+
++ **Meaning of partial coefficients.** A partial coefficient is conditional on the other predictors; treating coefficients as if independently orthogonal is incorrect.
++ **Normality of errors.** The model assumes normal errors. Do not apply regression blindly to binary or count data. Check normality after the fit with a Q-Q plot.
++ **Homoscedasticity of errors.** The model assumes errors share the same normal distribution everywhere; heteroscedasticity (variance depending on the predictor) violates this and is unmasked by Q-Q-style diagnostics.
++ **Independence of errors.** The model assumes errors are i.i.d. Time-series data with serial dependence (autoregression) breaks this; use a state-space model or other approach that models the dependence.
++ **Correct model specification.** All predictors that influence $y$ must be included. Omitting an influential variable $X_o$ that correlates with an included $X_a$ causes $X_o$'s effect to leak through $X_a$, distorting $X_a$'s estimated effect. Deliberately excluding variables to favour a hypothesis is a QRP.
++ **Inter-predictor correlations.** If two predictors are very highly correlated, multicollinearity becomes a concern; coefficient estimates become unstable. Mitigations include combining them via principal component analysis. If the goal is to study interactions rather than collinearity, enter terms one at a time and assess effects carefully (hierarchical regression). Interaction terms are usually constructed from the mean-centred deviation of each variable.
+
+## Exercises
+
+
+1. The following dataset is sample data for a multiple regression with response $y$ and predictors $x_1, x_2$. Only a few rows are shown; the full dataset ($n = 100$) is available at [ex_regression1.csv](ex_regression1.csv). Run a multiple regression and report the results.
+
+```{r}
+#| echo: FALSE
+set.seed(123)
+n <- 100
+beta0 <- 2
+beta1 <- 0
+beta2 <- 1
+sigma <- 3
+x1 <- runif(n, -10, 10)
+x2 <- runif(n, -10, 10)
+e <- rnorm(n, 0, sigma)
+y <- beta0 + beta1 * x1 + beta2 * x2 + e
+sample <- data.frame(y, x1, x2)
+head(sample)
+write.csv(sample, file = "ex_regression1.csv")
+```
+
+2. The following dataset is sample data for a multiple regression with response $y$ and predictors $x_1, x_2$. Only a few rows are shown; the full dataset ($n = 300$) is available at [ex_regression2.csv](ex_regression2.csv). Run a multiple regression. From the diagnostic plots, identify which of the listed regression assumptions appear to be violated.
+
+```{r}
+#| echo: FALSE
+set.seed(123)
+n <- 300
+beta0 <- 2
+beta1 <- 1
+beta2 <- 2
+rho <- 0.8
+tau <- 1.5
+x1 <- runif(n, -1, 1)
+x2 <- rho * x1 + sqrt(1 - rho^2) * rnorm(n)
+e <- rnorm(n, 0, exp(x2 * tau))
+y <- beta0 + beta1 * x1 + beta2 * x2 + e
+sample <- data.frame(y, x1, x2)
+head(sample)
+write.csv(sample, file = "ex_regression2.csv")
+```
+
+3. Compute the sample size required to achieve power $1 - \beta = 0.8$ for a multiple regression with $p = 10$ predictors targeting $R^2 = 0.3$, with $\alpha = 0.05$ and $\beta = 0.2$.
+
+```{r}
+#| include: FALSE
+#| echo: FALSE
+#| eval: FALSE
+
+R2 <- 0.3
+f2 <- R2 / (1 - R2) # effect size
+alpha <- 0.05
+beta <- 0.2
+p <- 10
+
+for (n in 20:500) {
+  lambda <- f2 * n
+  df1 <- p
+  df2 <- n - p - 1
+  cv <- qf(p = 1 - alpha, df1, df2)
+  t2error <- pf(q = cv, df1, df2, ncp = lambda)
+  if (t2error < beta) {
+    break
+  }
+}
+print(n)
+```

@@ -1,0 +1,286 @@
+# Multi-group Tests of Mean Differences
+
+In psychology experiments, the analysis of variance (ANOVA) has classically been heavily used. Experimental designs are carefully constructed so that the effects (causal relationships) of the manipulation can be uncovered by comparing mean differences. The result is, in its theoretical consistency, a kind of elegance — and it has captivated many researchers.
+
+Experimental designs built specifically to feed an ANOVA can be criticised for the inflexibility they impose ("everything must be analysable by ANOVA!"), but the counter-argument is that psychological measurements often do not have the precision to support inference more refined than mean differences anyway.
+
+More sophisticated statistical models have since superseded ANOVA, and ANOVA may already feel like a relic in present-day research; but those more sophisticated models are themselves extensions of the ANOVA framework, so it remains worthwhile to revisit the basics.
+
+## Basics of ANOVA
+
+The name "analysis of variance" suggests that variance itself is the object of analysis, but the ANOVA is in fact a test of mean differences. The name reflects the fact that — as we saw with effect sizes — to judge a mean difference one needs information on within-group variance.
+
+The variability among the group means is called the **between-group variance**, and the variability among the data within each group is called the **within-group variance**. ANOVA declares a statistically significant difference between groups when the ratio of between- to within-group variance is sufficiently large. The probability distribution for the ratio of two variances is the **F-distribution**, parameterised by the degrees of freedom of the between- and within-group sums of squares.
+
+Experimental designs are divided into **between-subjects** and **within-subjects** designs. The "independent groups with no correspondence" design familiar from the $t$-test is a between-subjects design; designs in which the groups *are* correlated — paired in some way — are within-subjects designs. Within-subjects designs draw repeated responses from the same individual (e.g., periods 1, 2, 3, …) and are also called **repeated-measures** designs. They allow the within-individual (i.e., individual-difference) component of variance to be separated out, so they are intrinsically more sensitive to the effect of interest than a between-subjects design, which cannot make that separation. However, the burden on each participant in a within-subjects design imposes its own practical limits.
+
+$$\text{Between-subjects: total variance} = \text{between-group} + \text{within-group (error)}$$
+$$\text{Within-subjects: total variance} = \text{between-group} + \text{individual differences} + \text{error}$$
+
+When there are multiple factors, a design may mix the two: factor A between-subjects and factor B within-subjects gives a **mixed design**. By convention one writes the *factor* in capital letters and combines it with the *levels* it carries: a "$\text{between-}2 \times \text{between-}3$" ANOVA is a two-factor between-subjects design with two and three levels on the two factors.
+
+## ANOVA workflow
+
+Just as the $t$-test required prior consideration of the homogeneity-of-variance assumption, between-subjects ANOVA assumes equal variances across groups, and this should be checked beforehand with Levene's test or similar. Within-subjects ANOVA assumes more: that the off-diagonal entries of the relevant variance–covariance matrix are all equal. This is rarely satisfied in practice, but the relaxed assumption of **sphericity** suffices, and the sphericity assumption is conventionally tested in advance. If it fails, the degrees of freedom can be adjusted (analogously to Welch's correction in the $t$-test) so that the test remains valid.
+
+ANOVA tests mean differences in designs with multiple factors and multiple levels. The natural first thought — "why not just run pairwise $t$-tests across all levels?" — runs into a familiar problem: doing so loses control of the overall Type I error rate $\alpha$. The ANOVA tests, in one shot, the null hypothesis "all factor/level means are equal." Once this null is rejected — i.e., once some difference is in the data — one proceeds to follow-up tests with careful control of $\alpha$.
+
+The follow-up tests on levels are sometimes called **post hoc** tests. There is no gold-standard method, and in practice the choice is dictated by whichever procedure one's software supports. With many factors and many levels, the number of comparisons explodes and the post hoc procedure becomes elaborate. Statistical software will obligingly decompose the ANOVA table over and over to drive the comparisons, but the multiple-comparison problem does not go away just because the software handles it — and giving a coherent overall interpretation across many follow-up tests is genuinely difficult. Simpler designs are better, and where the design seems to demand complex modelling, it is preferable to move to more general models such as hierarchical linear models or Bayesian methods.
+
+## Using ANOVA君 (anovakun)
+
+R provides base functions such as `aov()` and the `car` package for running ANOVAs. The output is not always particularly helpful, however, and post hoc tests and effect-size calculations often require additional packages and additional function calls.
+
+We recommend **anovakun**, developed by Ryuta Iseki at Taisho University. It is not packaged on CRAN, so you must `source()` the script from [its page](https://riseki.cloudfree.jp/?ANOVA%E5%90%9B), but it supports a wide range of designs and bundles the post hoc tests, effect sizes, sphericity corrections, and other procedures that ANOVA practice requires. We use it below.
+
+Source the script either by downloading it to the project folder and `source()`-ing the local file, or by sourcing directly from the Web (`anovakun_489.txt`)[^9.1]:
+
+```{r}
+source("https://riseki.cloudfree.jp/?plugin=attach&refer=ANOVA%E5%90%9B&openfile=anovakun_489.txt")
+```
+
+[^9.1]: As of 2024-03-17, the latest version is 4.8.9. Copy the source URL from the page.
+
+After sourcing, verify that `anovakun` appears in the *Environment* tab.
+
+### Inputs and data layout
+
+Traditionally, anovakun reads data in **wide format** — one observation per row. For a between-subjects design, the data are the dependent-variable columns preceded by an index of factor levels. For a within-subjects design, since each row is one observation, the repeated levels go across the row.
+
+As discussed in [Chapter @sec-Long_and_Wide], the more computer-friendly **long format** is now common, and anovakun has supported long-format input since version 4.4.0. When using long format, pass `long = TRUE`.
+
+The signature of `anovakun()` is: data, design pattern, level counts. The design pattern is a string in which a lowercase `s` separates between-subjects factors (on the left) from within-subjects factors (on the right). For example, `"As"` is one between-subjects factor; `"sAB"` is a two-factor within-subjects design; `"AsBC"` is a mixed design with one between- and two within-subjects factors.
+
+The level counts follow, one per factor — though for long-format input they are inferred automatically and need not be supplied.
+
+We have already discussed long/wide reshaping, so we use long format throughout below.
+
+## Between-subjects designs
+
+### One-way ANOVA
+
+The simplest case is a one-factor, three-level, between-subjects design. We build synthetic data to see the ANOVA's mechanics:
+
+```{r}
+set.seed(123)
+# per-group sample sizes
+n1 <- 5
+n2 <- 4
+n3 <- 6
+# grand mean, effect size, population SD
+mu <- 10
+delta <- 1
+sigma <- 3
+# per-group means
+mu1 <- mu - (delta * sigma)
+mu2 <- mu
+mu3 <- mu + (delta * sigma)
+# dataset
+X1 <- rnorm(n1, mu1, sigma)
+X2 <- rnorm(n2, mu2, sigma)
+X3 <- rnorm(n3, mu3, sigma)
+## assemble
+dat <- data.frame(
+  ID = 1:(n1 + n2 + n3),
+  group = as.factor(rep(LETTERS[1:3], c(n1, n2, n3))),
+  value = c(X1, X2, X3)
+)
+## inspect
+dat
+### run the ANOVA
+anovakun(dat, "As", long = TRUE, peta = TRUE)
+```
+
+The output is divided into descriptive statistics (`<< DESCRIPTIVE STATISTICS >>`), the ANOVA table (`<< ANOVA TABLE >>`), and post hoc analyses (`<< POST ANALYSES >>`). Use the descriptive statistics to verify the data have been read correctly.
+
+The main result is the ANOVA table, which divides the **sum of squares** by the **degrees of freedom** to obtain the per-df spread, and forms the between/within (error) ratio. Here the between-group SS is 98.38 and the within-group SS is 89.58, on 2 (3 levels − 1) and 12 ($\sum_{j=1}^{3} n_j - 3$) degrees of freedom respectively, so the **mean squares** are 49.19 and 7.47. The ratio is 6.5897, and the probability that an $F$ on $(2, 12)$ degrees of freedom exceeds this value is below 5% (in fact $p = 0.0117$); the test is significant.
+
+Check, in the Total row of the table, that the total SS equals the sum of the between- and within-group SS, and likewise for the degrees of freedom.
+
+We also passed `peta = TRUE` to print **partial $\eta^2$**, an effect-size measure.
+
+Because the omnibus test is significant ($F(2, 12) = 6.59, p < 0.05, \eta^2 = 0.52$), the post hoc analysis is also printed. anovakun supports several post hoc methods; the default is the Shaffer-modified Bonferroni procedure. For details see [@BA33892274]. In outline, the Bonferroni method splits $\alpha$ by the number of hypotheses; Shaffer's modification adjusts the denominator to also account for the number of competing hypotheses.
+
+Under this procedure, only the A–C comparison is significant ($t(12) = 3.61, p < 0.05$).
+
+### Two-way ANOVA
+
+The two-factor case. The design-pattern string changes, but otherwise nothing dramatic — except that the **interaction** between the factors must now be considered. Again, the simulated data clarify what the interaction encodes. For a $2 \times 2$ between-subjects design, the theoretical cell means look like this:
+
+```{r}
+set.seed(123)
+# per-cell sample size
+n <- 10
+# grand mean, effect sizes, population SD
+mu <- 10
+delta1 <- 1
+delta2 <- 0 # deliberately zero out factor B
+delta3 <- 2
+sigma <- 3
+# effects
+effectA <- delta1 * sigma # factor A
+effectB <- delta2 * sigma # factor B
+effectAB <- delta3 * sigma # interaction
+# cell means
+mu11 <- mu + effectA + effectB + effectAB
+mu12 <- mu + effectA - effectB - effectAB
+mu21 <- mu - effectA + effectB - effectAB
+mu22 <- mu - effectA - effectB + effectAB
+```
+
+Effects manifest relatively: if factor A appears at level 1 as `+effectA`, it appears at level 2 as `-effectA`. Likewise for factor B. The interaction enters at specific combinations of levels: at (A=1, B=1) it appears as `+effectAB`; to keep effects relative, the sign flips for the other combinations within each factor. Hence (A=1, B=2) carries `-effectAB`, (A=2, B=1) carries `-effectAB`, and (A=2, B=2) carries `+effectAB`.
+
+These theoretical cell means are then perturbed by error to yield realised values. Assembled:
+```{r}
+X11 <- rnorm(n, mean = mu11, sd = sigma)
+X12 <- rnorm(n, mean = mu12, sd = sigma)
+X21 <- rnorm(n, mean = mu21, sd = sigma)
+X22 <- rnorm(n, mean = mu22, sd = sigma)
+dat <- data.frame(
+  ID = 1:(n * 4),
+  FactorA = rep(1:2, each = n * 2),
+  FactorB = rep(rep(1:2, each = n), 2),
+  value = c(X11, X12, X21, X22)
+)
+dat
+```
+
+In practice, of course, the data come from whatever design was actually run, and per-cell sample sizes will often differ. Studying the theoretical composition of the data, however, lets us vary sample sizes and effect sizes and observe how the results change.[^9.2]
+
+[^9.2]: ANOVA was historically a hand-computable model, and traditional pedagogy walked students through the sums-of-squares decomposition by hand, instilling the mechanism along the way. That method, however, is slow, error-prone, and tends to reinforce the impression that the dataset in hand is uniquely meaningful. From the standpoint of inferential statistics, the data in hand are simply one realisation; in our view, the educational value of being able to generate as many synthetic datasets as one likes is higher.
+
+Now analyse these synthetic data:
+```{r}
+anovakun(dat, "ABs", long = TRUE, peta = TRUE)
+```
+
+The general reading is the same as for the one-way case. Here we engineered effects for factor A and the interaction, and they are correctly detected. As to post hoc analyses: factor A had only two levels, so a main-effect follow-up is not needed (the descriptive statistics suffice); the interaction triggers simple-effects analyses.
+
+## Within-subjects designs
+
+Within-subjects designs are best framed via a multivariate normal — as in the paired $t$-test — assuming that the within-subject responses are correlated. The code below illustrates the generative process. Covariances are written as $s_{xy} = \rho_{xy} s_x s_y$, following $\rho_{xy} = s_{xy}/(s_x s_y)$.
+
+```{r}
+pacman::p_load(tidyverse)
+pacman::p_load(MASS)
+set.seed(42)
+# sample size per condition
+n <- 10
+# grand mean, effect size, population SDs
+mu <- 10
+delta <- 1
+s1 <- s2 <- s3 <- 1
+rho12 <- 0.1
+rho13 <- 0.3
+rho23 <- 0.8
+mus <- c(mu, mu + s1 * delta, mu - s1 * delta)
+# build the covariance matrix
+Sigma <- matrix(NA, ncol = 3, nrow = 3)
+Sigma[1, 1] <- s1^2
+Sigma[2, 2] <- s2^2
+Sigma[3, 3] <- s3^2
+Sigma[1, 2] <- Sigma[2, 1] <- rho12 * s1 * s2
+Sigma[1, 3] <- Sigma[3, 1] <- rho13 * s1 * s3
+Sigma[2, 3] <- Sigma[3, 2] <- rho23 * s2 * s3
+# generate the data
+X <- mvrnorm(n, mus, Sigma) %>% as.data.frame()
+# inspect
+X
+# reshape to long
+X <- X %>%
+  rowid_to_column("ID") %>%
+  pivot_longer(-ID) %>%
+  print()
+# run the ANOVA
+anovakun(X, "sA", long = TRUE, peta = TRUE, GG = TRUE)
+```
+
+A few notes. We held the within-condition variances equal but introduced sharply different inter-condition correlations, deliberately violating the sphericity assumption. In the `<< SPHERICITY INDICES >>` output, the statistic $\lambda$ is followed by a $p$-value below 5%, so the null of "sphericity holds" is rejected. Several corrections are available; here we apply the **Greenhouse–Geisser correction** by passing `GG = TRUE` to `anovakun()`.
+
+The ANOVA table now contains a factor labelled `s`, reflecting per-subject variation; with this component pulled out, the test of the within-subjects effect operates on an error term net of individual differences.
+
+ANOVA is an additive, linear decomposition, which makes it relatively easy to grasp; even complicated designs are understandable as combinations of the basic building blocks. When data come first, careful decomposition of the sums of squares is the route to understanding. anovakun's predecessor anova4 supported up to 4 factors; anovakun supports up to 26. With four factors, however, third-order interactions arise, and interpreting them — together with the main effects and lower-order interactions — is hard. anovakun does not automatically run follow-ups on second-order or higher interactions; one must split the data by levels of one factor and decompose the ANOVA tables manually.[^9.3]
+
+That said, the multiple-comparisons issue lurks behind all of this, and the approach is not strongly recommended. Aim for designs with few factors, focused on main effects.
+
+We have also approached ANOVA here by simulating the *generative process*: rather than decomposing given data, we have reverse-engineered them. The goal is to draw attention to the assumptions ANOVA quietly makes. We simplified by homogenising some parameters; in practice, per-group sample sizes differ and the variance–covariance structure across groups is rarely uniform. Reverse engineering allows precisely such complications to be modelled when desired. Likewise, if precise hypotheses about effects at specific levels are in play, the analysis can target exactly those.
+
+ANOVA, in any case, is a tool for catching broad patterns. If psychological data ever come to support more precise assumptions, ANOVA may indeed pass into history.
+
+## Exercises
+
+1. The following dataset is from a one-factor, four-level, between-subjects design. Run an ANOVA and report whether the factor has an effect and, if there are level differences, where they lie. The data are available at [ex_anova1.csv](ex_anova1.csv).
+
+```{r}
+#| echo: FALSE
+# per-group sample sizes
+n1 <- 7
+n2 <- 4
+n3 <- 6
+n4 <- 8
+# grand mean, effects, population SD
+mu <- 10
+delta1 <- 1
+delta2 <- 3
+delta3 <- -2
+delta4 <- 0 - (delta1 + delta2 + delta3)
+sigma <- 3
+# per-group means
+mu1 <- mu + (delta1 * sigma)
+mu2 <- mu + (delta2 * sigma)
+mu3 <- mu + (delta3 * sigma)
+mu4 <- mu + (delta4 * sigma)
+# dataset
+X1 <- rnorm(n1, mu1, sigma) %>% round(2)
+X2 <- rnorm(n2, mu2, sigma) %>% round(2)
+X3 <- rnorm(n3, mu3, sigma) %>% round(2)
+X4 <- rnorm(n4, mu3, sigma) %>% round(2)
+## assemble
+dat <- data.frame(
+  ID = 1:(n1 + n2 + n3 + n4),
+  group = as.factor(rep(LETTERS[1:4], c(n1, n2, n3, n4))),
+  value = c(X1, X2, X3, X4)
+)
+dat
+write.csv(dat, file = "ex_anova1.csv")
+```
+
+2. The following dataset is from a one-factor, four-level, within-subjects design. Run an ANOVA and report whether the factor has an effect and, if there are level differences, where they lie. The data are available at [ex_anova2.csv](ex_anova2.csv).
+
+```{r}
+#| echo: FALSE
+pacman::p_load(tidyverse)
+pacman::p_load(MASS)
+set.seed(42)
+# sample size
+n <- 12
+# grand mean, effects, population SDs
+mu <- 10
+delta1 <- 1
+delta2 <- 3
+delta3 <- 4
+delta4 <- 0 - (delta1 + delta2 + delta3)
+Mus <- c(mu + delta1, mu + delta2, mu + delta3, mu + delta4)
+SDs <- c(2, 3, 4, 4)
+rhos <- matrix(c(
+  1, 0.2, 0.3, 0.4,
+  0.2, 1, 0.3, 0.5,
+  0.3, 0.3, 1, 0.8,
+  0.4, 0.5, 0.8, 1
+), ncol = 4)
+Sigma <- diag(SDs) %*% rhos
+# data generation
+X <- mvrnorm(n, Mus, Sigma) %>%
+  round(2) %>%
+  as.data.frame()
+# inspect
+X
+write.csv(X, file = "ex_anova2.csv")
+```
+
+
+
+3. Generate a synthetic dataset for a between-$3 \times$between-$3$ ANOVA design. Apply the analysis and confirm whether the assumed factor effects are recovered (or, if assumed to be zero, correctly *not* detected).
+4. (Stretch.) Generate a synthetic dataset for a mixed two-factor ANOVA (between $\times$ within). Apply the analysis and confirm whether the assumed factor effects are recovered.
+
+[^9.3]: anovakun has a helper, `anovatan`, that splits the data along a focal factor for you. See the official manual for details.

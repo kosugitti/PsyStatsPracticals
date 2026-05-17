@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Data Wrangling in R – Exercises in Psychological Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter04.html" rel="next">
+<link href="./chapter02.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter03.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling in R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exercises in Psychological Statistics</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="日本語版 (Japanese)" class="quarto-navigation-tool px-1" aria-label="日本語版 (Japanese)"><i class="bi bi-translate"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Exercises-in-Psychological-Statistics.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Exercises-in-Psychological-Statistics.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with R/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Fundamentals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Authoring Reports in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Programming in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Null Hypothesis Significance Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Tests of Mean Differences</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Multi-group Tests of Mean Differences</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Questionable Research Practices and Sample-Size Planning</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Multiple Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Bayesian Statistics in Practice</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Foundations of Linear Algebra</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Extensions of the Linear Model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Multivariate Analysis I</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Multivariate Analysis II</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modelling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./afterword.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Afterword</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./install_guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Installation Guide</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introducing-the-tidyverse" id="toc-introducing-the-tidyverse" class="nav-link active" data-scroll-target="#introducing-the-tidyverse"><span class="header-section-number">3.1</span> Introducing the tidyverse</a></li>
+  <li><a href="#the-pipe-operator" id="toc-the-pipe-operator" class="nav-link" data-scroll-target="#the-pipe-operator"><span class="header-section-number">3.2</span> The pipe operator</a></li>
+  <li><a href="#exercises-1.-the-pipe-operator" id="toc-exercises-1.-the-pipe-operator" class="nav-link" data-scroll-target="#exercises-1.-the-pipe-operator"><span class="header-section-number">3.3</span> Exercises 1. The pipe operator</a></li>
+  <li><a href="#column-and-row-selection" id="toc-column-and-row-selection" class="nav-link" data-scroll-target="#column-and-row-selection"><span class="header-section-number">3.4</span> Column and row selection</a>
+  <ul class="collapse">
+  <li><a href="#column-selection" id="toc-column-selection" class="nav-link" data-scroll-target="#column-selection"><span class="header-section-number">3.4.1</span> Column selection</a></li>
+  <li><a href="#row-selection" id="toc-row-selection" class="nav-link" data-scroll-target="#row-selection"><span class="header-section-number">3.4.2</span> Row selection</a></li>
+  </ul></li>
+  <li><a href="#creating-and-reassigning-variables" id="toc-creating-and-reassigning-variables" class="nav-link" data-scroll-target="#creating-and-reassigning-variables"><span class="header-section-number">3.5</span> Creating and reassigning variables</a></li>
+  <li><a href="#exercises-2.-select-filter-mutate" id="toc-exercises-2.-select-filter-mutate" class="nav-link" data-scroll-target="#exercises-2.-select-filter-mutate"><span class="header-section-number">3.6</span> Exercises 2. select, filter, mutate</a></li>
+  <li><a href="#sec-Long_and_Wide" id="toc-sec-Long_and_Wide" class="nav-link" data-scroll-target="#sec-Long_and_Wide"><span class="header-section-number">3.7</span> Long and wide formats</a></li>
+  <li><a href="#grouping-and-summary-statistics" id="toc-grouping-and-summary-statistics" class="nav-link" data-scroll-target="#grouping-and-summary-statistics"><span class="header-section-number">3.8</span> Grouping and summary statistics</a></li>
+  <li><a href="#exercises-3.-reshaping-data" id="toc-exercises-3.-reshaping-data" class="nav-link" data-scroll-target="#exercises-3.-reshaping-data"><span class="header-section-number">3.9</span> Exercises 3. Reshaping data</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling in R</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In the data sciences — psychology included — there is a stage between data collection and the communication of analytic results that consists of “transforming the data into a usable form, visualising it, and analysing it.” This transformation step is known as <strong>data wrangling</strong>. “Statistics” is often equated with “analysis,” but in practice data wrangling and visualisation typically consume the bulk of the time and are among the most consequential parts of the workflow.</p>
+<section id="introducing-the-tidyverse" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="introducing-the-tidyverse"><span class="header-section-number">3.1</span> Introducing the tidyverse</h2>
+<p>This course uses the <code>tidyverse</code> for data wrangling. The tidyverse is both a design philosophy for working with data and a concrete package implementing that philosophy. Install the <code>tidyverse</code> package and load it as follows:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You will see “Attaching core tidyverse packages,” with check marks next to several package names. The tidyverse is a meta-package that bundles a number of sub-packages: <code>dplyr</code> and <code>tidyr</code> handle reshaping; <code>readr</code> handles file I/O; <code>forcats</code> handles factor variables; <code>stringr</code> handles strings; <code>lubridate</code> handles dates; <code>tibble</code> provides a modern data-frame variant; <code>purrr</code> provides functional-programming utilities; and <code>ggplot2</code> handles visualisation.</p>
+<p>You will also see a message about <em>Conflicts</em>. This warning, which appears for many packages and not only the tidyverse, signals “function-name collisions.” Up to now you have used base functions such as <code>sqrt()</code> and <code>mean()</code> without any explicit <code>library()</code> call — these are loaded automatically at R startup from the <code>base</code> package. When a subsequently loaded package defines a function of the same name as an already-loaded one, the new definition shadows the old one. The conflict message lists those shadowings. For instance, <code>dplyr::filter() masks stats::filter()</code> means that <code>dplyr</code>’s <code>filter()</code> (loaded as part of the tidyverse) takes precedence over <code>stats</code>’s <code>filter()</code>, which was previously available.</p>
+<p>Such name collisions can be confusing. When you need to disambiguate, write <code>package::function</code> — for instance, <code>stats::filter()</code> — as the warning message itself illustrates.</p>
+</section>
+<section id="the-pipe-operator" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="the-pipe-operator"><span class="header-section-number">3.2</span> The pipe operator</h2>
+<p>Next, the pipe operator. The pipe was introduced by the <code>magrittr</code> package (since included in the tidyverse) and revolutionised data wrangling in R. As of R 4.2, a native pipe is built into the language itself, with no package required. We distinguish the built-in operator as the <strong>native pipe</strong> when needed.</p>
+<p>Let us see why this operator is so useful. The following script computes the (uncorrected) standard deviation of a small dataset.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> In equations, where <span class="math inline">\(\bar{x}\)</span> is the arithmetic mean of <span class="math inline">\(x\)</span>: <span class="math display">\[v = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">14</span>) <span class="co"># data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">mean</span>(dat) <span class="co"># mean</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dev <span class="ot">&lt;-</span> dat <span class="sc">-</span> M <span class="co"># deviations</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>pow <span class="ot">&lt;-</span> dev<span class="sc">^</span><span class="dv">2</span> <span class="co"># squared deviations</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(pow) <span class="co"># mean of squared deviations is the variance</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(variance) <span class="co"># square root of variance is the standard deviation</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To arrive at <code>standardDev</code>, we introduced four intermediate objects: <code>M</code>, <code>dev</code>, <code>pow</code>, and <code>variance</code>. The objects being created sit on the left of <code>&lt;-</code>, and the operations applied to them sit on the right; mentally, the reader processes each line as “create this object, by performing this computation.”</p>
+<p>The pipe operator makes that flow explicit. Written <code>%&gt;%</code>, it passes the result of its left-hand operand as the first argument of the function on its right. Rewritten with pipes, the calculation above becomes (note that <code>Ctrl/Cmd+Shift+M</code> inserts <code>%&gt;%</code>):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">14</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    . <span class="sc">-</span> <span class="fu">mean</span>(.)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  } <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    .<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  } <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The period (<code>.</code>) is the <strong>placeholder</strong> that refers to whatever was passed in by the previous stage; the second line is therefore <code>{dat - mean(dat)}</code>, the deviations from the mean. The subsequent stages square the deviations, take the mean, and take the square root. The placeholder is omitted where its position is unambiguous (e.g., as the first argument to <code>mean()</code> and <code>sqrt()</code>).</p>
+<p>Reading the piped version, the script flow — data → deviations → squared → mean → square root — matches the conceptual flow of the calculation, making it easier to follow.</p>
+<p>The same computation can also be written in nested form:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>standardDev <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((dat <span class="sc">-</span> <span class="fu">mean</span>(dat))<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This style — <span class="math inline">\(y = h(g(f(x)))\)</span> — requires the reader to peel back the parentheses from the inside out, reversing the natural reading order. The pipe version, by contrast, reads <code>x %&gt;% f() %&gt;% g() %&gt;% h() -&gt; y</code>, in the same order as the underlying thought.</p>
+<p>From here on we use the pipe extensively. Get comfortable with it (and with its keyboard shortcut).</p>
+</section>
+<section id="exercises-1.-the-pipe-operator" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="exercises-1.-the-pipe-operator"><span class="header-section-number">3.3</span> Exercises 1. The pipe operator</h2>
+<ul>
+<li>Confirm via the help system that <code>sqrt()</code> and <code>mean()</code> belong to the <code>base</code> package. Where in the help page is this information shown? What about <code>filter()</code> and <code>lag()</code>?</li>
+<li>After loading the tidyverse, <code>dplyr::filter()</code> takes precedence over <code>stats::filter()</code>. View the help for <code>dplyr::filter()</code>.</li>
+<li>View the help for <code>stats::filter()</code>, the function that has been shadowed.</li>
+<li>Using the data above, compute the <strong>mean absolute deviation (MeanAD)</strong> and the <strong>median absolute deviation (MAD)</strong> with the pipe. R’s absolute-value function is <code>abs()</code>. The definitions are:</li>
+</ul>
+<p><span class="math display">\[MeanAD = \frac{1}{n}\sum_{i=1}^n|x_i - \bar{x}|\]</span> <span class="math display">\[MAD = \mathrm{median}(|x_1-\mathrm{median}(x)|,\cdots,|x_n-\mathrm{median}(x)|)\]</span></p>
+</section>
+<section id="column-and-row-selection" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="column-and-row-selection"><span class="header-section-number">3.4</span> Column and row selection</h2>
+<p>Now to more substantive data wrangling with the tidyverse. We begin by selecting subsets of columns and rows — a basic operation for narrowing the data to which an analysis is applied.</p>
+<section id="column-selection" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="column-selection"><span class="header-section-number">3.4.1</span> Column selection</h3>
+<p>Column selection is performed by <code>select()</code>, from <code>dplyr</code> in the tidyverse. Note that several other packages (notably <code>MASS</code>) define a function of the same name, so be alert for conflicts.</p>
+<p>We illustrate with <code>iris</code>, a sample dataset included in base R. Since <code>iris</code> has 150 rows, we use <code>head()</code> to show only the first few rows in the snippets that follow; in your own exercises <code>head()</code> is not strictly required.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the iris dataset</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract a subset of variables</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length, Species) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Species
+1          5.1  setosa
+2          4.9  setosa
+3          4.7  setosa
+4          4.6  setosa
+5          5.0  setosa
+6          5.4  setosa</code></pre>
+</div>
+</div>
+<p>A minus sign drops variables:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Species) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1          5.1         3.5          1.4         0.2
+2          4.9         3.0          1.4         0.2
+3          4.7         3.2          1.3         0.2
+4          4.6         3.1          1.5         0.2
+5          5.0         3.6          1.4         0.2
+6          5.4         3.9          1.7         0.4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dropping several variables</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Petal.Length, Petal.Width)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Species
+1          5.1         3.5  setosa
+2          4.9         3.0  setosa
+3          4.7         3.2  setosa
+4          4.6         3.1  setosa
+5          5.0         3.6  setosa
+6          5.4         3.9  setosa</code></pre>
+</div>
+</div>
+<p><code>select()</code> also accepts pattern-matching helpers:</p>
+<ul>
+<li><code>starts_with()</code></li>
+<li><code>ends_with()</code></li>
+<li><code>contains()</code></li>
+<li><code>matches()</code></li>
+</ul>
+<p>Examples:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variables starting with a given string</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"Petal"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Petal.Length Petal.Width
+1          1.4         0.2
+2          1.4         0.2
+3          1.3         0.2
+4          1.5         0.2
+5          1.4         0.2
+6          1.7         0.4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variables ending with a given string</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"Length"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Petal.Length
+1          5.1          1.4
+2          4.9          1.4
+3          4.7          1.3
+4          4.6          1.5
+5          5.0          1.4
+6          5.4          1.7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variables containing a substring</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"etal"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Petal.Length Petal.Width
+1          1.4         0.2
+2          1.4         0.2
+3          1.3         0.2
+4          1.5         0.2
+5          1.4         0.2
+6          1.7         0.4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># selection by regular expression</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">".t."</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width
+1          5.1         3.5          1.4         0.2
+2          4.9         3.0          1.4         0.2
+3          4.7         3.2          1.3         0.2
+4          4.6         3.1          1.5         0.2
+5          5.0         3.6          1.4         0.2
+6          5.4         3.9          1.7         0.4</code></pre>
+</div>
+</div>
+<p><strong>Regular expressions</strong> are a notation for specifying string patterns, common to many programming languages and even widely used in bibliographic search systems. Patterns are constructed from ordinary characters together with <strong>metacharacters</strong> denoting “any character,” “start of string,” “end of string,” and so on. A Web search for “regular expression” will surface many tutorials.</p>
+</section>
+<section id="row-selection" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="row-selection"><span class="header-section-number">3.4.2</span> Row selection</h3>
+<p>If columns of a data frame correspond to variables, then rows correspond to observations (cases). Row selection is performed by <code>dplyr::filter()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rows where Sepal.Length exceeds 6</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Sepal.Length <span class="sc">&gt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          7.0         3.2          4.7         1.4 versicolor
+2          6.4         3.2          4.5         1.5 versicolor
+3          6.9         3.1          4.9         1.5 versicolor
+4          6.5         2.8          4.6         1.5 versicolor
+5          6.3         3.3          4.7         1.6 versicolor
+6          6.6         2.9          4.6         1.3 versicolor</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rows of a particular species</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">"versicolor"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          7.0         3.2          4.7         1.4 versicolor
+2          6.4         3.2          4.5         1.5 versicolor
+3          6.9         3.1          4.9         1.5 versicolor
+4          5.5         2.3          4.0         1.3 versicolor
+5          6.5         2.8          4.6         1.5 versicolor
+6          5.7         2.8          4.5         1.3 versicolor</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># combining conditions</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">!=</span> <span class="st">"versicolor"</span>, Sepal.Length <span class="sc">&gt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+1          6.3         3.3          6.0         2.5 virginica
+2          7.1         3.0          5.9         2.1 virginica
+3          6.3         2.9          5.6         1.8 virginica
+4          6.5         3.0          5.8         2.2 virginica
+5          7.6         3.0          6.6         2.1 virginica
+6          7.3         2.9          6.3         1.8 virginica</code></pre>
+</div>
+</div>
+<p><code>==</code> is the equality operator: a single <code>=</code> would be interpreted as assignment, so equality testing requires the doubled form. Likewise, <code>!=</code> is the inequality operator, true when the operands differ.</p>
+</section>
+</section>
+<section id="creating-and-reassigning-variables" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="creating-and-reassigning-variables"><span class="header-section-number">3.5</span> Creating and reassigning variables</h2>
+<p>Creating new variables from existing ones — or reassigning values — is among the most common operations in data wrangling. One may, for instance, dichotomise a continuous variable at some threshold to produce a categorical “high/low” variable, or apply a linear transformation to change units. Such variable manipulations — “engineering features from existing variables” — are performed with <code>dplyr::mutate()</code>. An example:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(iris, <span class="at">Twice =</span> Sepal.Length <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species Twice
+1          5.1         3.5          1.4         0.2  setosa  10.2
+2          4.9         3.0          1.4         0.2  setosa   9.8
+3          4.7         3.2          1.3         0.2  setosa   9.4
+4          4.6         3.1          1.5         0.2  setosa   9.2
+5          5.0         3.6          1.4         0.2  setosa  10.0
+6          5.4         3.9          1.7         0.4  setosa  10.8</code></pre>
+</div>
+</div>
+<p>A new variable <code>Twice</code> has been created. <code>mutate()</code> is typically used inside a pipe (in fact that is its primary mode of use). The next example partitions <code>Sepal.Length</code> into “high” and “low” groups at the mean:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.HL =</span> <span class="fu">ifelse</span>(Sepal.Length <span class="sc">&gt;</span> <span class="fu">mean</span>(Sepal.Length), <span class="dv">1</span>, <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.HL =</span> <span class="fu">factor</span>(Sepal.HL, <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"High"</span>, <span class="st">"Low"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.HL
+1          5.1      Low
+2          4.9      Low
+3          4.7      Low
+4          4.6      Low
+5          5.0      Low
+6          5.4      Low</code></pre>
+</div>
+</div>
+<p><code>ifelse(condition, value_if_true, value_if_false)</code> is a conditional that returns the second argument when the condition holds and the third otherwise. Here we return 1 when above the mean and 2 otherwise, assign the result to a new variable <code>Sepal.HL</code> via <code>mutate()</code>, and then in a second <code>mutate()</code> overwrite that variable with a factor version of itself. Assigning back to the same variable name is the idiom for type conversion as well (character → numeric, numeric → factor, and so on).</p>
+</section>
+<section id="exercises-2.-select-filter-mutate" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="exercises-2.-select-filter-mutate"><span class="header-section-number">3.6</span> Exercises 2. select, filter, mutate</h2>
+<ul>
+<li>Read <code>Baseball.csv</code> into a data frame named <code>df</code>.</li>
+<li>The data frame <code>df</code> contains many variables. <code>names(df)</code> returns the variable names. List them.</li>
+<li>From <code>df</code>, retain only <code>Year</code> (year), <code>Name</code> (player name), <code>team</code> (team), <code>height</code>, <code>weight</code>, <code>salary</code>, and <code>position</code>. Assign the result to <code>df2</code>.</li>
+<li><code>df2</code> covers several seasons; we want only the 2020 data. Filter accordingly.</li>
+<li>Now filter further to keep only the 2020 <em>Hanshin Tigers</em> records.</li>
+<li>Conversely, filter to the 2020 data <em>excluding</em> the Hanshin Tigers.</li>
+<li>Create a body-mass-index variable, BMI = weight (kg) / height (m)². Note that <code>height</code> is in centimetres.</li>
+<li>Create a new factor variable <code>position2</code> distinguishing pitchers from fielders. Fielders are everyone who is not a pitcher (infielders, outfielders, and catchers).</li>
+<li>Japanese professional baseball is divided into the <em>Central League</em> and the <em>Pacific League</em>. The Central League teams are Giants, Carp, Tigers, Swallows, Dragons, and DeNA; the Pacific League is everything else. Add a factor variable <code>League</code> to <code>df2</code> accordingly.</li>
+<li>The <code>Year</code> variable is stored as a string because each value ends in 年度 (“season”). Strip that suffix and convert the variable to numeric.</li>
+</ul>
+</section>
+<section id="sec-Long_and_Wide" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="sec-Long_and_Wide"><span class="header-section-number">3.7</span> Long and wide formats</h2>
+<p>So far the data we have seen have been stored as a two-dimensional array of cases × variables. This layout is convenient for humans but not always for machines. Indeed, spreadsheet software is sometimes (in)famously mis-used in Japan in a way nicknamed “<em>kami Excel</em>” (god-like Excel), in which a spreadsheet is treated as graph paper or manuscript-style ruled paper. Visually intuitive, perhaps; but the data become structurally opaque to a computer and very difficult to analyse. Many such datasets are still in circulation.</p>
+<p>In response, in December 2020 Japan’s Ministry of Internal Affairs and Communications issued a unified set of rules for machine-readable data layout <span class="citation" data-cites="soumu">(<a href="references.html#ref-soumu" role="doc-biblioref">総務省 2020</a>)</span>, including a checklist:</p>
+<ul>
+<li>Is the file format Excel or CSV?</li>
+<li>Is there one datum per cell?</li>
+<li>Are numeric data stored as numeric (no embedded strings)?</li>
+<li>Are there no merged cells?</li>
+<li>Are spaces and line breaks not used for cosmetic layout?</li>
+<li>Are no column headings omitted?</li>
+<li>Are formulas converted to their numeric results?</li>
+<li>Are no embedded objects (images, etc.) used?</li>
+<li>Are units of measurement recorded?</li>
+<li>Are no platform-specific characters used?</li>
+<li>Is the data not split into fragments?</li>
+<li>Is there only one table per sheet?</li>
+</ul>
+<p>The basic rule is: <strong>build a single self-contained dataset with one case per row, with neither omissions nor extras.</strong></p>
+<p>Independently, <span class="citation" data-cites="Hadley2014">Wickham (<a href="references.html#ref-Hadley2014" role="doc-biblioref">2014</a>)</span> proposed the notion of <strong>tidy data</strong> as a canonical form for analysis. Tidy data have four properties:</p>
+<ul>
+<li>Each variable forms one column.</li>
+<li>Each observation forms one row.</li>
+<li>Each type of observational unit forms one table.</li>
+<li>Each value forms one cell.</li>
+</ul>
+<p>In tidy form, the correspondence between variables and values is unambiguous to a computer and the data are straightforward to analyse. It is no exaggeration to say that the goal of data wrangling is to take messy, irregular data and put them into tidy form.</p>
+<p>A subtle but important observation: variable names themselves can also be regarded as a variable. Consider a matrix-style table of the form:</p>
+<table class="caption-top table">
+<caption>Wide-format data</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th>Morning</th>
+<th>Afternoon</th>
+<th>Evening</th>
+<th>Night</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tokyo</td>
+<td>clear</td>
+<td>clear</td>
+<td>rain</td>
+<td>rain</td>
+</tr>
+<tr class="even">
+<td>Osaka</td>
+<td>clear</td>
+<td>cloudy</td>
+<td>clear</td>
+<td>clear</td>
+</tr>
+<tr class="odd">
+<td>Fukuoka</td>
+<td>clear</td>
+<td>cloudy</td>
+<td>cloudy</td>
+<td>rain</td>
+</tr>
+</tbody>
+</table>
+<p>To read the evening weather in Osaka, one finds the Osaka row and the Evening column. That is, locating a single cell requires referencing both a row label and a column label.</p>
+<p>The same data can be rearranged like this:</p>
+<table class="caption-top table">
+<caption>Long-format data</caption>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Time</th>
+<th>Weather</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tokyo</td>
+<td>Morning</td>
+<td>clear</td>
+</tr>
+<tr class="even">
+<td>Tokyo</td>
+<td>Afternoon</td>
+<td>clear</td>
+</tr>
+<tr class="odd">
+<td>Tokyo</td>
+<td>Evening</td>
+<td>rain</td>
+</tr>
+<tr class="even">
+<td>Tokyo</td>
+<td>Night</td>
+<td>rain</td>
+</tr>
+<tr class="odd">
+<td>Osaka</td>
+<td>Morning</td>
+<td>clear</td>
+</tr>
+<tr class="even">
+<td>Osaka</td>
+<td>Afternoon</td>
+<td>cloudy</td>
+</tr>
+<tr class="odd">
+<td>Osaka</td>
+<td>Evening</td>
+<td>clear</td>
+</tr>
+<tr class="even">
+<td>Osaka</td>
+<td>Night</td>
+<td>clear</td>
+</tr>
+<tr class="odd">
+<td>Fukuoka</td>
+<td>Morning</td>
+<td>clear</td>
+</tr>
+<tr class="even">
+<td>Fukuoka</td>
+<td>Afternoon</td>
+<td>cloudy</td>
+</tr>
+<tr class="odd">
+<td>Fukuoka</td>
+<td>Evening</td>
+<td>cloudy</td>
+</tr>
+<tr class="even">
+<td>Fukuoka</td>
+<td>Night</td>
+<td>rain</td>
+</tr>
+</tbody>
+</table>
+<p>The information content is identical, but locating the “Osaka, evening” record requires only row selection — easier for a machine to handle. This second layout is the <strong>long format</strong> (or “vertical” layout); the original is the <strong>wide format</strong> (“horizontal” layout).</p>
+<p>One advantage of the long format is the handling of missing values. In a wide table, dropping a whole row or column when only one cell is missing is wasteful; targeting both a row and a column for partial deletion is technically awkward. In a long table, the missing record is a single row to be dropped.</p>
+<p>The <code>tidyverse</code> (specifically <code>tidyr</code>) provides functions for moving between long and wide layouts. First, <code>pivot_longer()</code> converts wide to long:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="sc">-</span>Species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 600 × 3
+   Species name         value
+   &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt;
+ 1 setosa  Sepal.Length   5.1
+ 2 setosa  Sepal.Width    3.5
+ 3 setosa  Petal.Length   1.4
+ 4 setosa  Petal.Width    0.2
+ 5 setosa  Sepal.Length   4.9
+ 6 setosa  Sepal.Width    3  
+ 7 setosa  Petal.Length   1.4
+ 8 setosa  Petal.Width    0.2
+ 9 setosa  Sepal.Length   4.7
+10 setosa  Sepal.Width    3.2
+# ℹ 590 more rows</code></pre>
+</div>
+</div>
+<p>Here we pivot the <code>iris</code> data around <code>Species</code>: all other variables are stacked into a <code>name</code>/<code>value</code> pair.</p>
+<p>Conversely, <code>pivot_wider()</code> reshapes long back to wide:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Species) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> ID, <span class="at">names_from =</span> name, <span class="at">values_from =</span> value)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 5
+      ID Sepal.Length Sepal.Width Petal.Length Petal.Width
+   &lt;int&gt;        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+ 1     1          5.1         3.5          1.4         0.2
+ 2     2          4.9         3            1.4         0.2
+ 3     3          4.7         3.2          1.3         0.2
+ 4     4          4.6         3.1          1.5         0.2
+ 5     5          5           3.6          1.4         0.2
+ 6     6          5.4         3.9          1.7         0.4
+ 7     7          4.6         3.4          1.4         0.3
+ 8     8          5           3.4          1.5         0.2
+ 9     9          4.4         2.9          1.4         0.2
+10    10          4.9         3.1          1.5         0.1
+# ℹ 140 more rows</code></pre>
+</div>
+</div>
+<p>Here <code>Species</code> is dropped and a per-row <code>ID</code> column is added. With <code>ID</code> as the key, the variable names come from <code>name</code> and the values from <code>value</code>, restoring the wide layout.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+</section>
+<section id="grouping-and-summary-statistics" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="grouping-and-summary-statistics"><span class="header-section-number">3.8</span> Grouping and summary statistics</h2>
+<p>Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine <code>group_by()</code> with <code>summarise()</code> (or <code>reframe()</code>). An example:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 5
+# Groups:   Species [3]
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+ 1          5.1         3.5          1.4         0.2 setosa 
+ 2          4.9         3            1.4         0.2 setosa 
+ 3          4.7         3.2          1.3         0.2 setosa 
+ 4          4.6         3.1          1.5         0.2 setosa 
+ 5          5           3.6          1.4         0.2 setosa 
+ 6          5.4         3.9          1.7         0.4 setosa 
+ 7          4.6         3.4          1.4         0.3 setosa 
+ 8          5           3.4          1.5         0.2 setosa 
+ 9          4.4         2.9          1.4         0.2 setosa 
+10          4.9         3.1          1.5         0.1 setosa 
+# ℹ 140 more rows</code></pre>
+</div>
+</div>
+<p>The displayed contents look unchanged, but the output now shows <code>Species[3]</code>, indicating that the data are grouped into three levels of <code>Species</code>. Now <code>summarise()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(Sepal.Length),</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(Sepal.Length),</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">IQR =</span> <span class="fu">IQR</span>(Sepal.Length)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  Species        n  Mean   Max   IQR
+  &lt;fct&gt;      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 setosa        50  5.01   5.8 0.400
+2 versicolor    50  5.94   7   0.7  
+3 virginica     50  6.59   7.9 0.675</code></pre>
+</div>
+</div>
+<p>We compute the sample size (<code>n</code>), mean, maximum, and interquartile range (<code>IQR</code>).<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p>The example above summarises only <code>Sepal.Length</code>. To apply the same calculation to multiple numeric variables at once, use <code>across()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(Sepal.Length, Sepal.Width, Petal.Length),</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">mean</span>(.x)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  Species    Sepal.Length Sepal.Width Petal.Length
+  &lt;fct&gt;             &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+1 setosa             5.01        3.43         1.46
+2 versicolor         5.94        2.77         4.26
+3 virginica          6.59        2.97         5.55</code></pre>
+</div>
+</div>
+<p>A note on the <code>~ mean(.x)</code> syntax. Expressions beginning with a tilde (<code>~</code>) are <em>lambda functions</em> (or <em>lambda expressions</em>) in R — a compact way to define an anonymous function on the fly. The same thing can be written with an explicit <code>function</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(Sepal.Length, Sepal.Width, Petal.Length),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x) {</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(x)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  Species    Sepal.Length Sepal.Width Petal.Length
+  &lt;fct&gt;             &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+1 setosa             5.01        3.43         1.46
+2 versicolor         5.94        2.77         4.26
+3 virginica          6.59        2.97         5.55</code></pre>
+</div>
+</div>
+<p>We will return to functions and lambdas in detail later; for now, focus on the pattern for applying a function across multiple variables. The variable-selection helpers introduced with <code>select()</code> (<code>starts_with()</code>, etc.) also work inside <code>across()</code>. Here is an example combining multi-variable selection with multi-function application; multiple functions are provided as a named list of lambdas.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"Sepal"</span>),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.fns =</span> <span class="fu">list</span>(</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">M =</span> <span class="sc">~</span> <span class="fu">mean</span>(.x),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">Q1 =</span> <span class="sc">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.25</span>),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">Q3 =</span> <span class="sc">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.75</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 7
+  Species    Sepal.Length_M Sepal.Length_Q1 Sepal.Length_Q3 Sepal.Width_M
+  &lt;fct&gt;               &lt;dbl&gt;           &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;
+1 setosa               5.01            4.8              5.2          3.43
+2 versicolor           5.94            5.6              6.3          2.77
+3 virginica            6.59            6.22             6.9          2.97
+# ℹ 2 more variables: Sepal.Width_Q1 &lt;dbl&gt;, Sepal.Width_Q3 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="exercises-3.-reshaping-data" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="exercises-3.-reshaping-data"><span class="header-section-number">3.9</span> Exercises 3. Reshaping data</h2>
+<ul>
+<li>Use the <code>df2</code> object built above. If it is no longer in your environment, return to the previous exercises and recreate it.</li>
+<li>Group by year and compute, for each year, the number of registered players (count of rows) and the mean salary.</li>
+<li>Group by year <em>and</em> team and compute the same two statistics for each year–team combination.</li>
+<li>Convert the resulting summary to wide format with <code>pivot_wider()</code>, with one row per year and one column per team-variable combination.</li>
+<li>Convert the wide-format result back to long format using <code>pivot_longer()</code> with <code>Year</code> as the key.</li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-Hadley2014" class="csl-entry" role="listitem">
+Wickham, Hadley. 2014. <span>“Tidy Data.”</span> <em>Journal of Statistical Software</em> 59: 1–23. <a href="https://doi.org/10.18637/jss.v059.i10">https://doi.org/10.18637/jss.v059.i10</a>.
+</div>
+<div id="ref-soumu" class="csl-entry" role="listitem">
+総務省. 2020. <em>統計表における機械判別可能なデータ作成に関する表記方法</em>. 統計企画会議申し合わせ. <a href="https://www.soumu.go.jp/main_content/000723697.pdf">https://www.soumu.go.jp/main_content/000723697.pdf</a>.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Of course one could simply call <code>sd(dat)</code>; we expand each step here for illustration. Note also that <code>sd()</code> computes the <em>unbiased</em> (n−1) standard deviation, which differs from the maximum-likelihood (sample) standard deviation shown here.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><code>Species</code> is dropped because it would not serve as a useful identifier for pivoting back (it has only three levels), and a separate row-level identifier is needed. Note also that <code>Species</code> information is lost in the round-trip: the long-format <code>value</code> column cannot simultaneously hold both character and numeric data. A workaround is to numerically encode the factor with <code>as.numeric()</code> before pivoting.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>The interquartile range is the difference between the 75th and 25th percentiles.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter02.html" class="pagination-link" aria-label="R Fundamentals">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Fundamentals</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./chapter04.html" class="pagination-link" aria-label="Authoring Reports in R">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Authoring Reports in R</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

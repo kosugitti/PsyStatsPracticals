@@ -1,0 +1,980 @@
+# Multivariate Analysis II
+
+The previous chapter focused on linear models based on the variance--covariance (correlation) matrix. Multivariate analysis is not limited to those, however. Indeed, the fixation on latent-variable measurement models has led to a number of misuses: factor-analysing data that violate the measurement assumptions, or contorting model specifications to chase fit indices.
+
+Psychology has often "purely" assumed that factor analysis measures constructs and uses it intensively, but historically a wider variety of multivariate techniques was developed and applied as needed. We classify the techniques here by the kind of matrix the analysis starts from.
+
+## Methods that use a distance matrix
+A **distance** is a number satisfying the four axioms:
+
+1. **Non-negativity**: $d(x, y) \geq 0$ (distances are non-negative).
+2. **Identity**: $d(x, y) = 0 \Leftrightarrow x = y$ (zero distance iff the points coincide).
+3. **Symmetry**: $d(x, y) = d(y, x)$ (distance has no direction).
+4. **Triangle inequality**: $d(x, z) \leq d(x, y) + d(y, z)$ (detours are at least as long as the direct path).
+
+A **distance matrix** has distance entries; it is square and symmetric. It shares this structure with the variance--covariance and correlation matrices, and provides an alternative basis for analysis.
+
+R builds distance matrices with `dist()`. The default is Euclidean, but several alternatives are available:
+
+- `"euclidean"`: Euclidean distance, $d(x, y) = \sqrt{\sum_{i=1}^{N} (x_i - y_i)^2}$.
+- `"maximum"`: Chebyshev distance, $d(x, y) = \max(|x_i - y_i|)$.
+- `"manhattan"`: Manhattan distance, $d(x, y) = \sum |x_i - y_i|$.
+- `"canberra"`: Canberra distance, $d(x, y) = \sum \frac{|x_i - y_i|}{|x_i + y_i|}$.
+- `"binary"`: binary (Jaccard) distance, $d(x, y) = (b + c)/(a + b + c + d)$, where $a$ counts positions where both are 1, $b$ where $x = 1$ and $y = 0$, $c$ where $x = 0$ and $y = 1$, and $d$ where both are 0. More shared 1s means a smaller distance.
+- `"minkowski"`: Minkowski distance, $d(x, y) = (\sum |x_i - y_i|^p)^{1/p}$. The general case: $p = 1$ recovers Manhattan, $p = 2$ Euclidean. The $p \to \infty$ limit is Chebyshev (the dominant-coordinate distance).
+
+### Distance data in psychology
+
+By treating numbers as distances, psychology too can apply distance-based methods. The differences of scale ratings can serve as score-distances; the correlation coefficient can be turned into a distance via $1.0 - |r_{jk}|$. Sociometric data in social psychology — interpersonal preference ratings — can also be read as interpersonal distances. Stimulus-confusion rates and generalisation gradients in experimental psychology, response latencies on same/different judgements, and stimulus-substitution or association values all measure similarity and so are usable as distance data [@Takane198002]. Distance matrices can be constructed even from a single individual's ratings, so even small-$n$ designs can produce distance matrices.
+
+Thus similarity (or dissimilarity) can be treated as a distance. The advantage is that it lets the respondent answer naturally — judging overall similarity rather than completing a battery of pre-specified ratings. Researchers tend to assume that several sub-rating scales are necessary to triangulate an overall judgement, but pre-specifying those scales also constrains the respondent's degrees of freedom and adds to their burden. Some items also induce social-desirability bias; an "overall similarity" judgement bypasses that bias.
+
+Multivariate methods that take distances as input share the usual aims — summarisation and classification — and also include visualisation tools for low-dimensional summaries of higher-dimensional data. We begin with classification.
+
+### Cluster analysis
+
+**Cluster analysis** groups similar units into clusters. There are many algorithms, organisable along several axes.
+
+#### Hierarchy
+
+##### Hierarchical clustering
+
+The first axis: whether clusters form a hierarchy. **Hierarchical clustering** merges pairs of points by increasing distance, building clusters of clusters, and clusters of clusters of clusters, until a single root cluster remains.
+
+Results are displayed as a tree-shaped **dendrogram** and cut at some height to recover clusters. There is no universally accepted criterion for choosing the cut, and the cut is usually made on practical grounds.
+
+Example with `iris`:
+
+```{r hierarical clustering}
+data(iris)
+d_matrix <- dist(iris[, -5], method = "euclidean")
+result.h <- hclust(d_matrix, method = "ward.D2")
+plot(result.h, main = "Hierarchical Clustering Dendrogram")
+```
+
+Several linkage methods exist for combining clusters; in R they are passed via `hclust()`'s `method`:
+
+- `"ward.D"` / `"ward.D2"`: Ward's method, minimising within-cluster variance.
+- `"single"`: single linkage; clusters linked by their closest members.
+- `"complete"`: complete linkage; clusters linked by their farthest members.
+- `"average"`: average linkage; clusters linked by the average pairwise distance.
+- `"mcquitty"`: McQuitty's weighted average linkage.
+- `"median"`: median linkage (weighted centroid variant).
+- `"centroid"`: centroid linkage.
+
+Ward's method is the most widely used and tends to produce the most interpretable groupings. Note that `"ward.D"` has a known bug; prefer `"ward.D2"`.[^1]
+
+[^1]: One might ask why the buggy method is not removed. `"ward.D"` was R's only Ward implementation before version 3.0.3 and was later found to miscompute the variance. R kept the original code for transparency — an example of free, open-source software's self-correction. In contrast, the author once reported buggy behaviour in a proprietary statistical product to the vendor and was told to "buy the next version, in which it is fixed." The author parted ways with that product accordingly. Paid support is not a guarantee of correctness in scientific software.
+
+`cutree()` cuts the dendrogram at any number of clusters. `iris` has three species, so cut at $k = 3$ and check the cross-tabulation:
+
+```{r cut tree}
+clusters <- cutree(result.h, k = 3)
+table(clusters, iris$Species)
+```
+
+##### Non-hierarchical clustering
+
+A well-known non-hierarchical method is **k-means**:
+
+1. Randomly generate $k$ cluster-centroid vectors.
+2. Assign each data point to the nearest centroid.
+3. Recompute each cluster's centroid.
+4. Repeat steps 2–3 until assignments stabilise.
+
+k-means handles arbitrary $k$ and converges relatively quickly on large data. In R:
+
+```{r kmeans}
+result.k <- kmeans(d_matrix, centers = 3)
+table(result.k$cluster, iris$Species)
+```
+
+#### Hard vs. soft clustering
+
+In the clustering above, each unit is assigned to exactly one cluster. Such partitionings are called **hard** or **crisp** clustering. When membership is partial — represented, say, as a number in $[0, 1]$ — the clustering is **fuzzy** or **soft**.
+
+An example of soft clustering: **fuzzy c-means**.
+
+```{r fuzzy c-means}
+pacman::p_load(e1071)
+result.c <- cmeans(d_matrix, centers = 3, m = 2)
+head(result.c$membership)
+table(result.c$cluster, iris$Species)
+```
+
+`cmeans()` is in the `e1071` package. The `m` parameter controls the fuzziness; typical values are 1.5–3, with larger $m$ permitting more ambiguity. `membership` is the per-point membership probability; taking the column with the largest probability gives a hard assignment.
+
+Plotting `membership` reveals points that are clearly in one cluster and points whose assignment is genuinely ambiguous. Psychological applications include personality typology and symptom classification.
+```{r fuzzy-cmeans plot}
+#| message: FALSE
+#| dev: "ragg_png"
+#| echo: FALSE
+row_vars <- apply(result.c$membership, 1, var)
+
+high_var_point <- which.max(row_vars)
+low_var_point <- which.min(row_vars)
+medium_var_point <- order(row_vars)[length(row_vars) %/% 2]
+
+selected_points <- c(high_var_point, medium_var_point, low_var_point)
+membership_subset <- result.c$membership[selected_points, ]
+
+par(mfrow = c(1, 3))
+for (i in 1:3) {
+  plot(1:3, membership_subset[i, ],
+    type = "b", pch = 16,
+    xlab = "Cluster", ylab = "Membership Probability",
+    main = paste("Point", selected_points[i]),
+    ylim = c(0, 1), xaxt = "n"
+  )
+  axis(1, at = 1:3, labels = paste("C", 1:3))
+}
+par(mfrow = c(1, 1))
+```
+
+#### Model-based clustering
+
+Neither hierarchical clustering nor k-means/fuzzy c-means gives an objective rule for choosing the number of clusters. **Model-based clustering** frames the problem probabilistically and uses model-fit indices to decide.
+
+
+Consider a histogram like the one below:
+```{r bimodal}
+#| message: FALSE
+#| dev: "ragg_png"
+#| echo: false
+pacman::p_load(tidyverse, patchwork)
+set.seed(12345)
+mu1 <- -2
+sig1 <- 1
+mu2 <- 2
+sig2 <- 1.5
+
+N1 <- 1000
+N2 <- 3000
+
+dat <- data.frame(
+  x = c(rnorm(N1, mu1, sig1), rnorm(N2, mu2, sig2)),
+  id = c(rep(1, N1), rep(2, N2))
+) %>%
+  mutate(id = as.factor(id))
+dat %>%
+  ggplot(aes(x = x)) +
+  geom_density() +
+  theme_minimal()
+```
+
+Is a single normal distribution a good fit here? The normal is unimodal and symmetric, so forcing one onto this data would distort the description. Better to assume two latent normal distributions whose mixture produced the data.
+
+```{r towmodels}
+#| message: FALSE
+#| dev: "ragg_png"
+#| echo: false
+
+# single-normal model
+p1 <- dat %>%
+  ggplot(aes(x = x)) +
+  geom_density(alpha = 0.5, fill = "lightblue") +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = mean(dat$x), sd = sd(dat$x)),
+    color = "red", size = 1.2
+  ) +
+  labs(
+    title = "Single-normal model",
+    x = "value", y = "density"
+  ) +
+  theme_minimal()
+
+# Gaussian mixture model
+p2 <- dat %>%
+  ggplot(aes(x = x)) +
+  geom_density(alpha = 0.5, fill = "lightblue") +
+  stat_function(
+    fun = function(x) (N1 / (N1 + N2)) * dnorm(x, mu1, sig1),
+    color = "red", size = 1, linetype = "dashed"
+  ) +
+  stat_function(
+    fun = function(x) (N2 / (N1 + N2)) * dnorm(x, mu2, sig2),
+    color = "red", size = 1, linetype = "dashed"
+  ) +
+  stat_function(
+    fun = function(x) {
+      (N1 / (N1 + N2)) * dnorm(x, mu1, sig1) +
+        (N2 / (N1 + N2)) * dnorm(x, mu2, sig2)
+    },
+    color = "red", size = 1.2
+  ) +
+  labs(
+    title = "Gaussian mixture model",
+    x = "x", y = "density"
+  ) +
+  theme_minimal()
+
+p1 + p2
+```
+
+The two-normal model is a **Gaussian mixture model (GMM)** — a cluster analysis whose generative model is "two distinct groups." A GMM assumes the data come from a mixture of several normals, and it estimates each group's mean and variance plus the mixing proportions. We used one variable here for simplicity; with multiple variables the model becomes multivariate normal mixtures.
+
+Because the model is probabilistic, the likelihood lets us assess fit. The number of components can be chosen objectively by BIC or similar criteria — an advantage over the previous methods.
+
+A worked example:
+
+```{r mclust_iris}
+#| message: FALSE
+#| dev: "ragg_png"
+pacman::p_load(mclust)
+
+# numeric variables of iris only
+iris_data <- iris[, 1:4]
+
+# fit GMM with mclust
+gmm_result <- Mclust(iris_data)
+
+# results
+summary(gmm_result, parameters = TRUE)
+
+# visualise the classification
+plot(gmm_result, what = "classification")
+
+# compare with the true species
+table(iris$Species, gmm_result$classification)
+
+# model selection by BIC
+plot(gmm_result, what = "BIC")
+```
+
+`mclust` distinguishes models by the structure of each cluster's covariance matrix, named by three-letter codes:
+
+- **First letter (Volume)**: cluster size
+  - `E` = Equal
+  - `V` = Variable
+- **Second letter (Shape)**: cluster shape
+  - `E` = Equal
+  - `V` = Variable
+- **Third letter (Orientation)**: cluster orientation
+  - `E` = Equal
+  - `V` = Variable
+  - `I` = Identity (spherical)
+
+For instance:
+
+- **`EII`**: all clusters share the same spherical shape and size.
+- **`VII`**: all spherical but with varying sizes.
+- **`EEE`**: all share the same ellipsoidal shape, size, and orientation.
+- **`VVV`**: each cluster has its own ellipsoidal shape, size, and orientation (the most general).
+
+Across 14 such covariance structures, the best model is selected automatically by BIC. Here the best fit is a 2-cluster `VEV` ("ellipsoidal, equal shape") — the data prefer two clusters, even though the true number of species is three.
+
+Latent classification is, for instance, used in marketing to discover customer segments. If the latent classes are assumed ordinal, the model becomes a **latent rank model** in test-theory terms. @TDE2022 argues that the practical interpretability of graded rankings often outweighs the fine-grained $\theta$ estimates of IRT.
+
+#### Biclustering
+
+As Cattell's data cube made clear, a person × variable dataset supports classifying persons (from variable co-variation) *and* variables (from person co-variation). **Biclustering** — also called *two-mode clustering* — does both at once.
+
+Several biclustering models exist; we follow the test-theory exposition of @TDE2022.
+
+Test theory generally treats data as binary, with IRT (Bernoulli likelihood) as the standard probabilistic model. As discussed, however, the precision of IRT-style $\theta$ estimates often outstrips its substantive interpretability — a $0.01$ difference in $\theta$ may correspond to no actionable difference. Practitioners providing diagnostic feedback (a small number of categories, or pass/fail) may not need such fine resolution.
+
+The biclustering of @TDE2022 classifies items into **fields** and respondents into **classes**. Respondent classes can be ordered by overall correctness and represented as **ranks** (giving rise to **rank-clustering**).
+
+To formalise Shojima's biclustering, define the principal matrices. Let $J$ be the number of items, $S$ the number of respondents, $C$ the number of latent classes/ranks, and $F$ the number of latent fields.
+
+The **bicluster reference matrix** $\boldsymbol{\Pi}_B$ is
+
+$$
+\boldsymbol{\Pi}_B = \begin{bmatrix}
+\pi_{11} & \cdots & \pi_{1F} \\
+\vdots & \ddots & \vdots \\
+\pi_{C1} & \cdots & \pi_{CF}
+\end{bmatrix} = \{\pi_{fc}\},
+$$
+
+where $\pi_{fc}$ is the probability that a respondent in class/rank $c$ answers an item in field $f$ correctly.
+
+The **class membership matrix** $\mathbf{M}_C$ and the **field membership matrix** $\mathbf{M}_F$ are
+
+$$
+\mathbf{M}_C = \begin{bmatrix}
+m_{11} & \cdots & m_{1C} \\
+\vdots & \ddots & \vdots \\
+m_{S1} & \cdots & m_{SC}
+\end{bmatrix}, \quad
+\mathbf{M}_F = \begin{bmatrix}
+m_{11} & \cdots & m_{1F} \\
+\vdots & \ddots & \vdots \\
+m_{J1} & \cdots & m_{JF}
+\end{bmatrix}.
+$$
+
+In rank-clustering, the **rank membership matrix** $\mathbf{M}_R$ is obtained from $\mathbf{M}_C$ by multiplying by a filter matrix $\mathbf{F}$ that gently connects adjacent classes:
+
+$$
+\mathbf{M}_R = \mathbf{M}_C \mathbf{F}.
+$$
+
+For example, with 6 ranks $\mathbf{F}$ takes the form
+
+$$
+\mathbf{F} = \begin{bmatrix}
+0.864 & 0.120 & & & & & \\
+0.136 & 0.760 & 0.120 & & & & \\
+& 0.120 & 0.760 & 0.120 & & & \\
+& & 0.120 & 0.760 & 0.120 & & \\
+& & & 0.120 & 0.760 & 0.120 & \\
+& & & & 0.120 & 0.760 & 0.136 \\
+& & & & & 0.120 & 0.864
+\end{bmatrix}.
+$$
+
+The likelihood is
+
+$$
+l(\mathbf{U} \mid \boldsymbol{\Pi}_B) = \prod_{s=1}^{S}\prod_{j=1}^{J}\prod_{f=1}^{F}\prod_{c=1}^{C} \left(\pi_{fc}^{u_{sj}} (1 - \pi_{fc})^{1 - u_{sj}}\right)^{z_{sj}\, m_{sc}\, m_{jf}},
+$$
+
+estimated by EM.
+
+The `exametrika` package implements this. A worked example:
+
+```{r exametrika}
+#| message: FALSE
+#| dev: "ragg_png"
+pacman::p_load(exametrika)
+result.Ranklustering <- Biclustering(J35S515,
+  nfld = 5, ncls = 6,
+  method = "R", verbose = F
+)
+plot(result.Ranklustering, type = "Array")
+```
+
+`Biclustering()` takes the data, the number of fields `nfld`, the number of classes/ranks `ncls`, and a `method` (`"B"` for biclustering, `"R"` for rank-clustering). Here we use `J35S515`, a sample dataset of 515 respondents on 35 items.
+
+The array plot is shown. The left panel is the raw data — respondents on rows, items on columns, with black squares (■) for correct answers and white squares (□) for incorrect. The right panel is the post-analysis arrangement, grouping similar patterns by rank and by field.
+
+Field and rank classifications can advise respondents on which areas of items they should answer correctly to advance to the next rank. Field and rank memberships are probabilistic (fuzzy clustering), enabling rank-up and rank-down odds for each respondent.
+
+Visualisations of the field and rank membership matrices:
+```{r biclustering}
+#| message: FALSE
+#| dev: "ragg_png"
+#| #| fig-width: 10
+#| fig-height: 8
+plot(result.Ranklustering, type = "FRP", nc = 2, nr = 3)
+plot(result.Ranklustering, type = "RMP", students = 1:9, nc = 3, nr = 3)
+```
+
+Polytomous biclustering models have also been developed and are a promising direction for psychological-scale analysis. Because clustering classifies based on surface response patterns without assuming a generative mechanism (in contrast to factor analysis or graded IRT), it avoids many of the theoretical worries surrounding latent-variable interpretation. Clustering of items also makes it straightforward to map composite or change scores to qualitative labels.
+
+The `exametrika` package implements all twelve models in @TDE2022; see [the package documentation](https://kosugitti.github.io/exametrika/index.html).
+
+
+### Multidimensional scaling
+
+**Multidimensional scaling (MDS)** is, in one line, the recovery of a map from a distance matrix.
+
+MDS divides into **metric** and **non-metric**. Metric MDS reads coordinates directly off the eigenvalues and eigenvectors of the (transformed) distance matrix and requires the data to be ratio-scale and error-free. The mathematical justification rests on the Young–Householder theorem (look it up if interested).
+
+A metric-MDS example using R's built-in `eurodist` data (distances between European cities) and the base function `cmdscale()`:
+
+```{r cmdscale}
+#| message: FALSE
+#| dev: "ragg_png"
+#| fig-asp: 1
+result <- cmdscale(eurodist, k = 2)
+
+# plot
+plot(result[, 1], result[, 2],
+  type = "n",
+  xlab = "dimension 1", ylab = "dimension 2",
+  main = "MDS of European cities",
+  cex.main = 1.2,
+  cex.lab = 1.1
+)
+
+# annotate with city names
+text(result[, 1], result[, 2],
+  labels = rownames(result),
+  cex = 0.8,
+  col = "darkblue",
+  font = 2
+)
+
+# grid
+grid(lty = 2, col = "lightgray")
+```
+
+Athens sits at upper right and Stockholm at the bottom, which suggests the north–south axis is inverted, but otherwise the relative positions are recovered well. `cmdscale()`'s `k` selects the number of dimensions; we chose 2. Strictly the earth is a sphere, so $k = 3$ would be more accurate, but for visualisation a low dimension is usual.
+
+`eurodist` records actual physical distances, so ratio-scale, error-free data is plausible. In psychological applications, however, neither assumption typically holds — and there **non-metric** MDS is used. Non-metric MDS places objects in a multidimensional space so that the *ordering* of distances is preserved: writing the distance between objects $i$ and $j$ as $d_{ij}$,
+
+$$ d_{ij} < d_{kl} \to \delta_{ij} < \delta_{kl}, $$
+
+where $\delta_{ij}$ are the recovered coordinate distances. Kruskal's classic non-metric MDS minimises a **stress** value
+
+$$ \sum_{i > j} e_{ij}^2 = \sum_{ij} (\delta_{ij} - d_{ij})^2. $$
+
+Many alternative objective functions have been proposed; in R, the `smacof` package (Scaling by MAjorising a COmplicated Function) is convenient.
+
+An example using `smacof`'s `FaceExp` data — similarity ratings of facial expressions.
+```{r smacof}
+#| message: FALSE
+#| dev: "ragg_png"
+#| fig-width: 12
+#| fig-height: 5
+pacman::p_load(smacof)
+
+# stress over dimensions 2 to 10
+dimensions <- 2:10
+stress_values <- numeric(length(dimensions))
+
+for (i in seq_along(dimensions)) {
+  result_temp <- mds(FaceExp, ndim = dimensions[i], type = "ordinal")
+  stress_values[i] <- result_temp$stress
+}
+stress_values
+# stress vs. dimensions
+plot(dimensions, stress_values,
+  type = "b", pch = 16,
+  xlab = "number of dimensions", ylab = "stress",
+  main = "Stress vs. dimensions (facial expressions)",
+  cex.main = 1.1,
+  cex.lab = 1.0,
+  col = "blue", lwd = 2
+)
+grid(lty = 2, col = "lightgray")
+```
+
+Common rules of thumb: stress below 0.05 is excellent; below 0.10, good; below 0.20, acceptable.
+
+The plot suggests three dimensions are sufficient. Re-fit with `ndim = 3` and `type = "ordinal"` (signalling ordinal-scale data):
+
+```{r smacof2}
+#| dev: "ragg_png"
+#| fig-width: 8
+#| fig-height: 6
+# 3D MDS
+result <- mds(FaceExp, ndim = 3, type = "ordinal")
+result
+
+# show pairs of axes
+
+# dim 1 vs dim 2
+plot(result$conf[, 1], result$conf[, 2],
+  type = "n",
+  xlab = "dim 1", ylab = "dim 2",
+  main = paste("dim 1 vs dim 2\nStress =", round(result$stress, 3)),
+  cex.main = 1.0,
+  cex.lab = 0.9
+)
+text(result$conf[, 1], result$conf[, 2],
+  labels = rownames(result$conf),
+  cex = 0.7,
+  col = "darkblue",
+  font = 2
+)
+grid(lty = 2, col = "lightgray")
+
+# dim 1 vs dim 3
+plot(result$conf[, 1], result$conf[, 3],
+  type = "n",
+  xlab = "dim 1", ylab = "dim 3",
+  main = paste("dim 1 vs dim 3\nStress =", round(result$stress, 3)),
+  cex.main = 1.0,
+  cex.lab = 0.9
+)
+text(result$conf[, 1], result$conf[, 3],
+  labels = rownames(result$conf),
+  cex = 0.7,
+  col = "darkblue",
+  font = 2
+)
+grid(lty = 2, col = "lightgray")
+
+# dim 2 vs dim 3
+plot(result$conf[, 2], result$conf[, 3],
+  type = "n",
+  xlab = "dim 2", ylab = "dim 3",
+  main = paste("dim 2 vs dim 3\nStress =", round(result$stress, 3)),
+  cex.main = 1.0,
+  cex.lab = 0.9
+)
+text(result$conf[, 2], result$conf[, 3],
+  labels = rownames(result$conf),
+  cex = 0.7,
+  col = "darkblue",
+  font = 2
+)
+grid(lty = 2, col = "lightgray")
+```
+
+```{r faceTable}
+print(result$conf)
+```
+
+The plot reveals the structure of perceptual similarity among facial expressions. The first dimension can be read as valence (pleasant/unpleasant), the second as arousal, and the third as naturalness.
+
+For more objective dimension labels, correlate the coordinates with external variables. Since a correlation is $\cos\theta$ between vectors, plotting auxiliary lines for external variables along each axis makes the labelling easier. See @kosugi2016a for details.
+
+## Methods that use a co-occurrence matrix
+
+Now to **co-occurrence-matrix** methods.
+A **co-occurrence matrix** is a cross-tabulation of categorical data, encoding how often categories co-occur. The co-occurrence is then treated as a measure of category similarity.
+
+The applicability is broad. The best-known case is **text mining**.
+
+### What is text mining?
+
+Text mining is the collective name for a set of techniques for statistically processing natural-language data — novels, web articles, free-text survey responses, interview transcripts — to extract meaningful patterns.
+
+In Japanese, text mining is essentially the combination of **morphological analysis** and multivariate analysis. Unlike English, Japanese is not space-segmented, so a continuous string must first be split into parts of speech. Splitting and recovering base forms is what morphological analysis does, and it requires a Japanese dictionary-based engine: MeCab, JANOME, ChaSen, and so on. R and Python packages exist for invoking these engines.
+
+Morphological analysis produces a **document-term matrix** — counts of each word's occurrence in each document. The matrix is typically large and sparse. One operates on it via singular value decomposition, or first converts to a square word × word **co-occurrence matrix** for downstream multivariate analysis.
+
+Any multivariate technique can be applied. Cluster analysis and MDS, both discussed above, are common. The matrix tends to be large enough that standard multivariate methods fit poorly in low dimensions; one either accepts the worse fit for visualisation, or uses a method such as a **self-organising map (SOM)**[^2] to force a categorisation.
+
+[^2]: A *self-organising map* (SOM), also called a Kohonen map after its developer Teuvo Kohonen of Finland, is an unsupervised learning algorithm that maps high-dimensional data to a two-dimensional grid while preserving structure for visualisation.
+
+Modern text mining at scale often replaces the morphological unit with the **token**[^3], leveraging big data and machine learning.
+
+[^3]: A *token* in machine learning is the minimal semantic unit of text — not necessarily a morpheme, but a numerical-vector unit segmented by similarity.
+
+A morphological-analysis-based example: the `RMeCab` package is a common route in R; install MeCab (the engine) first, then `RMeCab`.[^4] [^5] The newer `gibasa` package bundles a MeCab binary internally, so no external setup is needed; it is on CRAN.[^6] We use `gibasa` here.
+
+[^4]: RMeCab GitHub: [https://github.com/IshidaMotohiro/RMeCab](https://github.com/IshidaMotohiro/RMeCab)
+[^5]: MeCab official site: [http://taku910.github.io/mecab/](http://taku910.github.io/mecab/)
+[^6]: gibasa introduction: [https://zenn.dev/paithiov909/articles/gibasa-intro](https://zenn.dev/paithiov909/articles/gibasa-intro)
+
+Load the package and morphologically analyse a sentence:
+```{r gibasa}
+pacman::p_load(tidyverse, gibasa)
+text <- "私は昨日，カフェでコーヒーを飲んだ。"
+dat <- gibasa::tokenize(text)
+dat
+```
+
+`tokenize()` splits the string into morphemes; each morpheme's properties (part of speech, lemma, etc.) live in the `feature` column. `prettify()` parses this MeCab output into tidy columns.
+
+For real text mining, particles and punctuation marks are uninformative, and verbs are best treated by their base form. Piping these steps:
+
+```{r gibasa2}
+gibasa::prettify(dat, col_select = c("POS1", "Original")) |>
+  dplyr::filter(POS1 %in% c("名詞", "動詞", "形容詞"))
+```
+
+The filter retains nouns (名詞), verbs (動詞), and adjectives (形容詞).
+
+That was a single sentence. A more realistic example: short reviews of Kyoto ramen.
+
+The workflow:
+
+1. Split each document into morphemes.
+2. Build a document × word matrix of counts (a DTM).
+3. Convert the DTM to a word × word distance matrix.
+4. Visualise via metric MDS.
+
+
+```{r kyoto_ramen_data}
+# Kyoto ramen reviews (in Japanese)
+ramen_reviews <- c(
+  "京都ラーメンは意外とコッテリしたのが多いんだよね。",
+  "濃厚なスープと細麺の組み合わせが絶妙で美味しかった。",
+  "ドロドロとした鶏ガラベースのスープが京都らしくて好み。",
+  "老舗のラーメンは深いコクがあり,麺との絡みが良くて好き。",
+  "京都駅近くの店で食べた醤油ラーメンのチャーシューが柔らかくて最高。",
+  "京都ラーメンといえば天下一品のコッテリが魅力的。",
+  "背脂がたっぷりのラーメンも京都で食べると格別だった。",
+  "細麺とスープのバランスが絶妙で,また食べたくなる味。",
+  "京都らしい濃い醤油ラーメンに九条ネギがよく合っていた。",
+  "老舗の店主が作る丁寧なラーメンは心に残る味わいだった。"
+)
+
+# tokenise, select parts of speech, and count per document
+dat_count <- ramen_reviews |>
+  # tokenise into morphemes
+  gibasa::tokenize() |>
+  # pull out POS and lemma
+  gibasa::prettify(col_select = c("POS1", "Original")) |>
+  # keep only nouns and adjectives
+  dplyr::filter(POS1 %in% c("名詞", "形容詞")) |>
+  # tidy up
+  dplyr::mutate(
+    doc_id = forcats::fct_drop(doc_id),
+    token = dplyr::if_else(is.na(Original), token, Original)
+  ) |>
+  # per-document, per-word counts
+  dplyr::count(doc_id, token)
+
+# document-term matrix
+dtm <- dat_count |>
+  tidyr::pivot_wider(
+    id_cols = doc_id,
+    names_from = token,
+    values_from = n,
+    values_fill = 0
+  )
+
+dtm
+```
+
+```{r textminig_example}
+#| dev: "ragg_png"
+#| fig-width: 8
+#| fig-height: 6
+distance_matrix <- dist(t(dtm[, -1]))
+
+# classical MDS in 2 dimensions
+mds_result <- cmdscale(distance_matrix, k = 2)
+
+# visualise (ggrepel avoids label overlap)
+pacman::p_load(ggrepel)
+
+mds_df <- data.frame(
+  dim1 = mds_result[, 1],
+  dim2 = mds_result[, 2],
+  word = rownames(mds_result)
+)
+
+ggplot(mds_df, aes(x = dim1, y = dim2)) +
+  geom_point(color = "darkblue", size = 2, alpha = 0.7) +
+  geom_text_repel(
+    aes(label = word),
+    size = 3.5,
+    color = "darkblue",
+    fontface = "bold",
+    box.padding = 0.3,
+    point.padding = 0.3,
+    max.overlaps = Inf
+  ) +
+  labs(
+    title = "MDS of ramen-review words",
+    x = "dim 1",
+    y = "dim 2"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14),
+    panel.grid = element_line(linetype = "dashed", color = "lightgray")
+  )
+```
+
+Similar words are placed near each other. "Noodles" (麺) and "soup" (スープ), or "combination" (組み合わせ) and "balance" (バランス), cluster together, suggesting meaningful proximity.
+
+The morpheme-based approach has limits: a proper noun like 九条ネギ ("Kujo green onion") is mis-split into 九 ("nine") and 条 ("article"). Dictionary customisation or rules for extracting specific terms become necessary. Text mining via morphological analysis spends considerable pre-cleaning effort.
+
+This example used only 10 short reviews. Production text mining typically operates on much larger corpora and learned dictionaries. The synergy with generative AI is also strong (large language models have, in a real sense, already learned natural language), and text-mining workflows that bypass morphological analysis and explicit statistical modelling are likely to become mainstream.
+
+## Methods that use a partial-correlation matrix
+
+Finally, methods based on the **partial-correlation** matrix.
+
+(Pearson) correlation matrices underpin many linear models, but when a third variable $Z$ influences both $X$ and $Y$, the observed correlation between $X$ and $Y$ may be spuriously inflated; the correlation drops once $Z$ is controlled for.
+
+The statistical control regresses $X$ on $Z$ and $Y$ on $Z$, takes the residuals $R_X$ and $R_Y$, and computes their correlation — the **partial correlation** of $X$ and $Y$ given $Z$, often regarded as capturing the more genuine relationship. With many variables, the partial correlation between any two variables, given the rest, can be obtained without running each regression individually via the following matrix identity. Let $\mathbf{R}$ be the correlation matrix; the entries of the partial-correlation matrix $\mathbf{P}$ are
+
+$$p_{ij} = -\frac{r^{ij}}{\sqrt{r^{ii} r^{jj}}},$$
+
+where $r^{ij}$ is the $(i, j)$ entry of $\mathbf{R}^{-1}$.
+
+Factor analysis starts from a correlation matrix and gathers strongly related variables into factors. **Graphical modelling** inverts this idea: starting from the partial-correlation matrix, it removes the weak ties and visualises only the genuine pairwise relationships.
+
+In the quantitative case the method works directly on the partial-correlation matrix; in the categorical case it tests conditional independence via multi-way contingency tables. Because the result is visualised as a network of nodes and edges, the technique is also called **network analysis**.
+
+Psychology often interprets factors as theoretical constructs. From a systems perspective, however, a "construct" is not a thing that exists on its own but a synthesis of many phenomena — and the network-analytic approach may be a better fit. For the theoretical case for combining systems-thinking with network methods, see @Network2024.
+
+A concrete example. Compute correlation and partial-correlation matrices on the Big Five data:
+
+```{r partial_corr}
+#| dev: "ragg_png"
+#| fig-width: 12
+#| fig-height: 10
+pacman::p_load(psych, corrplot, RColorBrewer)
+
+# Big Five data; first 25 items only
+bfi <- psych::bfi[, 1:25]
+bfi_clean <- na.omit(bfi)
+
+# 1. correlation matrix
+cor_matrix <- cor(bfi_clean)
+# 2. partial-correlation matrix (via matrix inversion)
+R_inv <- solve(cor_matrix)
+
+partial_cor_matrix <- matrix(0, nrow = nrow(R_inv), ncol = ncol(R_inv))
+for (i in 1:nrow(R_inv)) {
+  for (j in 1:ncol(R_inv)) {
+    if (i != j) {
+      partial_cor_matrix[i, j] <- -R_inv[i, j] / sqrt(R_inv[i, i] * R_inv[j, j])
+    }
+  }
+}
+diag(partial_cor_matrix) <- 1
+
+rownames(partial_cor_matrix) <- rownames(cor_matrix)
+colnames(partial_cor_matrix) <- colnames(cor_matrix)
+```
+
+
+```{r compare_heatmaps}
+#| dev: "ragg_png"
+#| fig-width: 15
+#| fig-height: 6
+
+# side-by-side heatmaps
+par(mfrow = c(1, 2))
+
+# correlation matrix heatmap
+corrplot(cor_matrix,
+  method = "color",
+  order = "alphabet",
+  tl.cex = 0.6,
+  tl.col = "black",
+  col = brewer.pal(n = 8, name = "RdYlBu"),
+  title = "Correlation matrix",
+  mar = c(0, 0, 2, 0),
+  cl.pos = "n"
+)
+
+# partial-correlation matrix heatmap
+corrplot(partial_cor_matrix,
+  method = "color",
+  order = "alphabet",
+  tl.cex = 0.6,
+  tl.col = "black",
+  col = brewer.pal(n = 8, name = "RdYlBu"),
+  title = "Partial-correlation matrix",
+  mar = c(0, 0, 2, 0)
+)
+
+par(mfrow = c(1, 1))
+```
+
+Side by side, the patterns differ in places.
+
+A network can be built from either matrix; we use the partial-correlation matrix here.
+
+The `qgraph` package handles estimation and drawing. We use `graph = "glasso"`, the Gaussian graphical model with L1 regularisation that zeroes out unimportant pairwise relationships, cutting paths by BIC. The `spring` layout produces a natural arrangement; other layouts are available.
+
+```{r glasso}
+pacman::p_load(qgraph)
+BICgraph <- qgraph(
+  partial_cor_matrix,
+  graph = "glasso",
+  sampleSize = nrow(bfi),
+  tuning = 0, # 0 selects by BIC; larger = sparser
+  layout = "spring",
+  title = "BIC",
+  threshold = TRUE,
+  details = TRUE
+)
+```
+
+Network analysis is not about reducing to a "factor" — it presents the whole picture as is. That can be hard to read at first glance, so **centrality** indices are used to identify central nodes and tightly tied pairs:
+
+```{r centrality}
+centralityPlot(
+  list(BIC = BICgraph),
+  include = "all"
+)
+```
+
+The indices:
+
+1. **Strength** — sum of the absolute edge weights incident on a node. How strongly the node connects to the rest of the network. $\text{strength} = \sum |w_{ij}|$.
+2. **Closeness** — the reciprocal of the sum of shortest-path distances to all other nodes. How "close" the node is to the rest of the graph; related to ease of information propagation. $\text{closeness} = 1 / \sum d_{ij}$.
+3. **Betweenness** — how often the node lies on the shortest path between other pairs. Identifies "bridges"; in a psychopathology network, hub symptoms that connect chains of other symptoms.
+4. **Expected influence** — a refinement of strength that distinguishes positive and negative edges (positive adds, negative subtracts). Captures the genuine "influence" of a node by accounting for inhibitory edges as well.
+
+Network models have many estimation refinements and extensions (dynamic, time-series). Plenty to look forward to.
+
+## Exercises
+
+Practise the techniques of this chapter (cluster analysis, MDS, network analysis) on the following.
+
+### Exercise 1: consumer segmentation via cluster analysis
+
+Using purchase-behaviour data from 100 consumers (expenditure on five product categories), run both hierarchical clustering and k-means and compare the results. Only a subset is shown; the full data are at [consumer_data.csv](consumer_data.csv).
+
+```{r create_consumer_data}
+#| echo: false
+set.seed(123)
+
+# three latent consumer groups
+n1 <- 35 # food-focused
+n2 <- 30 # tech and books
+n3 <- 35 # travel and clothing
+
+group1 <- data.frame(
+  food = rnorm(n1, 8, 1.5),
+  clothing = rnorm(n1, 2, 1),
+  books = rnorm(n1, 1, 0.5),
+  electronics = rnorm(n1, 1.5, 0.8),
+  travel = rnorm(n1, 2, 1.2)
+)
+
+group2 <- data.frame(
+  food = rnorm(n2, 4, 1),
+  clothing = rnorm(n2, 2.5, 1),
+  books = rnorm(n2, 4, 1.2),
+  electronics = rnorm(n2, 5, 1.5),
+  travel = rnorm(n2, 3, 1.5)
+)
+
+group3 <- data.frame(
+  food = rnorm(n3, 3.5, 1),
+  clothing = rnorm(n3, 6, 1.5),
+  books = rnorm(n3, 1.5, 0.8),
+  electronics = rnorm(n3, 2, 1),
+  travel = rnorm(n3, 7, 2)
+)
+
+consumer_data <- rbind(group1, group2, group3) %>%
+  mutate(across(everything(), ~ pmax(., 0.1))) %>%
+  mutate(consumer_id = paste0("C", sprintf("%03d", 1:100))) %>%
+  select(consumer_id, everything())
+
+write.csv(consumer_data, "consumer_data.csv", row.names = FALSE, fileEncoding = "UTF-8")
+
+head(consumer_data, 10)
+```
+
+**Steps**:
+
+1. Load the data and standardise.
+2. Hierarchical clustering (Ward's method) — draw a dendrogram.
+3. k-means at $k = 3$.
+4. Compare the two and characterise each cluster.
+
+### Exercise 2: visualising city similarity via MDS
+
+Using similarity ratings among ten major Japanese cities, visualise them in 2D with MDS. Data at [city_similarity.csv](city_similarity.csv).
+
+```{r create_city_data}
+#| echo: false
+cities <- c(
+  "Tokyo", "Osaka", "Nagoya", "Sapporo", "Sendai",
+  "Hiroshima", "Fukuoka", "Kyoto", "Kobe", "Yokohama"
+)
+
+similarity_matrix <- matrix(c(
+  10, 6, 7, 2, 5, 3, 3, 7, 5, 9,
+  6, 10, 6, 2, 3, 4, 4, 8, 9, 5,
+  7, 6, 10, 2, 4, 4, 3, 6, 5, 6,
+  2, 2, 2, 10, 7, 2, 3, 2, 2, 2,
+  5, 3, 4, 7, 10, 3, 3, 3, 3, 4,
+  3, 4, 4, 2, 3, 10, 7, 4, 4, 3,
+  3, 4, 3, 3, 3, 7, 10, 4, 4, 3,
+  7, 8, 6, 2, 3, 4, 4, 10, 7, 6,
+  5, 9, 5, 2, 3, 4, 4, 7, 10, 5,
+  9, 5, 6, 2, 4, 3, 3, 6, 5, 10
+), nrow = 10, byrow = TRUE)
+
+rownames(similarity_matrix) <- cities
+colnames(similarity_matrix) <- cities
+
+city_data <- expand.grid(city1 = cities, city2 = cities) %>%
+  mutate(similarity = as.vector(similarity_matrix)) %>%
+  filter(city1 != city2)
+
+write.csv(city_data, "city_similarity.csv", row.names = FALSE, fileEncoding = "UTF-8")
+
+similarity_matrix[1:5, 1:5]
+```
+
+**Steps**:
+
+1. Convert similarity to a distance matrix.
+2. Classical MDS in 2D.
+3. Visualise with `ggplot` and `ggrepel`.
+4. Discuss the geographic/cultural patterns implicit in the configuration.
+
+### Exercise 3: psychological-scale structure via network analysis
+
+Using ten personality items (Big Five, two items per factor), visualise the inter-item structure as a network and identify central items via centrality indices. Data at [personality_data.csv](personality_data.csv).
+
+```{r create_personality_data}
+#| echo: false
+set.seed(42)
+n <- 500
+
+pacman::p_load(MASS)
+
+cor_matrix <- matrix(c(
+  1.0, 0.7, 0.2, 0.1, -0.3, -0.2, 0.3, 0.1, 0.2, 0.3,
+  0.7, 1.0, 0.1, 0.2, -0.2, -0.3, 0.2, 0.2, 0.3, 0.2,
+  0.2, 0.1, 1.0, 0.6, 0.1, 0.2, -0.1, -0.2, 0.1, 0.2,
+  0.1, 0.2, 0.6, 1.0, 0.2, 0.1, -0.2, -0.1, 0.2, 0.1,
+  -0.3, -0.2, 0.1, 0.2, 1.0, 0.8, -0.1, 0.1, 0.1, -0.1,
+  -0.2, -0.3, 0.2, 0.1, 0.8, 1.0, -0.2, 0.2, -0.1, 0.1,
+  0.3, 0.2, -0.1, -0.2, -0.1, -0.2, 1.0, 0.5, 0.2, 0.1,
+  0.1, 0.2, -0.2, -0.1, 0.1, 0.2, 0.5, 1.0, 0.1, -0.1,
+  0.2, 0.3, 0.1, 0.2, 0.1, -0.1, 0.2, 0.1, 1.0, 0.6,
+  0.3, 0.2, 0.2, 0.1, -0.1, 0.1, 0.1, -0.1, 0.6, 1.0
+), nrow = 10, byrow = TRUE)
+
+personality_data <- mvrnorm(n, mu = rep(0, 10), Sigma = cor_matrix) %>%
+  as.data.frame() %>%
+  setNames(c(
+    "Extra1", "Extra2", "Agree1", "Agree2", "Consc1", "Consc2",
+    "Neuro1", "Neuro2", "Open1", "Open2"
+  )) %>%
+  mutate(participant_id = paste0("P", sprintf("%03d", 1:n))) %>%
+  dplyr::select(participant_id, everything()) %>%
+  mutate(across(-participant_id, ~ round(pnorm(.) * 6 + 1)))
+
+write.csv(personality_data, "personality_data.csv", row.names = FALSE, fileEncoding = "UTF-8")
+
+head(personality_data, 10)
+```
+
+**Steps**:
+
+1. Load the data and compute the partial-correlation matrix.
+2. Estimate a sparse network with `glasso`.
+3. Compute centrality indices (strength, closeness, betweenness).
+4. Identify the most central and most peripheral items and discuss the structure of personality.
+
+```{r exercise_solutions}
+#| include: false
+#| eval: false
+
+# Reference solutions
+
+# Exercise 1: clustering
+pacman::p_load(tidyverse)
+
+consumer_data <- read.csv("consumer_data.csv", fileEncoding = "UTF-8")
+consumer_scaled <- scale(consumer_data[, -1])
+
+dist_matrix <- dist(consumer_scaled)
+hc_result <- hclust(dist_matrix, method = "ward.D2")
+plot(hc_result, main = "Consumer clustering")
+
+km_result <- kmeans(consumer_scaled, centers = 3, nstart = 25)
+plot(consumer_scaled, col = km_result$cluster, main = "K-means result")
+
+# Exercise 2: MDS
+pacman::p_load(smacof)
+
+city_data <- read.csv("city_similarity.csv", fileEncoding = "UTF-8")
+city_dist <- dist(city_data[, -1])
+
+set.seed(123)
+n_cities <- nrow(city_data)
+dist_matrix <- as.dist(matrix(runif(n_cities^2, 0, 10), n_cities, n_cities))
+
+mds_result <- cmdscale(dist_matrix, k = 2)
+plot(mds_result, type = "n", main = "City similarity MDS")
+text(mds_result, labels = rownames(mds_result))
+
+# Exercise 3: network analysis
+pacman::p_load(qgraph, psych)
+
+personality_data <- read.csv("personality_data.csv", fileEncoding = "UTF-8")
+cor_matrix <- cor(personality_data[, -1])
+partial_cor <- -cov2cor(solve(cor_matrix))
+diag(partial_cor) <- 0
+
+qgraph(partial_cor,
+  layout = "spring",
+  nodeNames = colnames(personality_data)[-1],
+  title = "Personality network"
+)
+```
