@@ -34,6 +34,7 @@
 ### 翻訳方針
 
 - 想定読者: 院生・研究者（学術英語，受動態・専門用語を厭わない）
+- **綴りは米国式（American）に統一**（2026-06-05 に全章 British→American 変換済み。`modeling`/`-ize`/`color`/`center` 等）。新章翻訳時も American で書く。一括変換器は `/tmp/americanize.py`（curated 語マップ＋同綴り語保持。残したければリポジトリ内に移すこと）
 - Rコードチャンクはそのまま，コメントのみ英訳。図中の日本語ラベルは当面そのまま（Phase完了後にまとめて差し替え）
 - 引用文献は原則そのまま（日本語文献は原タイトル＋必要に応じて英訳併記）
 - インストールガイドのリンクは英語資源（CRAN, Posit, R for Data Science, Homebrew）に置換
@@ -70,7 +71,10 @@
 | ch15 | 多変量解析(その1) | 1933+ |
 | ch16 | 多変量解析(その2) | 2863 |
 | ch17 | ベイジアンモデリング | 1639 |
+| ch18 | ベイズの観点から見た平均値差の検定 | — |
 | install_guide | インストールガイド | — |
+
+※ ch18（2026-06-05 追加）: t検定・分散分析をベイズで再構成し，ROPE・ベイズファクター（Savage-Dickey の事前/事後 density-ratio 可視化を含む）・事後予測分布（モデル妥当性＋データレベルの優越率/重複度/閾上率による効果検証）を解説。生Stan(`bayes_ttest.stan`/`bayes_anova.stan`)中心＋brmsで答え合わせ。素材は `Labo/Work：出版/RRStudio` ch8（分散分析の組成）と `psychometrics_syllabus/.../course_materials2/tex/x27_modeling3.tex`。日本語図は ragg_png + `family="Hiragino Sans"`（IPAexGothic 不在環境のため），`logspline` 依存追加。
 
 ## パッケージ運用
 

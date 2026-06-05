@@ -1,5 +1,49 @@
 # PsyStatsPracticals WORKLOG
 
+## 2026-06-05
+
+### ch18「ベイズの観点から見た平均値差の検定」を新規追加（日英）＋ 英語版を米国綴りに統一
+
+東大非常勤（D12）の「t検定・分散分析をベイズの観点から見直す＋意思決定（ROPE/BF/PPC）」回の主教材として新章を追加。
+
+#### 新規ファイル（jp/ と en/ 両方）
+- `chapter18.qmd` — 本文。`_quarto.yml` の chapters に ch17 の次として登録
+- `bayes_ttest.stan` — 二群（t検定）。等分散の共通 sigma，generated quantities で `diff`/標準化効果量 `delta`/事後予測 `X_pred`
+- `bayes_anova.stan` — 一要因 ANOVA。整然データ対応（idx で群参照），全体平均+効果（Σδ=0制約）+誤差，`X_pred`
+- `ex_anova_bayes.csv` — 課題用データ（make_exercise_data チャンクが生成）
+- 素材: `Labo/Work：出版/RRStudio` ch8（分散分析の組成）+ `psychometrics_syllabus/.../course_materials2/tex/x27_modeling3.tex`（Stan 3パラメータ化＋整然データ一般化）
+
+#### ch18 の構成
+- 検定→モデリング（ベイズは多重比較問題が生じない）
+- 分散分析の組成 `x_ij = μ + δ_j + e_ij` をそのままデータ生成モデル `N(μ+δ_j, σ)` に読み直す
+- 生Stan(cmdstanr) で二群→多群を推定，brms（contr.sum 効果コーディング）で答え合わせ（係数が delta と一致）
+- 意思決定3道具: ROPE（`bayestestR::rope`）/ ベイズファクター（Savage-Dickey: brms `sample_prior="yes"` + `bayesfactor_parameters` + `hypothesis`，**事前/事後を重ねた density-ratio 図も追加**）/ 事後予測分布（モデル妥当性 `ppc_dens_overlay` ＋**データレベルの効果検証**=優越率・重複度(被覆率,`bayestestR::overlap`)・閾上率）
+- 例データ: 学習法A/B/C（gm=60, eff=+8/+6/-14, sd=8, N=40, seed=1234）。A≈B（ROPE内72.6%, BF≈38で差なし支持, 重複度94.6%）, A・BともCと明確差（重複度23.7%）
+- 可視化は `bayesplot::mcmc_areas/mcmc_intervals/ppc_dens_overlay` 中心
+- 依存追加: `logspline`（Savage-Dickey に必要）。`BayesFactor::anovaBF` は eval:false で参考掲載（JASP同エンジン）
+- **日本語図の文字化け対策**: Savage-Dickey 図のチャンクに `#| dev: "ragg_png"` + `theme(text=element_text(family="Hiragino Sans"))`。IPAexGothic は Newton 未インストールのため Hiragino Sans を使用（mac標準で確実）
+
+#### 英語版を全章米国綴りに統一
+- 既存 en は全章 British 綴り（modelling/-ise/colour 等）だったが，ユーザ指示で **American に統一**
+- `/tmp/americanize.py`（curated 語マップ＋case保持＋自己テスト）で `chapter01-17/practices/afterword/install_guide/common/glossary.md` を一括変換
+  - `modelling→modeling, -ise→-ize, colour→color, centre→center, neighbour→neighbor, judgement→judgment, grey→gray` 等
+  - `analysis/analyses/exercise/revise/advise/premise/Kaiser/precise` 等の同綴り語は保持（コード内 British は全てコメントか dplyr/ggplot のエイリアス `summarise`/`colour`/`grey` で，識別子は無し→安全）
+  - 変更は行単位の語置換のみ（302挿入/302削除で対称）
+- ch18 は最初から American で英訳，`en/_quarto.yml` 登録
+
+#### ビルド・デプロイ
+- remote を HTTPS→**SSH** に変更（`git@github.com:kosugitti/PsyStatsPracticals.git`。Claude 経由 push のため）
+- `.gitignore` に `jp/bayes_ttest`,`jp/bayes_anova`,`en/bayes_ttest`,`en/bayes_anova`（コンパイル済みバイナリ）を追記
+- cycle 1（日本語版）: jp フルレンダリング → `docs/` 更新 → commit/push（`24b651d`）
+- cycle 2（英語版）: en 米国綴り化＋ch18 → en フルレンダリング → `docs/en/` 更新 → commit/push（`bbbd053`）
+- 両版とも `quarto render` 完走，ch18 レンダリングエラー痕跡 0
+
+#### 罠（要注意）
+- **Dropbox CloudStorage 上で `rm -rf docs; mv jp/docs docs` を行うと，Dropbox が新 `docs/` を競合コピー化する**（`docs (Kosugi Koji の競合コピー YYYY-MM-DD)`）。jp ビルドで発生。中身は無事なので競合コピーを `docs/` にリネームして復旧。en ビルド（`docs/en` のみ差し替え）では発生せず
+
+#### 次の作業
+- なし（両版デプロイ済み）。GitHub Pages 反映後に表示確認
+
 ## 2026-05-17
 
 ### 英語版 (`en/`) の再構築・Phase 1 着手
