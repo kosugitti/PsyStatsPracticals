@@ -20,7 +20,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 入れ子・ネスト | nested |
 | 反復インデックス変数 | loop index variable |
 | 無限ループ | infinite loop |
-| ベクトル化 | vectorisation |
+| ベクトル化 | vectorization |
 | カウンタ変数 | counter variable |
 | メタ文字 | metacharacter |
 | 正規表現 | regular expression |
@@ -99,7 +99,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 加工 | transformation |
 | 前処理 | preprocessing |
 
-## Documents and visualisation
+## Documents and visualization
 
 | 日本語 | English |
 |---|---|
@@ -119,7 +119,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 幾何学的オブジェクト | geometric object |
 | エステティックマッピング | aesthetic mapping |
 | レイア・レイヤー | layer |
-| カラーパレット | colour palette |
+| カラーパレット | color palette |
 | パレット | palette |
 | 散布図 | scatter plot |
 | 棒グラフ | bar chart |
@@ -138,7 +138,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 |---|---|
 | 確率 | probability |
 | 確率変数 | random variable |
-| 実現値 | realised value / realisation |
+| 実現値 | realized value / realization |
 | 確率分布 | probability distribution |
 | 確率密度関数 (pdf) | probability density function |
 | 確率質量関数 (pmf) | probability mass function |
@@ -209,7 +209,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 検定力分析 | power analysis |
 | 疑わしき研究実践 (QRPs) | questionable research practices |
 | p-hacking | p-hacking |
-| HARKing | HARKing (hypothesising after the results are known) |
+| HARKing | HARKing (hypothesizing after the results are known) |
 | 再現性危機 | replication crisis |
 | 事前登録 | preregistration |
 | 効果の方向性 | directionality of effect |
@@ -228,11 +228,11 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 残差 | residual |
 | 最小二乗法 | ordinary least squares (OLS) |
 | 最尤法 | maximum likelihood estimation (MLE) |
-| 標準化係数 | standardised coefficient |
+| 標準化係数 | standardized coefficient |
 | 一般線型モデル | general linear model |
-| 一般化線型モデル | generalised linear model (GLM) |
+| 一般化線型モデル | generalized linear model (GLM) |
 | 階層線型モデル | hierarchical linear model (HLM) |
-| 一般化線型混合モデル | generalised linear mixed model (GLMM) |
+| 一般化線型混合モデル | generalized linear mixed model (GLMM) |
 | 偏回帰係数 | partial regression coefficient |
 | 偏相関 | partial correlation |
 | 重相関係数 | multiple correlation coefficient |
@@ -331,7 +331,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 直交回転・斜交回転 | orthogonal rotation / oblique rotation |
 | バリマックス回転 | varimax rotation |
 | プロマックス回転 | promax rotation |
-| 構造方程式モデリング (SEM) | structural equation modelling |
+| 構造方程式モデリング (SEM) | structural equation modeling |
 | 共分散構造分析 | covariance structure analysis |
 | 潜在変数 | latent variable |
 | 観測変数 | observed variable / manifest variable |
@@ -347,7 +347,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 多次元尺度構成法 (MDS) | multidimensional scaling |
 | 計量的・非計量的MDS | metric / non-metric MDS |
 | 古典的MDS (PCoA) | classical MDS / principal coordinates analysis |
-| SMACOF | SMACOF (scaling by majorising a complicated function) |
+| SMACOF | SMACOF (scaling by majorizing a complicated function) |
 | クラスター分析 | cluster analysis |
 | 階層的クラスタリング | hierarchical clustering |
 | 非階層的クラスタリング (k-means) | non-hierarchical clustering / k-means |
@@ -362,7 +362,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 | 自由度 (SEM) | degrees of freedom (SEM) |
 | 推定法 (ML/GLS/WLS) | estimation method: ML / GLS / WLS |
 
-## Bayesian modelling (advanced)
+## Bayesian modeling (advanced)
 
 | 日本語 | English |
 |---|---|
@@ -392,7 +392,7 @@ This glossary fixes the English rendering of recurring terms. Update when introd
 
 ## Style conventions
 
-- Use British spelling (colour, visualisation, behaviour) for prose. Code identifiers (e.g., R function names) stay as-is.
+- Use British spelling (color, visualization, behavior) for prose. Code identifiers (e.g., R function names) stay as-is.
 - Use serial commas (Oxford commas).
 - Preserve R code chunks unchanged; translate inline R comments and `labs()` text in figures only as a follow-up pass (Phase 4 deferred).
 - Footnotes are translated; keep their numbering (`[^N.M]`) intact.

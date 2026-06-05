@@ -222,7 +222,7 @@ sum(diag(A))
 
 Express psychological data in matrix language. With $n$ respondents and $m$ variables, the data form an $n \times m$ matrix $\boldsymbol{X}$.
 
-### Mean vector and centred matrix
+### Mean vector and centered matrix
 
 Let $\boldsymbol{1}$ be the vector of ones. The mean of each variable is
 
@@ -230,13 +230,13 @@ $$
 \boldsymbol{m} = \frac{1}{n}\boldsymbol{X}'\boldsymbol{1}.
 $$
 
-Subtracting the mean from each entry gives the **centred matrix** $\boldsymbol{V} = \boldsymbol{X} - \boldsymbol{1}\boldsymbol{m}'$. The variance–covariance matrix is then
+Subtracting the mean from each entry gives the **centered matrix** $\boldsymbol{V} = \boldsymbol{X} - \boldsymbol{1}\boldsymbol{m}'$. The variance–covariance matrix is then
 
 $$
 \boldsymbol{S} = \frac{1}{n}\boldsymbol{V}'\boldsymbol{V}.
 $$
 
-Standardising each variable by its SD gives a matrix $\boldsymbol{Z}$, and the correlation matrix is
+Standardizing each variable by its SD gives a matrix $\boldsymbol{Z}$, and the correlation matrix is
 
 $$
 \boldsymbol{R} = \frac{1}{n}\boldsymbol{Z}'\boldsymbol{Z}.
@@ -259,7 +259,7 @@ m <- t(X) %*% one / n
 as.vector(m)
 colMeans(X)
 
-# centred matrix
+# centered matrix
 V <- X - one %*% t(m)
 
 # variance--covariance (divided by n = sample variance)
@@ -268,7 +268,7 @@ S <- t(V) %*% V / n
 # diagonal matrix of SDs
 Q <- diag(sqrt(diag(S)))
 
-# standardised matrix
+# standardized matrix
 Z <- V %*% solve(Q)
 
 # correlation matrix
@@ -364,11 +364,11 @@ eig_R$values / sum(eig_R$values)
 cumsum(eig_R$values) / sum(eig_R$values)
 ```
 
-The first eigenvalue accounts for about 73% of the total. That is, the information across the four variables can be largely summarised by a single component. This is the principle of **principal-components analysis (PCA)**, and exactly the computation done inside `prcomp()`.
+The first eigenvalue accounts for about 73% of the total. That is, the information across the four variables can be largely summarized by a single component. This is the principle of **principal-components analysis (PCA)**, and exactly the computation done inside `prcomp()`.
 
 ```{r}
 #| dev: "ragg_png"
-# visualise eigenvalues (scree plot)
+# visualize eigenvalues (scree plot)
 data.frame(
   Component = 1:4,
   Eigenvalue = eig_R$values
@@ -410,7 +410,7 @@ Factor analysis approximates the correlation matrix $\boldsymbol{R}$ by $\boldsy
 
 ## Exercises
 
-1. For the four numeric variables of `iris`, compute the correlation matrix and the variance–covariance matrix, and check what is on the diagonals. Also confirm that after standardising the four variables with `scale()`, the variance–covariance matrix of the standardised data equals the correlation matrix.
+1. For the four numeric variables of `iris`, compute the correlation matrix and the variance–covariance matrix, and check what is on the diagonals. Also confirm that after standardizing the four variables with `scale()`, the variance–covariance matrix of the standardized data equals the correlation matrix.
 
 2. For the two matrices below, compute $\boldsymbol{AB}$ and $\boldsymbol{BA}$ and confirm that they differ.
 $$
@@ -419,7 +419,7 @@ $$
 $$
 Also confirm the identity $(\boldsymbol{AB})' = \boldsymbol{B}'\boldsymbol{A}'$.
 
-3. Take the first five cases of `iris`'s four numeric variables. Use `scale(center = TRUE, scale = FALSE)` to construct the centred matrix $\boldsymbol{V}$, and confirm that $\frac{1}{n}\boldsymbol{V}'\boldsymbol{V}$ is close to the result of `cov()`. Hint: `cov()` divides by $n - 1$, returning the unbiased estimator.
+3. Take the first five cases of `iris`'s four numeric variables. Use `scale(center = TRUE, scale = FALSE)` to construct the centered matrix $\boldsymbol{V}$, and confirm that $\frac{1}{n}\boldsymbol{V}'\boldsymbol{V}$ is close to the result of `cov()`. Hint: `cov()` divides by $n - 1$, returning the unbiased estimator.
 
 4. Eigen-decompose the correlation matrix of `iris` and obtain each component's proportion of variance explained. Then run `prcomp(iris[, 1:4], scale. = TRUE)` and confirm that the squared standard deviations (`sdev^2`) of each principal component match the eigenvalues.
 

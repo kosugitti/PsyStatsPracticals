@@ -1,6 +1,6 @@
 # Data Wrangling in R
 
-In the data sciences — psychology included — there is a stage between data collection and the communication of analytic results that consists of "transforming the data into a usable form, visualising it, and analysing it." This transformation step is known as **data wrangling**. "Statistics" is often equated with "analysis," but in practice data wrangling and visualisation typically consume the bulk of the time and are among the most consequential parts of the workflow.
+In the data sciences — psychology included — there is a stage between data collection and the communication of analytic results that consists of "transforming the data into a usable form, visualizing it, and analyzing it." This transformation step is known as **data wrangling**. "Statistics" is often equated with "analysis," but in practice data wrangling and visualization typically consume the bulk of the time and are among the most consequential parts of the workflow.
 
 ## Introducing the tidyverse
 
@@ -10,7 +10,7 @@ This course uses the `tidyverse` for data wrangling. The tidyverse is both a des
 pacman::p_load(tidyverse)
 ```
 
-You will see "Attaching core tidyverse packages," with check marks next to several package names. The tidyverse is a meta-package that bundles a number of sub-packages: `dplyr` and `tidyr` handle reshaping; `readr` handles file I/O; `forcats` handles factor variables; `stringr` handles strings; `lubridate` handles dates; `tibble` provides a modern data-frame variant; `purrr` provides functional-programming utilities; and `ggplot2` handles visualisation.
+You will see "Attaching core tidyverse packages," with check marks next to several package names. The tidyverse is a meta-package that bundles a number of sub-packages: `dplyr` and `tidyr` handle reshaping; `readr` handles file I/O; `forcats` handles factor variables; `stringr` handles strings; `lubridate` handles dates; `tibble` provides a modern data-frame variant; `purrr` provides functional-programming utilities; and `ggplot2` handles visualization.
 
 You will also see a message about *Conflicts*. This warning, which appears for many packages and not only the tidyverse, signals "function-name collisions." Up to now you have used base functions such as `sqrt()` and `mean()` without any explicit `library()` call — these are loaded automatically at R startup from the `base` package. When a subsequently loaded package defines a function of the same name as an already-loaded one, the new definition shadows the old one. The conflict message lists those shadowings. For instance, `dplyr::filter() masks stats::filter()` means that `dplyr`'s `filter()` (loaded as part of the tidyverse) takes precedence over `stats`'s `filter()`, which was previously available.
 
@@ -18,7 +18,7 @@ Such name collisions can be confusing. When you need to disambiguate, write `pac
 
 ## The pipe operator
 
-Next, the pipe operator. The pipe was introduced by the `magrittr` package (since included in the tidyverse) and revolutionised data wrangling in R. As of R 4.2, a native pipe is built into the language itself, with no package required. We distinguish the built-in operator as the **native pipe** when needed.
+Next, the pipe operator. The pipe was introduced by the `magrittr` package (since included in the tidyverse) and revolutionized data wrangling in R. As of R 4.2, a native pipe is built into the language itself, with no package required. We distinguish the built-in operator as the **native pipe** when needed.
 
 Let us see why this operator is so useful. The following script computes the (uncorrected) standard deviation of a small dataset.[^3.1] In equations, where $\bar{x}$ is the arithmetic mean of $x$:
 $$v = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2}$$
@@ -161,7 +161,7 @@ iris %>%
 
 ## Creating and reassigning variables
 
-Creating new variables from existing ones — or reassigning values — is among the most common operations in data wrangling. One may, for instance, dichotomise a continuous variable at some threshold to produce a categorical "high/low" variable, or apply a linear transformation to change units. Such variable manipulations — "engineering features from existing variables" — are performed with `dplyr::mutate()`. An example:
+Creating new variables from existing ones — or reassigning values — is among the most common operations in data wrangling. One may, for instance, dichotomize a continuous variable at some threshold to produce a categorical "high/low" variable, or apply a linear transformation to change units. Such variable manipulations — "engineering features from existing variables" — are performed with `dplyr::mutate()`. An example:
 
 ```{r}
 mutate(iris, Twice = Sepal.Length * 2) %>% head()
@@ -194,7 +194,7 @@ iris %>%
 
 ## Long and wide formats {#sec-Long_and_Wide}
 
-So far the data we have seen have been stored as a two-dimensional array of cases × variables. This layout is convenient for humans but not always for machines. Indeed, spreadsheet software is sometimes (in)famously mis-used in Japan in a way nicknamed "*kami Excel*" (god-like Excel), in which a spreadsheet is treated as graph paper or manuscript-style ruled paper. Visually intuitive, perhaps; but the data become structurally opaque to a computer and very difficult to analyse. Many such datasets are still in circulation.
+So far the data we have seen have been stored as a two-dimensional array of cases × variables. This layout is convenient for humans but not always for machines. Indeed, spreadsheet software is sometimes (in)famously mis-used in Japan in a way nicknamed "*kami Excel*" (god-like Excel), in which a spreadsheet is treated as graph paper or manuscript-style ruled paper. Visually intuitive, perhaps; but the data become structurally opaque to a computer and very difficult to analyze. Many such datasets are still in circulation.
 
 In response, in December 2020 Japan's Ministry of Internal Affairs and Communications issued a unified set of rules for machine-readable data layout [@soumu], including a checklist:
 
@@ -220,7 +220,7 @@ Independently, @Hadley2014 proposed the notion of **tidy data** as a canonical f
 - Each type of observational unit forms one table.
 - Each value forms one cell.
 
-In tidy form, the correspondence between variables and values is unambiguous to a computer and the data are straightforward to analyse. It is no exaggeration to say that the goal of data wrangling is to take messy, irregular data and put them into tidy form.
+In tidy form, the correspondence between variables and values is unambiguous to a computer and the data are straightforward to analyze. It is no exaggeration to say that the goal of data wrangling is to take messy, irregular data and put them into tidy form.
 
 A subtle but important observation: variable names themselves can also be regarded as a variable. Consider a matrix-style table of the form:
 
@@ -283,18 +283,18 @@ Here `Species` is dropped and a per-row `ID` column is added. With `ID` as the k
 
 ## Grouping and summary statistics
 
-Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine `group_by()` with `summarise()` (or `reframe()`). An example:
+Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine `group_by()` with `summarize()` (or `reframe()`). An example:
 
 ```{r}
 iris %>% group_by(Species)
 ```
 
-The displayed contents look unchanged, but the output now shows `Species[3]`, indicating that the data are grouped into three levels of `Species`. Now `summarise()`:
+The displayed contents look unchanged, but the output now shows `Species[3]`, indicating that the data are grouped into three levels of `Species`. Now `summarize()`:
 
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarise(
+  summarize(
     n = n(),
     Mean = mean(Sepal.Length),
     Max = max(Sepal.Length),
@@ -306,12 +306,12 @@ We compute the sample size (`n`), mean, maximum, and interquartile range (`IQR`)
 
 [^3.3]: The interquartile range is the difference between the 75th and 25th percentiles.
 
-The example above summarises only `Sepal.Length`. To apply the same calculation to multiple numeric variables at once, use `across()`:
+The example above summarizes only `Sepal.Length`. To apply the same calculation to multiple numeric variables at once, use `across()`:
 
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarise(across(
+  summarize(across(
     c(Sepal.Length, Sepal.Width, Petal.Length),
     ~ mean(.x)
   ))
@@ -322,7 +322,7 @@ A note on the `~ mean(.x)` syntax. Expressions beginning with a tilde (`~`) are 
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarise(across(
+  summarize(across(
     c(Sepal.Length, Sepal.Width, Petal.Length),
     function(x) {
       mean(x)
@@ -335,7 +335,7 @@ We will return to functions and lambdas in detail later; for now, focus on the p
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarise(across(starts_with("Sepal"),
+  summarize(across(starts_with("Sepal"),
     .fns = list(
       M = ~ mean(.x),
       Q1 = ~ quantile(.x, 0.25),

@@ -1,6 +1,6 @@
 # Null Hypothesis Significance Testing
 
-Null hypothesis significance testing (NHST) is perhaps the canonical setting in which psychologists apply statistical methods. The procedure is formalised to the point that some software packages will, given the data type, generate the results report automatically. The advantage is that every analyst reaches the same conclusion, and the procedure is mechanisable. The disadvantage is that a beginner who has not internalised the underlying mechanism may draw mistaken conclusions, and an unscrupulous analyst may extract whatever numbers are convenient. Scientific practice does not presuppose bad-faith actors; where such cases come to light, they can only be dealt with after the fact. Inadvertent misuse by inexperienced analysts is, unfortunately, more common still.
+Null hypothesis significance testing (NHST) is perhaps the canonical setting in which psychologists apply statistical methods. The procedure is formalized to the point that some software packages will, given the data type, generate the results report automatically. The advantage is that every analyst reaches the same conclusion, and the procedure is mechanisable. The disadvantage is that a beginner who has not internalized the underlying mechanism may draw mistaken conclusions, and an unscrupulous analyst may extract whatever numbers are convenient. Scientific practice does not presuppose bad-faith actors; where such cases come to light, they can only be dealt with after the fact. Inadvertent misuse by inexperienced analysts is, unfortunately, more common still.
 
 In psychology, the *replication crisis* describes the failure of published findings to replicate in subsequent studies; one diagnosed source of the problem is the misuse of statistical techniques [@Ikeda2016]. With that in mind, we will retrace the procedure and logic of null hypothesis testing carefully.
 
@@ -8,7 +8,7 @@ In psychology, the *replication crisis* describes the failure of published findi
 
 ### Goal
 
-NHST is a framework for deciding whether the findings from a sample are meaningful — whether they generalise to a population. It is helpful to think of it as a game with clearly defined methods and decision criteria. NHST sets a **significance level** and pits two opposing accounts (models) — the **null hypothesis** and the **alternative hypothesis** — against each other, declaring a winner. The reason we can speak of winning and losing is that the two hypotheses are exclusive: it cannot be the case that both are right or that both are wrong. But because the verdict is reached by inferential statistics, the verdict itself carries probabilistic uncertainty. The probability of incorrectly concluding "the alternative is correct" when the null is actually true is non-zero. Likewise, the probability of incorrectly concluding "the null is correct" when the alternative is actually true is non-zero. The former is a **Type I error**; the latter is a **Type II error**. We would like both probabilities to be zero, but they cannot be; we therefore name them $\alpha$ and $\beta$, and aim to bound each below some agreed level. NHST is the formalised procedure built to achieve this control. The significance level mentioned above is the tolerated value of $\alpha$, set at 5% by convention in psychology.
+NHST is a framework for deciding whether the findings from a sample are meaningful — whether they generalize to a population. It is helpful to think of it as a game with clearly defined methods and decision criteria. NHST sets a **significance level** and pits two opposing accounts (models) — the **null hypothesis** and the **alternative hypothesis** — against each other, declaring a winner. The reason we can speak of winning and losing is that the two hypotheses are exclusive: it cannot be the case that both are right or that both are wrong. But because the verdict is reached by inferential statistics, the verdict itself carries probabilistic uncertainty. The probability of incorrectly concluding "the alternative is correct" when the null is actually true is non-zero. Likewise, the probability of incorrectly concluding "the null is correct" when the alternative is actually true is non-zero. The former is a **Type I error**; the latter is a **Type II error**. We would like both probabilities to be zero, but they cannot be; we therefore name them $\alpha$ and $\beta$, and aim to bound each below some agreed level. NHST is the formalized procedure built to achieve this control. The significance level mentioned above is the tolerated value of $\alpha$, set at 5% by convention in psychology.
 
 Because NHST is fundamentally a procedure for **controlling errors**, the mindset of "engineering a significant result" is wholly misguided. NHST also combines mathematical inference with a human convention for adjudicating verdicts; do not read excess meaning into the result or take any single outcome too much to heart.
 
@@ -74,7 +74,7 @@ $$\Sigma = \begin{pmatrix} s_x^2 & s_{xy} \\ s_{yx} & s_y^2 \end{pmatrix}
 
 Setting `Sigma = matrix(c(1, 0, 0, 1), ncol = 2)` specifies that the two variables are uncorrelated (each with SD 1). The option `empirical = TRUE` rescales the generated draws so that their *empirical* correlation matches the specified one exactly.
 
-Visualise the result:
+Visualize the result:
 
 ```{r,ggR}
 #| fig.height: 5
@@ -184,7 +184,7 @@ cor.test(sampleData[, 1], sampleData[, 2])
 
 In the output, the $t$ value, the degrees of freedom, and the $p$-value correspond to the example above. The confidence interval for the correlation and the sample correlation are also reported. Since the confidence interval does not include zero, the null hypothesis is rejected.
 
-We already know that a sample drawn from a zero-correlation population can produce a value like 0.5 — even though, on average, a zero population correlation tends to produce small sample correlations. The lesson is not to read too much into a single sample statistic (at least when generalisation is in scope).
+We already know that a sample drawn from a zero-correlation population can produce a value like 0.5 — even though, on average, a zero population correlation tends to produce small sample correlations. The lesson is not to read too much into a single sample statistic (at least when generalization is in scope).
 
 The null hypothesis is "the population correlation is zero," and rejecting it means only that "we cannot say the population correlation is zero." It does **not** follow that the population correlation must be near 0.5, nor that "$p = 0.024$, well below 5%, is strong evidence." These inferences hover over a counterfactual scenario in which $\rho = 0$; they say nothing about how large $\rho$ actually is. Misreading on this point is common; be careful.
 
@@ -205,7 +205,7 @@ for (i in 1:iter) {
 }
 df <- intervals %>%
   mutate(FLG = ifelse(Lower <= 0 & Upper >= 0, 1, 0)) %>%
-  summarise(type1error = mean(FLG)) %>%
+  summarize(type1error = mean(FLG)) %>%
   print()
 ```
 
@@ -245,7 +245,7 @@ for (i in 1:iter) {
 }
 df <- data.frame(p = judges) %>%
   mutate(FLG = ifelse(p <= 0.05, 1, 0)) %>%
-  summarise(
+  summarize(
     sig = sum(FLG == 1),
     non.sig = sum(FLG == 0),
     type2error = non.sig / iter

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -95,7 +95,7 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -336,13 +336,19 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter17.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modelling</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">A Bayesian View of Mean-Difference Tests</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./practices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -354,13 +360,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./afterword.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Afterword</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Afterword</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./install_guide.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Installation Guide</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Installation Guide</span></span></a>
   </div>
 </li>
     </ul>
@@ -407,13 +413,13 @@ window.Quarto = {
 </header>
 
 
-<p>Null hypothesis significance testing (NHST) is perhaps the canonical setting in which psychologists apply statistical methods. The procedure is formalised to the point that some software packages will, given the data type, generate the results report automatically. The advantage is that every analyst reaches the same conclusion, and the procedure is mechanisable. The disadvantage is that a beginner who has not internalised the underlying mechanism may draw mistaken conclusions, and an unscrupulous analyst may extract whatever numbers are convenient. Scientific practice does not presuppose bad-faith actors; where such cases come to light, they can only be dealt with after the fact. Inadvertent misuse by inexperienced analysts is, unfortunately, more common still.</p>
+<p>Null hypothesis significance testing (NHST) is perhaps the canonical setting in which psychologists apply statistical methods. The procedure is formalized to the point that some software packages will, given the data type, generate the results report automatically. The advantage is that every analyst reaches the same conclusion, and the procedure is mechanisable. The disadvantage is that a beginner who has not internalized the underlying mechanism may draw mistaken conclusions, and an unscrupulous analyst may extract whatever numbers are convenient. Scientific practice does not presuppose bad-faith actors; where such cases come to light, they can only be dealt with after the fact. Inadvertent misuse by inexperienced analysts is, unfortunately, more common still.</p>
 <p>In psychology, the <em>replication crisis</em> describes the failure of published findings to replicate in subsequent studies; one diagnosed source of the problem is the misuse of statistical techniques <span class="citation" data-cites="Ikeda2016">(<a href="references.html#ref-Ikeda2016" role="doc-biblioref">池田 and 平石 2016</a>)</span>. With that in mind, we will retrace the procedure and logic of null hypothesis testing carefully.</p>
 <section id="logic-and-procedure" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="logic-and-procedure"><span class="header-section-number">7.1</span> Logic and procedure</h2>
 <section id="goal" class="level3" data-number="7.1.1">
 <h3 data-number="7.1.1" class="anchored" data-anchor-id="goal"><span class="header-section-number">7.1.1</span> Goal</h3>
-<p>NHST is a framework for deciding whether the findings from a sample are meaningful — whether they generalise to a population. It is helpful to think of it as a game with clearly defined methods and decision criteria. NHST sets a <strong>significance level</strong> and pits two opposing accounts (models) — the <strong>null hypothesis</strong> and the <strong>alternative hypothesis</strong> — against each other, declaring a winner. The reason we can speak of winning and losing is that the two hypotheses are exclusive: it cannot be the case that both are right or that both are wrong. But because the verdict is reached by inferential statistics, the verdict itself carries probabilistic uncertainty. The probability of incorrectly concluding “the alternative is correct” when the null is actually true is non-zero. Likewise, the probability of incorrectly concluding “the null is correct” when the alternative is actually true is non-zero. The former is a <strong>Type I error</strong>; the latter is a <strong>Type II error</strong>. We would like both probabilities to be zero, but they cannot be; we therefore name them <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, and aim to bound each below some agreed level. NHST is the formalised procedure built to achieve this control. The significance level mentioned above is the tolerated value of <span class="math inline">\(\alpha\)</span>, set at 5% by convention in psychology.</p>
+<p>NHST is a framework for deciding whether the findings from a sample are meaningful — whether they generalize to a population. It is helpful to think of it as a game with clearly defined methods and decision criteria. NHST sets a <strong>significance level</strong> and pits two opposing accounts (models) — the <strong>null hypothesis</strong> and the <strong>alternative hypothesis</strong> — against each other, declaring a winner. The reason we can speak of winning and losing is that the two hypotheses are exclusive: it cannot be the case that both are right or that both are wrong. But because the verdict is reached by inferential statistics, the verdict itself carries probabilistic uncertainty. The probability of incorrectly concluding “the alternative is correct” when the null is actually true is non-zero. Likewise, the probability of incorrectly concluding “the null is correct” when the alternative is actually true is non-zero. The former is a <strong>Type I error</strong>; the latter is a <strong>Type II error</strong>. We would like both probabilities to be zero, but they cannot be; we therefore name them <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, and aim to bound each below some agreed level. NHST is the formalized procedure built to achieve this control. The significance level mentioned above is the tolerated value of <span class="math inline">\(\alpha\)</span>, set at 5% by convention in psychology.</p>
 <p>Because NHST is fundamentally a procedure for <strong>controlling errors</strong>, the mindset of “engineering a significant result” is wholly misguided. NHST also combines mathematical inference with a human convention for adjudicating verdicts; do not read excess meaning into the result or take any single outcome too much to heart.</p>
 </section>
 <section id="procedure" class="level3" data-number="7.1.2">
@@ -469,7 +475,7 @@ window.Quarto = {
 <p><span class="math display">\[\Sigma = \begin{pmatrix} s_x^2 &amp; s_{xy} \\ s_{yx} &amp; s_y^2 \end{pmatrix}
 = \begin{pmatrix} s_x^2 &amp; r_{xy}s_xs_y \\ r_{xy}s_xs_y &amp; s_y^2 \end{pmatrix}\]</span></p>
 <p>Setting <code>Sigma = matrix(c(1, 0, 0, 1), ncol = 2)</code> specifies that the two variables are uncorrelated (each with SD 1). The option <code>empirical = TRUE</code> rescales the generated draws so that their <em>empirical</em> correlation matches the specified one exactly.</p>
-<p>Visualise the result:</p>
+<p>Visualize the result:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="sc">%&gt;%</span></span>
@@ -607,7 +613,7 @@ cor
 </div>
 </div>
 <p>In the output, the <span class="math inline">\(t\)</span> value, the degrees of freedom, and the <span class="math inline">\(p\)</span>-value correspond to the example above. The confidence interval for the correlation and the sample correlation are also reported. Since the confidence interval does not include zero, the null hypothesis is rejected.</p>
-<p>We already know that a sample drawn from a zero-correlation population can produce a value like 0.5 — even though, on average, a zero population correlation tends to produce small sample correlations. The lesson is not to read too much into a single sample statistic (at least when generalisation is in scope).</p>
+<p>We already know that a sample drawn from a zero-correlation population can produce a value like 0.5 — even though, on average, a zero population correlation tends to produce small sample correlations. The lesson is not to read too much into a single sample statistic (at least when generalization is in scope).</p>
 <p>The null hypothesis is “the population correlation is zero,” and rejecting it means only that “we cannot say the population correlation is zero.” It does <strong>not</strong> follow that the population correlation must be near 0.5, nor that “<span class="math inline">\(p = 0.024\)</span>, well below 5%, is strong evidence.” These inferences hover over a counterfactual scenario in which <span class="math inline">\(\rho = 0\)</span>; they say nothing about how large <span class="math inline">\(\rho\)</span> actually is. Misreading on this point is common; be careful.</p>
 <p>With this picture in mind, Type I and Type II errors become concrete. A Type I error is the probability, <em>under the null</em>, of rejecting the null based on the sample statistic — exactly what the procedure above computes.</p>
 <p>From a slightly different angle: <code>cor.test()</code> reports the confidence interval. By default this is a 95% interval. Below we ask what fraction of these intervals correctly contain the population correlation — which here is the null value, <span class="math inline">\(\rho = 0\)</span>. The <code>conf.int</code> field of the returned object holds the bounds; we set up a results data frame in advance and use <code>ifelse()</code> to flag containment.</p>
@@ -624,7 +630,7 @@ cor
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> intervals <span class="sc">%&gt;%</span></span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FLG =</span> <span class="fu">ifelse</span>(Lower <span class="sc">&lt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> Upper <span class="sc">&gt;=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">type1error =</span> <span class="fu">mean</span>(FLG)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">type1error =</span> <span class="fu">mean</span>(FLG)) <span class="sc">%&gt;%</span></span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  type1error
@@ -666,7 +672,7 @@ cor
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p =</span> judges) <span class="sc">%&gt;%</span></span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FLG =</span> <span class="fu">ifelse</span>(p <span class="sc">&lt;=</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sig =</span> <span class="fu">sum</span>(FLG <span class="sc">==</span> <span class="dv">1</span>),</span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">non.sig =</span> <span class="fu">sum</span>(FLG <span class="sc">==</span> <span class="dv">0</span>),</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">type2error =</span> non.sig <span class="sc">/</span> iter</span>

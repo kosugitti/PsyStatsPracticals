@@ -1,6 +1,6 @@
 # Bayesian Statistics in Practice
 
-So far we have practised psychological statistics in R using the classical (frequentist) toolkit. We now introduce Bayesian statistics. The reason for the deliberate framing is that Bayesian statistics — though one species of inferential statistics — has accumulated, through its long history and contested interpretations, a thicket of misunderstandings. By some accounts there are over a hundred Bayesian "schools" of interpretation, and conversations on the topic can be fraught.
+So far we have practiced psychological statistics in R using the classical (frequentist) toolkit. We now introduce Bayesian statistics. The reason for the deliberate framing is that Bayesian statistics — though one species of inferential statistics — has accumulated, through its long history and contested interpretations, a thicket of misunderstandings. By some accounts there are over a hundred Bayesian "schools" of interpretation, and conversations on the topic can be fraught.
 
 The author considers himself a "fashion Bayesian" and is not enthusiastic about ideological fights. With that context as a kind of prior, please read what follows.
 
@@ -10,13 +10,13 @@ The Bayesian lineage is old. Bayes's theorem itself is nearly 300 years old: Tho
 
 Bayesian statistics also has a curious history of being more theoretical than applied for most of its existence; in the author's reading, only since around 2010 has Bayesian methodology spread rapidly in applications. The long latency is owed to several factors: the limited range of situations in which Bayesian methods could be applied; the fact that wartime applications kept much of the work classified; and — as McGrayne writes — the personal animosity of senior figures in American statistics toward Bayesian methods, which sounds like a joke but evidently was not. See [@mcgrayne2011theory] for that history.
 
-Two factors have driven the recent revival. First, the **replication crisis** in social psychology motivated a search for new statistical approaches outside the classical framework. Second, advances in computing have produced extraordinarily powerful estimation methods, vastly expanding the modelling flexibility on offer.
+Two factors have driven the recent revival. First, the **replication crisis** in social psychology motivated a search for new statistical approaches outside the classical framework. Second, advances in computing have produced extraordinarily powerful estimation methods, vastly expanding the modeling flexibility on offer.
 
 Bayesian statistics as a response to the replication crisis tends to contrast itself with "frequentist" classical statistics, sharpening the rhetorical edges. But moving to Bayesian methods *because* the classical methods are misused only changes which methods get misused; it does not fix the underlying problem.
 
 From a pedagogical standpoint, the author finds Bayesian statistics gentler and easier for novices to grasp than the classical methods. But the century-long accumulation of frequentist research in psychology — for all its potential for misuse — has produced a rich pedagogical literature and a deep analytic toolbox. Given that the field's literature is essentially all frequentist, abandoning it wholesale and converting to Bayes is not a realistic move. Weak points of Bayesian statistics are precisely those: the pedagogical content, the analytic tools, and the population of teachers familiar with Bayesian statistics are all still relatively thin. Closing those gaps in the near term is to be hoped for.
 
-The second factor gives reason for optimism about Bayes's future. As statistical models grow more complex, maximum likelihood estimation runs into practical walls; Bayesian estimation can keep going. This is largely thanks to MCMC, the computational engine that delivers Bayesian power. Bayesian methods let researchers build statistical models that flexibly fit the data at hand, and compare models on a unified scale via Bayes factors — clear strengths. The cost, however, is that the researcher must take on something of the role of programmer. Psychologists generally want statistics as a *tool*; they are not eager to invest effort in software engineering. Yet the appeal of free-form modelling — unconstrained by the strictures of mean-difference tests and factorial designs — is real, and the number of psychologists taking the modelling route grows each year.
+The second factor gives reason for optimism about Bayes's future. As statistical models grow more complex, maximum likelihood estimation runs into practical walls; Bayesian estimation can keep going. This is largely thanks to MCMC, the computational engine that delivers Bayesian power. Bayesian methods let researchers build statistical models that flexibly fit the data at hand, and compare models on a unified scale via Bayes factors — clear strengths. The cost, however, is that the researcher must take on something of the role of programmer. Psychologists generally want statistics as a *tool*; they are not eager to invest effort in software engineering. Yet the appeal of free-form modeling — unconstrained by the strictures of mean-difference tests and factorial designs — is real, and the number of psychologists taking the modeling route grows each year.
 
 ## MCMC
 
@@ -42,7 +42,7 @@ The left side is the probability of the parameters given the data — the very t
 
 Before any data, the unknown parameters have some uncertainty; the prior expresses that uncertainty. Multiplying the prior by the likelihood (and dividing by the **marginal likelihood** $P(D)$) yields the **posterior probability**, $P(\theta \mid D)$ — the result of statistical inference.
 
-Classical statistics has long criticised the practice of stipulating a parameter's plausibility before seeing the data as scientifically unsound. Setting that aside, look at the formula again: the posterior is the likelihood multiplied by the ratio of prior to marginal likelihood. Maximum likelihood estimation picks the value of $\theta$ at which the likelihood is highest; Bayesian estimation extends that, multiplying the likelihood by the prior/evidence ratio so that the *distribution* of $\theta$ — not just its peak — becomes available. Likelihood alone is not a probability distribution, so only its peak is usable as an estimate; once Bayes's theorem has done its work, however, we get a full probability distribution, and we can quantitatively describe the plausible region for $\theta$.
+Classical statistics has long criticized the practice of stipulating a parameter's plausibility before seeing the data as scientifically unsound. Setting that aside, look at the formula again: the posterior is the likelihood multiplied by the ratio of prior to marginal likelihood. Maximum likelihood estimation picks the value of $\theta$ at which the likelihood is highest; Bayesian estimation extends that, multiplying the likelihood by the prior/evidence ratio so that the *distribution* of $\theta$ — not just its peak — becomes available. Likelihood alone is not a probability distribution, so only its peak is usable as an estimate; once Bayes's theorem has done its work, however, we get a full probability distribution, and we can quantitatively describe the plausible region for $\theta$.
 
 ### A brief history of practical Bayes
 
@@ -64,9 +64,9 @@ The technique that turned Bayes from "usable with effort" into "usable for every
 
 MCMC stands for **Markov chain Monte Carlo**, combining two techniques. A Markov chain is a stochastic-process model; Monte Carlo refers to sampling from a probability distribution by simulation. In a nutshell, the Markov chain lets us construct, computationally, a probability distribution of essentially any shape, and Monte Carlo lets us draw random samples from it.
 
-The relationship between probability distributions and random numbers is familiar by now: a single draw is just one possible realisation, but enough of them together trace out the shape of the distribution. Even if the posterior has no closed form, we can generate draws from it; collect enough of them, plot a histogram, and the silhouette of the histogram approximates the posterior.
+The relationship between probability distributions and random numbers is familiar by now: a single draw is just one possible realization, but enough of them together trace out the shape of the distribution. Even if the posterior has no closed form, we can generate draws from it; collect enough of them, plot a histogram, and the silhouette of the histogram approximates the posterior.
 
-The first benefit of this approach is that probability calculations become tabulation problems. Modern hardware can summarise thousands or tens of thousands of values in an instant; computing the average of thousands of draws of a parameter is trivial. That average approximates the posterior expectation. The approximation's accuracy depends on the MCMC sample size, but a tenfold increase in sample size yields roughly a tenfold gain in precision; throwing more draws at the problem is the easy fix.
+The first benefit of this approach is that probability calculations become tabulation problems. Modern hardware can summarize thousands or tens of thousands of values in an instant; computing the average of thousands of draws of a parameter is trivial. That average approximates the posterior expectation. The approximation's accuracy depends on the MCMC sample size, but a tenfold increase in sample size yields roughly a tenfold gain in precision; throwing more draws at the problem is the easy fix.
 
 The second benefit is that integration becomes easy. A multi-parameter posterior is a probability distribution on a multidimensional space. Focusing on one parameter requires integrating out the others — a multiple integral, painful in closed form. With MCMC, one simply tabulates the draws on the parameter of interest and ignores the rest.
 
@@ -84,7 +84,7 @@ The screenshot shows macOS; use whatever matches your environment. Choose **CmdS
 
 `CmdStanR` runs Stan models written in the Stan language, builds the posterior inside the machine, and returns its representative samples (MCMC draws). It offers high flexibility because you write the model yourself; for linear models, however, the **brms** package (from the same team behind Stan) is far more convenient.
 
-With `brms`, R's `formula` interface specifies a generalised linear mixed model, hierarchical linear model, and so on. The syntax matches the (non-Bayesian) `lmer` package, which makes it easy to adopt. brms installs from CRAN; see [the brms site](https://github.com/paul-buerkner/brms).
+With `brms`, R's `formula` interface specifies a generalized linear mixed model, hierarchical linear model, and so on. The syntax matches the (non-Bayesian) `lmer` package, which makes it easy to adopt. brms installs from CRAN; see [the brms site](https://github.com/paul-buerkner/brms).
 
 ```{r}
 #| eval: false
@@ -141,13 +141,13 @@ Look first at *Regression Coefficients* and check that the recovery worked. The 
 
 Bayesian statistics expresses unknowns as probability distributions. The unknowns here are the regression coefficients, so the intercept $\beta_0$ and slope $\beta_1$ are themselves random variables whose posterior distributions are the result. The interval shown is therefore the 95% interval of the posterior: $\beta_0$ lies between `r fixef(result.bayes)[1,3]` and `r fixef(result.bayes)[1,4]`.
 
-Where maximum likelihood produced a point estimate, Bayesian estimation produces a distribution, and the printed estimate is a summary of that distribution — typically the mean, mode, or median. The posterior mean is the **EAP** (expectation a posteriori) estimate; the posterior median is the **MED** (median a posteriori); and the peak of the distribution is the **MAP** (maximum a posteriori). The posterior here is not given as a closed-form function but is reconstructed from sampled draws, so the MAP is found either by (a) inspecting a histogram and taking the modal bin's centre, or (b) fitting a smooth function to the histogram and reading off its peak. Package functions handle the computation. The key point is that the summary statistic should be chosen with the posterior's shape in mind: for a symmetric (e.g., normal) posterior, mean, median, and mode coincide; if they differ, the posterior is skewed and the median or MAP may be preferable. Always inspect the posterior histogram.
+Where maximum likelihood produced a point estimate, Bayesian estimation produces a distribution, and the printed estimate is a summary of that distribution — typically the mean, mode, or median. The posterior mean is the **EAP** (expectation a posteriori) estimate; the posterior median is the **MED** (median a posteriori); and the peak of the distribution is the **MAP** (maximum a posteriori). The posterior here is not given as a closed-form function but is reconstructed from sampled draws, so the MAP is found either by (a) inspecting a histogram and taking the modal bin's center, or (b) fitting a smooth function to the histogram and reading off its peak. Package functions handle the computation. The key point is that the summary statistic should be chosen with the posterior's shape in mind: for a symmetric (e.g., normal) posterior, mean, median, and mode coincide; if they differ, the posterior is skewed and the median or MAP may be preferable. Always inspect the posterior histogram.
 
 ### Evaluating MCMC {#sec-mcmc-evaluation}
 
 The output also reports information about the MCMC sampling. In the *Draws* section there are four chains, each iterated 2000 times (`iter`), the first 1000 of which are `warmup`; `thin` controls whether to keep every draw or every $k$th draw (here every one).
 
-Recall that MCMC constructs the posterior and then draws samples from it. Sampling starts from an initial value and moves to a neighbouring point in the joint parameter space, then to another, and so on; the collected positions are the draws. In our example we are estimating three parameters ($\beta_0, \beta_1, \sigma$), so the explored space is three-dimensional. From an initial $t_0$ we move to a nearby $t_1$, then $t_2, t_3, \ldots$. Each step is one MCMC draw, and the collection of draws approximates the posterior.
+Recall that MCMC constructs the posterior and then draws samples from it. Sampling starts from an initial value and moves to a neighboring point in the joint parameter space, then to another, and so on; the collected positions are the draws. In our example we are estimating three parameters ($\beta_0, \beta_1, \sigma$), so the explored space is three-dimensional. From an initial $t_0$ we move to a nearby $t_1$, then $t_2, t_3, \ldots$. Each step is one MCMC draw, and the collection of draws approximates the posterior.
 
 A natural worry is that the result depends on the starting point. It can, in extreme cases. When the sampler is working well, however, starting points are forgotten and the chain settles into the high-density region of the posterior, returning consistent samples regardless of where it began.
 
@@ -157,13 +157,13 @@ Now consider the early draws. The chain begins at an arbitrary starting point, p
 
 Returning to the output: four chains, 2000 iterations each, of which the first 1000 are warm-up; the post-warm-up draws total `total post-warmup draws = 4000`.
 
-`thin` specifies a thinning interval. In principle each draw should be independent of the previous one; in practice MCMC draws often show autocorrelation. Thinning — keeping every $k$th draw — reduces autocorrelation but also reduces sample size. High autocorrelation is usually a symptom of an inadequate model or parameterisation, so use `thin` mainly to shrink the result object rather than to fix mixing.
+`thin` specifies a thinning interval. In principle each draw should be independent of the previous one; in practice MCMC draws often show autocorrelation. Thinning — keeping every $k$th draw — reduces autocorrelation but also reduces sample size. High autocorrelation is usually a symptom of an inadequate model or parameterization, so use `thin` mainly to shrink the result object rather than to fix mixing.
 
 The output also reports `Rhat` and `Bulk-ESS`. **$\hat{R}$** measures whether chains have converged to the same distribution; values near 1 are good, and a common rule is that all parameters should have $\hat{R} < 1.1$. Larger $\hat{R}$ means the chains are exploring different regions and the draws are not from a common posterior — revisit the model. **Bulk-ESS** is the effective sample size — how many genuinely independent samples the draws are equivalent to. The rule of thumb is "at least three digits"; if Bulk-ESS is in the tens, the sampling has not produced enough independent information, and the model needs revisiting.
 
 ### Visual diagnostics
 
-Visualisation makes the diagnostics easier. The code below draws histograms of each parameter's posterior alongside **trace plots**:
+Visualization makes the diagnostics easier. The code below draws histograms of each parameter's posterior alongside **trace plots**:
 ```{r}
 plot(result.bayes)
 ```
@@ -172,7 +172,7 @@ A trace plot shows each chain's value at every iteration. It is used to confirm 
 
 ### Inspecting the MCMC draws
 
-The output so far has been summarised. To see the underlying draws themselves, use `brms::as_draws_df()`:
+The output so far has been summarized. To see the underlying draws themselves, use `brms::as_draws_df()`:
 
 ```{r mcmc_samples}
 mcmc_samples <- brms::as_draws_df(result.bayes)
@@ -181,15 +181,15 @@ mcmc_samples %>%
   head()
 ```
 
-`as_draws_df()` returns a specialised `data.frame`; we coerce to a plain data frame and display the first few rows. The last three columns — `.chain`, `.iteration`, `.draw` — index the chain number, the iteration within the chain, and the overall draw number.
+`as_draws_df()` returns a specialized `data.frame`; we coerce to a plain data frame and display the first few rows. The last three columns — `.chain`, `.iteration`, `.draw` — index the chain number, the iteration within the chain, and the overall draw number.
 
 By default there are four chains. The displayed rows are draws 1, 2, …, 6 from the first chain — each row is one point in the three-dimensional joint parameter space.
 
-`b_Intercept` is the intercept $\beta_0$, `b_x` is the slope $\beta_1$, and since the model is $Y \sim N(\beta_0 + \beta_1 x, \sigma)$, `sigma` is $\sigma$. `Intercept` is $\beta_0 + \beta_1 \bar{x}$, the centred intercept used internally.
+`b_Intercept` is the intercept $\beta_0$, `b_x` is the slope $\beta_1$, and since the model is $Y \sim N(\beta_0 + \beta_1 x, \sigma)$, `sigma` is $\sigma$. `Intercept` is $\beta_0 + \beta_1 \bar{x}$, the centered intercept used internally.
 
 `lprior` is the log prior and `lp__` the log posterior, both informational outputs from the estimation; no need to dwell on them here.
 
-The code below summarises the posterior from the MCMC draws. For the MAP we use base R's `density()` to compute a kernel density estimate and take the mode of that KDE.
+The code below summarizes the posterior from the MCMC draws. For the MAP we use base R's `density()` to compute a kernel density estimate and take the mode of that KDE.
 
 ```{r}
 # helper for MAP
@@ -204,7 +204,7 @@ mcmc_samples %>%
   rowid_to_column("iter") %>%
   pivot_longer(-iter) %>%
   group_by(name) %>%
-  summarise(
+  summarize(
     EAP = mean(value),
     MED = median(value),
     MAP = find_map(value),
@@ -215,7 +215,7 @@ mcmc_samples %>%
   )
 ```
 
-We have walked through the place of Bayesian statistics and the practice of MCMC-based estimation via a package. **brms** is powerful for linear models and their extensions and is, in practice, the workhorse. For non-linear models you will often write Stan code yourself. Keep that wider statistical-modelling world in view — it is not bounded by the linear-model framework.
+We have walked through the place of Bayesian statistics and the practice of MCMC-based estimation via a package. **brms** is powerful for linear models and their extensions and is, in practice, the workhorse. For non-linear models you will often write Stan code yourself. Keep that wider statistical-modeling world in view — it is not bounded by the linear-model framework.
 
 ### brms options
 
@@ -227,7 +227,7 @@ brms::get_prior(result.bayes)
 
 The regression coefficients have **flat** priors — uniform over the plausible range, conveying no information. This is a *non-informative prior*.
 
-For the residual SD $\sigma$, the default is `student_t(3, 0, 21.3)` — a Student's $t$ distribution. Visualise it:
+For the residual SD $\sigma$, the default is `student_t(3, 0, 21.3)` — a Student's $t$ distribution. Visualize it:
 ```{r}
 df <- 3
 mu <- 0

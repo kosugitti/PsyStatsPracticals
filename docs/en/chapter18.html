@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>18&nbsp; A Bayesian View of Mean-Difference Tests – Exercises in Psychological Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./practices.html" rel="next">
+<link href="./chapter17.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter18.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">A Bayesian View of Mean-Difference Tests</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exercises in Psychological Statistics</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="日本語版 (Japanese)" class="quarto-navigation-tool px-1" aria-label="日本語版 (Japanese)"><i class="bi bi-translate"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Exercises-in-Psychological-Statistics.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Exercises-in-Psychological-Statistics.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with R/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Fundamentals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data Wrangling in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Authoring Reports in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Programming in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Null Hypothesis Significance Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Tests of Mean Differences</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Multi-group Tests of Mean Differences</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Questionable Research Practices and Sample-Size Planning</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Multiple Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Bayesian Statistics in Practice</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Foundations of Linear Algebra</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Extensions of the Linear Model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Multivariate Analysis I</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Multivariate Analysis II</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter18.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">A Bayesian View of Mean-Difference Tests</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./afterword.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Afterword</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./install_guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Installation Guide</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#from-testing-to-modeling" id="toc-from-testing-to-modeling" class="nav-link active" data-scroll-target="#from-testing-to-modeling"><span class="header-section-number">18.1</span> From testing to modeling</a>
+  <ul class="collapse">
+  <li><a href="#the-multiple-comparison-problem-disappears" id="toc-the-multiple-comparison-problem-disappears" class="nav-link" data-scroll-target="#the-multiple-comparison-problem-disappears"><span class="header-section-number">18.1.1</span> The multiple-comparison problem disappears</a></li>
+  </ul></li>
+  <li><a href="#recalling-the-structure-of-anova" id="toc-recalling-the-structure-of-anova" class="nav-link" data-scroll-target="#recalling-the-structure-of-anova"><span class="header-section-number">18.2</span> Recalling the structure of ANOVA</a></li>
+  <li><a href="#a-bayesian-two-group-comparison-the-t-test" id="toc-a-bayesian-two-group-comparison-the-t-test" class="nav-link" data-scroll-target="#a-bayesian-two-group-comparison-the-t-test"><span class="header-section-number">18.3</span> A Bayesian two-group comparison (the <span class="math inline">\(t\)</span>-test)</a>
+  <ul class="collapse">
+  <li><a href="#writing-the-model-in-stan" id="toc-writing-the-model-in-stan" class="nav-link" data-scroll-target="#writing-the-model-in-stan"><span class="header-section-number">18.3.1</span> Writing the model in Stan</a></li>
+  <li><a href="#estimation-and-reading-the-results" id="toc-estimation-and-reading-the-results" class="nav-link" data-scroll-target="#estimation-and-reading-the-results"><span class="header-section-number">18.3.2</span> Estimation and reading the results</a></li>
+  </ul></li>
+  <li><a href="#a-bayesian-multi-group-comparison-anova" id="toc-a-bayesian-multi-group-comparison-anova" class="nav-link" data-scroll-target="#a-bayesian-multi-group-comparison-anova"><span class="header-section-number">18.4</span> A Bayesian multi-group comparison (ANOVA)</a>
+  <ul class="collapse">
+  <li><a href="#writing-the-model-in-stan-1" id="toc-writing-the-model-in-stan-1" class="nav-link" data-scroll-target="#writing-the-model-in-stan-1"><span class="header-section-number">18.4.1</span> Writing the model in Stan</a></li>
+  <li><a href="#estimation-and-comparing-all-pairs" id="toc-estimation-and-comparing-all-pairs" class="nav-link" data-scroll-target="#estimation-and-comparing-all-pairs"><span class="header-section-number">18.4.2</span> Estimation and comparing all pairs</a></li>
+  </ul></li>
+  <li><a href="#three-tools-for-decision-making" id="toc-three-tools-for-decision-making" class="nav-link" data-scroll-target="#three-tools-for-decision-making"><span class="header-section-number">18.5</span> Three tools for decision making</a>
+  <ul class="collapse">
+  <li><a href="#rope" id="toc-rope" class="nav-link" data-scroll-target="#rope"><span class="header-section-number">18.5.1</span> ROPE</a></li>
+  <li><a href="#the-bayes-factor" id="toc-the-bayes-factor" class="nav-link" data-scroll-target="#the-bayes-factor"><span class="header-section-number">18.5.2</span> The Bayes factor</a></li>
+  <li><a href="#the-posterior-predictive-distribution" id="toc-the-posterior-predictive-distribution" class="nav-link" data-scroll-target="#the-posterior-predictive-distribution"><span class="header-section-number">18.5.3</span> The posterior predictive distribution</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">18.6</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">18.7</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">A Bayesian View of Mean-Difference Tests</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>So far we have used the <span class="math inline">\(t\)</span>-test to compare the means of two groups and analysis of variance (ANOVA) to compare three or more. Both are frequentist procedures: we state a null hypothesis (“the group means do not differ”), compute a test statistic such as <span class="math inline">\(t\)</span> or <span class="math inline">\(F\)</span>, and reject the null when its probability (the <span class="math inline">\(p\)</span>-value) is small.</p>
+<p>In this chapter we reframe exactly the same problems from a Bayesian point of view. That is, we build a model from a data-generating perspective — “by what mechanism were the data produced?” — and estimate the means and the size of the differences directly as probability distributions. We then turn to decision making — judging whether a difference exists — and introduce three Bayesian tools: the <strong>ROPE</strong>, the <strong>Bayes factor</strong>, and the <strong>posterior predictive distribution</strong>.</p>
+<p>This chapter uses both <code>brms</code>, introduced in the chapter on Bayesian statistics in practice, and the Stan probabilistic models from the chapter on Bayesian modeling. We assume familiarity with both, so revisit them as needed.</p>
+<section id="from-testing-to-modeling" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="from-testing-to-modeling"><span class="header-section-number">18.1</span> From testing to modeling</h2>
+<p>The <span class="math inline">\(t\)</span>-test and ANOVA are collectively called “tests for differences in means.” Recall what they actually do: assuming the data follow a normal distribution, they evaluate whether the means differ — more precisely, how easily the difference observed in the data could arise if “all population means are equal.”</p>
+<p>From a data-generating perspective this procedure sees only a narrow slice. Can we not consider parameters other than the mean? Can we not isolate the difference between a specific pair of groups? Beyond merely “is there a difference,” can we not ask directly how large the difference is, or what the probability is that one group exceeds another? Bayesian estimation answers such questions naturally.</p>
+<section id="the-multiple-comparison-problem-disappears" class="level3" data-number="18.1.1">
+<h3 data-number="18.1.1" class="anchored" data-anchor-id="the-multiple-comparison-problem-disappears"><span class="header-section-number">18.1.1</span> The multiple-comparison problem disappears</h3>
+<p>Recall frequentist ANOVA. When a comparison of three or more groups is significant, all we know is that the null hypothesis <span class="math inline">\(H_0: \mu_1 = \mu_2 = \mu_3\)</span> has been rejected; <em>where</em> the difference lies is still unknown. We then proceed to multiple comparisons — but repeating tests inflates the Type I error rate. Even testing at <span class="math inline">\(\alpha = 0.05\)</span>, two independent tests give an overall error rate of <span class="math inline">\(1 - (0.95^2) = 0.0975\)</span>, well above <span class="math inline">\(5\%\)</span>. Hence the need for adjustments such as Tukey’s or Bonferroni’s method.</p>
+<p>Under Bayesian estimation, however, this multiplicity problem does not arise, because we are not repeating probabilistic yes/no decisions. The frequentist <span class="math inline">\(p\)</span>-value is the chance of the test statistic <em>given that the null is true</em>; it is not the probability of where the parameters lie. By contrast, the posterior distribution from Bayesian estimation is precisely the probability that the parameter lies in a given region. So we may inspect the difference between groups <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, between <span class="math inline">\(A\)</span> and <span class="math inline">\(C\)</span>, and so on, as much as we like, and there is in principle no worry that “comparing many times inflates the error.” For complex factorial designs this property is a great help.</p>
+</section>
+</section>
+<section id="recalling-the-structure-of-anova" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="recalling-the-structure-of-anova"><span class="header-section-number">18.2</span> Recalling the structure of ANOVA</h2>
+<p>Before building the Bayesian model, let us recall how ANOVA decomposes the variation in the data, because that decomposition becomes the data-generating model directly.</p>
+<p>In ANOVA we regard an observation <span class="math inline">\(x_{ij}\)</span> (the <span class="math inline">\(i\)</span>-th observation in group <span class="math inline">\(j\)</span>) as</p>
+<p><span class="math display">\[ x_{ij} = \mu + \delta_j + e_{ij} \]</span></p>
+<p>Here <span class="math inline">\(\mu\)</span> is the grand mean, <span class="math inline">\(\delta_j\)</span> is the effect of belonging to group <span class="math inline">\(j\)</span> (the deviation from the grand mean), and <span class="math inline">\(e_{ij}\)</span> is individual variation, or error. In the example of comparing the mean test scores of three classes, if the grand mean is <span class="math inline">\(60\)</span> and a class averages <span class="math inline">\(68\)</span>, then the effect of belonging to that class, <span class="math inline">\(\delta_j\)</span>, is <span class="math inline">\(+8\)</span>. Because the effects are deviations relative to the grand mean, summing them over all groups gives <span class="math inline">\(0\)</span> (<span class="math inline">\(\sum_j \delta_j = 0\)</span>). This is why, with three levels, the effects have only two degrees of freedom.</p>
+<p>In frequentist ANOVA we summed the squared effects <span class="math inline">\(\delta_j\)</span> over the group sizes to obtain the “between-group variation,” summed the squared errors <span class="math inline">\(e_{ij}\)</span> to obtain the “within-group variation,” divided each by its degrees of freedom, and declared a difference when the ratio <span class="math inline">\(F\)</span> was large.</p>
+<p>From a Bayesian point of view we reread this very decomposition as a probabilistic model that generates the data. If the error <span class="math inline">\(e_{ij}\)</span> follows a normal distribution with mean <span class="math inline">\(0\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>, then</p>
+<p><span class="math display">\[ x_{ij} \sim N(\mu + \delta_j, \sigma) \]</span></p>
+<p>All that remains is to estimate the unknowns — the grand mean <span class="math inline">\(\mu\)</span>, the effects <span class="math inline">\(\delta_j\)</span>, and the error scale <span class="math inline">\(\sigma\)</span> — from the data. Whereas frequentism concentrates on “decomposing the variation and taking a ratio,” Bayes goes directly after “the distribution of the effects <span class="math inline">\(\delta_j\)</span> themselves.”</p>
+</section>
+<section id="a-bayesian-two-group-comparison-the-t-test" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="a-bayesian-two-group-comparison-the-t-test"><span class="header-section-number">18.3</span> A Bayesian two-group comparison (the <span class="math inline">\(t\)</span>-test)</h2>
+<p>Let us begin with the simplest case, a two-group difference in means — the model corresponding to the <span class="math inline">\(t\)</span>-test.</p>
+<p>As a cover story, consider the effect of a study method. Learners who studied the same material under three different study methods (Method A, Method B, Method C) take a common test, with <span class="math inline">\(40\)</span> people per group. First we extract just Method A and Method C and compare them.</p>
+<p>We generate the data from the ANOVA decomposition: a grand mean of <span class="math inline">\(60\)</span>, with effects of <span class="math inline">\(+8\)</span> for Method A, <span class="math inline">\(+6\)</span> for Method B, and <span class="math inline">\(-14\)</span> for Method C (summing to <span class="math inline">\(0\)</span>), plus error with a standard deviation of <span class="math inline">\(8\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, cmdstanr, bayesplot, bayestestR, brms, logspline)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">brms.backend =</span> <span class="st">"cmdstanr"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="dv">60</span> <span class="co"># grand mean</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>eff <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">6</span>, <span class="sc">-</span><span class="dv">14</span>) <span class="co"># effect of each group (sums to 0)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sigma_true <span class="ot">&lt;-</span> <span class="dv">8</span> <span class="co"># standard deviation of the error</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">40</span> <span class="co"># sample size per group</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Method A"</span>, <span class="st">"Method B"</span>, <span class="st">"Method C"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(labels, <span class="at">each =</span> N), <span class="at">levels =</span> labels),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">c</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(N, gm <span class="sc">+</span> eff[<span class="dv">1</span>], sigma_true),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(N, gm <span class="sc">+</span> eff[<span class="dv">2</span>], sigma_true),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(N, gm <span class="sc">+</span> eff[<span class="dv">3</span>], sigma_true)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idx =</span> <span class="fu">as.integer</span>(method))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(method) <span class="sc">|&gt;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(score), <span class="at">sd =</span> <span class="fu">sd</span>(score), <span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  method    mean    sd     n
+  &lt;fct&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+1 Method A  64.7  7.30    40
+2 Method B  65.4  8.67    40
+3 Method C  46.4  6.32    40</code></pre>
+</div>
+</div>
+<p>Looking at the group means, in this particular sample Methods A and B come out about the same, with only Method C lower. In the population we built in a <span class="math inline">\(2\)</span>-point gap between Methods A and B, but sampling variability has all but erased it in the realized data. How Bayesian estimation handles this “sampling wobble” is itself worth watching.</p>
+<section id="writing-the-model-in-stan" class="level3" data-number="18.3.1">
+<h3 data-number="18.3.1" class="anchored" data-anchor-id="writing-the-model-in-stan"><span class="header-section-number">18.3.1</span> Writing the model in Stan</h3>
+<p>The Stan code for a two-group comparison is as follows. Save it as <code>bayes_ttest.stan</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N1;          <span class="co">// sample size of group 1</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N2;          <span class="co">// sample size of group 2</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N1] <span class="dt">real</span> X1;        <span class="co">// observations of group 1</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N2] <span class="dt">real</span> X2;        <span class="co">// observations of group 2</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> mu1;                 <span class="co">// population mean of group 1</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> mu2;                 <span class="co">// population mean of group 2</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;      <span class="co">// common standard deviation (equal-variance assumption)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">// likelihood: each group arises from a normal with the same spread</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  X1 ~ normal(mu1, sigma);</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  X2 ~ normal(mu2, sigma);</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// priors</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  mu1 ~ normal(<span class="dv">50</span>, <span class="dv">50</span>);</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  mu2 ~ normal(<span class="dv">50</span>, <span class="dv">50</span>);</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  sigma ~ cauchy(<span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> diff;                <span class="co">// the mean difference itself</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> delta;               <span class="co">// standardised effect size (Cohen's d)</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N1 + N2] <span class="dt">real</span> X_pred;  <span class="co">// replicated data for the posterior predictive distribution</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  diff = mu1 - mu2;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  delta = (mu1 - mu2) / sigma;</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> : N1) {</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    X_pred[i] = normal_rng(mu1, sigma);</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> : N2) {</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    X_pred[N1 + i] = normal_rng(mu2, sigma);</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>data</code> block receives the sample size and observations of each of the two groups. The <code>parameters</code> block holds the two population means <code>mu1</code>, <code>mu2</code> and a common standard deviation <code>sigma</code>. Sharing a single standard deviation corresponds to the “equal-variance assumption” of the <span class="math inline">\(t\)</span>-test. The <code>model</code> block writes the likelihood — each group’s data arise from a normal distribution centered on its population mean — and supplies the priors.</p>
+<p>The block to note is <code>generated quantities</code>. Here we compute the mean difference itself, <code>diff</code>, and a standardized effect size <code>delta</code> (corresponding to Cohen’s <span class="math inline">\(d\)</span>) obtained by dividing the difference by the standard deviation. Unlike a test, the strength of Bayes is that the size of the difference is available directly as a probability distribution. We also generate new data from the fitted model as <code>X_pred</code>, which we use later for the posterior predictive distribution.</p>
+</section>
+<section id="estimation-and-reading-the-results" class="level3" data-number="18.3.2">
+<h3 data-number="18.3.2" class="anchored" data-anchor-id="estimation-and-reading-the-results"><span class="header-section-number">18.3.2</span> Estimation and reading the results</h3>
+<p>Compile the model and fit it to the Method A and Method C data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sub <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> <span class="fu">filter</span>(method <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Method A"</span>, <span class="st">"Method C"</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> sub<span class="sc">$</span>score[sub<span class="sc">$</span>method <span class="sc">==</span> <span class="st">"Method A"</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> sub<span class="sc">$</span>score[sub<span class="sc">$</span>method <span class="sc">==</span> <span class="st">"Method C"</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>model_t <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"bayes_ttest.stan"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>fit_t <span class="ot">&lt;-</span> model_t<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">list</span>(<span class="at">N1 =</span> <span class="fu">length</span>(X1), <span class="at">N2 =</span> <span class="fu">length</span>(X2), <span class="at">X1 =</span> X1, <span class="at">X2 =</span> X2),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">1000</span>, <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>, <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.0 seconds.
+Chain 2 finished in 0.0 seconds.
+Chain 3 finished in 0.0 seconds.
+Chain 4 finished in 0.0 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.0 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_t<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">"mu1"</span>, <span class="st">"mu2"</span>, <span class="st">"sigma"</span>, <span class="st">"diff"</span>, <span class="st">"delta"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 10
+  variable  mean median    sd   mad    q5   q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 mu1      64.7   64.7  1.13  1.12  62.8  66.5   1.00    8594.    5383.
+2 mu2      46.4   46.4  1.11  1.13  44.6  48.2   1.00    7999.    6340.
+3 sigma     6.87   6.85 0.556 0.556  6.03  7.83  1.00    6844.    5527.
+4 diff     18.3   18.3  1.58  1.56  15.7  20.9   1.00    8728.    5529.
+5 delta     2.68   2.68 0.314 0.312  2.17  3.22  1.00    7784.    5499.</code></pre>
+</div>
+</div>
+<p>The <code>Rhat</code> values are all near <span class="math inline">\(1.00\)</span> and <code>ess_bulk</code> is large, so sampling went well. <code>mu1</code> and <code>mu2</code> summarize the posteriors of the population means of Methods A and C. The one to watch is <code>diff</code>, the posterior of the mean difference. Beyond a point estimate, we can see at a glance the range in which the difference lies with <span class="math inline">\(90\%\)</span> probability (<code>q5</code> to <code>q95</code>). The standardized effect size <code>delta</code> is also very large, so it seems safe to conclude that there is a substantial difference between Methods A and C.</p>
+<p>Numbers aside, it helps to picture the posteriors. The <code>mcmc_areas</code> function in the <code>bayesplot</code> package draws each parameter’s posterior as a density “ridge.”</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># posteriors of the two population means</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit_t<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"mu1"</span>, <span class="st">"mu2"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/ttest_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># posterior of the mean difference (dashed line at zero)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit_t<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"diff"</span>)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_vline()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/ttest_viz-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see at a glance that the two mean ridges are clearly separated, and that the distribution of <code>diff</code> lies well to the right of <span class="math inline">\(0\)</span> (the dashed line). Almost all of the difference’s ridge is in the positive region, which makes sense given the probability of superiority near <span class="math inline">\(1\)</span> that we compute next.</p>
+<p>A benefit of holding the difference as a probability distribution is that we can freely ask various “data-level hypotheses” after the fact. For example, the probability that Method A’s population mean exceeds Method C’s is just the proportion of the difference’s posterior that is positive. This is called the probability of superiority.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>draws_t <span class="ot">&lt;-</span> fit_t<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># probability that Method A exceeds Method C</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(draws_t<span class="sc">$</span>diff <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>We merely count the proportion of positive values among the MCMC samples of the difference. It is essentially <span class="math inline">\(1\)</span>: we can be all but certain that “Method A is superior.” Whereas the frequentist <span class="math inline">\(p\)</span>-value is the indirect quantity “how easily the test statistic arises under the null,” here we answer exactly the question we wanted, in terms of probability.</p>
+</section>
+</section>
+<section id="a-bayesian-multi-group-comparison-anova" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="a-bayesian-multi-group-comparison-anova"><span class="header-section-number">18.4</span> A Bayesian multi-group comparison (ANOVA)</h2>
+<p>Next we consider a three-group comparison, the model corresponding to one-way ANOVA. We could keep appending two-group models, but then we would have to rewrite and recompile the code every time the number of groups changes. So we write down the ANOVA decomposition in a form that does not depend on the number of groups.</p>
+<p>That is, we build the model from a grand mean <span class="math inline">\(\mu\)</span> (<code>gm</code> in the code), the effects <span class="math inline">\(\delta_j\)</span> of each group, and the error <span class="math inline">\(\sigma\)</span>. Because the effects are subject to the constraint <span class="math inline">\(\sum_j \delta_j = 0\)</span>, we only need to estimate <span class="math inline">\(\mathrm{Lv}-1\)</span> of them; the last one is fixed so that “the total is <span class="math inline">\(0\)</span>.”</p>
+<section id="writing-the-model-in-stan-1" class="level3" data-number="18.4.1">
+<h3 data-number="18.4.1" class="anchored" data-anchor-id="writing-the-model-in-stan-1"><span class="header-section-number">18.4.1</span> Writing the model in Stan</h3>
+<p>The following code, which does not depend on the number of groups, assumes the data are supplied in tidy-data form. Save it as <code>bayes_anova.stan</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Lv;                       <span class="co">// number of levels (groups)</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L;                        <span class="co">// total number of observations</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=Lv&gt; idx;   <span class="co">// group ID of each observation</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">real</span> X;                       <span class="co">// observations</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> gm;                               <span class="co">// grand mean</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[Lv - <span class="dv">1</span>] <span class="dt">real</span> raw_delta;          <span class="co">// effects; Lv-1 of them, by the degrees of freedom</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;                   <span class="co">// within-group spread (error)</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[Lv] <span class="dt">real</span> delta;                  <span class="co">// effects rebuilt so that they sum to zero</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[Lv] <span class="dt">real</span> mu;                     <span class="co">// population mean of each group</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : (Lv - <span class="dv">1</span>)) {</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    delta[l] = raw_delta[l];             <span class="co">// copy the first Lv-1 effects</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  delta[Lv] = -sum(raw_delta);           <span class="co">// the last one follows from "effects sum to zero"</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : Lv) {</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    mu[l] = gm + delta[l];               <span class="co">// group mean = grand mean + effect</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="co">// likelihood: observation l scatters around the mean of its group, mu[idx[l]]</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : L) {</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    X[l] ~ normal(mu[idx[l]], sigma);</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">// priors</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>  gm ~ normal(<span class="dv">50</span>, <span class="dv">50</span>);</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>  raw_delta ~ normal(<span class="dv">0</span>, <span class="dv">50</span>);</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>  sigma ~ cauchy(<span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">real</span> X_pred;                  <span class="co">// replicated data for the posterior predictive distribution</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : L) {</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>    X_pred[l] = normal_rng(mu[idx[l]], sigma);</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>data</code> block receives the number of levels <code>Lv</code> and the total number of observations <code>L</code>, together with an index <code>idx</code> indicating which group each observation belongs to and the observations <code>X</code>, both as arrays of length <code>L</code>. This accommodates unequal group sizes.</p>
+<p>The <code>parameters</code> block holds the grand mean <code>gm</code>, the effects <code>raw_delta</code> (<span class="math inline">\(\mathrm{Lv}-1\)</span> of them), and the error <code>sigma</code>. In the <code>transformed parameters</code> block we copy the first <span class="math inline">\(\mathrm{Lv}-1\)</span> entries of <code>raw_delta</code> and set the last to <code>-sum(raw_delta)</code> so the effects <span class="math inline">\(\delta_j\)</span> sum to <span class="math inline">\(0\)</span>, then build each group mean as <code>mu[l] = gm + delta[l]</code>.</p>
+<p>The likelihood in the <code>model</code> block is the single line <code>X[l] ~ normal(mu[idx[l]], sigma)</code>, expressing that observation <span class="math inline">\(l\)</span> scatters around the mean of its group <code>idx[l]</code>. The nested reference <code>mu[idx[l]]</code> specifies which group the observation belongs to. As in the two-group case, the <code>generated quantities</code> block produces replicated data <code>X_pred</code> for the posterior predictive distribution.</p>
+</section>
+<section id="estimation-and-comparing-all-pairs" class="level3" data-number="18.4.2">
+<h3 data-number="18.4.2" class="anchored" data-anchor-id="estimation-and-comparing-all-pairs"><span class="header-section-number">18.4.2</span> Estimation and comparing all pairs</h3>
+<p>Fit the model to all three groups.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model_a <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"bayes_anova.stan"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fit_a <span class="ot">&lt;-</span> model_a<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">list</span>(<span class="at">Lv =</span> <span class="dv">3</span>, <span class="at">L =</span> <span class="fu">nrow</span>(dat), <span class="at">idx =</span> dat<span class="sc">$</span>idx, <span class="at">X =</span> dat<span class="sc">$</span>score),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">1000</span>, <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>, <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.1 seconds.
+Chain 2 finished in 0.1 seconds.
+Chain 3 finished in 0.1 seconds.
+Chain 4 finished in 0.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.1 seconds.
+Total execution time: 0.3 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fit_a<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">"gm"</span>, <span class="st">"mu[1]"</span>, <span class="st">"mu[2]"</span>, <span class="st">"mu[3]"</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"delta[1]"</span>, <span class="st">"delta[2]"</span>, <span class="st">"delta[3]"</span>, <span class="st">"sigma"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 10
+  variable   mean median    sd   mad     q5    q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 gm        58.8   58.8  0.684 0.684  57.7   59.9   1.00    7525.    5741.
+2 mu[1]     64.7   64.7  1.17  1.15   62.7   66.6   1.00    6765.    5555.
+3 mu[2]     65.4   65.4  1.20  1.19   63.4   67.3   1.00    7005.    5621.
+4 mu[3]     46.4   46.4  1.19  1.16   44.4   48.3   1.00    8793.    6423.
+5 delta[1]   5.88   5.88 0.964 0.952   4.28   7.43  1.00    6157.    5834.
+6 delta[2]   6.56   6.55 0.978 0.984   4.95   8.16  1.00    6594.    5307.
+7 delta[3] -12.4  -12.4  0.970 0.979 -14.0  -10.9   1.00   10361.    6105.
+8 sigma      7.54   7.51 0.499 0.493   6.77   8.39  1.00    7794.    5961.</code></pre>
+</div>
+</div>
+<p><code>gm</code> is the grand mean, <code>mu[1]</code> to <code>mu[3]</code> are the population means of each group, and <code>delta[1]</code> to <code>delta[3]</code> are the posteriors of the effects. The effects are positive for Methods A and B and strongly negative for Method C, so the data-generating structure is broadly recovered.</p>
+<p>Let us visualize this too. We draw the group means as intervals (<code>mcmc_intervals</code>) and the effects as densities (<code>mcmc_areas</code>).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># population means of each group (point and interval)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_intervals</span>(fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"mu[1]"</span>, <span class="st">"mu[2]"</span>, <span class="st">"mu[3]"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/anova_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of each group (dashed line at zero)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"delta[1]"</span>, <span class="st">"delta[2]"</span>, <span class="st">"delta[3]"</span>))) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/anova_viz-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For the means, Methods A and B sit close together and only Method C is shifted downward. In the effects plot, Method C’s effect is clearly negative, while the effects of Methods A and B overlap around <span class="math inline">\(0\)</span>.</p>
+<p>Now let us do the equivalent of post-hoc multiple comparisons. Whereas frequentism required adjusting the significance level, in Bayes we simply subtract the posterior samples of the group means.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>draws_a <span class="ot">&lt;-</span> fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pair <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">A-B</span><span class="st">`</span> <span class="ot">=</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span> <span class="sc">-</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[2]</span><span class="st">`</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">A-C</span><span class="st">`</span> <span class="ot">=</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span> <span class="sc">-</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">B-C</span><span class="st">`</span> <span class="ot">=</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[2]</span><span class="st">`</span> <span class="sc">-</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>pair <span class="sc">|&gt;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"pair"</span>, <span class="at">values_to =</span> <span class="st">"diff"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(pair) <span class="sc">|&gt;</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">EAP =</span> <span class="fu">mean</span>(diff),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">L95 =</span> <span class="fu">quantile</span>(diff, <span class="fl">0.025</span>),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">U95 =</span> <span class="fu">quantile</span>(diff, <span class="fl">0.975</span>),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">P(diff&gt;0)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(diff <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  pair     EAP   L95   U95 `P(diff&gt;0)`
+  &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+1 A-B   -0.676 -3.99  2.62       0.346
+2 A-C   18.3   15.1  21.5        1    
+3 B-C   19.0   15.7  22.3        1    </code></pre>
+</div>
+</div>
+<p>The A–C and B–C differences have <span class="math inline">\(95\%\)</span> intervals that do not straddle <span class="math inline">\(0\)</span>, so we can be all but certain that “there is a difference” (the probability of superiority is also near <span class="math inline">\(1\)</span>). The A–B difference, by contrast, has a <span class="math inline">\(95\%\)</span> interval that brackets <span class="math inline">\(0\)</span>, with a probability of superiority near <span class="math inline">\(0.5\)</span> — so we cannot say there is a clear difference between those two methods. We built a <span class="math inline">\(2\)</span>-point gap into the population, but with only <span class="math inline">\(40\)</span> people per group the data could not distinguish it.</p>
+<p>Overlaying the posteriors of all pairwise differences makes it easy to see which pairs straddle <span class="math inline">\(0\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># posteriors of all pairwise differences (dashed line at zero)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(<span class="fu">as.matrix</span>(pair)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/pairwise_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The ridges for the A–C and B–C differences lie well to the right of <span class="math inline">\(0\)</span>, whereas the ridge for the A–B difference straddles <span class="math inline">\(0\)</span>, confirming visually that we cannot assert a difference there.</p>
+<p>The important point is that we must not jump from “the interval straddles <span class="math inline">\(0\)</span>” to “there is no difference.” That only means “we cannot say there is a difference,” which is not the same as “there is no difference (they are equivalent).” This very distinction is why we need the decision-making tools described next.</p>
+</section>
+</section>
+<section id="three-tools-for-decision-making" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="three-tools-for-decision-making"><span class="header-section-number">18.5</span> Three tools for decision making</h2>
+<p>Once we have the posterior, the question “so how do we actually decide?” remains. Frequentism had the clear (if much-abused) criterion “<span class="math inline">\(p &lt; 0.05\)</span> is significant.” Bayes offers several alternative tools. Here we look at three representatives: the ROPE, the Bayes factor, and the posterior predictive distribution.</p>
+<section id="rope" class="level3" data-number="18.5.1">
+<h3 data-number="18.5.1" class="anchored" data-anchor-id="rope"><span class="header-section-number">18.5.1</span> ROPE</h3>
+<p>ROPE stands for Region Of Practical Equivalence, a decision method proposed by <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span>. The idea is simple: declare in advance a band such that “if it falls in this range, the difference may be regarded as practically zero.”</p>
+<p>For these test scores, say a researcher decides that “a difference of about <span class="math inline">\(\pm 2\)</span> points is, for practical purposes, no difference.” This <span class="math inline">\([-2, +2]\)</span> is the ROPE. We then see how much of the difference’s posterior falls inside it.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A-B difference: practically equivalent?</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">rope</span>(pair<span class="sc">$</span><span class="st">`</span><span class="at">A-B</span><span class="st">`</span>, <span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">ci =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Proportion of samples inside the ROPE [-2.00, 2.00]:
+
+Inside ROPE
+-----------
+72.60 %    </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A-C difference: a practical difference?</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">rope</span>(pair<span class="sc">$</span><span class="st">`</span><span class="at">A-C</span><span class="st">`</span>, <span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">ci =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Proportion of samples inside the ROPE [-2.00, 2.00]:
+
+Inside ROPE
+-----------
+0.00 %     </code></pre>
+</div>
+</div>
+<p>Most of the A–B difference’s posterior (over <span class="math inline">\(70\%\)</span>) lies inside the ROPE. We can thus positively assert that “the difference between the two is practically negligible.” This is something frequentism could not say in principle (accepting the null), and it is a major advantage of Bayes. The A–C difference, on the other hand, lies entirely outside the ROPE, so we judge that there is a practical difference.</p>
+<p>This ROPE-based judgment is also intuitive when we overlay the ROPE band on the posteriors of the differences.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay the ROPE band [-2, 2] (red) on the posteriors of the differences</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(<span class="fu">as.matrix</span>(pair)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">annotate</span>(<span class="st">"rect"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">xmax =</span> <span class="dv">2</span>, <span class="at">ymin =</span> <span class="sc">-</span><span class="cn">Inf</span>, <span class="at">ymax =</span> <span class="cn">Inf</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.15</span>, <span class="at">fill =</span> <span class="st">"red"</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/rope_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The red band is the ROPE. The ridge of the A–B difference falls mostly inside the red band (practically equivalent), whereas the ridges of the A–C and B–C differences lie far to the right of the band (a practical difference). Overlaying the ROPE band on the “does the interval straddle <span class="math inline">\(0\)</span>” view lets us distinguish “we cannot say there is a difference” from “there is practically no difference.”</p>
+<p>How to set the width of the ROPE is the researcher’s judgment and should rest on domain knowledge. When no criterion comes to mind, <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> suggests <span class="math inline">\(\pm 0.1\)</span> standardized units as a guide. In <code>bayestestR</code>, setting <code>range = "default"</code> automatically uses a ROPE based on this standardized criterion.</p>
+</section>
+<section id="the-bayes-factor" class="level3" data-number="18.5.2">
+<h3 data-number="18.5.2" class="anchored" data-anchor-id="the-bayes-factor"><span class="header-section-number">18.5.2</span> The Bayes factor</h3>
+<p>The second tool is the Bayes factor (BF). It expresses, as a relative ratio, which of two models better explains the data. As noted in the chapter on Bayesian modeling, Bayesian model evaluation can be said to reduce to the BF.</p>
+<p>Here we compare a model in which “the effect is zero (no difference)” with one in which “the effect is non-zero (there is a difference).” One handy way to compute the BF is the Savage–Dickey density ratio, which takes the ratio of the prior and posterior densities at the point zero; if we also sample the prior in <code>brms</code>, <code>bayestestR</code> can compute it.</p>
+<p>To that end we first estimate the same ANOVA model with <code>brms</code>. Writing the R <code>formula</code> as <code>score ~ method</code> builds, internally, a model in the form of a grand mean plus group effects. Specifying effect coding (<code>contr.sum</code>) yields coefficients that almost match the effects <span class="math inline">\(\delta_j\)</span> estimated in Stan, which also serves as a cross-check.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># effect coding: obtain coefficients as deviations (effects) from the grand mean</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(dat<span class="sc">$</span>method) <span class="ot">&lt;-</span> <span class="fu">contr.sum</span>(<span class="dv">3</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>fit_brms <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  score <span class="sc">~</span> method,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> <span class="fu">set_prior</span>(<span class="st">"normal(0, 50)"</span>, <span class="at">class =</span> <span class="st">"b"</span>),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_prior =</span> <span class="st">"yes"</span>, <span class="co"># also sample the prior, for the BF</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">11000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>, <span class="at">seed =</span> <span class="dv">1</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(fit_brms)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Estimate Est.Error      Q2.5     Q97.5
+Intercept 58.810085 0.6848841 57.460350 60.157594
+method1    5.876573 0.9832975  3.958309  7.811276
+method2    6.571917 0.9788995  4.638359  8.501470</code></pre>
+</div>
+</div>
+<p><code>method1</code> and <code>method2</code> are the effects of Methods A and B, almost matching the <code>delta[1]</code> and <code>delta[2]</code> obtained earlier in Stan. We confirm that the Stan model we wrote ourselves and the model <code>brms</code> assembled automatically return the same results. Within the realm of linear models <code>brms</code> gives the same estimates quickly, so it is convenient for routine analyses.</p>
+<p>Now compute the BF from this model.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_parameters</span>(fit_brms, <span class="at">null =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Sampling priors, please wait...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes Factor (Savage-Dickey density ratio)
+
+Parameter   |       BF
+----------------------
+(Intercept) | 9.89e+97
+method1     | 1.84e+04
+method2     | 3.61e+05
+
+* Evidence Against The Null: 0</code></pre>
+</div>
+</div>
+<p>The BFs for <code>method1</code> and <code>method2</code> are both very large: the “there is an effect” model is overwhelmingly favored over the “the effect is zero” model. A BF above <span class="math inline">\(3\)</span> is a common guide that one model is favored, and here we are far beyond it.</p>
+<p>Conversely, evidence for “no difference (equivalence)” can also be evaluated with a BF. For the A–B difference, let us test the hypothesis “<span class="math inline">\(\mu_A - \mu_B = 0\)</span>” with the <code>hypothesis</code> function of <code>brms</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">hypothesis</span>(fit_brms, <span class="st">"method1 - method2 = 0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hypothesis Tests for class b:
+             Hypothesis Estimate Est.Error CI.Lower CI.Upper Evid.Ratio
+1 (method1-method2) = 0     -0.7       1.7    -4.02     2.66      38.12
+  Post.Prob Star
+1      0.97     
+---
+'CI': 90%-CI for one-sided and 95%-CI for two-sided hypotheses.
+'*': For one-sided hypotheses, the posterior probability exceeds 95%;
+for two-sided hypotheses, the value tested against lies outside the 95%-CI.
+Posterior probabilities of point hypotheses assume equal prior probabilities.</code></pre>
+</div>
+</div>
+<p>The <code>Evid.Ratio</code> in the output is the BF supporting the hypothesis “there is no difference.” It is well above <span class="math inline">\(1\)</span>, so for Methods A and B the “no difference” account is favored — consistent with the ROPE conclusion.</p>
+<section id="picturing-the-savagedickey-method" class="level4" data-number="18.5.2.1">
+<h4 data-number="18.5.2.1" class="anchored" data-anchor-id="picturing-the-savagedickey-method"><span class="header-section-number">18.5.2.1</span> Picturing the Savage–Dickey method</h4>
+<p>What the Savage–Dickey density ratio does becomes clear when we overlay the prior and the posterior. What it does is simple: for the parameter of interest, it compares the heights of the prior and posterior densities at the value zero. It asks how much the density at zero has decreased (or increased) after seeing the data (posterior) compared with before (prior). If the density at zero has decreased, that is evidence “the effect is non-zero”; if it has increased, evidence “the effect is zero.”</p>
+<p>Let us extract the prior and posterior MCMC samples from the <code>brms</code> fit and draw them. Since we placed a <code>normal(0, 50)</code> prior, we overlay that analytic normal directly (for the difference of two effects, because it is the difference of two independent effects, the prior standard deviation becomes <span class="math inline">\(50\sqrt{2}\)</span>).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">as_draws_df</span>(fit_brms)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># a function to picture the Savage-Dickey method</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>sd_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(post, prior_sd, xlim, title) {</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">value =</span> post) <span class="sc">|&gt;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(value)) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># prior (analytic normal)</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> prior_sd),</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Prior"</span>), <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior (density estimated from the MCMC samples)</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Posterior"</span>), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> xlim) <span class="sc">+</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> title, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">color =</span> <span class="cn">NULL</span>)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Effect of Method A: the density at zero drops sharply = evidence "the effect is non-zero"</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="fu">sd_plot</span>(dd<span class="sc">$</span>b_method1, <span class="at">prior_sd =</span> <span class="dv">50</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">12</span>, <span class="dv">12</span>), <span class="at">title =</span> <span class="st">"Effect of Method A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/savage_dickey_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A-B difference: density piles up at zero = evidence "the difference is zero"</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd_plot</span>(dd<span class="sc">$</span>b_method1 <span class="sc">-</span> dd<span class="sc">$</span>b_method2,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior_sd =</span> <span class="dv">50</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">2</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">12</span>, <span class="dv">12</span>), <span class="at">title =</span> <span class="st">"Difference: Method A vs Method B"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/savage_dickey_viz-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the first plot, “Effect of Method A,” the posterior forms a ridge clearly to the right of <span class="math inline">\(0\)</span> against the flat prior. The height of the posterior at zero (the dashed line) is far lower than the prior’s. The ratio of these heights is the BF; because the posterior has all but abandoned zero, the BF is large in favor of “the effect is non-zero.”</p>
+<p>The second plot, “Difference: Method A vs Method B,” is the opposite. The posterior ridge sits right on top of <span class="math inline">\(0\)</span>, and its height at zero exceeds the prior’s. Seeing the data has, if anything, increased the density at zero. So this BF points toward supporting “the difference is zero.” The numbers obtained earlier from <code>bayesfactor_parameters</code> and <code>hypothesis</code> correspond to the ratio of heights on the dashed line in these two pictures.</p>
+<p>A word of caution about BFs. Binary judgments such as “above <span class="math inline">\(3\)</span> means there is a difference” can, like <span class="math inline">\(p\)</span>-values, invite over-interpretation and gaming of the threshold. BFs are also known to vary greatly for the same data depending on the prior, and the choice of prior is debated. For routine models such as the <span class="math inline">\(t\)</span>-test and ANOVA, the <code>BayesFactor</code> package and JASP<span class="citation" data-cites="JASP2025">(<a href="references.html#ref-JASP2025" role="doc-biblioref">JASP Team 2025</a>)</span>, which wraps it in a GUI, compute BFs automatically, so it is worth using them alongside.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classic BF from the BayesFactor package (the same engine JASP uses)</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(BayesFactor)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anovaBF</span>(score <span class="sc">~</span> method, <span class="at">data =</span> <span class="fu">as.data.frame</span>(dat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="the-posterior-predictive-distribution" class="level3" data-number="18.5.3">
+<h3 data-number="18.5.3" class="anchored" data-anchor-id="the-posterior-predictive-distribution"><span class="header-section-number">18.5.3</span> The posterior predictive distribution</h3>
+<p>The third tool is the posterior predictive distribution. It has two main uses: one is checking model adequacy — “does the model we set up actually reproduce the data?” — and the other is evaluating the size of the effect at the level of the actual data. We look at each in turn.</p>
+<section id="checking-model-adequacy" class="level4" data-number="18.5.3.1">
+<h4 data-number="18.5.3.1" class="anchored" data-anchor-id="checking-model-adequacy"><span class="header-section-number">18.5.3.1</span> Checking model adequacy</h4>
+<p>First, the adequacy check. The idea is this: using the estimated parameters (the posterior), generate artificial data from the model. If the model is adequate, this artificial data (the predicted data) should have a distribution much like the data actually observed. If the predicted data diverge from the real data, the model has failed to capture some feature of the data.</p>
+<p>The <code>X_pred</code> we generated in the <code>generated quantities</code> block of the Stan model is exactly this predicted data. A set of data is generated at each MCMC step, so we overlay several of them on the real data, using the <code>ppc_dens_overlay</code> function in the <code>bayesplot</code> package.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>y_obs <span class="ot">&lt;-</span> dat<span class="sc">$</span>score</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>y_rep <span class="ot">&lt;-</span> fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"X_pred"</span>, <span class="at">format =</span> <span class="st">"matrix"</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay 50 of the predicted datasets on the real data</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_rep[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/ppc-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The dark line is the distribution of the actually observed data, and the light lines are the distributions of predicted data generated from the posterior predictive distribution. If they overlap well, we can judge that “this model, which assumes a normal distribution, reproduces the overall shape of the data well.” Here the data were generated from a normal distribution, so of course they overlap; but with real data that are badly skewed or contain outliers, the normal model’s predictions would fail to reproduce them, showing up as poor overlap. That is then a cue to revise the model — for instance, using a heavier-tailed <span class="math inline">\(t\)</span> distribution.</p>
+</section>
+<section id="measuring-the-effect-at-the-data-level" class="level4" data-number="18.5.3.2">
+<h4 data-number="18.5.3.2" class="anchored" data-anchor-id="measuring-the-effect-at-the-data-level"><span class="header-section-number">18.5.3.2</span> Measuring the effect at the data level</h4>
+<p>The posterior predictive distribution is not only for checking model adequacy. In psychological practice, this second use is often the more important one.</p>
+<p>The probability of superiority and the posterior of the difference we have seen so far are all at the level of the <strong>population mean</strong> — a parameter. For example, the probability that Method A’s population mean exceeds Method C’s is essentially <span class="math inline">\(1\)</span>, so the group averages clearly differ. But what we really want to know in practice is often a question at the level of <strong>individual data</strong>, such as: “if we bring in one person who studied with Method A and one who studied with Method C, in what fraction of cases does the Method A person score higher?”</p>
+<p>The posterior predictive distribution is precisely the distribution of predicted individual data. So we can measure the effect at the level of the data rather than the parameters — expressing not just the difference in means but, including the individual variability <span class="math inline">\(\sigma\)</span>, “how strongly the effect is actually felt.”</p>
+<p>To that end, let us generate the predicted score of a “random individual” from each posterior sample and compute three quantities.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># generate the predicted score of a "random individual" in each group from each posterior sample</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>xA <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(draws_a), draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span>, draws_a<span class="sc">$</span>sigma) <span class="co"># Method A</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>xB <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(draws_a), draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[2]</span><span class="st">`</span>, draws_a<span class="sc">$</span>sigma) <span class="co"># Method B</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>xC <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(draws_a), draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span>, draws_a<span class="sc">$</span>sigma) <span class="co"># Method C</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (1) data-level probability of superiority: a Method A person exceeds a Method C person</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(xA <span class="sc">&gt;</span> xC)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.954</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for comparison: the population-mean-level probability of superiority (seen earlier)</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span> <span class="sc">&gt;</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (2) overlap: how much the two groups' predictive distributions overlap</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">overlap</span>(xA, xC) <span class="co"># Method A vs Method C</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overlap
+
+24.0%</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">overlap</span>(xA, xB) <span class="co"># Method A vs Method B</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overlap
+
+96.9%</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (3) proportion above a threshold: probability of scoring 70 or more</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(xA <span class="sc">&gt;=</span> <span class="dv">70</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.250375</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(xC <span class="sc">&gt;=</span> <span class="dv">70</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0015</code></pre>
+</div>
+</div>
+<p>Let us read the results in turn.</p>
+<p>For the <strong>probability of superiority</strong>, whereas at the population-mean level it was essentially <span class="math inline">\(1\)</span> (A is certainly higher), at the data level it stays around <span class="math inline">\(0.95\)</span>. This means that even though A is clearly higher on average, because of individual variability there is about a <span class="math inline">\(5\%\)</span> chance that “a C person happens to beat an A person.” The obvious fact that the group tendency and what happens to a given individual are different is here expressed numerically. This data-level probability of superiority is also called the common-language effect size, and it is well suited to conveying effect size intuitively.</p>
+<p>The <strong>overlap</strong> expresses how much the two groups’ predictive distributions overlap. Methods A and C overlap only about <span class="math inline">\(20\%\)</span> (they are <span class="math inline">\(80\%\)</span> separated), showing a large effect. Methods A and B, on the other hand, overlap more than <span class="math inline">\(90\%\)</span> — practically the same distribution. The smaller the overlap, the larger the effect; the conclusion from the ROPE and Bayes factor that “A and B are equivalent while C is clearly different” shows up here as the degree of overlap of the distributions.</p>
+<p>The <strong>proportion above a threshold</strong> is the probability of exceeding some criterion. If we take a passing line of <span class="math inline">\(70\)</span> points, for example, more than <span class="math inline">\(20\%\)</span> of Method A reaches the passing region, whereas almost no one in Method C does. When practical decisions hinge more on “what fraction pass” than on “by how many points the averages differ,” it is clearer to fix a criterion and compare the proportions above it like this.</p>
+<p>In this way, the posterior predictive distribution lets us examine the effect from many angles — not just the difference in means but the individual-level probability of superiority, the overlap of the distributions, and the proportion above a criterion. Going beyond a binary “is there a difference or not” to “what the difference actually means in practice” is a strength of the Bayesian approach that starts from a data-generating mechanism.</p>
+</section>
+</section>
+</section>
+<section id="summary" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="summary"><span class="header-section-number">18.6</span> Summary</h2>
+<p>In this chapter we rebuilt the most basic analyses of mean differences — the <span class="math inline">\(t\)</span>-test and ANOVA — from a Bayesian point of view. Let us collect the key points.</p>
+<ul>
+<li>The structure of ANOVA (data = grand mean + effect + error) becomes the data-generating model directly. Writing it in Stan lets us estimate the distribution of the effects <span class="math inline">\(\delta_j\)</span> directly.</li>
+<li>Because Bayes holds the difference as a probability distribution, we can freely do interval estimation, the probability of superiority, all-pairs comparisons, and so on, with no multiple-comparison adjustment.</li>
+<li>As tools for judgment we have the ROPE (judgment via a region of practical equivalence), the Bayes factor (model comparison), and the posterior predictive distribution (model-adequacy checking, plus verifying the effect via the data-level probability of superiority, overlap, and proportion above a threshold).</li>
+<li>“We cannot say there is a difference” and “there is no difference (they are equivalent)” are different things, and being able to positively assert the latter is a strength of Bayes.</li>
+</ul>
+<p>This is not to say frequentist tests are bad. They are clear procedures refined over a long history, and much knowledge has been built upon them. But the Bayesian approach — capturing a mean difference directly as a “distribution of the difference” and widening the scope of decision making — gives the researcher richer expressive power. Rather than one or the other, it is best to hold both points of view.</p>
+</section>
+<section id="exercises" class="level2" data-number="18.7">
+<h2 data-number="18.7" class="anchored" data-anchor-id="exercises"><span class="header-section-number">18.7</span> Exercises</h2>
+<p>The following dataset records a measurement (<code>y</code>) for three groups (<code>group</code>). You can download it from <a href="ex_anova_bayes.csv">ex_anova_bayes.csv</a>. Using the methods covered in this chapter, report the following in order.</p>
+<ol type="1">
+<li>Using this chapter’s <code>bayes_anova.stan</code>, estimate the three-group mean differences in tidy-data form, and report the posterior summaries and <span class="math inline">\(95\%\)</span> intervals of each group’s population mean <code>mu</code> and effect <code>delta</code>.</li>
+<li>From the MCMC samples, obtain the posteriors of all three pairwise differences and report each one’s <span class="math inline">\(95\%\)</span> interval and probability of superiority.</li>
+<li>For each pairwise difference, compute <code>bayestestR::rope</code> with a ROPE of <span class="math inline">\(\pm 0.5\)</span> and discuss whether any pair can be called “practically no difference.”</li>
+<li>Estimate the same model with <code>brms</code> (using effect coding), confirm that the coefficients match the Stan results, and then compute the Bayes factor and discuss whether the effects can be said to be non-zero.</li>
+<li>Draw the posterior predictive distribution with <code>ppc_dens_overlay</code> and assess whether the model assuming a normal distribution reproduces the data well.</li>
+<li>Using the posterior predictive distribution, obtain for each pair of groups (a) the data-level probability of superiority and (b) the overlap of the predictive distributions via <code>bayestestR::overlap</code>. Then fix some criterion and compare the proportions above the threshold across groups. Discuss how these differ from the population-mean-level results.</li>
+</ol>
+<p>In your report, include the R code you used and a brief interpretation of each result.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-JASP2025" class="csl-entry" role="listitem">
+JASP Team. 2025. <em><span class="nocase">JASP (Version 0.95.1)[Computer software]</span></em>. <a href="https://jasp-stats.org/">https://jasp-stats.org/</a>.
+</div>
+<div id="ref-kruschke2018rejecting" class="csl-entry" role="listitem">
+Kruschke, John K. 2018. <span>“Rejecting or Accepting Parameter Values in Bayesian Estimation.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 1 (2): 270–80.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter17.html" class="pagination-link" aria-label="Bayesian Modeling">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Bayesian Modeling</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./practices.html" class="pagination-link" aria-label="Exercises">
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Exercises</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

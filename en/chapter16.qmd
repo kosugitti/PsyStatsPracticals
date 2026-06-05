@@ -1,6 +1,6 @@
 # Multivariate Analysis II
 
-The previous chapter focused on linear models based on the variance--covariance (correlation) matrix. Multivariate analysis is not limited to those, however. Indeed, the fixation on latent-variable measurement models has led to a number of misuses: factor-analysing data that violate the measurement assumptions, or contorting model specifications to chase fit indices.
+The previous chapter focused on linear models based on the variance--covariance (correlation) matrix. Multivariate analysis is not limited to those, however. Indeed, the fixation on latent-variable measurement models has led to a number of misuses: factor-analyzing data that violate the measurement assumptions, or contorting model specifications to chase fit indices.
 
 Psychology has often "purely" assumed that factor analysis measures constructs and uses it intensively, but historically a wider variety of multivariate techniques was developed and applied as needed. We classify the techniques here by the kind of matrix the analysis starts from.
 
@@ -25,11 +25,11 @@ R builds distance matrices with `dist()`. The default is Euclidean, but several 
 
 ### Distance data in psychology
 
-By treating numbers as distances, psychology too can apply distance-based methods. The differences of scale ratings can serve as score-distances; the correlation coefficient can be turned into a distance via $1.0 - |r_{jk}|$. Sociometric data in social psychology — interpersonal preference ratings — can also be read as interpersonal distances. Stimulus-confusion rates and generalisation gradients in experimental psychology, response latencies on same/different judgements, and stimulus-substitution or association values all measure similarity and so are usable as distance data [@Takane198002]. Distance matrices can be constructed even from a single individual's ratings, so even small-$n$ designs can produce distance matrices.
+By treating numbers as distances, psychology too can apply distance-based methods. The differences of scale ratings can serve as score-distances; the correlation coefficient can be turned into a distance via $1.0 - |r_{jk}|$. Sociometric data in social psychology — interpersonal preference ratings — can also be read as interpersonal distances. Stimulus-confusion rates and generalization gradients in experimental psychology, response latencies on same/different judgments, and stimulus-substitution or association values all measure similarity and so are usable as distance data [@Takane198002]. Distance matrices can be constructed even from a single individual's ratings, so even small-$n$ designs can produce distance matrices.
 
-Thus similarity (or dissimilarity) can be treated as a distance. The advantage is that it lets the respondent answer naturally — judging overall similarity rather than completing a battery of pre-specified ratings. Researchers tend to assume that several sub-rating scales are necessary to triangulate an overall judgement, but pre-specifying those scales also constrains the respondent's degrees of freedom and adds to their burden. Some items also induce social-desirability bias; an "overall similarity" judgement bypasses that bias.
+Thus similarity (or dissimilarity) can be treated as a distance. The advantage is that it lets the respondent answer naturally — judging overall similarity rather than completing a battery of pre-specified ratings. Researchers tend to assume that several sub-rating scales are necessary to triangulate an overall judgment, but pre-specifying those scales also constrains the respondent's degrees of freedom and adds to their burden. Some items also induce social-desirability bias; an "overall similarity" judgment bypasses that bias.
 
-Multivariate methods that take distances as input share the usual aims — summarisation and classification — and also include visualisation tools for low-dimensional summaries of higher-dimensional data. We begin with classification.
+Multivariate methods that take distances as input share the usual aims — summarization and classification — and also include visualization tools for low-dimensional summaries of higher-dimensional data. We begin with classification.
 
 ### Cluster analysis
 
@@ -54,7 +54,7 @@ plot(result.h, main = "Hierarchical Clustering Dendrogram")
 
 Several linkage methods exist for combining clusters; in R they are passed via `hclust()`'s `method`:
 
-- `"ward.D"` / `"ward.D2"`: Ward's method, minimising within-cluster variance.
+- `"ward.D"` / `"ward.D2"`: Ward's method, minimizing within-cluster variance.
 - `"single"`: single linkage; clusters linked by their closest members.
 - `"complete"`: complete linkage; clusters linked by their farthest members.
 - `"average"`: average linkage; clusters linked by the average pairwise distance.
@@ -64,7 +64,7 @@ Several linkage methods exist for combining clusters; in R they are passed via `
 
 Ward's method is the most widely used and tends to produce the most interpretable groupings. Note that `"ward.D"` has a known bug; prefer `"ward.D2"`.[^1]
 
-[^1]: One might ask why the buggy method is not removed. `"ward.D"` was R's only Ward implementation before version 3.0.3 and was later found to miscompute the variance. R kept the original code for transparency — an example of free, open-source software's self-correction. In contrast, the author once reported buggy behaviour in a proprietary statistical product to the vendor and was told to "buy the next version, in which it is fixed." The author parted ways with that product accordingly. Paid support is not a guarantee of correctness in scientific software.
+[^1]: One might ask why the buggy method is not removed. `"ward.D"` was R's only Ward implementation before version 3.0.3 and was later found to miscompute the variance. R kept the original code for transparency — an example of free, open-source software's self-correction. In contrast, the author once reported buggy behavior in a proprietary statistical product to the vendor and was told to "buy the next version, in which it is fixed." The author parted ways with that product accordingly. Paid support is not a guarantee of correctness in scientific software.
 
 `cutree()` cuts the dendrogram at any number of clusters. `iris` has three species, so cut at $k = 3$ and check the cross-tabulation:
 
@@ -80,7 +80,7 @@ A well-known non-hierarchical method is **k-means**:
 1. Randomly generate $k$ cluster-centroid vectors.
 2. Assign each data point to the nearest centroid.
 3. Recompute each cluster's centroid.
-4. Repeat steps 2–3 until assignments stabilise.
+4. Repeat steps 2–3 until assignments stabilize.
 
 k-means handles arbitrary $k$ and converges relatively quickly on large data. In R:
 
@@ -232,7 +232,7 @@ gmm_result <- Mclust(iris_data)
 # results
 summary(gmm_result, parameters = TRUE)
 
-# visualise the classification
+# visualize the classification
 plot(gmm_result, what = "classification")
 
 # compare with the true species
@@ -276,7 +276,7 @@ Test theory generally treats data as binary, with IRT (Bernoulli likelihood) as 
 
 The biclustering of @TDE2022 classifies items into **fields** and respondents into **classes**. Respondent classes can be ordered by overall correctness and represented as **ranks** (giving rise to **rank-clustering**).
 
-To formalise Shojima's biclustering, define the principal matrices. Let $J$ be the number of items, $S$ the number of respondents, $C$ the number of latent classes/ranks, and $F$ the number of latent fields.
+To formalize Shojima's biclustering, define the principal matrices. Let $J$ be the number of items, $S$ the number of respondents, $C$ the number of latent classes/ranks, and $F$ the number of latent fields.
 
 The **bicluster reference matrix** $\boldsymbol{\Pi}_B$ is
 
@@ -352,7 +352,7 @@ The array plot is shown. The left panel is the raw data — respondents on rows,
 
 Field and rank classifications can advise respondents on which areas of items they should answer correctly to advance to the next rank. Field and rank memberships are probabilistic (fuzzy clustering), enabling rank-up and rank-down odds for each respondent.
 
-Visualisations of the field and rank membership matrices:
+Visualizations of the field and rank membership matrices:
 ```{r biclustering}
 #| message: FALSE
 #| dev: "ragg_png"
@@ -402,17 +402,17 @@ text(result[, 1], result[, 2],
 grid(lty = 2, col = "lightgray")
 ```
 
-Athens sits at upper right and Stockholm at the bottom, which suggests the north–south axis is inverted, but otherwise the relative positions are recovered well. `cmdscale()`'s `k` selects the number of dimensions; we chose 2. Strictly the earth is a sphere, so $k = 3$ would be more accurate, but for visualisation a low dimension is usual.
+Athens sits at upper right and Stockholm at the bottom, which suggests the north–south axis is inverted, but otherwise the relative positions are recovered well. `cmdscale()`'s `k` selects the number of dimensions; we chose 2. Strictly the earth is a sphere, so $k = 3$ would be more accurate, but for visualization a low dimension is usual.
 
 `eurodist` records actual physical distances, so ratio-scale, error-free data is plausible. In psychological applications, however, neither assumption typically holds — and there **non-metric** MDS is used. Non-metric MDS places objects in a multidimensional space so that the *ordering* of distances is preserved: writing the distance between objects $i$ and $j$ as $d_{ij}$,
 
 $$ d_{ij} < d_{kl} \to \delta_{ij} < \delta_{kl}, $$
 
-where $\delta_{ij}$ are the recovered coordinate distances. Kruskal's classic non-metric MDS minimises a **stress** value
+where $\delta_{ij}$ are the recovered coordinate distances. Kruskal's classic non-metric MDS minimizes a **stress** value
 
 $$ \sum_{i > j} e_{ij}^2 = \sum_{ij} (\delta_{ij} - d_{ij})^2. $$
 
-Many alternative objective functions have been proposed; in R, the `smacof` package (Scaling by MAjorising a COmplicated Function) is convenient.
+Many alternative objective functions have been proposed; in R, the `smacof` package (Scaling by Majorizing a COmplicated Function) is convenient.
 
 An example using `smacof`'s `FaceExp` data — similarity ratings of facial expressions.
 ```{r smacof}
@@ -445,7 +445,7 @@ grid(lty = 2, col = "lightgray")
 
 Common rules of thumb: stress below 0.05 is excellent; below 0.10, good; below 0.20, acceptable.
 
-The plot suggests three dimensions are sufficient. Re-fit with `ndim = 3` and `type = "ordinal"` (signalling ordinal-scale data):
+The plot suggests three dimensions are sufficient. Re-fit with `ndim = 3` and `type = "ordinal"` (signaling ordinal-scale data):
 
 ```{r smacof2}
 #| dev: "ragg_png"
@@ -512,7 +512,7 @@ print(result$conf)
 
 The plot reveals the structure of perceptual similarity among facial expressions. The first dimension can be read as valence (pleasant/unpleasant), the second as arousal, and the third as naturalness.
 
-For more objective dimension labels, correlate the coordinates with external variables. Since a correlation is $\cos\theta$ between vectors, plotting auxiliary lines for external variables along each axis makes the labelling easier. See @kosugi2016a for details.
+For more objective dimension labels, correlate the coordinates with external variables. Since a correlation is $\cos\theta$ between vectors, plotting auxiliary lines for external variables along each axis makes the labeling easier. See @kosugi2016a for details.
 
 ## Methods that use a co-occurrence matrix
 
@@ -529,9 +529,9 @@ In Japanese, text mining is essentially the combination of **morphological analy
 
 Morphological analysis produces a **document-term matrix** — counts of each word's occurrence in each document. The matrix is typically large and sparse. One operates on it via singular value decomposition, or first converts to a square word × word **co-occurrence matrix** for downstream multivariate analysis.
 
-Any multivariate technique can be applied. Cluster analysis and MDS, both discussed above, are common. The matrix tends to be large enough that standard multivariate methods fit poorly in low dimensions; one either accepts the worse fit for visualisation, or uses a method such as a **self-organising map (SOM)**[^2] to force a categorisation.
+Any multivariate technique can be applied. Cluster analysis and MDS, both discussed above, are common. The matrix tends to be large enough that standard multivariate methods fit poorly in low dimensions; one either accepts the worse fit for visualization, or uses a method such as a **self-organizing map (SOM)**[^2] to force a categorization.
 
-[^2]: A *self-organising map* (SOM), also called a Kohonen map after its developer Teuvo Kohonen of Finland, is an unsupervised learning algorithm that maps high-dimensional data to a two-dimensional grid while preserving structure for visualisation.
+[^2]: A *self-organizing map* (SOM), also called a Kohonen map after its developer Teuvo Kohonen of Finland, is an unsupervised learning algorithm that maps high-dimensional data to a two-dimensional grid while preserving structure for visualization.
 
 Modern text mining at scale often replaces the morphological unit with the **token**[^3], leveraging big data and machine learning.
 
@@ -543,7 +543,7 @@ A morphological-analysis-based example: the `RMeCab` package is a common route i
 [^5]: MeCab official site: [http://taku910.github.io/mecab/](http://taku910.github.io/mecab/)
 [^6]: gibasa introduction: [https://zenn.dev/paithiov909/articles/gibasa-intro](https://zenn.dev/paithiov909/articles/gibasa-intro)
 
-Load the package and morphologically analyse a sentence:
+Load the package and morphologically analyze a sentence:
 ```{r gibasa}
 pacman::p_load(tidyverse, gibasa)
 text <- "私は昨日，カフェでコーヒーを飲んだ。"
@@ -569,7 +569,7 @@ The workflow:
 1. Split each document into morphemes.
 2. Build a document × word matrix of counts (a DTM).
 3. Convert the DTM to a word × word distance matrix.
-4. Visualise via metric MDS.
+4. Visualize via metric MDS.
 
 
 ```{r kyoto_ramen_data}
@@ -587,9 +587,9 @@ ramen_reviews <- c(
   "老舗の店主が作る丁寧なラーメンは心に残る味わいだった。"
 )
 
-# tokenise, select parts of speech, and count per document
+# tokenize, select parts of speech, and count per document
 dat_count <- ramen_reviews |>
-  # tokenise into morphemes
+  # tokenize into morphemes
   gibasa::tokenize() |>
   # pull out POS and lemma
   gibasa::prettify(col_select = c("POS1", "Original")) |>
@@ -624,7 +624,7 @@ distance_matrix <- dist(t(dtm[, -1]))
 # classical MDS in 2 dimensions
 mds_result <- cmdscale(distance_matrix, k = 2)
 
-# visualise (ggrepel avoids label overlap)
+# visualize (ggrepel avoids label overlap)
 pacman::p_load(ggrepel)
 
 mds_df <- data.frame(
@@ -658,9 +658,9 @@ ggplot(mds_df, aes(x = dim1, y = dim2)) +
 
 Similar words are placed near each other. "Noodles" (麺) and "soup" (スープ), or "combination" (組み合わせ) and "balance" (バランス), cluster together, suggesting meaningful proximity.
 
-The morpheme-based approach has limits: a proper noun like 九条ネギ ("Kujo green onion") is mis-split into 九 ("nine") and 条 ("article"). Dictionary customisation or rules for extracting specific terms become necessary. Text mining via morphological analysis spends considerable pre-cleaning effort.
+The morpheme-based approach has limits: a proper noun like 九条ネギ ("Kujo green onion") is mis-split into 九 ("nine") and 条 ("article"). Dictionary customization or rules for extracting specific terms become necessary. Text mining via morphological analysis spends considerable pre-cleaning effort.
 
-This example used only 10 short reviews. Production text mining typically operates on much larger corpora and learned dictionaries. The synergy with generative AI is also strong (large language models have, in a real sense, already learned natural language), and text-mining workflows that bypass morphological analysis and explicit statistical modelling are likely to become mainstream.
+This example used only 10 short reviews. Production text mining typically operates on much larger corpora and learned dictionaries. The synergy with generative AI is also strong (large language models have, in a real sense, already learned natural language), and text-mining workflows that bypass morphological analysis and explicit statistical modeling are likely to become mainstream.
 
 ## Methods that use a partial-correlation matrix
 
@@ -674,9 +674,9 @@ $$p_{ij} = -\frac{r^{ij}}{\sqrt{r^{ii} r^{jj}}},$$
 
 where $r^{ij}$ is the $(i, j)$ entry of $\mathbf{R}^{-1}$.
 
-Factor analysis starts from a correlation matrix and gathers strongly related variables into factors. **Graphical modelling** inverts this idea: starting from the partial-correlation matrix, it removes the weak ties and visualises only the genuine pairwise relationships.
+Factor analysis starts from a correlation matrix and gathers strongly related variables into factors. **Graphical modeling** inverts this idea: starting from the partial-correlation matrix, it removes the weak ties and visualizes only the genuine pairwise relationships.
 
-In the quantitative case the method works directly on the partial-correlation matrix; in the categorical case it tests conditional independence via multi-way contingency tables. Because the result is visualised as a network of nodes and edges, the technique is also called **network analysis**.
+In the quantitative case the method works directly on the partial-correlation matrix; in the categorical case it tests conditional independence via multi-way contingency tables. Because the result is visualized as a network of nodes and edges, the technique is also called **network analysis**.
 
 Psychology often interprets factors as theoretical constructs. From a systems perspective, however, a "construct" is not a thing that exists on its own but a synthesis of many phenomena — and the network-analytic approach may be a better fit. For the theoretical case for combining systems-thinking with network methods, see @Network2024.
 
@@ -750,7 +750,7 @@ Side by side, the patterns differ in places.
 
 A network can be built from either matrix; we use the partial-correlation matrix here.
 
-The `qgraph` package handles estimation and drawing. We use `graph = "glasso"`, the Gaussian graphical model with L1 regularisation that zeroes out unimportant pairwise relationships, cutting paths by BIC. The `spring` layout produces a natural arrangement; other layouts are available.
+The `qgraph` package handles estimation and drawing. We use `graph = "glasso"`, the Gaussian graphical model with L1 regularization that zeroes out unimportant pairwise relationships, cutting paths by BIC. The `spring` layout produces a natural arrangement; other layouts are available.
 
 ```{r glasso}
 pacman::p_load(qgraph)
@@ -786,11 +786,11 @@ Network models have many estimation refinements and extensions (dynamic, time-se
 
 ## Exercises
 
-Practise the techniques of this chapter (cluster analysis, MDS, network analysis) on the following.
+Practice the techniques of this chapter (cluster analysis, MDS, network analysis) on the following.
 
 ### Exercise 1: consumer segmentation via cluster analysis
 
-Using purchase-behaviour data from 100 consumers (expenditure on five product categories), run both hierarchical clustering and k-means and compare the results. Only a subset is shown; the full data are at [consumer_data.csv](consumer_data.csv).
+Using purchase-behavior data from 100 consumers (expenditure on five product categories), run both hierarchical clustering and k-means and compare the results. Only a subset is shown; the full data are at [consumer_data.csv](consumer_data.csv).
 
 ```{r create_consumer_data}
 #| echo: false
@@ -837,14 +837,14 @@ head(consumer_data, 10)
 
 **Steps**:
 
-1. Load the data and standardise.
+1. Load the data and standardize.
 2. Hierarchical clustering (Ward's method) — draw a dendrogram.
 3. k-means at $k = 3$.
-4. Compare the two and characterise each cluster.
+4. Compare the two and characterize each cluster.
 
-### Exercise 2: visualising city similarity via MDS
+### Exercise 2: visualizing city similarity via MDS
 
-Using similarity ratings among ten major Japanese cities, visualise them in 2D with MDS. Data at [city_similarity.csv](city_similarity.csv).
+Using similarity ratings among ten major Japanese cities, visualize them in 2D with MDS. Data at [city_similarity.csv](city_similarity.csv).
 
 ```{r create_city_data}
 #| echo: false
@@ -882,12 +882,12 @@ similarity_matrix[1:5, 1:5]
 
 1. Convert similarity to a distance matrix.
 2. Classical MDS in 2D.
-3. Visualise with `ggplot` and `ggrepel`.
+3. Visualize with `ggplot` and `ggrepel`.
 4. Discuss the geographic/cultural patterns implicit in the configuration.
 
 ### Exercise 3: psychological-scale structure via network analysis
 
-Using ten personality items (Big Five, two items per factor), visualise the inter-item structure as a network and identify central items via centrality indices. Data at [personality_data.csv](personality_data.csv).
+Using ten personality items (Big Five, two items per factor), visualize the inter-item structure as a network and identify central items via centrality indices. Data at [personality_data.csv](personality_data.csv).
 
 ```{r create_personality_data}
 #| echo: false

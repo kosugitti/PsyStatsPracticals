@@ -8,9 +8,9 @@ $$ y_i = \beta_0 + \beta_1 x_i + e_i = \hat{y}_i + e_i.$$
 
 The linear part $\hat{y}_i$ is the **fitted value**, and the gap $e_i = y_i - \hat{y}_i$ is the **residual**.
 
-Finding the intercept and slope of a line in the plane is the basic problem. Two points determine a unique line; data analysis, however, fits a line to many points, so an external criterion is needed. The criterion "minimise the variance of the residuals" leads to **ordinary least squares (OLS)**; the criterion "assume normal residuals and maximise their likelihood" leads to **maximum likelihood estimation (MLE)**. The former has a descriptive-statistics flavour; the latter is more thoroughly a probability model. A third option, popular when an informative prior is available, is **Bayesian estimation**.
+Finding the intercept and slope of a line in the plane is the basic problem. Two points determine a unique line; data analysis, however, fits a line to many points, so an external criterion is needed. The criterion "minimize the variance of the residuals" leads to **ordinary least squares (OLS)**; the criterion "assume normal residuals and maximize their likelihood" leads to **maximum likelihood estimation (MLE)**. The former has a descriptive-statistics flavour; the latter is more thoroughly a probability model. A third option, popular when an informative prior is available, is **Bayesian estimation**.
 
-The OLS estimates have the closed form below. We refer to other texts [@kosugi2018; @Nishiuchi201712] for proofs; in outline, minimise the residual sum of squares $\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2$ by expansion or partial differentiation. It is gratifying that the result is expressible purely in terms of sample statistics — the means $\bar{x}, \bar{y}$, the variances $s_x, s_y$, and the correlation $r_{xy}$:
+The OLS estimates have the closed form below. We refer to other texts [@kosugi2018; @Nishiuchi201712] for proofs; in outline, minimize the residual sum of squares $\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2$ by expansion or partial differentiation. It is gratifying that the result is expressible purely in terms of sample statistics — the means $\bar{x}, \bar{y}$, the variances $s_x, s_y$, and the correlation $r_{xy}$:
 
 $$\beta_0 = \bar{y} - \beta_1\bar{x},\quad \beta_1 = r_{xy} \frac{s_y}{s_x}.$$
 
@@ -20,7 +20,7 @@ ANOVA also accommodates several factors. Setting interactions aside, a two-facto
 
 $$ y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + e_i.$$
 
-A regression with more than one predictor is called **multiple regression**. The model is linear in each predictor, so it sits inside the linear-model family. In a multiple regression one often wants to compare predictors by "which has the larger effect on $y$," but raw coefficients depend on the unit of each $x$ and are awkward in that role. The remedy is to standardise all variables first and report the **standardised coefficients**.
+A regression with more than one predictor is called **multiple regression**. The model is linear in each predictor, so it sits inside the linear-model family. In a multiple regression one often wants to compare predictors by "which has the larger effect on $y$," but raw coefficients depend on the unit of each $x$ and are awkward in that role. The remedy is to standardize all variables first and report the **standardized coefficients**.
 
 
 ## Properties of regression
@@ -69,7 +69,7 @@ dat <- bind_cols(dat, yhat = result.lm$fitted.values, residuals = result.lm$resi
 summary(dat)
 ```
 
-The fitted values $\hat{y}$ are stored in `fitted.values`. Their mean equals the mean of the response $y$ — natural, since regression stretches ($\times \beta_1$) and shifts ($+\beta_0$) $x$ to fit $y$, and any such linear map preserves the centre when fitted by OLS.[^11.1]
+The fitted values $\hat{y}$ are stored in `fitted.values`. Their mean equals the mean of the response $y$ — natural, since regression stretches ($\times \beta_1$) and shifts ($+\beta_0$) $x$ to fit $y$, and any such linear map preserves the center when fitted by OLS.[^11.1]
 
 Likewise the mean of the residuals is zero. If it were some constant $c \neq 0$, the intercept would be systematically off by $c$, and that systematic offset would be absorbed into the best linear fit.[^11.2]
 
@@ -89,17 +89,17 @@ dat %>%
 
 A Q-Q plot compares two distributions by plotting their quantiles against each other. The x-axis shows quantiles of the theoretical distribution; the y-axis the empirical quantiles. Points lying on a 45° line indicate that the empirical distribution matches the theoretical one; departures from the line indicate departures from the theoretical distribution. Here the points fall close to the line, so no major non-normality.
 
-Depending on how data are generated, the response may be binary, ordinal, or a count — not normally distributed. In such cases forcing a regression is inappropriate. **Always visualise the data** and check that the model assumptions are reasonable before trusting the output.
+Depending on how data are generated, the response may be binary, ordinal, or a count — not normally distributed. In such cases forcing a regression is inappropriate. **Always visualize the data** and check that the model assumptions are reasonable before trusting the output.
 
-You can also pass the fitted object directly to `plot()`, which produces a set of diagnostic plots: residuals vs fitted values, the Q-Q plot, scale-location, and leverage vs standardised residuals.[^11.3]
+You can also pass the fitted object directly to `plot()`, which produces a set of diagnostic plots: residuals vs fitted values, the Q-Q plot, scale-location, and leverage vs standardized residuals.[^11.3]
 
-[^11.3]: Large standardised residuals indicate likely outliers requiring careful interpretation. *Leverage* indicates a point's influence on the regression coefficients; observations near the edges of this plot also deserve attention.
+[^11.3]: Large standardized residuals indicate likely outliers requiring careful interpretation. *Leverage* indicates a point's influence on the regression coefficients; observations near the edges of this plot also deserve attention.
 
 ```{r}
 plot(result.lm)
 ```
 
-As the residuals-vs-fitted plot suggests, the correlation between them is zero. Visualise it:
+As the residuals-vs-fitted plot suggests, the correlation between them is zero. Visualize it:
 
 ```{r}
 #| message: FALSE
@@ -164,9 +164,9 @@ The partial coefficient for `V3` follows analogously, by removing the effect of 
 
 This belaboured framing is intentional. The "conditional on" qualifier is frequently dropped in reports and interpretations, often misleadingly. @yoshidaMRA recently sparked discussion on this point.[^11.5] In our example, the partial coefficient for `V2` is `r round(result.mra$coefficients[2],4)`, whereas the simple correlation between `V1` and `V2` is `r round(cor(X$V1,X$V2),4)`. The signs disagree — interpretations of the two would be directly opposed. The actual simple correlation is positive, so reporting (without qualifier) "`V2` has a negative effect, `V3` a positive one" would mislead.
 
-@Toyoda201706 argues that to avoid this trap, one should use **conjoint analysis** with orthogonalised predictors. If we are not capable of using multiple regression carefully, such alternative designs are well worth considering.
+@Toyoda201706 argues that to avoid this trap, one should use **conjoint analysis** with orthogonalized predictors. If we are not capable of using multiple regression carefully, such alternative designs are well worth considering.
 
-[^11.5]: After the paper appeared in early-access form, the Japanese Psychological Association hosted an online symposium with the author and the authors of the paper criticised (Japan Psychological Association YouTube Live, "Conversations with Authors of Notable Papers," 2 July 2021, 20:00–21:40 JST). Despite the weekday-evening slot and the not-yet-final article, nearly 1,700 viewers attended.
+[^11.5]: After the paper appeared in early-access form, the Japanese Psychological Association hosted an online symposium with the author and the authors of the paper criticized (Japan Psychological Association YouTube Live, "Conversations with Authors of Notable Papers," 2 July 2021, 20:00–21:40 JST). Despite the weekday-evening slot and the not-yet-final article, nearly 1,700 viewers attended.
 
 ### Multicollinearity
 
@@ -260,7 +260,7 @@ sd(beta0.est)
 sd(beta1.est)
 ```
 
-A regression coefficient follows a $t$-distribution with $n - p$ degrees of freedom (sample size minus number of fitted coefficients). Standardise the histogram and overlay the theoretical density:
+A regression coefficient follows a $t$-distribution with $n - p$ degrees of freedom (sample size minus number of fitted coefficients). Standardize the histogram and overlay the theoretical density:
 
 ```{r}
 data.frame(x = beta1.est) %>%
@@ -335,8 +335,8 @@ Multiple regression is heavily used in the humanities and social sciences, but t
 + **Normality of errors.** The model assumes normal errors. Do not apply regression blindly to binary or count data. Check normality after the fit with a Q-Q plot.
 + **Homoscedasticity of errors.** The model assumes errors share the same normal distribution everywhere; heteroscedasticity (variance depending on the predictor) violates this and is unmasked by Q-Q-style diagnostics.
 + **Independence of errors.** The model assumes errors are i.i.d. Time-series data with serial dependence (autoregression) breaks this; use a state-space model or other approach that models the dependence.
-+ **Correct model specification.** All predictors that influence $y$ must be included. Omitting an influential variable $X_o$ that correlates with an included $X_a$ causes $X_o$'s effect to leak through $X_a$, distorting $X_a$'s estimated effect. Deliberately excluding variables to favour a hypothesis is a QRP.
-+ **Inter-predictor correlations.** If two predictors are very highly correlated, multicollinearity becomes a concern; coefficient estimates become unstable. Mitigations include combining them via principal component analysis. If the goal is to study interactions rather than collinearity, enter terms one at a time and assess effects carefully (hierarchical regression). Interaction terms are usually constructed from the mean-centred deviation of each variable.
++ **Correct model specification.** All predictors that influence $y$ must be included. Omitting an influential variable $X_o$ that correlates with an included $X_a$ causes $X_o$'s effect to leak through $X_a$, distorting $X_a$'s estimated effect. Deliberately excluding variables to favor a hypothesis is a QRP.
++ **Inter-predictor correlations.** If two predictors are very highly correlated, multicollinearity becomes a concern; coefficient estimates become unstable. Mitigations include combining them via principal component analysis. If the goal is to study interactions rather than collinearity, enter terms one at a time and assess effects carefully (hierarchical regression). Interaction terms are usually constructed from the mean-centered deviation of each variable.
 
 ## Exercises
 

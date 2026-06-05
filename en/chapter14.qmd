@@ -1,6 +1,6 @@
 # Extensions of the Linear Model
 
-This chapter develops the **linear model** — a model expressing the relationship between explanatory and response variables as a linear (first-order) function. The natural progression is from the general linear model (LM) to the generalised linear model (GLM), then to the generalised linear mixed model (GLMM), and finally to the hierarchical linear model (HLM). We begin with the general linear model.
+This chapter develops the **linear model** — a model expressing the relationship between explanatory and response variables as a linear (first-order) function. The natural progression is from the general linear model (LM) to the generalized linear model (GLM), then to the generalized linear mixed model (GLMM), and finally to the hierarchical linear model (HLM). We begin with the general linear model.
 
 ## The general linear model
 
@@ -76,7 +76,7 @@ df_exp <- data.frame(
 p2 <- ggplot(df_exp, aes(x = group, y = value)) +
   geom_point(alpha = 0.6) +
   geom_segment(
-    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
+    data = df_exp %>% group_by(group) %>% summarize(mean_value = mean(value)),
     aes(
       x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
       y = mean_value, yend = mean_value
@@ -95,7 +95,7 @@ p2 <- ggplot(df_exp, aes(x = group, y = value)) +
 p3 <- ggplot(df_exp, aes(x = group, y = value)) +
   geom_point(alpha = 0.6) +
   geom_segment(
-    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
+    data = df_exp %>% group_by(group) %>% summarize(mean_value = mean(value)),
     aes(
       x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
       y = mean_value, yend = mean_value
@@ -113,9 +113,9 @@ plot(p4)
 
 Fitting a regression line through this kind of plot produces a line through the two group means. Regression assumes errors normally distributed about $\hat{y}$; for dummy-coded data this becomes "errors normally distributed about each group mean" — the very assumption of the two-sample $t$-test. The $t$-test for a mean difference and a regression with a nominal-scale predictor are thus mathematically the same. The unifying name is the **general linear model**.
 
-## The generalised linear model (GLM)
+## The generalized linear model (GLM)
 
-For a long time psychology relied on factorial designs analysed by NHST, designs engineered to fit a test of means, with the verdict determined by a $p$-value. NHST was thought to be independent of the data-generating mechanism, accessible to anyone with statistical software, and decidable by an "uncontaminated" number.
+For a long time psychology relied on factorial designs analyzed by NHST, designs engineered to fit a test of means, with the verdict determined by a $p$-value. NHST was thought to be independent of the data-generating mechanism, accessible to anyone with statistical software, and decidable by an "uncontaminated" number.
 
 Setting aside the wider critique of that paradigm, the dominant practice was to reduce everything to a test of differences of normal means. Hence proportions, counts, and other data ill-suited to a normal model were forced into normality by log or angular transformations and then tested.
 
@@ -123,11 +123,11 @@ The normal distribution stretches over $(-\infty, +\infty)$, but proportions lie
 
 [^1]: To offer an excuse: the statistical and computing toolkit of that era was much thinner than today's, and even when theoretical impropriety was acknowledged, there was little users could do about it. Psychology also measures only rough surrogates for invisible mental quantities, and there is a folk argument that, given the more fundamental problems with the data themselves, statistical-assumption violations are a minor matter. That climate may be part of how the practice persisted.
 
-In response, statistical models built on distributions other than the normal were developed. These are the **generalised linear models (GLMs)**.[^2]
+In response, statistical models built on distributions other than the normal were developed. These are the **generalized linear models (GLMs)**.[^2]
 
-[^2]: In English, "general linear model" vs. "generalised linear model" differs by *-ised*; that one-letter difference is easier to track than the analogous Japanese pair (一般 vs. 一般化), so we use the English distinction.
+[^2]: In English, "general linear model" vs. "generalized linear model" differs by *-ised*; that one-letter difference is easier to track than the analogous Japanese pair (一般 vs. 一般化), so we use the English distinction.
 
-Most probability distributions have a location parameter and a scale parameter. A statistical model addresses the average behaviour, so we want the linear part to map to the location parameter — after a suitable algebraic rearrangement. We illustrate with the Bernoulli and Poisson families.
+Most probability distributions have a location parameter and a scale parameter. A statistical model addresses the average behavior, so we want the linear part to map to the location parameter — after a suitable algebraic rearrangement. We illustrate with the Bernoulli and Poisson families.
 
 ### A linear model for the Bernoulli: logistic regression
 
@@ -389,9 +389,9 @@ summary(result.ml.pois)
 ```
 
 
-## The generalised linear mixed model (GLMM)
+## The generalized linear mixed model (GLMM)
 
-A further extension is the **generalised linear mixed model (GLMM)**. Up to now the regression models we considered have assumed that a predictor exerts a uniform effect across all units. Those effects are called **fixed effects**. GLMMs add **random effects** to the model.
+A further extension is the **generalized linear mixed model (GLMM)**. Up to now the regression models we considered have assumed that a predictor exerts a uniform effect across all units. Those effects are called **fixed effects**. GLMMs add **random effects** to the model.
 
 A random effect captures the idea that a predictor's effect varies across individuals. A within-subjects factorial design, for example, controls for individual differences; this can be cast as a model in which the variation of interest is the within-subjects main effect, while individual differences in average level are absorbed into a random intercept for each person.
 
@@ -535,11 +535,11 @@ The random-effects notation `(1 | person)` says that intercepts vary by `person`
 
 The simulated SDs were $\sigma_u =$ `r sigma_u` and $\sigma_e =$ `r sigma_e`. Bayesian estimation returns `r round(bayes_sigma_u, 3)` and `r round(bayes_sigma_e, 3)` respectively; MLE returns `r round(ml_sigma_u, 3)` and `r round(ml_sigma_e, 3)`. Both methods land near the truth.
 
-The fixed-effects-only regression returns an intercept of `r round(lm_estimates[1], 3)` and a slope of `r round(lm_estimates[2], 3)`. The slope is the same, but the intercept estimate differs because the model does not accommodate the variability across persons. The fixed-effects-only model estimates only the mean of the normal-distributed intercepts — analogous to analysing a within-subjects design as if it were between-subjects, throwing away the very individual differences that the within-subjects design isolates.
+The fixed-effects-only regression returns an intercept of `r round(lm_estimates[1], 3)` and a slope of `r round(lm_estimates[2], 3)`. The slope is the same, but the intercept estimate differs because the model does not accommodate the variability across persons. The fixed-effects-only model estimates only the mean of the normal-distributed intercepts — analogous to analyzing a within-subjects design as if it were between-subjects, throwing away the very individual differences that the within-subjects design isolates.
 
 #### Per-individual estimates
 
-A benefit of Bayesian estimation is that we can quantify per-individual estimates and their uncertainty. Below we extract the MCMC samples for each individual's random effect and visualise the posteriors.
+A benefit of Bayesian estimation is that we can quantify per-individual estimates and their uncertainty. Below we extract the MCMC samples for each individual's random effect and visualize the posteriors.
 
 `brms::ranef()` will do this directly, but extracting and shaping the MCMC samples ourselves is a useful exercise in understanding MCMC-based inference.
 
@@ -561,7 +561,7 @@ posterior_samples <- as_draws_df(result.bayes.random_intercept) %>%
 # summary statistics from the MCMC samples
 posterior_samples %>%
   group_by(person) %>%
-  summarise(
+  summarize(
     EAP = mean(value),
     median = quantile(value, 0.5),
     q025 = quantile(value, 0.025),
@@ -614,7 +614,7 @@ print(p2)
 # credible intervals for the absolute intercepts
 total_intercept_summary <- total_intercept_samples %>%
   group_by(person) %>%
-  summarise(
+  summarize(
     EAP = mean(total_intercept),
     median = quantile(total_intercept, 0.5),
     q025 = quantile(total_intercept, 0.025),
@@ -626,7 +626,7 @@ total_intercept_summary <- total_intercept_samples %>%
 print(total_intercept_summary)
 ```
 
-With Bayesian estimation, per-individual estimates and their uncertainty can be analysed in detail.
+With Bayesian estimation, per-individual estimates and their uncertainty can be analyzed in detail.
 
 ### Random-slope model
 
@@ -642,7 +642,7 @@ $$
 y_{ij} = \beta_0  + (\beta_1 + u_{1i}) x_{ij} + e_{ij}.
 $$
 
-Simulate and visualise:
+Simulate and visualize:
 
 ```{r random_slope_model_plot}
 #| dev: "ragg_png"
@@ -797,7 +797,7 @@ p2 <- ggplot(df_random_both, aes(x = x, y = y, color = person_factor)) +
 p1 + p2
 ```
 
-The fixed-effects-only plot suggests a single regression would do. The colour-coded plot shows the random-intercept random-slope model captures the structure more cleanly. **Always visualise the data first.**
+The fixed-effects-only plot suggests a single regression would do. The color-coded plot shows the random-intercept random-slope model captures the structure more cleanly. **Always visualize the data first.**
 
 To fit, both random effects go inside the formula parentheses:
 ```{r random_intercept_slope_model}
@@ -828,7 +828,7 @@ The model also estimates the correlation between intercept and slope. Check how 
 
 The hierarchical linear model takes the mixing of distributions further. Treating individual differences as random effects already amounts to viewing the data as observations $j$ **nested** within individuals $i$ — Russian-doll fashion. That nested-data picture is the leading idea of HLMs.
 
-HLMs handle hierarchically structured data. In studies of classroom-level educational effects, broader investigations move to comparisons across classrooms, then across schools, then districts, prefectures, and so on. Classrooms are nested in schools, schools in districts, districts in municipalities, municipalities in prefectures. We may equally well nest in the other direction: individuals within classrooms, types of task within individuals. The point is that each nesting level has its own distribution; elements at the same level are taken to be qualitatively equivalent and exchangeable. In a memory experiment, for example, when we say "memorise words of equivalent 'meaninglessness'," strings like "menuso" or "nukiha" are treated as exchangeable insofar as both are three-character nonsense syllables.
+HLMs handle hierarchically structured data. In studies of classroom-level educational effects, broader investigations move to comparisons across classrooms, then across schools, then districts, prefectures, and so on. Classrooms are nested in schools, schools in districts, districts in municipalities, municipalities in prefectures. We may equally well nest in the other direction: individuals within classrooms, types of task within individuals. The point is that each nesting level has its own distribution; elements at the same level are taken to be qualitatively equivalent and exchangeable. In a memory experiment, for example, when we say "memorize words of equivalent 'meaninglessness'," strings like "menuso" or "nukiha" are treated as exchangeable insofar as both are three-character nonsense syllables.
 
 A further attractive feature of the HLM is the ability to model **cross-level effects** — for instance, a municipality-level variable (population) influencing classroom-level educational quality. Such cross-level relationships can be expressed (in principle).
 
@@ -1029,7 +1029,7 @@ ggplot(plot_data, aes(x = observed, y = predicted, color = team)) +
 
 ### Basic problems: parameter recovery
 
-Using brms, practise **parameter recovery** for Bayesian models — confirming that the parameters used to generate the data can be recovered by fitting.
+Using brms, practice **parameter recovery** for Bayesian models — confirming that the parameters used to generate the data can be recovered by fitting.
 
 
 #### 1-1: Logistic regression
@@ -1108,7 +1108,7 @@ plot(model_poisson)
 
 **Question.** Confirm that the true intercept (1.0) and slope (0.8) are recovered.
 
-### Applied problem: hierarchical modelling on the baseball data
+### Applied problem: hierarchical modeling on the baseball data
 
 Using [Baseball.csv](Baseball.csv), build hierarchical models nested by year and team. Restrict to the 2018–2020 seasons and to pitchers. The relevant variables include salary, height, and weight, together with pitching performance metrics — wins (Win), losses (Lose), holds (Hold), and saves (Save).
 
@@ -1152,7 +1152,7 @@ model1 <- brm(
 - the meaning and statistical significance of each fixed-effect coefficient;
 - the magnitude of the random-effects variances and what they imply.
 
-**Question 3.** Produce the following visualisations:
+**Question 3.** Produce the following visualizations:
 
 - MCMC convergence diagnostics via `plot(model1)`;
 - a posterior predictive check via `pp_check(model1)`;
@@ -1185,7 +1185,7 @@ model2 <- brm(
 - the cross-team salary disparities and differences in the Games effect;
 - the magnitude of the year effects and their economic interpretation.
 
-**Question 3.** Produce the following visualisations:
+**Question 3.** Produce the following visualizations:
 
 - MCMC convergence diagnostics via `plot(model2)`;
 - per-team differences in the Games effect;
