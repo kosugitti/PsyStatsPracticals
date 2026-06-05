@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>18&nbsp; ベイズの観点から見た平均値差の検定 – 心理学統計実習</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./practices.html" rel="next">
+<link href="./chapter17.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter18.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">ベイズの観点から見た平均値差の検定</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">心理学統計実習</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./en/index.html" title="English version" class="quarto-navigation-tool px-1" aria-label="English version"><i class="bi bi-translate"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./心理学統計実習.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめようR/RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Rによるデータハンドリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Rによるレポートの作成</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Rでプログラミング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">確率とシミュレーション</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">統計的仮説検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">多群の平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">疑わしき研究実践とサンプルサイズ設計</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">重回帰分析の基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">ベイズ統計の活用</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">線型代数の基礎</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">線型モデルの展開</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">多変量解析(その1)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">多変量解析(その2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter18.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">ベイズの観点から見た平均値差の検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">演習問題</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./afterword.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">あとがき</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./install_guide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">インストールガイド</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#検定からモデリングへ" id="toc-検定からモデリングへ" class="nav-link active" data-scroll-target="#検定からモデリングへ"><span class="header-section-number">18.1</span> 検定からモデリングへ</a>
+  <ul class="collapse">
+  <li><a href="#多重比較の問題が生じない" id="toc-多重比較の問題が生じない" class="nav-link" data-scroll-target="#多重比較の問題が生じない"><span class="header-section-number">18.1.1</span> 多重比較の問題が生じない</a></li>
+  </ul></li>
+  <li><a href="#分散分析の組成を思い出す" id="toc-分散分析の組成を思い出す" class="nav-link" data-scroll-target="#分散分析の組成を思い出す"><span class="header-section-number">18.2</span> 分散分析の組成を思い出す</a></li>
+  <li><a href="#二群の平均値差をベイズでt検定" id="toc-二群の平均値差をベイズでt検定" class="nav-link" data-scroll-target="#二群の平均値差をベイズでt検定"><span class="header-section-number">18.3</span> 二群の平均値差をベイズで（<span class="math inline">\(t\)</span>検定）</a>
+  <ul class="collapse">
+  <li><a href="#stanによるモデルの記述" id="toc-stanによるモデルの記述" class="nav-link" data-scroll-target="#stanによるモデルの記述"><span class="header-section-number">18.3.1</span> Stanによるモデルの記述</a></li>
+  <li><a href="#推定と結果の読み取り" id="toc-推定と結果の読み取り" class="nav-link" data-scroll-target="#推定と結果の読み取り"><span class="header-section-number">18.3.2</span> 推定と結果の読み取り</a></li>
+  </ul></li>
+  <li><a href="#多群の平均値差をベイズで分散分析" id="toc-多群の平均値差をベイズで分散分析" class="nav-link" data-scroll-target="#多群の平均値差をベイズで分散分析"><span class="header-section-number">18.4</span> 多群の平均値差をベイズで（分散分析）</a>
+  <ul class="collapse">
+  <li><a href="#stanによるモデルの記述-1" id="toc-stanによるモデルの記述-1" class="nav-link" data-scroll-target="#stanによるモデルの記述-1"><span class="header-section-number">18.4.1</span> Stanによるモデルの記述</a></li>
+  <li><a href="#推定と全ペアの比較" id="toc-推定と全ペアの比較" class="nav-link" data-scroll-target="#推定と全ペアの比較"><span class="header-section-number">18.4.2</span> 推定と全ペアの比較</a></li>
+  </ul></li>
+  <li><a href="#意思決定の三つの道具" id="toc-意思決定の三つの道具" class="nav-link" data-scroll-target="#意思決定の三つの道具"><span class="header-section-number">18.5</span> 意思決定の三つの道具</a>
+  <ul class="collapse">
+  <li><a href="#rope" id="toc-rope" class="nav-link" data-scroll-target="#rope"><span class="header-section-number">18.5.1</span> ROPE</a></li>
+  <li><a href="#ベイズファクター" id="toc-ベイズファクター" class="nav-link" data-scroll-target="#ベイズファクター"><span class="header-section-number">18.5.2</span> ベイズファクター</a></li>
+  <li><a href="#事後予測分布" id="toc-事後予測分布" class="nav-link" data-scroll-target="#事後予測分布"><span class="header-section-number">18.5.3</span> 事後予測分布</a></li>
+  </ul></li>
+  <li><a href="#まとめ" id="toc-まとめ" class="nav-link" data-scroll-target="#まとめ"><span class="header-section-number">18.6</span> まとめ</a></li>
+  <li><a href="#課題" id="toc-課題" class="nav-link" data-scroll-target="#課題"><span class="header-section-number">18.7</span> 課題</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">ベイズの観点から見た平均値差の検定</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>これまで，二群の平均値差を比べる<span class="math inline">\(t\)</span>検定，三群以上を比べる分散分析（ANOVA）を扱ってきた。これらはいずれも，「群の間で平均値に差があるとはいえない」という帰無仮説を立て，<span class="math inline">\(t\)</span>値や<span class="math inline">\(F\)</span>値といった検定統計量を計算し，その確率（<span class="math inline">\(p\)</span>値）が小さければ帰無仮説を棄却する，という頻度主義的な手続きであった。</p>
+<p>この章では，まったく同じ問題をベイズ統計の観点から捉え直してみる。すなわち，「データはどのようなメカニズムで生まれたのか」というデータ生成の視点からモデルを組み立て，平均値や差の大きさを確率分布として直接見積もるのである。さらに，差があるかないかという判断（意思決定）について，ベイズ的なアプローチである <strong>ROPE</strong>，<strong>ベイズファクター</strong>，<strong>事後予測分布</strong> の三つの道具を紹介する。</p>
+<p>なお本章では，ベイズ統計の活用の章で導入した<code>brms</code>と，ベイジアンモデリングの章で扱ったStanによる確率モデルの記述の両方を用いる。これらの章の内容を前提とするので，必要に応じて読み返してほしい。</p>
+<section id="検定からモデリングへ" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="検定からモデリングへ"><span class="header-section-number">18.1</span> 検定からモデリングへ</h2>
+<p><span class="math inline">\(t\)</span>検定や分散分析は，「平均値の差の検定」と総称される。ここで行われていたことを改めて振り返ると，正規分布に従うと仮定されたデータについて，その平均値に差があるかどうか，より正確には「すべての群の母平均が等しい」と仮定したときに手元のデータ（が示す差）がどれほど生じやすいか，を評価していたのであった。</p>
+<p>データ生成メカニズムの観点から見ると，この手続きはごく限定的な一面しか見ていない。平均値以外のパラメータを考えることはできないのか。特定の群間の差だけを取り出すことはできないのか。差があるかないかだけでなく，どれぐらいの差があるのか，一方が他方より大きい確率はどれぐらいか，といったことを直接問うことはできないのか。ベイズ推定は，こうした問いに自然な形で答えを与える。</p>
+<section id="多重比較の問題が生じない" class="level3" data-number="18.1.1">
+<h3 data-number="18.1.1" class="anchored" data-anchor-id="多重比較の問題が生じない"><span class="header-section-number">18.1.1</span> 多重比較の問題が生じない</h3>
+<p>頻度主義的な分散分析を思い出してほしい。三群以上を比較して有意差が得られた場合，帰無仮説<span class="math inline">\(H_0: \mu_1 = \mu_2 = \mu_3\)</span>が否定されただけで，「どこに差があるのか」はまだわからない。そこで多重比較へと進むのであったが，検定を繰り返すとタイプ1エラーが増大する。<span class="math inline">\(\alpha=0.05\)</span>で検定していても，独立な検定を二回繰り返せば<span class="math inline">\(1-(0.95^2)=0.0975\)</span>と，全体としての誤り率は<span class="math inline">\(5\%\)</span>を大きく上回ってしまう。そのため，テューキー法やボンフェローニ法のように有意水準を調整する工夫が必要だったのである。</p>
+<p>ところがベイズ推定の場合，こうした多重性の問題は生じない。なぜなら，確率を伴う二分判断（YesかNoか）を繰り返しているわけではないからである。頻度主義の<span class="math inline">\(p\)</span>値は「帰無仮説が正しいという条件のもとで」計算された検定統計量の生じやすさであって，パラメータがどこにあるかという確率ではない。これに対しベイズ推定で得られる事後分布は，パラメータがこのあたりにあるだろう，という確率そのものである。だから<span class="math inline">\(A\)</span>群と<span class="math inline">\(B\)</span>群の差，<span class="math inline">\(A\)</span>群と<span class="math inline">\(C\)</span>群の差，というように好きなだけ差の分布を眺めてよいし，「何度も比べたから誤りが増える」という心配は原理的に存在しない。複雑な要因計画を考えるとき，この性質は非常に助けになる。</p>
+</section>
+</section>
+<section id="分散分析の組成を思い出す" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="分散分析の組成を思い出す"><span class="header-section-number">18.2</span> 分散分析の組成を思い出す</h2>
+<p>ベイズのモデルを組む前に，分散分析がデータの変動をどう分解していたかを思い出しておこう。これがそのままデータ生成モデルになるからである。</p>
+<p>分散分析では，あるデータ<span class="math inline">\(x_{ij}\)</span>（第<span class="math inline">\(j\)</span>群の第<span class="math inline">\(i\)</span>番目の観測値）を次のように考える。</p>
+<p><span class="math display">\[ x_{ij} = \mu + \delta_j + e_{ij} \]</span></p>
+<p>ここで<span class="math inline">\(\mu\)</span>は全体平均，<span class="math inline">\(\delta_j\)</span>は第<span class="math inline">\(j\)</span>群に属することの効果（全体平均からのずれ），<span class="math inline">\(e_{ij}\)</span>は個体差・誤差である。三つのクラスの試験の平均点を比べる例でいえば，全体平均が<span class="math inline">\(60\)</span>点で，あるクラスの平均が<span class="math inline">\(68\)</span>点だったなら，そのクラスに属したことの効果<span class="math inline">\(\delta_j\)</span>は<span class="math inline">\(+8\)</span>点ということになる。効果は全体平均からの相対的なずれなので，すべての群の効果を足し合わせると<span class="math inline">\(0\)</span>になる（<span class="math inline">\(\sum_j \delta_j = 0\)</span>）。これが，水準数が<span class="math inline">\(3\)</span>なのに効果の自由度が<span class="math inline">\(2\)</span>になる理由であった。</p>
+<p>頻度主義の分散分析では，この効果<span class="math inline">\(\delta_j\)</span>の二乗を群のサイズ分だけ足し合わせた「群間変動」と，誤差<span class="math inline">\(e_{ij}\)</span>の二乗を足し合わせた「群内変動」を，それぞれの自由度で割って比べ，その比率<span class="math inline">\(F\)</span>が大きければ「差がある」と判断していた。</p>
+<p>ベイズの観点では，この分解の式そのものを，データを生み出す確率モデルとして読み直す。すなわち，誤差<span class="math inline">\(e_{ij}\)</span>が平均<span class="math inline">\(0\)</span>，標準偏差<span class="math inline">\(\sigma\)</span>の正規分布に従うと考えれば，</p>
+<p><span class="math display">\[ x_{ij} \sim N(\mu + \delta_j, \sigma) \]</span></p>
+<p>となる。あとは，未知数である全体平均<span class="math inline">\(\mu\)</span>，効果<span class="math inline">\(\delta_j\)</span>，誤差の大きさ<span class="math inline">\(\sigma\)</span>を，データから推定すればよい。頻度主義が「変動を分解して比率を取る」ことに注力したのに対し，ベイズは「効果<span class="math inline">\(\delta_j\)</span>そのものの分布」を直接求めにいくのである。</p>
+</section>
+<section id="二群の平均値差をベイズでt検定" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="二群の平均値差をベイズでt検定"><span class="header-section-number">18.3</span> 二群の平均値差をベイズで（<span class="math inline">\(t\)</span>検定）</h2>
+<p>まずは最も単純な，二群の平均値差，すなわち<span class="math inline">\(t\)</span>検定に対応するモデルから始めよう。</p>
+<p>カバーストーリーとして，ある学習法の効果を考える。同じ範囲の内容を，異なる三つの学習法（方法A，方法B，方法C）で学んだ受講者に，共通のテストを受けてもらった。各群<span class="math inline">\(40\)</span>名である。まずはこのうち方法Aと方法Cの二群だけを取り出して比較してみよう。</p>
+<p>データは，分散分析の組成の式にもとづいて生成する。全体平均<span class="math inline">\(60\)</span>点に，方法Aは<span class="math inline">\(+8\)</span>点，方法Bは<span class="math inline">\(+6\)</span>点，方法Cは<span class="math inline">\(-14\)</span>点の効果があり（合計<span class="math inline">\(0\)</span>），そこに標準偏差<span class="math inline">\(8\)</span>点の誤差が乗るものとする。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, cmdstanr, bayesplot, bayestestR, brms, logspline)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">brms.backend =</span> <span class="st">"cmdstanr"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="dv">60</span> <span class="co"># 全体平均</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>eff <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">6</span>, <span class="sc">-</span><span class="dv">14</span>) <span class="co"># 各群の効果（合計0）</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sigma_true <span class="ot">&lt;-</span> <span class="dv">8</span> <span class="co"># 誤差の標準偏差</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">40</span> <span class="co"># 各群のサンプルサイズ</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"方法A"</span>, <span class="st">"方法B"</span>, <span class="st">"方法C"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(labels, <span class="at">each =</span> N), <span class="at">levels =</span> labels),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">c</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(N, gm <span class="sc">+</span> eff[<span class="dv">1</span>], sigma_true),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(N, gm <span class="sc">+</span> eff[<span class="dv">2</span>], sigma_true),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(N, gm <span class="sc">+</span> eff[<span class="dv">3</span>], sigma_true)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idx =</span> <span class="fu">as.integer</span>(method))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(method) <span class="sc">|&gt;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(平均 <span class="ot">=</span> <span class="fu">mean</span>(score), 標準偏差 <span class="ot">=</span> <span class="fu">sd</span>(score), <span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  method  平均 標準偏差     n
+  &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+1 方法A   64.7     7.30    40
+2 方法B   65.4     8.67    40
+3 方法C   46.4     6.32    40</code></pre>
+</div>
+</div>
+<p>群ごとの平均値を見ると，手元のデータでは方法Aと方法Bがほぼ同じ程度で，方法Cだけが低い，という結果になっている。母集団では方法Aと方法Bに<span class="math inline">\(2\)</span>点の差をつけて生成したのだが，標本のばらつきによって，得られたデータ上ではほとんど差がなくなっている。このあたりの「標本だからこその揺らぎ」も，ベイズ推定がどう扱うか見どころである。</p>
+<section id="stanによるモデルの記述" class="level3" data-number="18.3.1">
+<h3 data-number="18.3.1" class="anchored" data-anchor-id="stanによるモデルの記述"><span class="header-section-number">18.3.1</span> Stanによるモデルの記述</h3>
+<p>二群比較のStanコードは次のようになる。これを<code>bayes_ttest.stan</code>という名前で保存しておく。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N1;          <span class="co">// 第1群のサンプルサイズ</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N2;          <span class="co">// 第2群のサンプルサイズ</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N1] <span class="dt">real</span> X1;        <span class="co">// 第1群の観測値</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N2] <span class="dt">real</span> X2;        <span class="co">// 第2群の観測値</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> mu1;                 <span class="co">// 第1群の母平均</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> mu2;                 <span class="co">// 第2群の母平均</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;      <span class="co">// 共通の標準偏差（等分散の仮定）</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 尤度：各群が同じ散らばりを持つ正規分布から生じる</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  X1 ~ normal(mu1, sigma);</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  X2 ~ normal(mu2, sigma);</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 事前分布</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  mu1 ~ normal(<span class="dv">50</span>, <span class="dv">50</span>);</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  mu2 ~ normal(<span class="dv">50</span>, <span class="dv">50</span>);</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  sigma ~ cauchy(<span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> diff;                <span class="co">// 平均値差そのもの</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> delta;               <span class="co">// 標準化した効果量（Cohen's d 相当）</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N1 + N2] <span class="dt">real</span> X_pred;  <span class="co">// 事後予測分布のための複製データ</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  diff = mu1 - mu2;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  delta = (mu1 - mu2) / sigma;</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> : N1) {</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    X_pred[i] = normal_rng(mu1, sigma);</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> : N2) {</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    X_pred[N1 + i] = normal_rng(mu2, sigma);</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>data</code>ブロックでは，二つの群それぞれのサンプルサイズと観測値を受け取る。<code>parameters</code>ブロックには，二つの母平均<code>mu1</code>，<code>mu2</code>と，共通の標準偏差<code>sigma</code>を置いた。ここで標準偏差を共通にしているのは，<span class="math inline">\(t\)</span>検定でいう「等分散の仮定」に対応する。<code>model</code>ブロックでは，各群のデータがそれぞれの母平均を中心とする正規分布から生じたという尤度を記述し，事前分布を与えている。</p>
+<p>注目すべきは<code>generated quantities</code>ブロックである。ここでは平均値差そのもの<code>diff</code>と，それを標準偏差で割って標準化した効果量<code>delta</code>（Cohen’s <span class="math inline">\(d\)</span>に相当）を計算している。検定と違って，差の大きさを確率分布として直接得られるのがベイズの強みである。さらに<code>X_pred</code>として，推定されたモデルから新しいデータを生成しておく。これは後述する事後予測分布に用いる。</p>
+</section>
+<section id="推定と結果の読み取り" class="level3" data-number="18.3.2">
+<h3 data-number="18.3.2" class="anchored" data-anchor-id="推定と結果の読み取り"><span class="header-section-number">18.3.2</span> 推定と結果の読み取り</h3>
+<p>このモデルをコンパイルし，方法Aと方法Cのデータを与えて推定する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sub <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> <span class="fu">filter</span>(method <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"方法A"</span>, <span class="st">"方法C"</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> sub<span class="sc">$</span>score[sub<span class="sc">$</span>method <span class="sc">==</span> <span class="st">"方法A"</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> sub<span class="sc">$</span>score[sub<span class="sc">$</span>method <span class="sc">==</span> <span class="st">"方法C"</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>model_t <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"bayes_ttest.stan"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>fit_t <span class="ot">&lt;-</span> model_t<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">list</span>(<span class="at">N1 =</span> <span class="fu">length</span>(X1), <span class="at">N2 =</span> <span class="fu">length</span>(X2), <span class="at">X1 =</span> X1, <span class="at">X2 =</span> X2),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">1000</span>, <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>, <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.0 seconds.
+Chain 2 finished in 0.0 seconds.
+Chain 3 finished in 0.0 seconds.
+Chain 4 finished in 0.0 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.0 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_t<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">"mu1"</span>, <span class="st">"mu2"</span>, <span class="st">"sigma"</span>, <span class="st">"diff"</span>, <span class="st">"delta"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 10
+  variable  mean median    sd   mad    q5   q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 mu1      64.7   64.7  1.13  1.12  62.8  66.5   1.00    8594.    5383.
+2 mu2      46.4   46.4  1.11  1.13  44.6  48.2   1.00    7999.    6340.
+3 sigma     6.87   6.85 0.556 0.556  6.03  7.83  1.00    6844.    5527.
+4 diff     18.3   18.3  1.58  1.56  15.7  20.9   1.00    8728.    5529.
+5 delta     2.68   2.68 0.314 0.312  2.17  3.22  1.00    7784.    5499.</code></pre>
+</div>
+</div>
+<p><code>Rhat</code>はいずれも<span class="math inline">\(1.00\)</span>付近，<code>ess_bulk</code>も十分大きく，サンプリングはうまくいっている。<code>mu1</code>，<code>mu2</code>が方法A，方法Cの母平均の事後分布の代表値である。注目すべきは<code>diff</code>で，これは平均値差の事後分布である。点推定としての差だけでなく，その差が<span class="math inline">\(90\%\)</span>の確率でどの範囲にあるか（<code>q5</code>から<code>q95</code>）まで一目でわかる。標準化効果量<code>delta</code>も非常に大きく，方法Aと方法Cの間には実質的な差があると考えてよさそうである。</p>
+<p>数値だけでなく，事後分布を絵にして眺めるとわかりやすい。<code>bayesplot</code>パッケージの<code>mcmc_areas</code>関数は，パラメータの事後分布を山型の密度で描いてくれる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 二群の母平均の事後分布</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit_t<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"mu1"</span>, <span class="st">"mu2"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/ttest_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 平均値差の事後分布（破線が差ゼロ）</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit_t<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"diff"</span>)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_vline()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/ttest_viz-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>二つの母平均の山がはっきり離れていること，そして差<code>diff</code>の分布が<span class="math inline">\(0\)</span>（破線）から大きく右に離れていることが一目でわかる。差の山のほぼすべてが正の領域にあるので，先ほどの優越率がほぼ<span class="math inline">\(1\)</span>だったことも納得できる。</p>
+<p>差を確率分布として持っていることの利点は，さまざまな「データレベルの仮説」を後から自由に問える点にある。たとえば「方法Aの母平均が方法Cの母平均より大きい確率」は，差の事後分布のうち正の領域が占める割合として計算できる。これを優越率（probability of superiority）と呼ぶ。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>draws_t <span class="ot">&lt;-</span> fit_t<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法Aが方法Cより大きい確率</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(draws_t<span class="sc">$</span>diff <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>差のMCMCサンプルのうち正の値が占める割合を数えるだけである。ほぼ<span class="math inline">\(1\)</span>，すなわち「方法Aのほうが優れている」とほぼ確実にいえる。頻度主義の<span class="math inline">\(p\)</span>値が「帰無仮説のもとでの検定統計量の生じやすさ」という間接的な指標だったのに対し，これは知りたかったことそのものを確率で答えている点に注目してほしい。</p>
+</section>
+</section>
+<section id="多群の平均値差をベイズで分散分析" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="多群の平均値差をベイズで分散分析"><span class="header-section-number">18.4</span> 多群の平均値差をベイズで（分散分析）</h2>
+<p>次に三群の比較，すなわち一要因分散分析に対応するモデルを考える。二群モデルを群の数だけ書き足してもよいが，それでは群の数が変わるたびにコードを修正してコンパイルし直すことになる。そこで，先に見た分散分析の組成の式を，群の数によらない一般的な形で書き下す。</p>
+<p>すなわち全体平均<span class="math inline">\(\mu\)</span>（コード中では<code>gm</code>）と，各群の効果<span class="math inline">\(\delta_j\)</span>，誤差<span class="math inline">\(\sigma\)</span>でモデルを構成する。ただし効果には<span class="math inline">\(\sum_j \delta_j = 0\)</span>という制約があったから，推定するのは<span class="math inline">\(\mathrm{Lv}-1\)</span>個の効果だけでよく，最後の一つは「総和が<span class="math inline">\(0\)</span>になるように」決まる。</p>
+<section id="stanによるモデルの記述-1" class="level3" data-number="18.4.1">
+<h3 data-number="18.4.1" class="anchored" data-anchor-id="stanによるモデルの記述-1"><span class="header-section-number">18.4.1</span> Stanによるモデルの記述</h3>
+<p>整然データ（tidy data）の形でデータを与えることを前提にした，群の数によらないコードが次である。<code>bayes_anova.stan</code>として保存しておく。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Lv;                       <span class="co">// 水準数（群の数）</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L;                        <span class="co">// データの総数</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=Lv&gt; idx;   <span class="co">// 各データが属する群のID</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">real</span> X;                       <span class="co">// 観測値</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> gm;                               <span class="co">// 全体平均（grand mean）</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[Lv - <span class="dv">1</span>] <span class="dt">real</span> raw_delta;          <span class="co">// 効果。自由度の関係で Lv-1 個</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;                   <span class="co">// 群内の散らばり（誤差）</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[Lv] <span class="dt">real</span> delta;                  <span class="co">// 総和が0になるよう作り直した効果</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[Lv] <span class="dt">real</span> mu;                     <span class="co">// 各群の母平均</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : (Lv - <span class="dv">1</span>)) {</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    delta[l] = raw_delta[l];             <span class="co">// 最初の Lv-1 個はコピー</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  delta[Lv] = -sum(raw_delta);           <span class="co">// 最後の1つは「効果の総和=0」から決まる</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : Lv) {</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    mu[l] = gm + delta[l];               <span class="co">// 各群の平均 = 全体平均 + 効果</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 尤度：l 番目のデータは，その群の平均 mu[idx[l]] を中心に散らばる</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : L) {</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    X[l] ~ normal(mu[idx[l]], sigma);</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 事前分布</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>  gm ~ normal(<span class="dv">50</span>, <span class="dv">50</span>);</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>  raw_delta ~ normal(<span class="dv">0</span>, <span class="dv">50</span>);</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>  sigma ~ cauchy(<span class="dv">0</span>, <span class="dv">5</span>);</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">real</span> X_pred;                  <span class="co">// 事後予測分布のための複製データ</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (l <span class="cf">in</span> <span class="dv">1</span> : L) {</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>    X_pred[l] = normal_rng(mu[idx[l]], sigma);</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>data</code>ブロックでは，水準数<code>Lv</code>，データ総数<code>L</code>に加え，各データがどの群に属するかを示すインデックス<code>idx</code>と観測値<code>X</code>を，いずれも長さ<code>L</code>の配列で受け取る。これにより，群ごとのサンプルサイズが異なっていても対応できる。</p>
+<p><code>parameters</code>ブロックには全体平均<code>gm</code>，効果<code>raw_delta</code>（<span class="math inline">\(\mathrm{Lv}-1\)</span>個），誤差<code>sigma</code>を置いた。<code>transformed parameters</code>ブロックでは，<code>raw_delta</code>の最初の<span class="math inline">\(\mathrm{Lv}-1\)</span>個をそのままコピーし，最後の一つを<code>-sum(raw_delta)</code>として総和が<span class="math inline">\(0\)</span>になるよう作り直すことで効果<span class="math inline">\(\delta_j\)</span>を完成させ，各群の平均<code>mu[l] = gm + delta[l]</code>を構成している。</p>
+<p><code>model</code>ブロックの尤度は，<code>X[l] ~ normal(mu[idx[l]], sigma)</code>の一行で，<span class="math inline">\(l\)</span>番目のデータがその群<code>idx[l]</code>の平均を中心に散らばる，という関係を表している。<code>mu[idx[l]]</code>という入れ子の参照によって，どの群に属するデータかを指定しているのである。<code>generated quantities</code>ブロックでは，二群のときと同様に事後予測のための複製データ<code>X_pred</code>を生成しておく。</p>
+</section>
+<section id="推定と全ペアの比較" class="level3" data-number="18.4.2">
+<h3 data-number="18.4.2" class="anchored" data-anchor-id="推定と全ペアの比較"><span class="header-section-number">18.4.2</span> 推定と全ペアの比較</h3>
+<p>三群すべてのデータを与えて推定する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model_a <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"bayes_anova.stan"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fit_a <span class="ot">&lt;-</span> model_a<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">list</span>(<span class="at">Lv =</span> <span class="dv">3</span>, <span class="at">L =</span> <span class="fu">nrow</span>(dat), <span class="at">idx =</span> dat<span class="sc">$</span>idx, <span class="at">X =</span> dat<span class="sc">$</span>score),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">1000</span>, <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>, <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...
+
+Chain 1 finished in 0.1 seconds.
+Chain 2 finished in 0.1 seconds.
+Chain 3 finished in 0.1 seconds.
+Chain 4 finished in 0.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.1 seconds.
+Total execution time: 0.3 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fit_a<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">"gm"</span>, <span class="st">"mu[1]"</span>, <span class="st">"mu[2]"</span>, <span class="st">"mu[3]"</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"delta[1]"</span>, <span class="st">"delta[2]"</span>, <span class="st">"delta[3]"</span>, <span class="st">"sigma"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 10
+  variable   mean median    sd   mad     q5    q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 gm        58.8   58.8  0.684 0.684  57.7   59.9   1.00    7525.    5741.
+2 mu[1]     64.7   64.7  1.17  1.15   62.7   66.6   1.00    6765.    5555.
+3 mu[2]     65.4   65.4  1.20  1.19   63.4   67.3   1.00    7005.    5621.
+4 mu[3]     46.4   46.4  1.19  1.16   44.4   48.3   1.00    8793.    6423.
+5 delta[1]   5.88   5.88 0.964 0.952   4.28   7.43  1.00    6157.    5834.
+6 delta[2]   6.56   6.55 0.978 0.984   4.95   8.16  1.00    6594.    5307.
+7 delta[3] -12.4  -12.4  0.970 0.979 -14.0  -10.9   1.00   10361.    6105.
+8 sigma      7.54   7.51 0.499 0.493   6.77   8.39  1.00    7794.    5961.</code></pre>
+</div>
+</div>
+<p><code>gm</code>が全体平均，<code>mu[1]</code>から<code>mu[3]</code>が各群の母平均，<code>delta[1]</code>から<code>delta[3]</code>が各群の効果の事後分布である。効果を見ると，方法A・方法Bが正，方法Cが大きく負であり，データの生成構造をおおむね復元できている。</p>
+<p>これも可視化してみよう。各群の母平均は区間表示（<code>mcmc_intervals</code>），効果は密度（<code>mcmc_areas</code>）で描く。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群の母平均（点と区間）</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_intervals</span>(fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"mu[1]"</span>, <span class="st">"mu[2]"</span>, <span class="st">"mu[3]"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/anova_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 各群の効果（破線が効果ゼロ）</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"delta[1]"</span>, <span class="st">"delta[2]"</span>, <span class="st">"delta[3]"</span>))) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/anova_viz-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>母平均では方法A・方法Bが近い位置に並び，方法Cだけが下にずれている。効果の図でも，方法Cの効果が明確に負側にあるのに対し，方法A・方法Bの効果は<span class="math inline">\(0\)</span>付近で重なっていることが見て取れる。</p>
+<p>ここで分散分析の後の多重比較に相当することをやってみよう。頻度主義では有意水準の調整が必要だったが，ベイズでは各群の母平均の事後分布（のMCMCサンプル）から，差を引き算するだけでよい。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>draws_a <span class="ot">&lt;-</span> fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pair <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">A-B</span><span class="st">`</span> <span class="ot">=</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span> <span class="sc">-</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[2]</span><span class="st">`</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">A-C</span><span class="st">`</span> <span class="ot">=</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span> <span class="sc">-</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">B-C</span><span class="st">`</span> <span class="ot">=</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[2]</span><span class="st">`</span> <span class="sc">-</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>pair <span class="sc">|&gt;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"対"</span>, <span class="at">values_to =</span> <span class="st">"差"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(対) <span class="sc">|&gt;</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">EAP =</span> <span class="fu">mean</span>(差),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">L95 =</span> <span class="fu">quantile</span>(差, <span class="fl">0.025</span>),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">U95 =</span> <span class="fu">quantile</span>(差, <span class="fl">0.975</span>),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">P(差&gt;0)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(差 <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  対       EAP   L95   U95 `P(差&gt;0)`
+  &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+1 A-B   -0.676 -3.99  2.62     0.346
+2 A-C   18.3   15.1  21.5      1    
+3 B-C   19.0   15.7  22.3      1    </code></pre>
+</div>
+</div>
+<p>結果を見ると，方法Aと方法Cの差，方法Bと方法Cの差は<span class="math inline">\(95\%\)</span>区間が<span class="math inline">\(0\)</span>をまたがず，「差がある」とほぼ確実にいえる（優越率もほぼ<span class="math inline">\(1\)</span>）。一方で方法Aと方法Bの差は，<span class="math inline">\(95\%\)</span>区間が<span class="math inline">\(0\)</span>をはさんでおり，優越率も<span class="math inline">\(0.5\)</span>に近い。つまり，この二つの方法には明確な差があるとはいえない，という結果である。母集団では<span class="math inline">\(2\)</span>点差をつけて作ったのだが，<span class="math inline">\(40\)</span>名ずつのデータからはその差を見分けられなかった，ということになる。</p>
+<p>全ペアの差の事後分布を重ねて描くと，どのペアが<span class="math inline">\(0\)</span>をまたいでいるかがよくわかる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 全ペアの差の事後分布（破線が差ゼロ）</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(<span class="fu">as.matrix</span>(pair)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/pairwise_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>方法Aと方法Cの差，方法Bと方法Cの差は，山全体が<span class="math inline">\(0\)</span>より右に大きく離れている。一方で方法Aと方法Bの差の山は<span class="math inline">\(0\)</span>をまたいでおり，差があるとはいいきれないことが視覚的に確認できる。</p>
+<p>ここで重要なのは，「区間が<span class="math inline">\(0\)</span>をまたぐから差がない」と即断してはいけない，という点である。これは「差があるとはいえない」のであって，「差がない（同等である）」とは違う。この区別こそが，次に述べる意思決定の道具が必要になる理由である。</p>
+</section>
+</section>
+<section id="意思決定の三つの道具" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="意思決定の三つの道具"><span class="header-section-number">18.5</span> 意思決定の三つの道具</h2>
+<p>事後分布が得られたあと，「で，結局どう判断すればよいのか」という問いが残る。頻度主義には「<span class="math inline">\(p &lt; 0.05\)</span>なら有意」という明快（だが乱用もされてきた）な基準があった。ベイズにはこれに代わる判断の道具がいくつかある。ここでは代表的な三つ，ROPE，ベイズファクター，事後予測分布を見ていく。</p>
+<section id="rope" class="level3" data-number="18.5.1">
+<h3 data-number="18.5.1" class="anchored" data-anchor-id="rope"><span class="header-section-number">18.5.1</span> ROPE</h3>
+<p>ROPEはRegion Of Practical Equivalence（実質的同等の領域）の略で，<span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> によって提唱された判断方法である。考え方はシンプルで，「この範囲に入っていれば，差は実質的にゼロとみなしてよい」という幅をあらかじめ宣言しておく，というものである。</p>
+<p>たとえば今回のテスト得点であれば，「<span class="math inline">\(\pm 2\)</span>点くらいの差は，実用上は差がないも同然だ」と研究者が判断したとしよう。この<span class="math inline">\([-2, +2]\)</span>がROPEである。そのうえで，差の事後分布がこのROPEにどれだけ入っているかを見る。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法Aと方法Bの差：実質的同等か？</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">rope</span>(pair<span class="sc">$</span><span class="st">`</span><span class="at">A-B</span><span class="st">`</span>, <span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">ci =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Proportion of samples inside the ROPE [-2.00, 2.00]:
+
+Inside ROPE
+-----------
+72.60 %    </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法Aと方法Cの差：実質的な差があるか？</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">rope</span>(pair<span class="sc">$</span><span class="st">`</span><span class="at">A-C</span><span class="st">`</span>, <span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">ci =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Proportion of samples inside the ROPE [-2.00, 2.00]:
+
+Inside ROPE
+-----------
+0.00 %     </code></pre>
+</div>
+</div>
+<p>方法Aと方法Bの差は，その事後分布の大部分（<span class="math inline">\(7\)</span>割以上）がROPEの内側に収まっている。つまり「両者の差は実質的に無視できる」と積極的に主張できる。これは頻度主義では原理的に言えなかったこと（帰無仮説の採択）であり，ベイズの大きな利点である。一方，方法Aと方法Cの差はROPEに一切入っておらず，実質的にも明確な差があると判断できる。</p>
+<p>このROPEによる判断も，差の事後分布にROPEの帯を重ねて描くと直感的である。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 差の事後分布に ROPE [-2, 2] の帯（赤）を重ねる</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(<span class="fu">as.matrix</span>(pair)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">annotate</span>(<span class="st">"rect"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">xmax =</span> <span class="dv">2</span>, <span class="at">ymin =</span> <span class="sc">-</span><span class="cn">Inf</span>, <span class="at">ymax =</span> <span class="cn">Inf</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.15</span>, <span class="at">fill =</span> <span class="st">"red"</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/rope_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>赤い帯がROPEである。方法Aと方法Bの差の山は，その大部分が赤い帯の中に収まっている（実質的に同等）。これに対し方法Aと方法C，方法Bと方法Cの差の山は，赤い帯からはるか右に外れている（実質的に差がある）。区間が<span class="math inline">\(0\)</span>をまたぐかどうかという見方に，ROPEの帯を重ねることで，「差がないとはいえない」のか「実質的に差がない」のかを描き分けられるのである。</p>
+<p>ROPEの幅をどう決めるかは研究者の判断であり，分野の知見にもとづくべきものである。基準が思いつかない場合，<span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> は標準化した尺度で<span class="math inline">\(\pm 0.1\)</span>標準偏差を目安として提案している。<code>bayestestR</code>では<code>range = "default"</code>とすると，この標準化基準にもとづくROPEを自動的に設定してくれる。</p>
+</section>
+<section id="ベイズファクター" class="level3" data-number="18.5.2">
+<h3 data-number="18.5.2" class="anchored" data-anchor-id="ベイズファクター"><span class="header-section-number">18.5.2</span> ベイズファクター</h3>
+<p>二つ目の道具はベイズファクター（Bayes Factor, BF）である。これは二つのモデルのどちらがデータをよく説明するかを，相対的な比で表すものである。ベイジアンモデリングの章でも触れたように，ベイズ的なモデル評価はこのBFに一元化できるといってよい。</p>
+<p>ここでは，「効果はゼロである（差がない）」というモデルと「効果はゼロでない（差がある）」というモデルを比べる。BFを計算する一つの簡便な方法が，Savage-Dickey密度比である。これは，事前分布と事後分布の，ゼロ点における密度の比を取るというもので，<code>brms</code>で事前分布もサンプリングしておけば<code>bayestestR</code>で計算できる。</p>
+<p>そのためにまず，<code>brms</code>で同じ分散分析モデルを推定する。Rの<code>formula</code>に<code>score ~ method</code>と書くだけで，内部では全体平均と各群の効果という形のモデルが組まれる。効果コーディング（<code>contr.sum</code>）を指定すると，先ほどStanで推定した効果<span class="math inline">\(\delta_j\)</span>とほぼ同じものが係数として得られ，答え合わせにもなる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 効果コーディング：全体平均からのずれ（効果）として係数を得る</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(dat<span class="sc">$</span>method) <span class="ot">&lt;-</span> <span class="fu">contr.sum</span>(<span class="dv">3</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>fit_brms <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  score <span class="sc">~</span> method,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> <span class="fu">set_prior</span>(<span class="st">"normal(0, 50)"</span>, <span class="at">class =</span> <span class="st">"b"</span>),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_prior =</span> <span class="st">"yes"</span>, <span class="co"># BFのため事前分布もサンプリング</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">11000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>, <span class="at">seed =</span> <span class="dv">1</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(fit_brms)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Estimate Est.Error      Q2.5     Q97.5
+Intercept 58.810085 0.6848841 57.460350 60.157594
+method1    5.876573 0.9832975  3.958309  7.811276
+method2    6.571917 0.9788995  4.638359  8.501470</code></pre>
+</div>
+</div>
+<p><code>method1</code>，<code>method2</code>が方法A，方法Bの効果であり，先ほどStanで得た<code>delta[1]</code>，<code>delta[2]</code>とほぼ一致している。自分で書いたStanモデルと，<code>brms</code>が自動で組んだモデルが同じ結果を返すことが確認できた。<code>brms</code>は線型モデルの範囲なら手早く同じ推定ができるので，定型的な分析では便利である。</p>
+<p>このモデルからBFを計算する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_parameters</span>(fit_brms, <span class="at">null =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Sampling priors, please wait...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes Factor (Savage-Dickey density ratio)
+
+Parameter   |       BF
+----------------------
+(Intercept) | 9.89e+97
+method1     | 1.84e+04
+method2     | 3.61e+05
+
+* Evidence Against The Null: 0</code></pre>
+</div>
+</div>
+<p><code>method1</code>，<code>method2</code>のBFはいずれも非常に大きな値であり，「効果がゼロ」というモデルに対して「効果がある」というモデルが圧倒的に支持される。一般にBFが<span class="math inline">\(3\)</span>を超えれば一方のモデルが優っている目安とされるが，ここではそれをはるかに上回っている。</p>
+<p>逆に，「差がない（同等である）」ことの証拠もBFで評価できる。方法Aと方法Bの差については，<code>brms</code>の<code>hypothesis</code>関数で「<span class="math inline">\(\mu_A - \mu_B = 0\)</span>」という仮説を検証してみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">hypothesis</span>(fit_brms, <span class="st">"method1 - method2 = 0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hypothesis Tests for class b:
+             Hypothesis Estimate Est.Error CI.Lower CI.Upper Evid.Ratio
+1 (method1-method2) = 0     -0.7       1.7    -4.02     2.66      38.12
+  Post.Prob Star
+1      0.97     
+---
+'CI': 90%-CI for one-sided and 95%-CI for two-sided hypotheses.
+'*': For one-sided hypotheses, the posterior probability exceeds 95%;
+for two-sided hypotheses, the value tested against lies outside the 95%-CI.
+Posterior probabilities of point hypotheses assume equal prior probabilities.</code></pre>
+</div>
+</div>
+<p>出力の<code>Evid.Ratio</code>が，「差がない」という仮説を支持するBFである。<span class="math inline">\(1\)</span>をかなり上回っており，方法Aと方法Bについては「差がない」ほうが支持される。ROPEの結論と整合的である。</p>
+<section id="サベージディッキー法を絵で見る" class="level4" data-number="18.5.2.1">
+<h4 data-number="18.5.2.1" class="anchored" data-anchor-id="サベージディッキー法を絵で見る"><span class="header-section-number">18.5.2.1</span> サベージ・ディッキー法を絵で見る</h4>
+<p>Savage-Dickey密度比が何をしているのかは，事前分布と事後分布を重ねて描くとよくわかる。やっていることは単純で，注目するパラメータについて，事前分布と事後分布の，値ゼロにおける密度の高さを比べているだけである。データを見る前（事前分布）に比べて，データを見た後（事後分布）にゼロ点の密度がどれだけ減ったか（または増えたか）を見るのである。ゼロでの密度が減っていれば「効果はゼロでない」証拠，増えていれば「効果はゼロ」の証拠になる。</p>
+<p><code>brms</code>のフィット結果から事前分布と事後分布のMCMCサンプルを取り出して描いてみよう。事前分布には<code>normal(0, 50)</code>を置いたので，描画では解析的な正規分布をそのまま重ねる（二つの効果の差については，独立な二つの効果の差なので事前分布の標準偏差は<span class="math inline">\(50\sqrt{2}\)</span>になる）。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">as_draws_df</span>(fit_brms)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># サベージ・ディッキー法を絵にする関数</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>sd_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(post, prior_sd, xlim, title) {</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">value =</span> post) <span class="sc">|&gt;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(value)) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 事前分布（解析的な正規分布）</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> prior_sd),</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"事前分布"</span>), <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 事後分布（MCMCサンプルから推定した密度）</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"事後分布"</span>), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> xlim) <span class="sc">+</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> title, <span class="at">y =</span> <span class="st">"密度"</span>, <span class="at">color =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Hiragino Sans"</span>))</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法Aの効果：ゼロ点の密度が大きく減る＝「効果はゼロでない」証拠</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="fu">sd_plot</span>(dd<span class="sc">$</span>b_method1, <span class="at">prior_sd =</span> <span class="dv">50</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">12</span>, <span class="dv">12</span>), <span class="at">title =</span> <span class="st">"方法Aの効果"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/savage_dickey_viz-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法Aと方法Bの差：ゼロ点に密度が集まる＝「差はゼロ」の証拠</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd_plot</span>(dd<span class="sc">$</span>b_method1 <span class="sc">-</span> dd<span class="sc">$</span>b_method2,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior_sd =</span> <span class="dv">50</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">2</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">12</span>, <span class="dv">12</span>), <span class="at">title =</span> <span class="st">"方法Aと方法Bの差"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/savage_dickey_viz-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>一枚目の「方法Aの効果」では，平べったい事前分布に対して，事後分布は<span class="math inline">\(0\)</span>からはっきり右に離れた位置に山を作っている。ゼロ点（破線）における事後分布の高さは，事前分布の高さよりもずっと低くなっている。この高さの比がBFであり，事後分布がゼロ点をほとんど見捨てているので，「効果はゼロでない」という大きなBFになる。</p>
+<p>二枚目の「方法Aと方法Bの差」は対照的である。事後分布の山はちょうど<span class="math inline">\(0\)</span>の真上に乗っており，ゼロ点の高さは事前分布よりも高い。データを見たことで，かえってゼロ点の密度が増えたわけである。だからこのBFは「差はゼロ」を支持する向きになる。先ほど<code>bayesfactor_parameters</code>や<code>hypothesis</code>で得た数値が，この二つの絵の，破線上での高さの比に対応している。</p>
+<p>なお，BFには注意も必要である。「<span class="math inline">\(3\)</span>を超えたら差がある」といった二値判断は，<span class="math inline">\(p\)</span>値と同じく過大解釈や基準超えのための不正を招きかねない。またBFは事前分布の置き方によって同じデータでも値が大きく変わることが知られており，事前分布の選択には議論がある。<span class="math inline">\(t\)</span>検定や分散分析のような定型的なモデルについては，<code>BayesFactor</code>パッケージや，それをGUIで扱えるJASP<span class="citation" data-cites="JASP2025">(<a href="references.html#ref-JASP2025" role="doc-biblioref">JASP Team 2025</a>)</span>がBFを自動計算してくれるので，それらを併用するのもよいだろう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BayesFactorパッケージによる古典的なBF（JASPの計算エンジンと同じ）</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(BayesFactor)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anovaBF</span>(score <span class="sc">~</span> method, <span class="at">data =</span> <span class="fu">as.data.frame</span>(dat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="事後予測分布" class="level3" data-number="18.5.3">
+<h3 data-number="18.5.3" class="anchored" data-anchor-id="事後予測分布"><span class="header-section-number">18.5.3</span> 事後予測分布</h3>
+<p>三つ目の道具は事後予測分布（posterior predictive distribution）である。事後予測分布には大きく二つの使い道がある。一つは「そもそも立てたモデルはデータをきちんと再現できているのか」というモデルの妥当性チェック，もう一つは効果の大きさを実際のデータのレベルで評価することである。順に見ていこう。</p>
+<section id="モデルの妥当性をチェックする" class="level4" data-number="18.5.3.1">
+<h4 data-number="18.5.3.1" class="anchored" data-anchor-id="モデルの妥当性をチェックする"><span class="header-section-number">18.5.3.1</span> モデルの妥当性をチェックする</h4>
+<p>まずは妥当性チェックである。考え方はこうである。推定したパラメータ（の事後分布）を使って，モデルから人工的にデータを生成してみる。もしモデルが適切なら，この人工データ（予測データ）は，実際に観測されたデータとよく似た分布になるはずである。逆に，予測データが実データと食い違っていれば，モデルがデータの何らかの特徴を捉えそこねている，ということになる。</p>
+<p>Stanモデルの<code>generated quantities</code>ブロックで生成しておいた<code>X_pred</code>が，まさにこの予測データである。MCMCのステップごとに一組のデータが生成されているので，その何本かを実データに重ねて描いてみる。<code>bayesplot</code>パッケージの<code>ppc_dens_overlay</code>関数を使う。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>y_obs <span class="ot">&lt;-</span> dat<span class="sc">$</span>score</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>y_rep <span class="ot">&lt;-</span> fit_a<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"X_pred"</span>, <span class="at">format =</span> <span class="st">"matrix"</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 予測データの中から50本を選んで実データに重ねる</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(<span class="at">y =</span> y_obs, <span class="at">yrep =</span> y_rep[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chapter18_files/figure-html/ppc-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>濃い線が実際に観測されたデータの分布，薄い線が事後予測分布から生成された予測データの分布である。両者がよく重なっていれば，「正規分布を仮定したこのモデルは，データの全体的な形をうまく再現できている」と判断できる。今回はデータを正規分布から生成したのだから当然うまく重なるが，実データで分布が大きく歪んでいたり外れ値があったりすると，正規モデルの予測がそれを再現できず，重なりの悪さとして検出される。そのときは，より裾の重い<span class="math inline">\(t\)</span>分布を使うなど，モデルを見直す手がかりになる。</p>
+</section>
+<section id="データのレベルで効果を測る" class="level4" data-number="18.5.3.2">
+<h4 data-number="18.5.3.2" class="anchored" data-anchor-id="データのレベルで効果を測る"><span class="header-section-number">18.5.3.2</span> データのレベルで効果を測る</h4>
+<p>事後予測分布の使い道は，モデルの妥当性チェックだけではない。むしろ心理学の実践では，こちらの使い方のほうが重要になることも多い。</p>
+<p>ここまで見てきた優越率や差の事後分布は，いずれも<strong>母平均というパラメータのレベル</strong>の話であった。たとえば「方法Aの母平均が方法Cの母平均より大きい確率」はほぼ<span class="math inline">\(1\)</span>で，集団としての平均には明確な差があるといえる。しかし，現場で本当に知りたいのは「では，方法Aで学んだ一人と方法Cで学んだ一人を連れてきたら，どれくらいの割合でAの人のほうが高得点なのか」といった，<strong>個々のデータのレベル</strong>の問いであることも多い。</p>
+<p>事後予測分布は，まさに予測される個々のデータの分布である。だから，パラメータではなくデータのレベルで効果を測ることができる。母平均の差だけでなく，個人ごとのばらつき<span class="math inline">\(\sigma\)</span>も込みで「効果がどれほど体感されるか」を表現できるのである。</p>
+<p>そのために，各事後サンプルから「無作為な一人」の予測得点を生成し，三つの量を計算してみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 各事後サンプルから，各群の「無作為な一人」の予測得点を生成する</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>xA <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(draws_a), draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span>, draws_a<span class="sc">$</span>sigma) <span class="co"># 方法A</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>xB <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(draws_a), draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[2]</span><span class="st">`</span>, draws_a<span class="sc">$</span>sigma) <span class="co"># 方法B</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>xC <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(draws_a), draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span>, draws_a<span class="sc">$</span>sigma) <span class="co"># 方法C</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (1) データレベルの優越率：方法Aの一人が方法Cの一人を上回る確率</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(xA <span class="sc">&gt;</span> xC)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.954</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 比較：母平均レベルの優越率（先に見たもの）</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[1]</span><span class="st">`</span> <span class="sc">&gt;</span> draws_a<span class="sc">$</span><span class="st">`</span><span class="at">mu[3]</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (2) 被覆率（重複度）：2群の予測分布がどれだけ重なっているか</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">overlap</span>(xA, xC) <span class="co"># 方法A vs 方法C</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overlap
+
+24.0%</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">overlap</span>(xA, xB) <span class="co"># 方法A vs 方法B</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overlap
+
+96.9%</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (3) 閾上率：70点以上を取る確率</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(xA <span class="sc">&gt;=</span> <span class="dv">70</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.250375</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(xC <span class="sc">&gt;=</span> <span class="dv">70</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0015</code></pre>
+</div>
+</div>
+<p>結果を順に読み取ろう。</p>
+<p><strong>優越率</strong>を見ると，母平均のレベルではほぼ<span class="math inline">\(1\)</span>（確実にAのほうが上）であったのに対し，データのレベルでは<span class="math inline">\(0.95\)</span>前後にとどまっている。これは，平均としてはAが明確に上でも，個人差があるために「たまたまCの人がAの人を上回る」ことが<span class="math inline">\(5\%\)</span>ほど起こりうる，ということを意味する。集団の傾向と，目の前の一人ひとりに起こることは別だという当たり前の事実が，数値として表現されている。このデータレベルの優越率は，共通言語効果量（common language effect size）とも呼ばれ，効果の大きさを直感的に伝えるのに向いている。</p>
+<p><strong>被覆率（重複度）</strong>は，二つの群の予測分布がどれだけ重なっているかを表す。方法Aと方法Cはおよそ<span class="math inline">\(2\)</span>割しか重なっておらず（<span class="math inline">\(8\)</span>割は分離している），効果が大きいことがわかる。一方，方法Aと方法Bは<span class="math inline">\(9\)</span>割以上が重なっており，両者は実質的にほとんど同じ分布だといえる。重なりが小さいほど効果が大きい，という関係であり，ROPEやベイズファクターで得た「A・Bは同等，CははっきりちがうC」という結論が，分布の重なり具合としても確認できる。</p>
+<p><strong>閾上率</strong>は，ある基準値を超える確率である。たとえば合格ラインを<span class="math inline">\(70\)</span>点とすると，方法Aでは<span class="math inline">\(2\)</span>割以上が合格圏に入るのに対し，方法Cではほとんど誰も届かない。「平均が何点違うか」よりも「合格者が何割出るか」のほうが実務的な意思決定に直結する場面では，このように基準値を決めて閾上率を比べるのがわかりやすい。</p>
+<p>このように，事後予測分布を使うと，平均値の差という一点だけでなく，個人のレベルでの優越率，分布の重なり，基準値の超過率といった，さまざまな角度から効果を検証できる。差があるかないかの二値判断にとどまらず，「その差が現場でどういう意味を持つのか」まで踏み込めるのが，データ生成メカニズムから出発するベイズ的アプローチの強みである。</p>
+</section>
+</section>
+</section>
+<section id="まとめ" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="まとめ"><span class="header-section-number">18.6</span> まとめ</h2>
+<p>この章では，<span class="math inline">\(t\)</span>検定と分散分析という最も基本的な平均値差の分析を，ベイズの観点から組み直した。要点を整理しておこう。</p>
+<ul>
+<li>分散分析の組成（データ＝全体平均＋効果＋誤差）は，そのままデータ生成モデルになる。これをStanで記述すれば，効果<span class="math inline">\(\delta_j\)</span>の分布を直接推定できる。</li>
+<li>ベイズでは差を確率分布として持つので，区間推定，優越率，全ペアの比較などを多重比較の調整なしで自由に行える。</li>
+<li>判断の道具として，ROPE（実質的同等の領域による判断），ベイズファクター（モデル比較），事後予測分布（モデルの妥当性チェックに加え，データレベルの優越率・重複度・閾上率による効果の検証）がある。</li>
+<li>「差があるとはいえない」と「差がない（同等である）」は別物であり，後者を積極的に主張できるのがベイズの強みである。</li>
+</ul>
+<p>頻度主義の検定が悪いというわけではない。長い歴史の中で洗練された明快な手続きであり，多くの知見がその上に積み重ねられてきた。しかし，平均値差を「差の分布」として直接捉え，意思決定の幅を広げられるベイズのアプローチは，研究者により豊かな表現力を与えてくれる。どちらか一方ではなく，両方の視点を持っておくことが望ましい。</p>
+</section>
+<section id="課題" class="level2" data-number="18.7">
+<h2 data-number="18.7" class="anchored" data-anchor-id="課題"><span class="header-section-number">18.7</span> 課題</h2>
+<p>以下のデータセットは，三つの群（<code>group</code>）について測定値（<code>y</code>）を記録したものです。データセットは<a href="ex_anova_bayes.csv">ex_anova_bayes.csv</a>からダウンロードできます。このデータに対して，本章で扱った方法を用いて以下を順に報告してください。</p>
+<ol type="1">
+<li>本章の<code>bayes_anova.stan</code>を用いて，整然データの形で三群の平均値差をベイズ推定し，各群の母平均<code>mu</code>と効果<code>delta</code>の事後分布の代表値・<span class="math inline">\(95\%\)</span>区間を示す。</li>
+<li>MCMCサンプルから，三つの全ペアの差の事後分布を求め，それぞれの<span class="math inline">\(95\%\)</span>区間と優越率を報告する。</li>
+<li>各ペアの差について，ROPEを<span class="math inline">\(\pm 0.5\)</span>として<code>bayestestR::rope</code>を計算し，「実質的に差がない」といえるペアがあるかどうかを論じる。</li>
+<li><code>brms</code>で同じモデルを推定し（効果コーディングを使うこと），Stanの結果と係数が一致することを確認する。さらにベイズファクターを計算し，効果がゼロでないといえるかを論じる。</li>
+<li>事後予測分布を<code>ppc_dens_overlay</code>で描き，正規分布を仮定したモデルがデータをうまく再現できているかを評価する。</li>
+<li>事後予測分布を使って，群の組ごとに（a）データレベルの優越率，（b）<code>bayestestR::overlap</code>による予測分布の重複度（被覆率）を求める。さらに適当な基準値を一つ決めて，各群の閾上率を比較する。これらが母平均レベルの結果とどう違うかを論じる。</li>
+</ol>
+<p>レポートには，使用したRコードと，各項目の結果に対する簡潔な解釈を含めてください。</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-JASP2025" class="csl-entry" role="listitem">
+JASP Team. 2025. <em><span class="nocase">JASP (Version 0.95.1)[Computer software]</span></em>. <a href="https://jasp-stats.org/">https://jasp-stats.org/</a>.
+</div>
+<div id="ref-kruschke2018rejecting" class="csl-entry" role="listitem">
+Kruschke, John K. 2018. <span>“Rejecting or Accepting Parameter Values in Bayesian Estimation.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 1 (2): 270–80.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter17.html" class="pagination-link" aria-label="ベイジアンモデリング">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">ベイジアンモデリング</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./practices.html" class="pagination-link" aria-label="演習問題">
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">演習問題</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
