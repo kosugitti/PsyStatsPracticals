@@ -239,3 +239,33 @@
 ### 次回への引き継ぎ
 - (継続) SEM応用セクション3つの本文執筆
 - (継続) Citeproc警告 `Nagata.kentei not found` 解消
+
+## 2026-07-11
+
+### chapter17 項目反応モデルの確率の添字修正
+- IRTモデルのベルヌーイ確率が `p_i` になっていたのを `p_{ij}` に修正（式直前で $Y_{ij}$ と二重添字で定義しており，確率は個人$i$と項目$j$両方に依存するため）
+  - `jp/chapter17.qmd` 345-346行: 2箇所
+  - `en/chapter17.qmd` 342-343行: 2箇所
+- `./compile.sh` で日英両版ビルド→GitHub Pages 反映
+
+### compile.sh 英語版レンダリングのリソース欠落事故（発見・当座復旧）
+- compile.sh 実行後のコミット(3094f7d4)で，英語版ビルドが `docs/en/` に画像12枚・データCSV12本・search.json をコピーせず削除，`docs/en/styles.css` をsymlink化していた
+  - 英語版の ch01/04/12/14/15 が `images/*.png` を参照しているため，このままだと英語版サイトの画像・データが壊れる状態だった。日本語版(docs/直下)は無傷
+- 原因の疑い: `en/styles.css` が `../jp/styles.css` へのsymlinkのまま残っており，Quartoのレンダリング（CLAUDE.md記載の「symlinkだと壊れる」現象）でリソースコピーが崩れた
+- 当座対応: 直前コミット db4f7b0b から `docs/en` 配下の削除・型変更ファイル26件を復元し，styles.cssを実ファイルに戻してコミット(1b1f157)・push。英語版サイト復旧確認済み
+
+### コミット
+- 3094f7d4 compile.sh自動コミット（chapter17 p_ij修正＋全章再レンダリング。※en/リソース欠落を含む）
+- 1b1f157 英語版ビルドが落としたdocs/enリソースを復元
+
+### 次回への引き継ぎ
+- (新規・要検討) compile.sh の英語版リソース欠落の恒久対策。レンダリング前に en/styles.css 等を実体コピーで保証する，または compile.sh に docs/en の画像・CSV枚数チェックを入れる。次に compile.sh を無対策で回すと再発の恐れ
+- (継続) SEM応用セクション3つの本文執筆
+- (継続) Citeproc警告 `Nagata.kentei not found` 解消
+- (継続) en/images/ 5枚の日本語ラベル差し替え
+
+## CLAUDE.mdからの退避 (2026-07-17)
+
+ホーム索引(~/Dropbox/CLAUDE.md)のステータスセル圧縮時の退避(退避時点の全文):
+
+日英両版デプロイ済(ch01-18+付録，全章米国綴り統一)。東大D12で主教材使用中。※compile.shの英語版レンダリングにdocs/enの画像・CSV・search.jsonを落としstyles.cssをsymlink化する既知バグあり(要en/styles.css実体化・詳細memory)。残TODO: compile.sh恒久対策，en/images/ 5枚の日本語ラベル差し替え，ch15 SEMセクション3節(媒介分析/多母集団同時分析/成長曲線モデル)本文執筆。詳細→Git/PsyStatsPracticals/{CLAUDE,WORKLOG}.md
