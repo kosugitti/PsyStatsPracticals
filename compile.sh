@@ -6,38 +6,57 @@
 #
 # 過去に踏んだ事故への対策が入っている。理解せずに削らないこと。
 #
-#   対策A: jp/ の myBiber.bib と jpa2.* は /Users/<マシン名>/ 固定の symlink だったため，
-#          別マシンでは切れたまま静かにビルドが進み，文献データベースを見失う。
-#          $HOME 基準で毎回張り直し，解決しなければ中断する。
+#   対策A: jp/ の myBiber.bib と jpa2.* は symlink だが，かつて絶対パスで張られていたため
+#          もう一方のマシンでは切れていた。Dropbox は symlink そのものを同期するので，
+#          絶対パスだと必ずどちらか一方で壊れる。**相対パスで張る**のが正解。
 #   対策B: en/ のリソースは symlink 不可（Quarto がレンダリング時に再生成しようとして壊れる）。
 #          旧版は末尾で en/styles.css を symlink に戻していたため，次回ビルドが必ず
 #          symlink 状態から始まり事故が再発する構造だった。実体のまま維持する。
 #   対策C: ビルド後に docs/en を前回コミットと突き合わせ，リソースが減っていたら
 #          コミット・プッシュせずに中断する。壊れた状態を本番に出さないための最後の砦。
+#   対策D: レンダリングが両方成功するまで公開中の docs/ を消さない。
+#          旧版は先頭で rm -rf docs していたため，途中で失敗すると公開物が消えた。
+#   対策E: jp/ en/ に残る他マシン製の Stan バイナリを削除する。rpath が焼き込まれており
+#          別マシンでは「Fitting failed」で落ちる（2026-08-01のフルビルドで実際に踏んだ）。
 #
 # 環境変数:
 #   COMPILE_PREPARE_ONLY=1  準備段階（対策A・B）まで実行して終了。動作確認用
 #   COMPILE_VERIFY_ONLY=1   レンダリングせず，いまの docs/en を検算するだけ
+#   COMPILE_NO_COMMIT=1     ビルドと検算まで行い，コミットもプッシュもしない
 #   COMPILE_NO_PUSH=1       コミットまで行い push しない
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-# --- 対策A: マシン依存の symlink を $HOME 基準で張り直す ---
-# これらは .gitignore 済みのローカル専用ファイル。実体は両マシンとも同じ相対位置にある。
+# --- 前提の確認 ---
+command -v quarto >/dev/null || { echo '中断: quarto が見つかりません'; exit 1; }
+command -v Rscript >/dev/null || { echo '中断: Rscript が見つかりません'; exit 1; }
+[ -f myenv/bin/activate ] || { echo '中断: myenv/bin/activate がありません'; exit 1; }
+
+# --- 対策A: 参照ファイルの symlink を相対パスで張る ---
+# これらは .gitignore 済みのローカル専用ファイルだが，Dropbox はリンク自体を同期する。
+# 絶対パスで張ると /Users/<マシン名>/ が焼き込まれ，もう一方のマシンで必ず切れる。
+# 相対パスならユーザ名に依存せず，同期を跨いでも成立する。
 echo '== 参照ファイルの張り直し =='
-ln -sfn "$HOME/Dropbox/myBiber.bib" jp/myBiber.bib
+link_rel() { # $1=リンクを置く場所 $2=相対ターゲット $3=絶対フォールバック
+  local link="$1" rel="$2" abs="$3"
+  ln -sfn "$rel" "$link"
+  if [ -e "$link" ]; then return 0; fi
+  # リポジトリを ~/Dropbox/Git/ 以外に置いた場合の逃げ道
+  ln -sfn "$abs" "$link"
+  [ -e "$link" ]
+}
+link_rel jp/myBiber.bib ../../../myBiber.bib "$HOME/Dropbox/myBiber.bib" ||
+  { echo '中断: myBiber.bib の参照先が見つかりません'; exit 1; }
 for x in bbx cbx dbx; do
-  ln -sfn "$HOME/Dropbox/Git/biblatex-jpa2/biblatex/jpa2.$x" "jp/jpa2.$x"
+  link_rel "jp/jpa2.$x" "../../biblatex-jpa2/biblatex/jpa2.$x" \
+    "$HOME/Dropbox/Git/biblatex-jpa2/biblatex/jpa2.$x" ||
+    { echo "中断: jpa2.$x の参照先が見つかりません"; exit 1; }
 done
 for f in jp/myBiber.bib jp/jpa2.bbx jp/jpa2.cbx jp/jpa2.dbx; do
-  if [ ! -e "$f" ]; then
-    echo "  中断: $f の参照先が見つかりません -> $(readlink "$f")"
-    exit 1
-  fi
+  printf '  %-16s -> %s\n' "$(basename "$f")" "$(readlink "$f")"
 done
-echo '  jp/ の参照ファイルは解決した'
 
 # --- 対策B: en/ のリソースを実体にする ---
 # symlink になっているものだけ実体化する。既に実体のファイルは中身を触らない
@@ -49,10 +68,29 @@ if [ -L en/styles.css ]; then
   echo '  en/styles.css を symlink から実体に変換した'
 fi
 for f in en/styles.css en/myBiber.bib en/cover.png; do
-  if [ -L "$f" ]; then echo "  中断: $f が symlink のままです"; exit 1; fi
-  if [ ! -e "$f" ]; then echo "  中断: $f がありません"; exit 1; fi
+  [ -L "$f" ] && { echo "  中断: $f が symlink のままです"; exit 1; }
+  [ -e "$f" ] || { echo "  中断: $f がありません"; exit 1; }
 done
 echo "  en/ のリソースは実体（styles.css $(stat -f %z en/styles.css) bytes）"
+
+# --- 対策E: 他マシンでコンパイルされた Stan バイナリを削除する ---
+# cmdstan の実行ファイルは rpath をビルドしたマシンの絶対パスで焼き込むため，
+# 別マシンでは @rpath/libtbb.dylib を解決できず「Fitting failed」で落ちる。
+# .stan と同名の拡張子なし実行ファイルとして jp/ en/ に残るが git 管理外なので消してよい。
+echo '== 他マシン製 Stan バイナリの掃除 =='
+purged=0
+for d in jp en; do
+  for f in "$d"/*; do
+    [ -f "$f" ] || continue
+    case "$f" in *.*) continue ;; esac   # 拡張子つきは対象外
+    if file -b "$f" | grep -q 'Mach-O'; then
+      if [ -n "$(git ls-files "$f")" ]; then continue; fi   # 追跡下なら触らない
+      rm -f "$f"; purged=$((purged + 1))
+      echo "  削除: $f"
+    fi
+  done
+done
+if [ "$purged" -eq 0 ]; then echo '  残骸なし'; fi
 
 if [ -n "${COMPILE_PREPARE_ONLY:-}" ]; then
   echo 'COMPILE_PREPARE_ONLY のため準備段階で終了'
@@ -95,42 +133,45 @@ if [ -n "${COMPILE_VERIFY_ONLY:-}" ]; then
   if verify_en; then echo '検算: 問題なし'; exit 0; else echo '検算: 異常あり'; exit 1; fi
 fi
 
+# shellcheck disable=SC1091
 source myenv/bin/activate
 
-# 古いdocsディレクトリを削除
+# --- 対策D: 両方のレンダリングが成功してから docs/ を差し替える ---
+# 旧版は先頭で rm -rf docs していたため，途中で失敗すると公開物が消えた。
+rm -rf jp/docs en/docs
+
+echo '== 日本語版レンダリング =='
+( cd jp && quarto render )
+[ -d jp/docs ] || { echo '中断: jp/docs が生成されませんでした'; exit 1; }
+
+# styles.css をソース側に戻す（レンダリングで出力側へ移るため）
+[ -f jp/styles.css ] || cp jp/docs/styles.css jp/styles.css
+
+echo '== 英語版レンダリング =='
+( cd en && quarto render )
+[ -d en/docs ] || { echo '中断: en/docs が生成されませんでした'; exit 1; }
+
+echo '== docs/ の差し替え =='
 rm -rf docs
-
-# Quarto: 日本語版
-cd jp
-echo '日本語版レンダリングします'
-quarto render
-cd ..
-
-# jp/docsディレクトリを一つ上の階層に移動
 mv jp/docs docs
-
-# styles.cssをjpディレクトリに戻す
-cp docs/styles.css jp/styles.css
-
-# Quarto: 英語版
-cd en
-echo '英語版レンダリングします'
-quarto render
-cd ..
-
-# en/docsディレクトリを docs/en に移動
 mv en/docs docs/en
 
-# --- 対策B(続き): en/styles.css を実体のまま戻す（symlink にしない） ---
+# --- 対策B(続き): en/styles.css は実体のまま維持する（symlink に戻さない） ---
 cp -f docs/styles.css en/styles.css
 
 # --- 対策B(続き): Quarto が取りこぼしたリソースを補う ---
-# リンクが検出されなかったリソースは docs/en へコピーされない。
-echo '== 英語版リソースの補完 =='
+# リンクを検出できなかったリソースは出力側へコピーされない。
+echo '== リソースの補完 =='
 mkdir -p docs/en/images
-cp -n en/images/* docs/en/images/ 2>/dev/null || true
+# 画像形式だけを補う。.drawio のような編集元ファイルは公開しない
+for f in en/images/*.png en/images/*.jpg en/images/*.jpeg en/images/*.gif en/images/*.svg; do
+  [ -e "$f" ] && { cp -n "$f" docs/en/images/ 2>/dev/null || true; }
+done
 for f in en/*.csv; do
   [ -e "$f" ] && { cp -n "$f" docs/en/ 2>/dev/null || true; }
+done
+for f in jp/*.csv; do
+  [ -e "$f" ] && { cp -n "$f" docs/ 2>/dev/null || true; }
 done
 cp -f en/styles.css docs/en/styles.css
 
@@ -140,8 +181,13 @@ if ! verify_en; then
   echo ''
   echo '英語版のリソースが前回より減っています。壊れた状態を公開しないため，'
   echo 'コミット・プッシュせずに中断しました。docs/en を確認してください。'
-  echo '復旧: git checkout HEAD -- docs/en'
+  echo '復旧: git checkout HEAD -- docs'
   exit 1
+fi
+
+if [ -n "${COMPILE_NO_COMMIT:-}" ]; then
+  echo 'COMPILE_NO_COMMIT のためコミットしません。git status で差分を確認してください'
+  exit 0
 fi
 
 today=$(LANG="ja_JP.UTF-8" date)
