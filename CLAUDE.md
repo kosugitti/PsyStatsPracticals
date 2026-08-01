@@ -132,4 +132,38 @@ ch15で参照していた画像のプレフィックスが過去の章番号 `14
 - ローカル（日本語版のみ）: `cd jp && quarto render` で `jp/docs/` に出力
 - ローカル（英語版のみ）: `cd en && quarto render` で `en/docs/` に出力
 - 統合ビルド: `./compile.sh` が日英両方をレンダリングし `jp/docs → docs/`，`en/docs → docs/en/` に配置した上で git push まで実行
-- GitHub Pages: `docs/` をpushすると自動反映
+- GitHub Pages: `docs/` をpushすると自動反映（`main` ブランチの `/docs`）
+
+### compile.sh の安全装置（2026-08-01 実装）
+
+7/11に英語版の画像・CSVが本番で壊れた事故を受けて，3つの対策を組み込んである。
+**理解せずに削らないこと。**
+
+- **対策A**: `jp/myBiber.bib` と `jp/jpa2.{bbx,cbx,dbx}` は `.gitignore` 済みのローカル symlink。
+  かつて `/Users/newton/` 固定だったため別マシンで4本とも切れており，文献データベースを
+  見失ったまま静かにビルドが完走する状態だった。ビルド冒頭で `$HOME` 基準に張り直し，
+  解決しなければ中断する
+- **対策B**: `en/` のリソースは symlink 不可。旧版は末尾で `en/styles.css` を symlink に
+  戻していたため，次回ビルドが必ず symlink 状態から始まり事故が再発する構造だった。
+  実体コピーで維持する。Quarto が取りこぼしたリソースの補完も行う
+- **対策C**: ビルド後に `docs/en` の画像・データCSV・HTMLの件数を前回コミットと突き合わせ，
+  減っていれば，または `styles.css` の symlink 化・`search.json` の欠落があれば，
+  **コミットもプッシュもせず終了コード1で中断する**
+
+確認用の環境変数:
+
+| 変数 | 挙動 |
+|---|---|
+| `COMPILE_PREPARE_ONLY=1` | 準備段階（対策A・B）まで実行して終了 |
+| `COMPILE_VERIFY_ONLY=1` | レンダリングせず，いまの `docs/en` を検算するだけ |
+| `COMPILE_NO_PUSH=1` | コミットまで行い push しない |
+
+事故った時の復旧: `git checkout HEAD -- docs/en`
+
+### freeze 未設定の影響
+
+`_quarto.yml` に `freeze` の指定が無いため，`quarto render` は毎回すべてのチャンクを
+再実行する。ch12/17/18 は brms・Stan の MCMC を含むのでフルビルドは重く，
+数値も実行のたびに変動する。**軽微な文言修正のためにフルビルドを回すと，
+1文字の修正に対して差分が過大になる**。該当箇所だけ `docs/` 側も直して
+ソースと揃える運用でもよい（次回フルビルドでソースから再現される）。
