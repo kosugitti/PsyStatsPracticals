@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -95,10 +98,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -128,7 +131,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -430,7 +433,7 @@ window.Quarto = {
 <p><span class="math display">\[ y_i = \beta_0 + \beta_1 x_i + e_i = \hat{y}_i + e_i.\]</span></p>
 <p>The linear part <span class="math inline">\(\hat{y}_i\)</span> is the <strong>fitted value</strong>, and the gap <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span> is the <strong>residual</strong>.</p>
 <p>Finding the intercept and slope of a line in the plane is the basic problem. Two points determine a unique line; data analysis, however, fits a line to many points, so an external criterion is needed. The criterion “minimize the variance of the residuals” leads to <strong>ordinary least squares (OLS)</strong>; the criterion “assume normal residuals and maximize their likelihood” leads to <strong>maximum likelihood estimation (MLE)</strong>. The former has a descriptive-statistics flavour; the latter is more thoroughly a probability model. A third option, popular when an informative prior is available, is <strong>Bayesian estimation</strong>.</p>
-<p>The OLS estimates have the closed form below. We refer to other texts <span class="citation" data-cites="kosugi2018 Nishiuchi201712">(<a href="#ref-kosugi2018" role="doc-biblioref">小杉 2018</a>; <a href="#ref-Nishiuchi201712" role="doc-biblioref">西内 2017</a>)</span> for proofs; in outline, minimize the residual sum of squares <span class="math inline">\(\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2\)</span> by expansion or partial differentiation. It is gratifying that the result is expressible purely in terms of sample statistics — the means <span class="math inline">\(\bar{x}, \bar{y}\)</span>, the variances <span class="math inline">\(s_x, s_y\)</span>, and the correlation <span class="math inline">\(r_{xy}\)</span>:</p>
+<p>The OLS estimates have the closed form below. We refer to other texts <span class="citation" data-cites="kosugi2018 Nishiuchi201712">(<a href="references.html#ref-kosugi2018" role="doc-biblioref">小杉 2018</a>; <a href="references.html#ref-Nishiuchi201712" role="doc-biblioref">西内 2017</a>)</span> for proofs; in outline, minimize the residual sum of squares <span class="math inline">\(\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2\)</span> by expansion or partial differentiation. It is gratifying that the result is expressible purely in terms of sample statistics — the means <span class="math inline">\(\bar{x}, \bar{y}\)</span>, the variances <span class="math inline">\(s_x, s_y\)</span>, and the correlation <span class="math inline">\(r_{xy}\)</span>:</p>
 <p><span class="math display">\[\beta_0 = \bar{y} - \beta_1\bar{x},\quad \beta_1 = r_{xy} \frac{s_y}{s_x}.\]</span></p>
 <p>We have assumed <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are both continuous; if <span class="math inline">\(x\)</span> is binary or otherwise categorical, the “line” passes through the group means of <span class="math inline">\(y\)</span>, and “slope = 0” becomes the null hypothesis “all group means are equal” — the same null that drives the <span class="math inline">\(t\)</span>-test. From this angle, the <span class="math inline">\(t\)</span>-test and ANOVA are special cases of regression, and the unified framework is the <strong>general linear model</strong>: the response is continuous, the linear part gives the mean, and a normal residual is added.</p>
 <p>ANOVA also accommodates several factors. Setting interactions aside, a two-factor model is</p>
@@ -645,8 +648,8 @@ V3 0.5 0.8 1.0</code></pre>
 </div>
 <p>The multiple regression’s <code>V2</code> coefficient is -0.2778. The coefficient obtained by regressing the residuals (each net of <code>V3</code>) is -0.2778 — the same.</p>
 <p>The partial coefficient for <code>V3</code> follows analogously, by removing the effect of <code>V2</code> from both <code>V1</code> and <code>V3</code> and regressing the residuals. In short, partial regression coefficients are coefficients <em>controlling for the other predictors</em>: “the effect of this variable, conditional on the other variables being equal.”</p>
-<p>This belaboured framing is intentional. The “conditional on” qualifier is frequently dropped in reports and interpretations, often misleadingly. <span class="citation" data-cites="yoshidaMRA">吉田 and 村井 (<a href="#ref-yoshidaMRA" role="doc-biblioref">2021</a>)</span> recently sparked discussion on this point.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> In our example, the partial coefficient for <code>V2</code> is -0.2778, whereas the simple correlation between <code>V1</code> and <code>V2</code> is 0.3. The signs disagree — interpretations of the two would be directly opposed. The actual simple correlation is positive, so reporting (without qualifier) “<code>V2</code> has a negative effect, <code>V3</code> a positive one” would mislead.</p>
-<p><span class="citation" data-cites="Toyoda201706">豊田 (<a href="#ref-Toyoda201706" role="doc-biblioref">2017</a>)</span> argues that to avoid this trap, one should use <strong>conjoint analysis</strong> with orthogonalized predictors. If we are not capable of using multiple regression carefully, such alternative designs are well worth considering.</p>
+<p>This belaboured framing is intentional. The “conditional on” qualifier is frequently dropped in reports and interpretations, often misleadingly. <span class="citation" data-cites="yoshidaMRA">吉田 and 村井 (<a href="references.html#ref-yoshidaMRA" role="doc-biblioref">2021</a>)</span> recently sparked discussion on this point.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> In our example, the partial coefficient for <code>V2</code> is -0.2778, whereas the simple correlation between <code>V1</code> and <code>V2</code> is 0.3. The signs disagree — interpretations of the two would be directly opposed. The actual simple correlation is positive, so reporting (without qualifier) “<code>V2</code> has a negative effect, <code>V3</code> a positive one” would mislead.</p>
+<p><span class="citation" data-cites="Toyoda201706">豊田 (<a href="references.html#ref-Toyoda201706" role="doc-biblioref">2017</a>)</span> argues that to avoid this trap, one should use <strong>conjoint analysis</strong> with orthogonalized predictors. If we are not capable of using multiple regression carefully, such alternative designs are well worth considering.</p>
 </section>
 <section id="multicollinearity" class="level3" data-number="11.3.2">
 <h3 data-number="11.3.2" class="anchored" data-anchor-id="multicollinearity"><span class="header-section-number">11.3.2</span> Multicollinearity</h3>
@@ -833,7 +836,7 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 </div>
 </div>
 <p>The <span class="math inline">\(F\)</span>-statistic on $(<span class="math inline">\(2, 497\)</span>)$ degrees of freedom is 0.4713, not significant (p = 0.6245, n.s.).</p>
-<p>This is a test of the multiple correlation: the null is that the model as a whole has no explanatory power in the population. With <span class="math inline">\(p\)</span> predictors, sample size <span class="math inline">\(n\)</span>, and multiple correlation <span class="math inline">\(R^2\)</span>, the test statistic is <span class="citation" data-cites="Haebara2014">(<a href="#ref-Haebara2014" role="doc-biblioref">南風原 2014</a>)</span></p>
+<p>This is a test of the multiple correlation: the null is that the model as a whole has no explanatory power in the population. With <span class="math inline">\(p\)</span> predictors, sample size <span class="math inline">\(n\)</span>, and multiple correlation <span class="math inline">\(R^2\)</span>, the test statistic is <span class="citation" data-cites="Haebara2014">(<a href="references.html#ref-Haebara2014" role="doc-biblioref">南風原 2014</a>)</span></p>
 <p><span class="math display">\[ F = \frac{R^2}{1-R^2}\cdot\frac{n-p-1}{p}. \]</span></p>
 <p>The first factor, <span class="math inline">\(f^2 = R^2/(1 - R^2)\)</span>, is <strong>Cohen’s <span class="math inline">\(f^2\)</span></strong>, the effect size used for sample-size planning.</p>
 </section>
@@ -913,7 +916,7 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 </ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-Haebara2014" class="csl-entry" role="listitem">
 南風原朝和. 2014. <em>心理統計学の基礎: 続・統合的理解のために</em>. 有斐閣.
 </div>
@@ -940,10 +943,10 @@ F-statistic: 0.4713 on 2 and 497 DF,  p-value: 0.6245</code></pre>
 <li id="fn1"><p>Provably: from <span class="math inline">\(\beta_0 = \bar{y} - \beta_1\bar{x}\)</span> and <span class="math inline">\(\beta_1 = r_{xy} \frac{s_y}{s_x}\)</span>, we have <span class="math inline">\(\bar{\hat{y}} = \frac{1}{n}\sum(\bar{y} - \beta_1\bar{x} + \beta_1 x_i) = \bar{y} - \beta_1\bar{x} + \beta_1 \frac{1}{n}\sum x_i = \bar{y}\)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Provably: <span class="math inline">\(\bar{e} = \frac{1}{n}\sum e_i = \frac{1}{n}\sum (y_i - \hat{y}_i) = \bar{y} - \bar{\hat{y}} = 0\)</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Large standardized residuals indicate likely outliers requiring careful interpretation. <em>Leverage</em> indicates a point’s influence on the regression coefficients; observations near the edges of this plot also deserve attention.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>Provably; see <span class="citation" data-cites="kosugi2018">小杉 (<a href="#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> for details.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Provably; see <span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span> for details.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>After the paper appeared in early-access form, the Japanese Psychological Association hosted an online symposium with the author and the authors of the paper criticized (Japan Psychological Association YouTube Live, “Conversations with Authors of Notable Papers,” 2 July 2021, 20:00–21:40 JST). Despite the weekday-evening slot and the not-yet-final article, nearly 1,700 viewers attended.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>In a two-predictor multiple regression, VIF <span class="math inline">\(= 3\)</span> corresponds to inter-predictor correlation <span class="math inline">\(r \approx 0.81\)</span>; VIF <span class="math inline">\(= 10\)</span> corresponds to <span class="math inline">\(r \approx 0.97\)</span>. See <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> for details.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>Provably; see <span class="citation" data-cites="kosugi2018">小杉 (<a href="#ref-kosugi2018" role="doc-biblioref">2018</a>)</span>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>In a two-predictor multiple regression, VIF <span class="math inline">\(= 3\)</span> corresponds to inter-predictor correlation <span class="math inline">\(r \approx 0.81\)</span>; VIF <span class="math inline">\(= 10\)</span> corresponds to <span class="math inline">\(r \approx 0.97\)</span>. See <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span> for details.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Provably; see <span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>A linear model that <em>does</em> explicitly model hierarchical data structure (e.g., classroom ⊂ municipality ⊂ prefecture) is the <strong>hierarchical linear model</strong> (HLM).<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>

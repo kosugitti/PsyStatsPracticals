@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -95,10 +98,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -128,7 +131,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -551,13 +554,13 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 0.0 seconds.
-Chain 2 finished in 0.0 seconds.
-Chain 3 finished in 0.0 seconds.
+Chain 1 finished in 0.1 seconds.
+Chain 2 finished in 0.1 seconds.
+Chain 3 finished in 0.1 seconds.
 Chain 4 finished in 0.1 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.0 seconds.
+Mean chain execution time: 0.1 seconds.
 Total execution time: 0.2 seconds.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_t<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">"mu1"</span>, <span class="st">"mu2"</span>, <span class="st">"sigma"</span>, <span class="st">"diff"</span>, <span class="st">"delta"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -781,7 +784,7 @@ Total execution time: 0.3 seconds.</code></pre>
 <p>Once we have the posterior, the question “so how do we actually decide?” remains. Frequentism had the clear (if much-abused) criterion “<span class="math inline">\(p &lt; 0.05\)</span> is significant.” Bayes offers several alternative tools. Here we look at three representatives: the ROPE, the Bayes factor, and the posterior predictive distribution.</p>
 <section id="rope" class="level3" data-number="18.5.1">
 <h3 data-number="18.5.1" class="anchored" data-anchor-id="rope"><span class="header-section-number">18.5.1</span> ROPE</h3>
-<p>ROPE stands for Region Of Practical Equivalence, a decision method proposed by <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span>. The idea is simple: declare in advance a band such that “if it falls in this range, the difference may be regarded as practically zero.”</p>
+<p>ROPE stands for Region Of Practical Equivalence, a decision method proposed by <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span>. The idea is simple: declare in advance a band such that “if it falls in this range, the difference may be regarded as practically zero.”</p>
 <p>For these test scores, say a researcher decides that “a difference of about <span class="math inline">\(\pm 2\)</span> points is, for practical purposes, no difference.” This <span class="math inline">\([-2, +2]\)</span> is the ROPE. We then see how much of the difference’s posterior falls inside it.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A-B difference: practically equivalent?</span></span>
@@ -822,7 +825,7 @@ Inside ROPE
 </div>
 </div>
 <p>The red band is the ROPE. The ridge of the A–B difference falls mostly inside the red band (practically equivalent), whereas the ridges of the A–C and B–C differences lie far to the right of the band (a practical difference). Overlaying the ROPE band on the “does the interval straddle <span class="math inline">\(0\)</span>” view lets us distinguish “we cannot say there is a difference” from “there is practically no difference.”</p>
-<p>How to set the width of the ROPE is the researcher’s judgment and should rest on domain knowledge. When no criterion comes to mind, <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> suggests <span class="math inline">\(\pm 0.1\)</span> standardized units as a guide. In <code>bayestestR</code>, setting <code>range = "default"</code> automatically uses a ROPE based on this standardized criterion.</p>
+<p>How to set the width of the ROPE is the researcher’s judgment and should rest on domain knowledge. When no criterion comes to mind, <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> suggests <span class="math inline">\(\pm 0.1\)</span> standardized units as a guide. In <code>bayestestR</code>, setting <code>range = "default"</code> automatically uses a ROPE based on this standardized criterion.</p>
 </section>
 <section id="the-bayes-factor" class="level3" data-number="18.5.2">
 <h3 data-number="18.5.2" class="anchored" data-anchor-id="the-bayes-factor"><span class="header-section-number">18.5.2</span> The Bayes factor</h3>
@@ -933,7 +936,7 @@ Posterior probabilities of point hypotheses assume equal prior probabilities.</c
 </div>
 <p>In the first plot, “Effect of Method A,” the posterior forms a ridge clearly to the right of <span class="math inline">\(0\)</span> against the flat prior. The height of the posterior at zero (the dashed line) is far lower than the prior’s. The ratio of these heights is the BF; because the posterior has all but abandoned zero, the BF is large in favor of “the effect is non-zero.”</p>
 <p>The second plot, “Difference: Method A vs Method B,” is the opposite. The posterior ridge sits right on top of <span class="math inline">\(0\)</span>, and its height at zero exceeds the prior’s. Seeing the data has, if anything, increased the density at zero. So this BF points toward supporting “the difference is zero.” The numbers obtained earlier from <code>bayesfactor_parameters</code> and <code>hypothesis</code> correspond to the ratio of heights on the dashed line in these two pictures.</p>
-<p>A word of caution about BFs. Binary judgments such as “above <span class="math inline">\(3\)</span> means there is a difference” can, like <span class="math inline">\(p\)</span>-values, invite over-interpretation and gaming of the threshold. BFs are also known to vary greatly for the same data depending on the prior, and the choice of prior is debated. For routine models such as the <span class="math inline">\(t\)</span>-test and ANOVA, the <code>BayesFactor</code> package and JASP<span class="citation" data-cites="JASP2025">(<a href="#ref-JASP2025" role="doc-biblioref">JASP Team 2025</a>)</span>, which wraps it in a GUI, compute BFs automatically, so it is worth using them alongside.</p>
+<p>A word of caution about BFs. Binary judgments such as “above <span class="math inline">\(3\)</span> means there is a difference” can, like <span class="math inline">\(p\)</span>-values, invite over-interpretation and gaming of the threshold. BFs are also known to vary greatly for the same data depending on the prior, and the choice of prior is debated. For routine models such as the <span class="math inline">\(t\)</span>-test and ANOVA, the <code>BayesFactor</code> package and JASP<span class="citation" data-cites="JASP2025">(<a href="references.html#ref-JASP2025" role="doc-biblioref">JASP Team 2025</a>)</span>, which wraps it in a GUI, compute BFs automatically, so it is worth using them alongside.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classic BF from the BayesFactor package (the same engine JASP uses)</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(BayesFactor)</span>
@@ -1042,7 +1045,7 @@ Posterior probabilities of point hypotheses assume equal prior probabilities.</c
 <p>In your report, include the R code you used and a brief interpretation of each result.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-JASP2025" class="csl-entry" role="listitem">
 JASP Team. 2025. <em><span class="nocase">JASP (Version 0.95.1)[Computer software]</span></em>. <a href="https://jasp-stats.org/">https://jasp-stats.org/</a>.
 </div>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -95,10 +98,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -128,7 +131,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -428,7 +431,7 @@ window.Quarto = {
 <p>Third, even a system whose behavior is theoretically known will, in practice, exhibit both systematic deviations and irreducibly random errors. Systematic deviations can be addressed by recalibration; random errors must be modeled via the probability they follow.</p>
 <p>Psychology takes human beings as its subjects, but cannot examine every human being at once, so a sample is drawn for observation or experiment (the second case above). In data science the resulting datasets sometimes run to millions of records; in psychology they are often only a handful to a few dozen. Even when a psychological pattern can be modeled theoretically, actual behavior will contain error (the third case). For this reason, the data of psychology are treated as <strong>random variables</strong>, and <strong>inferential statistics</strong> — drawing conclusions about a population from a small sample — is the principal tool.</p>
 <p>In its strict mathematical sense, <strong>probability</strong> is defined through layered concepts of set theory, integration, and measure.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> We will not dive into those foundations. It is enough, for our purposes, to think of probability as “a real number between 0 and 1 expressing the relative plausibility of a particular outcome.” This loose definition admits both the <strong>frequentist</strong> interpretation (“the proportion of all possible cases in which the event obtains”) and the <strong>subjective</strong> interpretation (“the strength of one’s belief in its truth, subjectively weighted”).<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<p>You may remember probability from high-school mathematics as the tedious enumeration of permutations and combinations, but “I’d say it’s eight or nine chances out of ten” (80–90% confidence) is also a perfectly serviceable kind of probability. The concept has wide reach in daily life. A useful intuition is to think of probability as <strong>area</strong>: relative to the total space of possible situations, what fraction of the area does the event of interest occupy? (<span class="citation" data-cites="Hiraoka200910">平岡 and 堀 (<a href="#ref-Hiraoka200910" role="doc-biblioref">2009</a>)</span> uses this area-based picture throughout, and it makes ideas such as conditional probability particularly clear.)</p>
+<p>You may remember probability from high-school mathematics as the tedious enumeration of permutations and combinations, but “I’d say it’s eight or nine chances out of ten” (80–90% confidence) is also a perfectly serviceable kind of probability. The concept has wide reach in daily life. A useful intuition is to think of probability as <strong>area</strong>: relative to the total space of possible situations, what fraction of the area does the event of interest occupy? (<span class="citation" data-cites="Hiraoka200910">平岡 and 堀 (<a href="references.html#ref-Hiraoka200910" role="doc-biblioref">2009</a>)</span> uses this area-based picture throughout, and it makes ideas such as conditional probability particularly clear.)</p>
 <p>One distinction worth keeping clearly in mind: a random variable versus its realization. The values in a dataset or spreadsheet are <strong>realizations of a random variable</strong> — the values that were actually observed — while the <strong>random variable</strong> itself is the variable as a generator of uncertain outcomes. A die is a random variable; the face it shows on a particular roll is a realization. A psychological variable is a random variable; the data we collect are its realizations. We learn about the variable, and infer the whole, by studying realizations.</p>
 <p>It may feel hard to reason about an abstract entity that lies beyond the data in front of you. That difficulty is universal — probability is genuinely hard to grasp precisely. But by working with the implementations in R, you can build understanding through concrete manipulation.</p>
 </section>
@@ -535,16 +538,16 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 41.70761 53.31225 61.25972 46.94176 49.45840 63.09412 54.22898 65.31147
- [9] 34.24753 49.61493</code></pre>
+<pre><code> [1] 54.75063 36.10908 40.21975 54.90292 58.03131 53.42502 53.03072 35.31543
+ [9] 71.48659 45.18963</code></pre>
 </div>
 </div>
 <p>If you need a sequence of numbers for a homework problem, this is one way to get one. But the next time you ask for ten such numbers, you will get a different sequence:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 37.38047 40.91168 23.25428 50.48083 54.72940 54.67575 47.98423 49.75384
- [9] 41.88598 46.13470</code></pre>
+<pre><code> [1] 40.79920 39.60248 52.77503 49.07374 60.81456 43.47077 59.64889 44.47330
+ [9] 52.14746 59.89864</code></pre>
 </div>
 </div>
 <p>You may want reproducibility — the same “random” sequence on every run. Use <code>set.seed()</code>: a pseudo-random sequence is determined by an internal <strong>seed</strong>, and fixing the seed fixes the sequence.</p>
@@ -815,7 +818,7 @@ window.Quarto = {
 </div>
 </div>
 <p>The mean — i.e., the expectation — of the sample variances stored in <code>vars</code> is 95.0853144, noticeably below the true value of 100. The mean of the unbiased variances (using R’s built-in <code>var()</code>) is 100.0898047, much closer to 100. The sample variance is biased; the <span class="math inline">\(n-1\)</span> correction was introduced precisely to remove that bias. If this clears up any earlier irritation, good.</p>
-<p>Another desirable property is <strong>efficiency</strong>, on which see <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="#ref-kosugi2023" role="doc-biblioref">2023</a>)</span>. That text also discusses non-normal cases and other sample statistics (e.g., correlations), all via simulation. When mathematical statistics starts to feel tiring, that book is a good companion.</p>
+<p>Another desirable property is <strong>efficiency</strong>, on which see <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span>. That text also discusses non-normal cases and other sample statistics (e.g., correlations), all via simulation. When mathematical statistics starts to feel tiring, that book is a good companion.</p>
 </section>
 <section id="confidence-intervals" class="level2" data-number="6.8">
 <h2 data-number="6.8" class="anchored" data-anchor-id="confidence-intervals"><span class="header-section-number">6.8</span> Confidence intervals</h2>
@@ -896,7 +899,7 @@ window.Quarto = {
 </section>
 <section id="confidence-intervals-when-the-population-variance-is-unknown" class="level3" data-number="6.8.2">
 <h3 data-number="6.8.2" class="anchored" data-anchor-id="confidence-intervals-when-the-population-variance-is-unknown"><span class="header-section-number">6.8.2</span> Confidence intervals when the population variance is unknown</h3>
-<p>The previous example assumed a known population variance. But if we already knew the population mean and variance, we would not need to estimate them — so in practice the variance is unknown too. Fortunately, replacing the population variance by the unbiased sample variance yields a sample mean that follows a <strong>t-distribution with <span class="math inline">\(n-1\)</span> degrees of freedom</strong> (for details see <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="#ref-kosugi2023" role="doc-biblioref">2023</a>)</span>). The 95% interval of a t-distribution is no longer <span class="math inline">\(\pm 1.96\)</span>; it depends on <span class="math inline">\(n\)</span>, so the confidence interval becomes</p>
+<p>The previous example assumed a known population variance. But if we already knew the population mean and variance, we would not need to estimate them — so in practice the variance is unknown too. Fortunately, replacing the population variance by the unbiased sample variance yields a sample mean that follows a <strong>t-distribution with <span class="math inline">\(n-1\)</span> degrees of freedom</strong> (for details see <span class="citation" data-cites="kosugi2023">小杉 et al. (<a href="references.html#ref-kosugi2023" role="doc-biblioref">2023</a>)</span>). The 95% interval of a t-distribution is no longer <span class="math inline">\(\pm 1.96\)</span>; it depends on <span class="math inline">\(n\)</span>, so the confidence interval becomes</p>
 <p><span class="math display">\[ \bar{X} + T_{0.025}\frac{U}{\sqrt{n}} \le \mu \le \bar{X} + T_{0.975}\frac{U}{\sqrt{n}}, \]</span></p>
 <p>where <span class="math inline">\(T_{0.025}\)</span> and <span class="math inline">\(T_{0.975}\)</span> are the 2.5th and 97.5th percentiles of the t-distribution. The t-distribution is symmetric about zero (when its location is zero), so <span class="math inline">\(T_{0.025} = -T_{0.975}\)</span>. <span class="math inline">\(U^2\)</span> is the unbiased variance; <span class="math inline">\(U\)</span> is its square root.</p>
 <p>Verify by simulation. Again the empirical coverage is close to 95%:</p>
@@ -946,7 +949,7 @@ window.Quarto = {
 </ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-Sato1994-02-25" class="csl-entry" role="listitem">
 佐藤坦. 1994. <em>はじめての確率論: 測度から確率へ</em>. 共立出版.
 </div>
@@ -967,7 +970,7 @@ window.Quarto = {
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>For details, see <span class="citation" data-cites="Yoshida2021-02-25">吉田 (<a href="#ref-Yoshida2021-02-25" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="Kono1999-05-01">河野 (<a href="#ref-Kono1999-05-01" role="doc-biblioref">1999</a>)</span>, or <span class="citation" data-cites="Sato1994-02-25">佐藤 (<a href="#ref-Sato1994-02-25" role="doc-biblioref">1994</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>For details, see <span class="citation" data-cites="Yoshida2021-02-25">吉田 (<a href="references.html#ref-Yoshida2021-02-25" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="Kono1999-05-01">河野 (<a href="references.html#ref-Kono1999-05-01" role="doc-biblioref">1999</a>)</span>, or <span class="citation" data-cites="Sato1994-02-25">佐藤 (<a href="references.html#ref-Sato1994-02-25" role="doc-biblioref">1994</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>The first interpretation is the probability taught in high-school mathematics, sometimes called <em>frequentist</em> probability. The second is the kind appealed to in everyday usage (e.g., a precipitation forecast of X%) and is called <em>subjective</em> probability. Critics view the disagreement as ideological rather than mathematical, but in fact Kolmogorov’s axioms can be derived under either interpretation. Personally I think either is fine, provided the user can compute with it.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>No rigorous evidence is on offer, but folk wisdom in Japan (“the lies of 5, 3, 8”) holds that humans asked to say a random digit pick 5, 3, or 8 more often than chance.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>

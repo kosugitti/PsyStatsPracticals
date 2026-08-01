@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -95,10 +98,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -398,7 +401,7 @@ div.csl-indent {
 <p>This chapter covers document authoring in RStudio. Until now you have probably written documents in a word processor such as Microsoft Word, and used different applications for different tasks: R (or other software) for statistics, Excel for figures and tables. Such workflows repeatedly copy and paste numbers from one application to another. Each transfer is an opportunity for a transcription error, and any such error means the final document is wrong. This kind of error is sometimes called <strong>“copy-paste contamination.”</strong></p>
 <p>The root cause is that the work spans multiple applications. If computation, plotting, and prose are all handled within a single environment, the problem disappears. <strong>R Markdown</strong> and <strong>Quarto</strong> are notations — and supporting software — that provide exactly this unified environment.</p>
 <p>Markdown is one of several <strong>markup languages</strong>: a format in which special symbols are embedded in plain text, and a renderer turns the marked-up text into formatted output. Well-known markup languages include LaTeX (for mathematics) and HTML (for the Web). Markdown is a lightweight markup language designed to be easy to write and easy to read, even before rendering, and editable in any plain-text editor.</p>
-<p>R Markdown extends Markdown by adding commands that embed R code and its results inside the document. R is used for computation and plotting; markup specifies where the results should appear. To view the final document, the source must be <strong>compiled</strong> (“knitted” in R Markdown parlance, “rendered” in Quarto’s), and R is executed during compilation. Each compile re-runs the code, so a document that uses random numbers will refresh, and a document that reads an input file will reflect the latest contents. Crucially, copy-paste errors are eliminated and the same code reliably produces the same output document, which supports reproducibility. For a thorough treatment of reproducible document authoring, see <span class="citation" data-cites="Takahashi201805">高橋 (<a href="#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span>.</p>
+<p>R Markdown extends Markdown by adding commands that embed R code and its results inside the document. R is used for computation and plotting; markup specifies where the results should appear. To view the final document, the source must be <strong>compiled</strong> (“knitted” in R Markdown parlance, “rendered” in Quarto’s), and R is executed during compilation. Each compile re-runs the code, so a document that uses random numbers will refresh, and a document that reads an input file will reflect the latest contents. Crucially, copy-paste errors are eliminated and the same code reliably produces the same output document, which supports reproducibility. For a thorough treatment of reproducible document authoring, see <span class="citation" data-cites="Takahashi201805">高橋 (<a href="references.html#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span>.</p>
 <p>Quarto is a successor that generalizes R Markdown. It is one of Posit’s flagship products. Whereas R Markdown is tied to R, Quarto natively supports Python and Julia in addition to R, and even allows multiple languages within a single document — one section in R, another verifying the result in Python, and a third rendering the figure in Julia.</p>
 <p>This very textbook is produced with Quarto. Quarto can also build slide presentations and Web sites, and can output to HTML, PDF, or EPUB (e-book). This textbook is published in HTML, <a href="心理学統計実習.PDF">PDF</a>, and <a href="心理学統計実習.epub">EPUB</a>. A definitive print reference does not yet exist, but the <a href="https://quarto.org/">official documentation</a> is excellent and should be consulted first.</p>
 </section>
@@ -441,7 +444,7 @@ div.csl-indent {
 <p>The correspondence between source and output is largely intuitive. The YAML title, author, and date appear at the top of the rendered document; lines beginning with <code>#</code> become headings.</p>
 <p>The gray blocks delimited by triple backticks in the source are particularly important: these are <strong>chunks</strong>. R code inside a chunk is executed during compilation and the output is inserted into the document. For instance, the source contains a chunk with <code>summary(cars)</code>, and the rendered output shows the resulting summary of the built-in <code>cars</code> dataset. Note that the source file contains only the <em>instruction</em> — the result is generated automatically. This is the key point: there is no opportunity for copy-paste error, and given the same source and the same data, the document can be reproduced on any other machine. Unifying the environment thereby supports both error prevention and reproducibility.</p>
 <p>The <code>cars</code> example uses a built-in dataset, so every reader gets the same output. For custom data the same principle applies: the same source plus the same data file plus the same processing steps yield the same output in any environment. One caveat: compilation runs in a fresh R session, so <strong>objects that are not defined in the source cannot be used</strong>. This is by design — relying on “data that I happened to pre-process beforehand” would defeat reproducibility, because no third party could verify the preprocessing. To take advantage of the share-the-source guarantee, all preprocessing (including data wrangling) must be written into chunks in the source file. This is sometimes inconvenient but is essential to good scientific practice.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<p>RStudio offers many editing aids for Rmd/Qmd files — visual mode, outline view, chunk-insert and chunk-run buttons, per-chunk settings, and so on. <span class="citation" data-cites="Takahashi201805">高橋 (<a href="#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span> is a good reference.</p>
+<p>RStudio offers many editing aids for Rmd/Qmd files — visual mode, outline view, chunk-insert and chunk-run buttons, per-chunk settings, and so on. <span class="citation" data-cites="Takahashi201805">高橋 (<a href="references.html#ref-Takahashi201805" role="doc-biblioref">2018</a>)</span> is a good reference.</p>
 </section>
 <section id="markdown-syntax" class="level3" data-number="4.1.3">
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="markdown-syntax"><span class="header-section-number">4.1.3</span> Markdown syntax</h3>
@@ -490,7 +493,7 @@ following paragraph</code></pre>
 </section>
 <section id="basic-plotting" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="basic-plotting"><span class="header-section-number">4.2</span> Basic plotting</h2>
-<p>For reproducibility, figures should also be specified by code. <strong>Always visualize your data first.</strong> Visualization reveals patterns and relationships that summary statistics alone can hide. After collecting data, the first step should be visualization — and we emphasize this because it bears emphasizing. For an extended treatment, drawing on examples from psychology, see <span class="citation" data-cites="Kieran2018">キーラン・ヒーリー (<a href="#ref-Kieran2018" role="doc-biblioref">[2018] 2021</a>)</span>.</p>
+<p>For reproducibility, figures should also be specified by code. <strong>Always visualize your data first.</strong> Visualization reveals patterns and relationships that summary statistics alone can hide. After collecting data, the first step should be visualization — and we emphasize this because it bears emphasizing. For an extended treatment, drawing on examples from psychology, see <span class="citation" data-cites="Kieran2018">キーラン・ヒーリー (<a href="references.html#ref-Kieran2018" role="doc-biblioref">[2018] 2021</a>)</span>.</p>
 <p>R’s base graphics are perfectly adequate. The <code>plot()</code> function, given x and y vectors, immediately produces a scatter plot.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris<span class="sc">$</span>Sepal.Length, iris<span class="sc">$</span>Sepal.Width,</span>
@@ -636,7 +639,7 @@ following paragraph</code></pre>
 </section>
 <section id="plotting-tips" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="plotting-tips"><span class="header-section-number">4.5</span> Plotting tips</h2>
-<p>A few additional techniques. These are easy to find via Web search or AI assistants on demand, but it helps to know that they exist. For a fuller treatment, see Chapter 4 of <span class="citation" data-cites="Kinosady2021">松村 et al. (<a href="#ref-Kinosady2021" role="doc-biblioref">2021</a>)</span>.</p>
+<p>A few additional techniques. These are easy to find via Web search or AI assistants on demand, but it helps to know that they exist. For a fuller treatment, see Chapter 4 of <span class="citation" data-cites="Kinosady2021">松村 et al. (<a href="references.html#ref-Kinosady2021" role="doc-biblioref">2021</a>)</span>.</p>
 <section id="composing-multiple-ggplot-objects" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="composing-multiple-ggplot-objects"><span class="header-section-number">4.5.1</span> Composing multiple ggplot objects</h3>
 <p>Sometimes you want several plots together on one panel — for instance, splitting the <code>mtcars</code> scatter plot into separate panels for automatic and manual transmissions.</p>
@@ -797,7 +800,7 @@ following paragraph</code></pre>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-Kieran2018" class="csl-entry" role="listitem">
 キーラン・ヒーリー. (2018) 2021. <em>データ分析のためのデータ可視化入門</em>. Translated by 瓜生真也, 江口哲史, and 三村喬生. 講談社. Originally published as <em>Data Visualization: A Practical Introduction</em> (Princeton Univ Pr).
 </div>
