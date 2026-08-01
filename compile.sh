@@ -156,6 +156,22 @@ rm -rf docs
 mv jp/docs docs
 mv en/docs docs/en
 
+# --- 対策E(続き): 生成された Stan バイナリを Dropbox の同期対象から外す ---
+# これをしておくと，そもそも相手のマシンへ渡らないので衝突が起きない。
+# 対策E冒頭の削除は，この属性が付く前に同期されてしまった分への保険として残す。
+echo '== Stan バイナリを Dropbox 同期から除外 =='
+marked=0
+for d in jp en; do
+  for f in "$d"/*; do
+    [ -f "$f" ] || continue
+    case "$f" in *.*) continue ;; esac
+    if file -b "$f" | grep -q 'Mach-O'; then
+      xattr -w com.dropbox.ignored 1 "$f" 2>/dev/null && marked=$((marked + 1))
+    fi
+  done
+done
+echo "  $marked 個に除外属性を付与"
+
 # --- 対策B(続き): en/styles.css は実体のまま維持する（symlink に戻さない） ---
 cp -f docs/styles.css en/styles.css
 
