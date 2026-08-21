@@ -6,7 +6,7 @@
 #
 # 過去に踏んだ事故への対策が入っている。理解せずに削らないこと。
 #
-#   対策A: jp/ の myBiber.bib と jpa2.* は symlink だが，かつて絶対パスで張られていたため
+#   対策A: jp/ と en/ の myBiber.bib，jp/ の jpa2.* は symlink だが，かつて絶対パスで張られていたため
 #          もう一方のマシンでは切れていた。Dropbox は symlink そのものを同期するので，
 #          絶対パスだと必ずどちらか一方で壊れる。**相対パスで張る**のが正解。
 #   対策B: en/ のリソースは symlink 不可（Quarto がレンダリング時に再生成しようとして壊れる）。
@@ -47,27 +47,32 @@ link_rel() { # $1=リンクを置く場所 $2=相対ターゲット $3=絶対フ
   ln -sfn "$abs" "$link"
   [ -e "$link" ]
 }
-link_rel jp/myBiber.bib ../../../myBiber.bib "$HOME/Dropbox/myBiber.bib" ||
-  { echo '中断: myBiber.bib の参照先が見つかりません'; exit 1; }
+for d in jp en; do
+  link_rel "$d/myBiber.bib" ../../../myBiber.bib "$HOME/Dropbox/myBiber.bib" ||
+    { echo "中断: $d/myBiber.bib の参照先が見つかりません"; exit 1; }
+done
 for x in bbx cbx dbx; do
   link_rel "jp/jpa2.$x" "../../biblatex-jpa2/biblatex/jpa2.$x" \
     "$HOME/Dropbox/Git/biblatex-jpa2/biblatex/jpa2.$x" ||
     { echo "中断: jpa2.$x の参照先が見つかりません"; exit 1; }
 done
-for f in jp/myBiber.bib jp/jpa2.bbx jp/jpa2.cbx jp/jpa2.dbx; do
-  printf '  %-16s -> %s\n' "$(basename "$f")" "$(readlink "$f")"
+for f in jp/myBiber.bib en/myBiber.bib jp/jpa2.bbx jp/jpa2.cbx jp/jpa2.dbx; do
+  printf '  %-20s -> %s\n' "$f" "$(readlink "$f")"
 done
 
-# --- 対策B: en/ のリソースを実体にする ---
-# symlink になっているものだけ実体化する。既に実体のファイルは中身を触らない
-# （en/myBiber.bib は英語版用に別管理されている可能性があるため上書きしない）。
+# --- 対策B: en/ の「出力に載る」リソースを実体にする ---
+# symlink になっているものだけ実体化する。既に実体のファイルは中身を触らない。
+# 対象は docs/ へコピーされて配信されるもの（styles.css・cover.png）に限る。
+# **myBiber.bib は対象外**（2026-08-21）。あれはレンダリング時の入力であって出力に
+# 載らないので，実体コピーにする理由がない。正本は ~/Dropbox/myBiber.bib ただ1つで，
+# jp/ と同じく対策A が相対 symlink を張る。複製を置かない。
 echo '== 英語版リソースの実体化 =='
 if [ -L en/styles.css ]; then
   rm -f en/styles.css
   cp jp/styles.css en/styles.css
   echo '  en/styles.css を symlink から実体に変換した'
 fi
-for f in en/styles.css en/myBiber.bib en/cover.png; do
+for f in en/styles.css en/cover.png; do
   [ -L "$f" ] && { echo "  中断: $f が symlink のままです"; exit 1; }
   [ -e "$f" ] || { echo "  中断: $f がありません"; exit 1; }
 done

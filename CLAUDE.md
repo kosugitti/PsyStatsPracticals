@@ -26,7 +26,8 @@
 ### en/ の構成と運用
 
 - `en/_quarto.yml`，`en/index.qmd`，`en/chapter*.qmd`，`en/references.qmd`
-- `en/images/`，`en/styles.css`，`en/myBiber.bib`，`en/cover.png` は `jp/` から **実体コピー**（Quarto がレンダリング時にシンボリックリンクを再生成しようとして壊れるため symlink 不可）
+- `en/images/`，`en/styles.css`，`en/cover.png` は `jp/` から **実体コピー**（Quarto がレンダリング時にシンボリックリンクを再生成しようとして壊れるため symlink 不可。**これらは `docs/` へコピーされて配信される出力側のリソース**である）
+- `en/myBiber.bib` は **`jp/` と同じく `../../../myBiber.bib` への相対 symlink**（2026-08-21 に実体コピーから変更）。**正本は `~/Dropbox/myBiber.bib` ただ1つで，複製は置かない。**bib はレンダリング時の入力であって出力に載らないので実体である理由がなく，実際 5/17 で凍結された複製が正本より36件少ないまま残っていた。`.gitignore` 済みで compile.sh が毎回張り直す
 - 章を追加翻訳したら `en/_quarto.yml` の `chapters:` リストに足す（現在は ch01 のみ）
 - 言語スイッチャーは両方の `_quarto.yml` の `book.sidebar.tools` に設定済み（サイドバーに translate アイコンが出る）
 - 公開URL: 日本語版 `https://kosugitti.github.io/PsyStatsPracticals/`，英語版 `https://kosugitti.github.io/PsyStatsPracticals/en/`
@@ -139,13 +140,17 @@ ch15で参照していた画像のプレフィックスが過去の章番号 `14
 7/11に英語版の画像・CSVが本番で壊れた事故を受けて，3つの対策を組み込んである。
 **理解せずに削らないこと。**
 
-- **対策A**: `jp/myBiber.bib` と `jp/jpa2.{bbx,cbx,dbx}` は `.gitignore` 済みのローカル symlink。
+- **対策A**: `jp/myBiber.bib`・`en/myBiber.bib` と `jp/jpa2.{bbx,cbx,dbx}` は `.gitignore` 済みのローカル symlink。
   かつて `/Users/newton/` 固定だったため別マシンで4本とも切れており，文献データベースを
   見失ったまま静かにビルドが完走する状態だった。ビルド冒頭で `$HOME` 基準に張り直し，
   解決しなければ中断する
-- **対策B**: `en/` のリソースは symlink 不可。旧版は末尾で `en/styles.css` を symlink に
-  戻していたため，次回ビルドが必ず symlink 状態から始まり事故が再発する構造だった。
-  実体コピーで維持する。Quarto が取りこぼしたリソースの補完も行う
+- **対策B**: `en/` の**出力に載るリソース**（`styles.css`・`cover.png`・`images/`）は
+  symlink 不可。旧版は末尾で `en/styles.css` を symlink に戻していたため，次回ビルドが
+  必ず symlink 状態から始まり事故が再発する構造だった。実体コピーで維持する。
+  Quarto が取りこぼしたリソースの補完も行う。
+  **`en/myBiber.bib` は 2026-08-21 に対象から外した**——レンダリングの入力であって
+  `docs/` に載らないので実体である理由がなく，複製は正本から取り残されるだけである
+  （実際 5/17 で凍結され36件足りない状態だった）。対策A が jp/ と同じ相対 symlink を張る
 - **対策C**: ビルド後に `docs/en` の画像・データCSV・HTMLの件数を前回コミットと突き合わせ，
   減っていれば，または `styles.css` の symlink 化・`search.json` の欠落があれば，
   **コミットもプッシュもせず終了コード1で中断する**
@@ -171,7 +176,7 @@ ch15で参照していた画像のプレフィックスが過去の章番号 `14
 
 | 対象 | 何が起きるか | 対策 |
 |---|---|---|
-| `jp/myBiber.bib`, `jp/jpa2.*` | 絶対パスの symlink だと相手側で切れる。文献を見失ったまま静かに完走する | **相対パスで張る**（compile.sh が毎回張り直す） |
+| `jp/myBiber.bib`, `en/myBiber.bib`, `jp/jpa2.*` | 絶対パスの symlink だと相手側で切れる。文献を見失ったまま静かに完走する | **相対パスで張る**（compile.sh が毎回張り直す） |
 | `jp/`, `en/` の Stan バイナリ | rpath がビルドしたマシンの絶対パスで焼き込まれ，相手側では「Fitting failed」 | 削除＋`com.dropbox.ignored` で同期対象から外す |
 | Quarto のバージョン | 生成物が版ごとに変わり，ビルドするマシンによって差分が往復する | 両マシンで版を揃える。**2026-08-01時点で両機とも 1.10.18 で一致** |
 | cmdstan のバージョン | MCMCの数値が版差で動く。同期除外済みなので衝突は起きないが再現性には影響 | 揃えることが望ましい。**2026-08-01時点で両機とも 2.39.0 で一致** |
