@@ -269,3 +269,9 @@
 ホーム索引(~/Dropbox/CLAUDE.md)のステータスセル圧縮時の退避(退避時点の全文):
 
 日英両版デプロイ済(ch01-18+付録，全章米国綴り統一)。東大D12で主教材使用中。※compile.shの英語版レンダリングにdocs/enの画像・CSV・search.jsonを落としstyles.cssをsymlink化する既知バグあり(要en/styles.css実体化・詳細memory)。残TODO: compile.sh恒久対策，en/images/ 5枚の日本語ラベル差し替え，ch15 SEMセクション3節(媒介分析/多母集団同時分析/成長曲線モデル)本文執筆。詳細→Git/PsyStatsPracticals/{CLAUDE,WORKLOG}.md
+
+## CLAUDE.mdからの退避 (2026-08-01)
+
+ホーム索引(~/Dropbox/CLAUDE.md)のステータスセル圧縮時の退避(退避時点の全文)。この時点で未実行だったフルビルドは2026-08-01に実行済み。
+
+> 日英両版デプロイ済，東大D12で主教材使用中。**compile.shの恒久対策は完了**(en/styles.cssを実体化＋jp/のsymlinkを$HOME基準へ＋ビルド後の検算でリソース減少時はpushを止める，shebangも/usr/bin/bash→env bashへ修正)。ただし**フルビルド自体は未実行**なので次回回すとき要確認。ch12の課題データリンク切れ(ex_regression3.csv)も修正・公開済。残=en画像5枚差し替え・ch15 SEM3節執筆。
