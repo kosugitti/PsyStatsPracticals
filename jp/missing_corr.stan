@@ -6,7 +6,7 @@ data{
 }
 
 parameters{
-    vector[2] mu;
+    vector<lower=0,upper=100>[2] mu;
     real<lower=0> sd1;
     real<lower=0> sd2;
     real<lower=-1,upper=1> rho;

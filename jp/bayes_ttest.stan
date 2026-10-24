@@ -23,11 +23,11 @@ model {
 
 generated quantities {
   real diff;                // 平均値差そのもの
-  real delta;               // 標準化した効果量（Cohen's d 相当）
+  real d;                   // 標準化した効果量（Cohen's d 相当）
   array[N1 + N2] real X_pred;  // 事後予測分布のための複製データ
 
   diff = mu1 - mu2;
-  delta = (mu1 - mu2) / sigma;
+  d = (mu1 - mu2) / sigma;
   for (i in 1 : N1) {
     X_pred[i] = normal_rng(mu1, sigma);
   }
