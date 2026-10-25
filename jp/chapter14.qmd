@@ -1,6 +1,6 @@
 # 線型モデルの展開
 
-この章では，線型モデルの展開を説明する。線型モデルは，説明変数と目的変数の関係を線型すなわち一次式で表現するモデルである。
+この章では，線型モデルの展開を説明する。線型モデルは，説明変数と被説明変数の関係を線型すなわち一次式で表現するモデルである。
 線型モデルは，一般化線型モデル(GLM)，一般化線型混合モデル(GLMM)，階層線型モデル(HLM)と拡張していくが，まずは一般線型モデル(LM)についてみておこう。
 
 ## 一般線型モデル(General Linear Model)
@@ -63,7 +63,7 @@ p1 <- ggplot(df_regression, aes(x = x, y = y)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "lm", se = FALSE, color = "blue") +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "連続データの場合") +
+  labs(x = "説明変数", y = "被説明変数", title = "連続データの場合") +
   theme(text = element_text(family = "IPAexGothic"))
 
 
@@ -99,7 +99,7 @@ p2 <- ggplot(df_exp, aes(x = group, y = value)) +
     color = "blue", linewidth = 1
   ) +
   theme_minimal() +
-  labs(x = "群", y = "従属変数", title = "ダミーデータの場合") +
+  labs(x = "群", y = "被説明変数", title = "ダミーデータの場合") +
   theme(text = element_text(family = "IPAexGothic"))
 
 # 散布図3: 全体平均を通る直線(平均値バー付き)
@@ -115,7 +115,7 @@ p3 <- ggplot(df_exp, aes(x = group, y = value)) +
   ) +
   geom_hline(yintercept = mean(df_exp$value), linetype = "dashed", color = "blue", linewidth = 1) +
   theme_minimal() +
-  labs(x = "群", y = "従属変数", title = "帰無仮説") +
+  labs(x = "群", y = "被説明変数", title = "帰無仮説") +
   theme(text = element_text(family = "IPAexGothic"))
 
 p4 <- p1 + p2
@@ -149,7 +149,7 @@ P(Y = y) = p^y (1-p)^{1-y}
 $$
 
 ここで，$p$は成功確率であり，0から1の範囲の値を取る。
-こうしたデータは現実にも少なくない。生死，病気の有無，テストの正答/誤答のようなデータが代表的である。こうしたデータを目的変数にして，直線回帰を行うと当然おかしなことが生じる。すなわち，予測値が0と1の範囲を超えることがありえるからである。
+こうしたデータは現実にも少なくない。生死，病気の有無，テストの正答/誤答のようなデータが代表的である。こうしたデータを被説明変数にして，直線回帰を行うと当然おかしなことが生じる。すなわち，予測値が0と1の範囲を超えることがありえるからである。
 
 そこで，線型予測子と確率を適切に結びつけるリンク関数を用いる。ロジスティック回帰では**ロジット関数**(logit function)をリンク関数として使用する。
 
@@ -235,7 +235,7 @@ p1 <- ggplot(df_logistic, aes(x = x, y = y)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "lm", se = FALSE, color = "blue") +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰") +
+  labs(x = "説明変数", y = "被説明変数", title = "線型回帰") +
   theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ロジスティック回帰
@@ -243,7 +243,7 @@ p2 <- ggplot(df_logistic, aes(x = x, y = y)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE, color = "red") +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ロジスティック回帰") +
+  labs(x = "説明変数", y = "被説明変数", title = "ロジスティック回帰") +
   theme(text = element_text(family = "IPAexGothic"))
 
 # パッチワークで結合
@@ -275,9 +275,9 @@ result.ml <- glm(y ~ x, family = binomial(), data = df_logistic)
 summary(result.ml)
 ```
 
-最尤推定の結果とベイズ推定の結果に多少のズレが見られるが，これはサンプルサイズの小ささによるものである。アウトプット変数が2値しか持たないため，分散がどうしても小さくなりがちであり，正確な推定値を得るためにはより多くのデータが必要である。
+最尤推定の結果とベイズ推定の結果に多少のズレが見られるが，これは，ベイズ推定の値が事後分布の平均(EAP)であるのに対し，最尤推定値は尤度のピーク(既定の平坦な事前分布のもとでは事後分布の最頻値)に当たるからである。2値データでは事後分布が歪みやすく，両者がずれやすい。
 
-また，回帰係数の解釈には注意が必要である。普通の回帰分析であれば，説明変数が1単位変わると目的変数がどれだけ変わるかを表すが，ロジスティック回帰ではこのような直接的な解釈はできない。ロジスティック関数によって変換されたものが意味を持つからである。
+また，回帰係数の解釈には注意が必要である。普通の回帰分析であれば，説明変数が1単位変わると被説明変数がどれだけ変わるかを表すが，ロジスティック回帰ではこのような直接的な解釈はできない。ロジスティック関数によって変換されたものが意味を持つからである。
 
 線型モデルが表すのは次の関係なのであった。
 $$ \beta_0 + \beta_1 x = \log \frac{p}{1-p} $$
@@ -412,7 +412,7 @@ summary(result.ml.pois)
 
 ## 一般化線型混合モデル(GLMM)
 
-線型モデルのさらなる拡張として，**一般化線型混合モデル(GLMM)**Generalized Linear Mixed Modelがある。ここまでの回帰モデルは，説明変数が目的変数に対して一貫した効果を持つと仮定してきた。この効果を特に**固定効果**fixed effectというが，GLMMでは固定効果に加えて**変量効果**random effectを考慮することができる。
+線型モデルのさらなる拡張として，**一般化線型混合モデル(GLMM)**Generalized Linear Mixed Modelがある。ここまでの回帰モデルは，説明変数が被説明変数に対して一貫した効果を持つと仮定してきた。この効果を特に**固定効果**fixed effectというが，GLMMでは固定効果に加えて**変量効果**random effectを考慮することができる。
 
 変量効果とは，説明変数の効果(係数)が個体ごとに異なる値を持つことを意味する。たとえばWithinデザインの要因計画は個人差を考慮することができるが，これは変量効果を考慮したモデルであるといえる。すなわち，研究として見たい効果はWithin要因の水準ごとの固定効果であり，これとは別に個人の平均値が異なることを想定しているから，個人ごとの平均値を変量効果として考慮しているモデルといえる。
 
@@ -510,7 +510,7 @@ p1 <- ggplot(df_random_intercept, aes(x = x, y = y)) +
   geom_point(alpha = 0.5, size = 1) +
   geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰(固定効果のみ)") +
+  labs(x = "説明変数", y = "被説明変数", title = "線型回帰(固定効果のみ)") +
   theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ランダム切片モデル(個人ごとに異なる切片の回帰線)
@@ -518,7 +518,7 @@ p2 <- ggplot(df_random_intercept, aes(x = x, y = y, color = person_factor)) +
   geom_point(alpha = 0.6, size = 1) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ランダム切片モデル") +
+  labs(x = "説明変数", y = "被説明変数", title = "ランダム切片モデル") +
   theme(
     text = element_text(family = "IPAexGothic"),
     legend.position = "none"
@@ -527,7 +527,7 @@ p2 <- ggplot(df_random_intercept, aes(x = x, y = y, color = person_factor)) +
 p1 + p2
 ```
 
-ランダム効果を含むモデルを推定するコード例を以下に示す。
+変量効果を含むモデルを推定するコード例を以下に示す。
 
 ```{r random_intercept_model}
 #| message: false
@@ -571,7 +571,7 @@ lm_estimates <- coef(result.ml.random_intercept.ordinal)
 
 変量効果のモデル表記は，固定効果に加えて`(1 | person)`のように表記する。ここで，`1`は切片を表し，`person`は個人を表す。このようにすることで，個人ごとに異なる切片を考慮することができる。
 
-設定したパラメタ(個人差の標準偏差$\sigma_u$ = `r sigma_u`，残差の標準偏差$\sigma_e$ = `r sigma_e`)に対して，ベイズ推定では個人差の標準偏差が`r round(bayes_sigma_u, 3)`，残差の標準偏差が`r round(bayes_sigma_e, 3)`と推定されている。ML推定では個人差の標準偏差が`r round(ml_sigma_u, 3)`，残差の標準偏差が`r round(ml_sigma_e, 3)`と推定された。両手法ともに設定値に近い値が得られており，適切にパラメタが推定されていることがわかる。
+設定したパラメータ(個人差の標準偏差$\sigma_u$ = `r sigma_u`，残差の標準偏差$\sigma_e$ = `r sigma_e`)に対して，ベイズ推定では個人差の標準偏差が`r round(bayes_sigma_u, 3)`，残差の標準偏差が`r round(bayes_sigma_e, 3)`と推定されている。ML推定では個人差の標準偏差が`r round(ml_sigma_u, 3)`，残差の標準偏差が`r round(ml_sigma_e, 3)`と推定された。両手法ともに設定値に近い値が得られており，適切にパラメータが推定されていることがわかる。
 
 このデータに対して，固定効果のみで推定すると切片が`r round(lm_estimates[1], 3)`，傾きが`r round(lm_estimates[2], 3)`と推定される。傾きに対しては同じ値になるが切片の変動を考慮するかどうかで推定値が異なっていることがわかる。固定効果のみのモデルの場合，切片に想定された正規分布の平均値のみ推定したことになっている。実践的な意味としては，Within計画をBetween計画とみなして推定しているようなものであり，せっかく綺麗に取り分けられる個人差分散を無視しているようなものである。
 
@@ -650,7 +650,7 @@ p2 <- ggplot(total_intercept_samples, aes(x = total_intercept, fill = person)) +
 
 print(p2)
 
-# 実際の切片の信頼区間
+# 実際の切片の確信区間
 total_intercept_summary <- total_intercept_samples %>%
   group_by(person) %>%
   summarise(
@@ -727,7 +727,7 @@ p1 <- ggplot(df_random_slope, aes(x = x, y = y)) +
   geom_point(alpha = 0.5, size = 1) +
   geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰(固定効果のみ)") +
+  labs(x = "説明変数", y = "被説明変数", title = "線型回帰(固定効果のみ)") +
   theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ランダム傾きモデル(個人ごとに異なる傾きの回帰線)
@@ -735,7 +735,7 @@ p2 <- ggplot(df_random_slope, aes(x = x, y = y, color = person_factor)) +
   geom_point(alpha = 0.6, size = 1) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ランダム傾きモデル") +
+  labs(x = "説明変数", y = "被説明変数", title = "ランダム傾きモデル") +
   theme(
     text = element_text(family = "IPAexGothic"),
     legend.position = "none"
@@ -767,7 +767,7 @@ result.ml.random_slope <- lmer(y ~ x + (0 + x | person), data = df_random_slope)
 summary(result.ml.random_slope)
 ```
 
-変量効果のモデル表記で，`(0 + x | person)`は傾きのみにランダム効果を考慮することを表す。`0`によって切片の変量効果を除き，`x`で傾きにランダム効果を指定している。それぞれの出力が，理論値のどこを反映したものであるか確認しておこう。
+変量効果のモデル表記で，`(0 + x | person)`は傾きのみに変量効果を考慮することを表す。`0`によって切片の変量効果を除き，`x`で傾きに変量効果を指定している。それぞれの出力が，理論値のどこを反映したものであるか確認しておこう。
 
 また出力結果はランダム切片モデルの時と同様に，関数あるいはMCMCサンプルから推定値やその分布情報を得ることもできる。自分なりに加工して出力結果を確認してみてほしい。
 
@@ -783,7 +783,7 @@ $$
 $$
 
 ここで，$u_{0i}$は個人$i$の切片の個人差，$u_{1i}$は個人$i$の傾きの個人差である。
-このランダム効果はいずれも個人に係るものであるから相関し得るため，それぞれに正規分布を仮定するのではなく多変量正規分布から得られるものと仮定する。当然のことながら，この相関係数も推定対象である。
+この変量効果はいずれも個人に係るものであるから相関し得るため，それぞれに正規分布を仮定するのではなく多変量正規分布から得られるものと仮定する。当然のことながら，この相関係数も推定対象である。
 
 $$
 \begin{pmatrix} u_{0i} \\ u_{1i} \end{pmatrix} \sim \mathrm{MVN}\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \sigma_{u0}^2 & \sigma_{u01} \\ \sigma_{u01} & \sigma_{u1}^2 \end{pmatrix} \right)
@@ -812,7 +812,7 @@ sigma_u1 <- 0.5 # 傾きの個人差の標準偏差
 rho <- 0.3 # 切片と傾きの相関
 sigma_e <- 0.5 # 誤差の標準偏差
 
-# 切片と傾きの共分散行列
+# 切片と傾きの分散共分散行列
 Sigma <- matrix(
   c(
     sigma_u0^2, rho * sigma_u0 * sigma_u1,
@@ -821,7 +821,7 @@ Sigma <- matrix(
   nrow = 2
 )
 
-# 個人ごとのランダム効果(切片と傾き)
+# 個人ごとの変量効果(切片と傾き)
 pacman::p_load(MASS)
 random_effects <- mvrnorm(n_person, mu = c(0, 0), Sigma = Sigma)
 person_intercepts <- random_effects[, 1]
@@ -848,7 +848,7 @@ p1 <- ggplot(df_random_both, aes(x = x, y = y)) +
   geom_point(alpha = 0.5, size = 1) +
   geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰(固定効果のみ)") +
+  labs(x = "説明変数", y = "被説明変数", title = "線型回帰(固定効果のみ)") +
   theme(text = element_text(family = "IPAexGothic"))
 
 # p2: ランダム切片ランダム傾きモデル(個人ごとに異なる切片と傾きの回帰線)
@@ -856,7 +856,7 @@ p2 <- ggplot(df_random_both, aes(x = x, y = y, color = person_factor)) +
   geom_point(alpha = 0.6, size = 1) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "ランダム切片ランダム傾きモデル") +
+  labs(x = "説明変数", y = "被説明変数", title = "ランダム切片ランダム傾きモデル") +
   theme(
     text = element_text(family = "IPAexGothic"),
     legend.position = "none"
@@ -887,7 +887,7 @@ result.ml.random_both <- lmer(y ~ x + (1 + x | person), data = df_random_both)
 summary(result.ml.random_both)
 ```
 
-変量効果のモデル表記で，`(1 + x | person)`は切片と傾きの両方にランダム効果を考慮することを表す。`1`は切片，`x`は傾きのランダム効果を指定している。
+変量効果のモデル表記で，`(1 + x | person)`は切片と傾きの両方に変量効果を考慮することを表す。`1`は切片，`x`は傾きの変量効果を指定している。
 
 このモデルでは切片と傾きの相関も推定される。設定した相関($\rho$ = `r rho`)がどの程度再現されているか確認してみよう。また，個人レベルの推定値も前述の方法で取り出すことができる。
 
@@ -995,7 +995,7 @@ ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが�
 ### モデルの図解
 
 数式で表現することでわかりにくくなったかもしれないので，図解しておく。この図は下から順にみていくとよい。
-データ$Y_{ij}$が図の底にあり，これをある正規分布が生成していると考える。この正規分布の幅$\sigma$に応じて個人レベルの誤差$r_{ij}$が生成される。この正規分布の平均は回帰モデルで表現されるが，その時の回帰係数が多次元正規分布によって生成される。多次元正規分布はそれぞれの位置(平均)と幅をもち，さらに両者の相関関係$\rho$も含まれる。切片$\beta_{0j}$および傾き$\beta_{1j}$に生じる誤差$u_{0j},u_{1j}$が幅$\tau_{00},\tau_{11}$に応じて生成され，またその平均は学級レベルの変数で説明される会期式になっている。ここでの切片と傾きについては事前情報がないので，無情報分布(一様分布)で表している。誤差の事前分布は負の数を取らないように，切断された分布をもちいる。コーシー分布やt分布など，裾の重い分布が用いられることが多い。
+データ$Y_{ij}$が図の底にあり，これをある正規分布が生成していると考える。この正規分布の幅$\sigma$に応じて個人レベルの誤差$r_{ij}$が生成される。この正規分布の平均は回帰モデルで表現されるが，その時の回帰係数が多変量正規分布によって生成される。多変量正規分布はそれぞれの位置(平均)と幅をもち，さらに両者の相関関係$\rho$も含まれる。切片$\beta_{0j}$および傾き$\beta_{1j}$に生じる誤差$u_{0j},u_{1j}$が幅$\tau_{00},\tau_{11}$に応じて生成され，またその平均は学級レベルの変数で説明される会期式になっている。ここでの切片と傾きについては事前情報がないので，無情報分布(一様分布)で表している。誤差の事前分布は負の数を取らないように，切断された分布をもちいる。コーシー分布やt分布など，裾の重い分布が用いられることが多い。
 
 ![HLMのモデル図](images/hlm_model.png)
 
@@ -1038,12 +1038,12 @@ print(paste("Team:Position ICC1:", round(icc_team_position, 3)))
 print(paste("Position ICC1:", round(icc_position, 3)))
 ```
 
-ICCの値が負になっているので，群内のばらつきの方が群間のばらつきよりも大きいことがわかる。つまり群に分けた意味がないことを意味している。本来はある程度の正の大きさのICCを持つことが望ましい[^4]。ただし，チーム$\times$ポジションの組み合わせで群をつくると，群内の類似性が現れるため，これを群分け変数として用いることにしよう。
+ICCの値が負になっているので，群内のばらつきの方が群間のばらつきよりも大きいことがわかる。つまり群に分けた意味がないことを意味している。本来はある程度の正の大きさのICCを持つことが望ましい[^4]。なお，チーム$\times$ポジションの組み合わせでもICCはほぼ0(わずかに負)であるが，ここでは階層モデルの練習として，これを群分け変数として用いることにしよう。
 
 
 [^4]: 0.05を小，0.10を中，0.15を大とする基準が最も一般的である(@Hox2002,@Raudenbush2000)。
 
-従属変数を安打数(`Hit`)，説明変数をゲーム出場回数(`Games`)ならびに選手の体躯(`height`と`weight`)とする。
+被説明変数を安打数(`Hit`)，説明変数をゲーム出場回数(`Games`)ならびに選手の体躯(`height`と`weight`)とする。
 これらがチームの中でのポジションでネストされていて切片が異なるとしたモデルを構成する。なお安打数は正の整数しか取らないから，ポアソン分布を用いた。
 
 ```{r brm_HLM}
@@ -1158,7 +1158,7 @@ plot(model_logistic)
 posterior_summary(model_logistic)
 ```
 
-**課題**: 上記のコードを実行し，真の切片(0.5)と傾き(1.2)が適切に推定されているかを確認してください。また，事後分布の95%信頼区間に真の値が含まれているかを確認してください。
+**課題**: 上記のコードを実行し，真の切片(0.5)と傾き(1.2)が適切に推定されているかを確認してください。また，事後分布の95%確信区間に真の値が含まれているかを確認してください。
 
 #### 課題1-2: ポアソン回帰のパラメータリカバリ
 
@@ -1229,7 +1229,7 @@ model1 <- brm(
 
 **課題1**: このモデルの構造を説明してください。以下の点について述べてください。
 
-- 従属変数と確率分布
+- 被説明変数と確率分布
 - 固定効果(説明変数)の意味
 - 変量効果(階層構造)の意味
 - なぜこの確率分布を選んだのか
@@ -1262,7 +1262,7 @@ model2 <- brm(
 
 **課題1**: このモデルの構造を説明してください。以下の点について述べてください。
 
-- 従属変数の対数変換の理由
+- 被説明変数の対数変換の理由
 - 固定効果(Win, Lose)の経済的意味
 - 変量効果の構造(ランダム切片・ランダム傾き)の意味
 
