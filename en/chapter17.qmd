@@ -43,7 +43,7 @@ The **parameters block** declares the quantities to be estimated; Stan returns p
 
 The remaining blocks are supplementary and not always needed. The **transformed data block** modifies data declared in the data block; the **transformed parameters block** transforms parameters declared in the parameters block. Such transformations make subsequent computation more readable. For example, in regression the parameters are the intercept $\beta_0$ and the slope $\beta_1$, combined with the predictor $x_i$ to form the fitted value $\hat{y}_i$. With $\beta_0$ and $\beta_1$ declared as parameters and `yhat` declared in transformed parameters as
 
-$$ yhat = \beta_0 + \beta_1 x, $$
+$$ \hat{y}_i = \beta_0 + \beta_1 x_i, $$
 
 the model block uses `yhat` directly. When a derived parameter is a combination of others, writing it as a transformed parameter often improves clarity.
 
@@ -67,7 +67,7 @@ The key shift in perspective is to view analysis as describing a **data-generati
 
 The goal of statistics is to turn natural human behavior and responses into numbers and read meaning out of them; budget or environment should not be allowed to bend the behavior itself. Keep the data as raw as possible, and *think* about how to analyze them. Approach the question from "what mechanism generated this data?" The "mechanism" can equally be called a probability distribution. A single response cannot be deterministic; the possible alternative values, together, form a probability distribution. The parameters of that distribution are then specified by a mathematical structure.
 
-In regression, each observation $y_i$ is the true value $\hat{y}_i$ plus error $e_i$. The error is normal, so $y_i \sim N(\hat{y}_i, \sigma^2)$. The mean $\hat{y}_i$ is the linear combination of predictors $x_i$: $y_i \sim N(\beta_0 + \beta_1 x_i, \sigma^2)$. And so on.
+In regression, each observation $y_i$ is the true value $\hat{y}_i$ plus error $e_i$. The error is normal, so $y_i \sim N(\hat{y}_i, \sigma)$. The mean $\hat{y}_i$ is the linear combination of predictors $x_i$: $y_i \sim N(\beta_0 + \beta_1 x_i, \sigma)$. And so on.
 
 The $t$-test and ANOVA can be described the same way. Rewriting them clarifies aspects of the model you had not noticed: which distribution does the model assume? What constraints sit on the parameters? What priors are in play? Writing it all explicitly in Stan brings these to light. That is the educational value of rewriting.
 
@@ -144,15 +144,15 @@ Three blocks: `data`, `parameters`, `model`. Note the `int`, `array`, and `real`
 
 The `data` block first declares the sample size as an integer, so the same code works for 7, 50, or any other sample size. `array[N] real Y;` declares a length-`N` real array.
 
-`parameters` declares the unknowns $\mu$ (a single real) and $\sigma_i$ (a real array of length `N`). The constraint `<lower=0>` restricts $\sigma_i$ to non-negative values — variances cannot be negative, and the constraint helps the sampler explore appropriate regions.
+`parameters` declares the unknowns $\mu$ (a single real) and $\sigma_i$ (a real array of length `N`). The constraint `<lower=0>` restricts $\sigma_i$ to non-negative values — standard deviations cannot be negative, and the constraint helps the sampler explore appropriate regions.
 
 `model` is the probabilistic model. Bayesian models require a likelihood and a prior. The line `Y[i] ~ normal(mu, sigma[i])` inside a `for` loop is:
 
-$$ \prod_{i=1}^{N} N(Y_i \mid \mu, \sigma_i). $$
+$$ \prod_{i=1}^{n} N(y_i \mid \mu, \sigma_i). $$
 
 Internally Stan works with the log-likelihood:
 
-$$ \sum_{i=1}^{N} \log N(Y_i \mid \mu, \sigma_i). $$
+$$ \sum_{i=1}^{n} \log N(y_i \mid \mu, \sigma_i). $$
 
 Anyone who can write down a probabilistic model can therefore obtain estimates from Stan.
 
@@ -201,7 +201,7 @@ bayesplot::mcmc_areas(draws, regex_pars = "sigma")
 The last two values are conspicuously large — the two unexperienced part-timers.
 
 For numerical summaries, `bayestestR` is handy:
-```{r gyudon10_socre}
+```{r gyudon10_score}
 pacman::p_load(bayestestR)
 sigma_draws <- draws[, , grepl("sigma", dimnames(draws)$variable)]
 # EAP, MAP, median, 95% HDI
@@ -275,11 +275,11 @@ In the data block, `Nobs` and `Nmiss` are integer counts: the number of cases ob
 
 The target is the correlation `rho`, which appears in the variance--covariance matrix of a bivariate normal. The likelihood is
 
-$$ obsX \sim MN(\mathbb{\mu}, \mathbb{\Sigma}), $$
+$$ \boldsymbol{x}_i \sim \mathrm{MVN}(\boldsymbol{\mu}, \boldsymbol{\Sigma}), $$
 
 with
 
-$$ \mathbb{\Sigma} = \begin{pmatrix}
+$$ \boldsymbol{\Sigma} = \begin{pmatrix}
 \sigma_1^2 & \sigma_{12}\\
 \sigma_{21} & \sigma_2^2
 \end{pmatrix}
@@ -295,7 +295,7 @@ The `parameters` block declares $\sigma_1$, $\sigma_2$, $\rho$, and the `transfo
 
 Now look at the `model` block carefully. For complete pairs `obsX` we use the multivariate normal. For the half-missing `missX` we still have the $X_1$ values, which under the model are univariate normal with mean $\mu_1$ and SD $\sigma_1$; we add that likelihood to leverage the remaining information.
 
-The priors: a `uniform(0, 100)` on each mean (a test score), Cauchy on the SDs, and Stan's `lkj_corr` (with shape 1) on the correlation — a non-informative prior for correlations.
+The priors: a `uniform(0, 100)` on each mean, since a test score lies somewhere between 0 and 100 (the `parameters` block also constrains `mu` to the range 0 to 100); a heavy-tailed Cauchy `cauchy(0, 5)` on the SDs; and a uniform distribution from $-1$ to $1$, `uniform(-1, 1)`, on the correlation.
 
 Compile, fit, and inspect `rho`. Mind how the data are passed:
 
@@ -329,13 +329,49 @@ The recovered correlation is `r round(fit$summary("rho")$mean, 4)` — essential
 
 [^6]: See, e.g., @kinosada2018.
 
+### Extending to more variables: an LKJ prior on the correlation matrix
+
+The code above declares the correlation $\rho$ as a single parameter and assembles the four elements of the variance--covariance matrix by hand. That is fine for two variables, but as the number of variables grows to three, four, and beyond, the number of correlations and of elements to assemble grows as well, and assigning values arbitrarily can produce combinations that are not positive definite (that is, that do not form a valid variance--covariance matrix). Multivariate models therefore conventionally declare the correlations not one at a time but as a **correlation matrix** $\boldsymbol{\Omega}$, and place on it the LKJ distribution, a prior designed for correlation matrices.
+
+```{r kick_corr_lkj}
+#| echo: false
+#| results: asis
+cat("```stan\n")
+cat(readLines("missing_corr_lkj.stan"), sep = "\n")
+cat("\n```")
+```
+
+The `corr_matrix` type is Stan's dedicated type for correlation matrices; its values are constrained to symmetric positive-definite matrices with ones on the diagonal. A two-variable correlation matrix is $\begin{pmatrix} 1 & \rho \\ \rho & 1 \end{pmatrix}$, so the `transformed parameters` block extracts its off-diagonal element as the correlation `rho`. The variance--covariance matrix is the correlation matrix sandwiched between the diagonal matrix of standard deviations $\boldsymbol{D} = \mathrm{diag}(\sigma_1, \sigma_2)$,
+
+$$ \boldsymbol{\Sigma} = \boldsymbol{D}\boldsymbol{\Omega}\boldsymbol{D}, $$
+
+which is what the `quad_form_diag` function computes. However many variables there are, this one line stays the same.
+
+The prior `lkj_corr(1)` on the correlation matrix, with parameter `1`, is equivalent to a uniform prior over all correlation matrices; with two variables it is mathematically the same as the earlier model's uniform prior from $-1$ to $1$ on $\rho$. Setting the parameter above 1 gives higher prior probability to matrices whose correlations are closer to 0.
+
+```{r stan_corr_lkj}
+#| echo: true
+#| message: false
+model_lkj <- cmdstan_model("missing_corr_lkj.stan")
+fit_lkj <- model_lkj$sample(
+  data = dataSet,
+  chains = 4,
+  parallel_chains = 4,
+  refresh = 0,
+  save_cmdstan_config = TRUE
+)
+fit_lkj$summary("rho")
+```
+
+The estimated `rho` is `r round(fit_lkj$summary("rho")$mean, 4)`, nearly the same value as in the earlier model.
+
 ## Models with non-normal distributions
 
 Bayesian modeling sets a mathematical structure on the parameters of a probability distribution. Here are some non-normal examples.
 
 ### Item response theory
 
-As we saw in @sec-irt-model, IRT is exactly a non-normal model in this sense: the response variable is binary, the distribution is Bernoulli, and the success probability is given a logistic structure on a latent ability $\theta$.
+As we saw in @sec-irt-model, IRT is exactly a non-normal model in this sense: the response variable is binary, the distribution is Bernoulli, and the success probability $p_{ij}$ is given a logistic structure on a latent ability $\theta_i$.
 
 In symbols, the response of person $i$ to item $j$ is
 
@@ -421,7 +457,7 @@ where $t$ is the population size, $x$ the first-sample size, $n$ the second-samp
 
 In distributional notation,
 
-$$ k \sim \text{Hypergeometric}(n, x, t - x). $$[^8]
+$$ X \sim \text{Hypergeometric}(n, x, t - x). $$[^8]
 
 
 [^8]: Stan's `hypergeometric` is `hypergeometric(n, a, b)` where `n` is the second-sample size, `a` the first-sample size, and `b` the number not in the first sample. The total population is $a + b$; here, $x + (t - x) = t$. Some texts (e.g., @Lee201709) write `Hypergeometric(n, x, t)` instead.
@@ -441,7 +477,7 @@ The model bundles several techniques worth reviewing.
 
 #### Priors
 
-The data: first-sample size `x`, second-sample size `n`, recapture count `t`, and a maximum value `maxT` for the population (e.g., 30 outfits is plenty).
+The data: first-sample size `x`, second-sample size `n`, recapture count `k`, and a maximum value `maxT` for the population (e.g., 30 outfits is plenty).
 
 The prior is uniform on $\{1, 2, \ldots, \text{maxT}\}$: $1/\text{maxT}$.
 
@@ -474,7 +510,7 @@ There is no `parameters` block. The model has no continuous parameter to estimat
 1. loop $i$ from 1 to `maxT`,
 2. for $i < \text{minT}$, set `lp[i]` to the prior plus $-\infty$:
 
-`lp[t] = log(1.0 / maxT) + negative_infinity();`
+`lp[i] = log(1.0 / maxT) + negative_infinity();`
 
 (`negative_infinity()` is Stan's $-\infty$), and
 
@@ -490,7 +526,7 @@ The `generated quantities` block processes the MCMC results. It computes the est
 
 `tp` is obtained by applying `softmax` to `lp`. Recall that `lp` is a vector of log-posteriors; softmax turns it into normalized probabilities:
 
-$$ \mathbf{x} = \frac{\exp(\mathbf{x})}{\sum \exp(\mathbf{x})}. $$
+$$ \mathrm{softmax}(\boldsymbol{x}) = \frac{\exp(\boldsymbol{x})}{\sum_t \exp(x_t)}. $$
 
 `tp` has Stan's `simplex` type — a non-negative vector summing to 1 — and can be read as the probabilities that the true $t$ takes each candidate value.
 
@@ -605,7 +641,7 @@ fit$summary()
 ```
 
 ```{r MAPS}
-# echo: false
+#| echo: false
 MAPs <- bayestestR::describe_posterior(fit$draws(),
   centrality = c("mean", "median", "MAP"), ci = 0.95,
   ci_method = "hdi", test = NULL
@@ -638,13 +674,13 @@ A caveat: regression is not strictly appropriate for time series because regress
 
 ### Modeling a heterogeneous group
 
-Another baseball example. Restrict the [baseball data](Baseball.csv) to the 2020 Central League teams and plot the histogram of hits:
+Another baseball example. Restrict the [baseball data](Baseball.csv) to the 2022 Central League teams and plot the histogram of hits:
 
 ```{r Hit_hist}
 #| dev: "ragg_png"
 #| message: false
 y <- read_csv("Baseball.csv") |>
-  filter(Year == "2020年度") |>
+  filter(Year == "2022年度") |>
   filter(team %in% c("Giants", "Tigers", "Carp", "Swallows", "DeNA", "Dragons")) |>
   select(position, Hit, team) |>
   mutate(Hit = ifelse(is.na(Hit), 0, Hit))
@@ -653,7 +689,7 @@ y |> ggplot(aes(x = Hit)) +
 summary(y$Hit)
 ```
 
-A large number of players have essentially zero hits. The reason is that the 2020 Central League required pitchers to bat. Pitchers' job is pitching, not hitting; they rarely swing, so their hit counts are essentially zero.[^12]
+A large number of players have essentially zero hits. The reason is that the 2022 Central League required pitchers to bat. Pitchers' job is pitching, not hitting; they rarely swing, so their hit counts are essentially zero.[^12]
 
 [^12]: For non-baseball readers: Japan's professional baseball has 12 teams divided between the Central League (CL) and the Pacific League (PL), six teams each. The PL uses a designated hitter; the CL did not (until the 2027 season). Pitchers in the CL therefore had to bat, but typically did not perform meaningfully at the plate. Yes, Shohei Ohtani is an exception.
 
@@ -661,14 +697,14 @@ The hit count is a count variable, so the Poisson would be the textbook choice �
 
 A mixture distribution that includes this "structural zero" possibility is the **zero-inflated Poisson** (or zero-inflated negative binomial). We will use the latter below.
 
-A word about the Poisson: its only parameter, $\lambda$, is the mean — and also the variance, by construction. When the data are over-dispersed (variance greater than the mean), a single-$\lambda$ Poisson fits poorly. The **negative binomial** distribution generalizes the Poisson with a separate dispersion parameter:
+A word about the Poisson: its only parameter, $\lambda$, is the mean — and also the variance, by construction. When the data are over-dispersed (variance greater than the mean), a single-$\lambda$ Poisson fits poorly. The **negative binomial** distribution generalizes the Poisson with a separate dispersion parameter. Stan's `neg_binomial` defines it with a shape parameter $\alpha$ and an inverse-scale parameter $\beta$:
 
-$$ \text{NegBinomial}(n \mid \alpha, \beta) = \frac{\Gamma(\alpha + n)}{\Gamma(\alpha)\,\Gamma(n + 1)} \left(\frac{\alpha}{\alpha + \beta}\right)^{\alpha} \left(\frac{\beta}{\alpha + \beta}\right)^{n}. $$
+$$ \text{NegBinomial}(n \mid \alpha, \beta) = \frac{\Gamma(n + \alpha)}{\Gamma(\alpha)\, n!} \left(\frac{\beta}{1 + \beta}\right)^{\alpha} \left(\frac{1}{1 + \beta}\right)^{n}. $$
 
 Its mean and variance are
 
-$$ E[N] = \beta, $$
-$$ \text{Var}[N] = \beta + \frac{\beta^2}{\alpha} = \beta\left(1 + \frac{\beta}{\alpha}\right). $$
+$$ E[n] = \frac{\alpha}{\beta}, $$
+$$ \text{Var}[n] = \frac{\alpha}{\beta^2}(\beta + 1). $$
 
 This parameterization is hard to read. Stan supplies the alternative `neg_binomial_2`, parameterized by the mean $\mu$ and a dispersion $\phi$:
 
@@ -676,8 +712,8 @@ $$ \text{NegBinomial2}(n \mid \mu, \phi) = \frac{\Gamma(\phi + n)}{\Gamma(\phi)\
 
 with
 
-$$ E[N] = \mu, $$
-$$ \text{Var}[N] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right). $$
+$$ E[n] = \mu, $$
+$$ \text{Var}[n] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right). $$
 
 Large $\phi$ pushes the variance toward the mean; in the limit $\phi \to \infty$, the negative binomial coincides with the Poisson.
 
@@ -697,14 +733,14 @@ The `parameters` block declares a mixing probability `theta` ∈ [0, 1] (a Berno
 The `model` block makes the branching explicit. If `y_i = 0`, use `log_mix(theta, 0, neg_binomial_2_lpmf(0 | mu, phi))`:
 
 $$
-p(y_i \mid \theta, \mu, \phi) =
+P(y_i = 0 \mid \theta, \mu, \phi) =
   \theta + (1 - \theta) \cdot \text{NegBinomial2}(0 \mid \mu, \phi),
 $$
 
 with probability $\theta$ for "structural zero"[^13] and $1 - \theta$ for "negative binomial gives zero."
 
 
-[^13]: `log_mix`'s first argument is the mixing proportion; the second and third are log-probability densities. A second argument of `0` corresponds to $\exp(0) = 1$ — i.e., 100% — so the structural-zero branch contributes its full prior weight. The third argument, `neg_binomial_2_lpmf`, is the log-pmf of `neg_binomial_2`.
+[^13]: `log_mix`'s first argument is the mixing proportion; the second and third are log-probability masses. A second argument of `0` corresponds to $\exp(0) = 1$ — i.e., 100% — so the structural-zero branch contributes its full prior weight. The third argument, `neg_binomial_2_lpmf`, is the log-pmf of `neg_binomial_2`.
 
 If `y_i > 0`, the contribution is the $1 - \theta$ branch times the negative-binomial likelihood. We use `target +=` to add to the log posterior directly.
 

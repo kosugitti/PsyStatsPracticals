@@ -81,7 +81,7 @@ prob <- 0.9
 ## full normal curve
 df1 <- data.frame(x = seq(from = -4, 4, by = 0.01)) %>%
   mutate(y = dnorm(x, mean = 0, sd = 1))
-## data up to qnorm(0.975)
+## data up to qnorm(prob)
 df2 <- data.frame(x = seq(from = -4, qnorm(prob), by = 0.01)) %>%
   mutate(y = dnorm(x, mean = 0, sd = 1))
 ## note the different data frames
@@ -163,7 +163,7 @@ R provides similar functions for the Poisson, binomial, t, F, and chi-squared di
 The recent rise of Bayesian statistics is in large part a consequence of advances in computing. **Markov chain Monte Carlo (MCMC)** is a technique for sampling from a posterior distribution even when that distribution has no closed form. Such distributions defy analytic description, but by drawing random samples and inspecting their histogram one can visualize the shape directly.
 
 A second advantage of sampling is that it gives easy numerical approximations to probabilities. Suppose we want the area under the standard-normal density between $-1.5$ and $+1.5$:
-$$ p = \int_{-1.5}^{+1.5} \frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}} dx. $$
+$$ P = \int_{-1.5}^{+1.5} \frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}} dx. $$
 
 Analytically, we use `pnorm()`:
 
@@ -206,7 +206,7 @@ It bears mentioning that the data psychologists collect from experiment or surve
 
 Use random numbers from a normal distribution to approximate each of the following quantities. Aim for accuracy of two decimal places relative to the "true" value calculated analytically.
 
-1. The expected value of a normal distribution with mean 100 and SD 8. The expected value of a continuous random variable is $$E[X] = \int_{-\infty}^{\infty} x f(x) \, dx,$$ where $f(x)$ is the density. For a normal distribution this equals the mean parameter, so the true value is 100.
+1. The expected value of a normal distribution with mean 100 and SD 8. The expected value of a continuous random variable is $$E[X] = \int_{-\infty}^{\infty} x f(x) \, dx,$$ where $x$ denotes a realization of the random variable $X$ (the variable of integration) and $f(x)$ is the density. For a normal distribution this equals the mean parameter, so the true value is 100.
 2. The variance of a normal distribution with mean 100 and SD 3. The variance is $$\sigma^2 = \int_{-\infty}^{\infty} (x - \mu)^2 f(x) \, dx,$$ where $\mu$ is the expected value. For a normal distribution this equals the square of the SD parameter, so the true value is $3^2 = 9$.
 3. For a normal distribution with mean 65 and SD 10, the probability that $90 < X < 110$. The analytic value:
 
@@ -223,7 +223,7 @@ pnorm(110, mean = 65, sd = 10) - pnorm(90, mean = 65, sd = 10)
 
 ## Populations and samples
 
-So far we have used random numbers to inspect probability distributions. We now turn to the role of probability distributions in inferential statistics. In inferential statistics the entire collection of interest is the **population**, and the (typically small) subset we actually observe is the **sample**. The aim is to infer properties of the population using statistics computed from the sample. The numerical properties of the population are its **parameters** — written with the "population" prefix in Japanese (母平均, etc.) — including the population mean and population variance. The corresponding quantities computed on the sample are the **sample mean**, **sample variance**, and so on.
+So far we have used random numbers to inspect probability distributions. We now turn to the role of probability distributions in inferential statistics. In inferential statistics the entire collection of interest is the **population**, and the (typically small) subset we actually observe is the **sample**. The aim is to infer properties of the population using statistics computed from the sample. The fixed values (constants) that characterize the population are its **parameters** — written with the "population" prefix in Japanese (母平均, etc.) — including the population mean and population variance. The corresponding quantities computed on the sample are the **sample mean**, **sample variance**, and so on.
 
 A concrete example via random numbers. Suppose there is a village of 100 people, and we measure each person's height. Generating 100 reasonable numbers by hand is tedious, so we use random numbers as a stand-in.
 
@@ -393,7 +393,7 @@ qnorm(0.025)
 qnorm(0.975)
 ```
 
-Combining these, for a sample mean $\bar{X}$, the 95% confidence interval — using 1.96 standard deviations — is
+Combining these, for a sample mean $\bar{X}$, the 95% confidence interval — 1.96 times the standard error $\sigma/\sqrt{n}$ on either side — is
 
 $$ \bar{X} - 1.96 \frac{\sigma}{\sqrt{n}} \le \mu \le \bar{X} + 1.96 \frac{\sigma}{\sqrt{n}} $$
 
@@ -414,11 +414,11 @@ result.df2 <- data.frame(m = m) %>%
 
 ### Confidence intervals when the population variance is unknown
 
-The previous example assumed a known population variance. But if we already knew the population mean and variance, we would not need to estimate them — so in practice the variance is unknown too. Fortunately, replacing the population variance by the unbiased sample variance yields a sample mean that follows a **t-distribution with $n-1$ degrees of freedom** (for details see @kosugi2023). The 95% interval of a t-distribution is no longer $\pm 1.96$; it depends on $n$, so the confidence interval becomes
+The previous example assumed a known population variance. But if we already knew the population mean and variance, we would not need to estimate them — so in practice the variance is unknown too. Fortunately, replacing the population variance by the unbiased sample variance, the standardized sample mean $(\bar{X}-\mu)/(\hat{\sigma}/\sqrt{n})$ follows a **t-distribution with $n-1$ degrees of freedom** (for details see @kosugi2023). The 95% interval of a t-distribution is no longer $\pm 1.96$; it depends on $n$, so the confidence interval becomes
 
-$$ \bar{X} + T_{0.025}\frac{U}{\sqrt{n}} \le \mu \le \bar{X} + T_{0.975}\frac{U}{\sqrt{n}}, $$
+$$ \bar{X} + T_{0.025}\frac{\hat{\sigma}}{\sqrt{n}} \le \mu \le \bar{X} + T_{0.975}\frac{\hat{\sigma}}{\sqrt{n}}, $$
 
-where $T_{0.025}$ and $T_{0.975}$ are the 2.5th and 97.5th percentiles of the t-distribution. The t-distribution is symmetric about zero (when its location is zero), so $T_{0.025} = -T_{0.975}$. $U^2$ is the unbiased variance; $U$ is its square root.
+where $T_{0.025}$ and $T_{0.975}$ are the 2.5th and 97.5th percentiles of the t-distribution. The t-distribution is symmetric about zero (when its location is zero), so $T_{0.025} = -T_{0.975}$. $\hat{\sigma}^2$ is the unbiased variance; $\hat{\sigma}$ is its square root.
 
 Verify by simulation. Again the empirical coverage is close to 95%:
 
@@ -454,7 +454,7 @@ result.df <- data.frame(m = m, interval = interval) %>%
 
 ## Exercises
 
-1. We showed that the arithmetic mean $M = \frac{1}{n}\sum x_i$ is a consistent estimator. What about the **harmonic mean** $HM = \frac{n}{\sum (1/x_i)}$ and the **geometric mean** $GM = (\prod x_i)^{1/n} = \exp\left(\frac{1}{n}\sum \log x_i\right)$? Check by simulation.
+1. We showed that the arithmetic mean $\bar{x} = \frac{1}{n}\sum x_i$ is a consistent estimator. What about the **harmonic mean** $\mathrm{HM} = \frac{n}{\sum (1/x_i)}$ and the **geometric mean** $\mathrm{GM} = (\prod x_i)^{1/n} = \exp\left(\frac{1}{n}\sum \log x_i\right)$? Check by simulation.
 2. Does the convergence of the sample mean to the population mean hold for non-normal distributions as well? Check by simulation using the t-distribution with $\nu = 3$ degrees of freedom. (R's `rt()` draws from a t-distribution; without a non-centrality parameter `ncp` it has mean zero.)
 3. For very large degrees of freedom $\nu$, the t-distribution converges to the standard normal. Using `rt()`, generate 1,000 draws for $\nu = 10, 50, 100$ and inspect histograms. Also compute the mean and sample SD and confirm convergence to standard-normal values.
 4. From a normal with mean 50 and SD 10, draw 10,000 samples of size 20. Use the `quantile()` function to simulate the 95% confidence interval and compare with the theoretical value.
@@ -572,8 +572,9 @@ true_sd <- 15
 
 # run the simulation
 ci_widths <- sapply(sample_sizes, function(n) {
-  sample_means <- replicate(n_sim, mean(rnorm(n, mean = true_mean, sd = true_sd)))
-  sample_sds <- replicate(n_sim, sd(rnorm(n, mean = true_mean, sd = true_sd)))
+  samples <- replicate(n_sim, rnorm(n, mean = true_mean, sd = true_sd))
+  sample_means <- colMeans(samples)
+  sample_sds <- apply(samples, 2, sd)
   ci_lower <- sample_means - qnorm(0.975) * sample_sds / sqrt(n)
   ci_upper <- sample_means + qnorm(0.975) * sample_sds / sqrt(n)
   mean(ci_upper - ci_lower)

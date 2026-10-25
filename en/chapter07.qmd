@@ -69,7 +69,7 @@ $$r_{xy} = \frac{s_{xy}}{s_xs_y} = \frac{\frac{1}{n}\sum (x_i - \bar{x})(y_i - \
 
 **Variance–covariance matrix**
 
-$$\Sigma = \begin{pmatrix} s_x^2 & s_{xy} \\ s_{yx} & s_y^2 \end{pmatrix}
+$$\boldsymbol{S} = \begin{pmatrix} s_x^2 & s_{xy} \\ s_{yx} & s_y^2 \end{pmatrix}
 = \begin{pmatrix} s_x^2 & r_{xy}s_xs_y \\ r_{xy}s_xs_y & s_y^2 \end{pmatrix}$$
 
 Setting `Sigma = matrix(c(1, 0, 0, 1), ncol = 2)` specifies that the two variables are uncorrelated (each with SD 1). The option `empirical = TRUE` rescales the generated draws so that their *empirical* correlation matches the specified one exactly.
@@ -205,11 +205,11 @@ for (i in 1:iter) {
 }
 df <- intervals %>%
   mutate(FLG = ifelse(Lower <= 0 & Upper >= 0, 1, 0)) %>%
-  summarize(type1error = mean(FLG)) %>%
+  summarize(coverage = mean(FLG)) %>%
   print()
 ```
 
-In this run, the intervals contained the true correlation `r df$type1error*100`% of the time — i.e., they missed `r (1-df$type1error)*100`% of the time. The goal of holding the Type I error rate at 5% has been met.
+In this run, the intervals contained the true correlation `r df$coverage*100`% of the time — i.e., they missed `r (1-df$coverage)*100`% of the time. The goal of holding the Type I error rate at 5% has been met.
 
 For the Type II error — the probability of accepting the null when the null is actually false — we need a population in which the null is false. Let us put the population correlation at 0.5:
 
@@ -255,7 +255,7 @@ df <- data.frame(p = judges) %>%
 
 The population correlation is 0.5 — the null should be rejected — but `r df$type2error*100`% of tests fail to reach significance. In psychology, the conventional target is $\beta < 0.2$ (equivalently, power $> 0.8$), so this design is underpowered.
 
-In practice we do not know the true population correlation; it could be 0.3, or $-0.5$, or something else. Type II error is therefore not directly under the researcher's control; the best one can do is choose variables for which a non-trivial correlation seems plausible.
+In practice we do not know the true population correlation; it could be 0.3, or $-0.5$, or something else. The effect size is therefore not under the researcher's control; the best one can do is choose variables for which a non-trivial correlation seems plausible.
 
 Both Type I and Type II error rates are functions of the sample size and the **effect size** (here, the magnitude of the population correlation). The researcher can choose the sample size, so given a target effect and a target error rate, sample size can be chosen rationally.
 

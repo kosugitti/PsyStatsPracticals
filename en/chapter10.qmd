@@ -93,7 +93,7 @@ studyMake(n = 10, mu = 10, sigma = 1, delta = 0)
 ```
 
 
-Each call is one analysis; `num_studies` such calls together count as "one paper." Set `num_studies = 3`. Using `replicate()` we obtain a $p$-value vector and check whether *any* test is significant using `any()`. We evaluate two thresholds: the raw $\alpha$ and the Bonferroni-adjusted $\alpha_{\text{adj}}$.
+Each call corresponds to one study (one test); `num_studies` such calls together count as "one paper." Set `num_studies = 3`. Using `replicate()` we obtain a $p$-value vector and check whether *any* test is significant using `any()`. We evaluate two thresholds: the raw $\alpha$ and the Bonferroni-adjusted $\alpha_{\text{adj}}$.
 ```{r}
 set.seed(12345)
 iter <- 1000
@@ -164,7 +164,7 @@ hist(p)
 hist(add.vec)
 ```
 
-The empirical Type I error rate is `r mean(ifelse(p < 0.05, 1, 0))` — wildly above 5%. The "significance" wrung out of patient data-adding is the gift of chance: a phantom of bad practice. As the histogram of additions shows, 75% of runs hit the cap of 100 added participants. Pure cost, no benefit.
+The empirical Type I error rate is `r mean(ifelse(p < 0.05, 1, 0))` — wildly above 5%. The "significance" wrung out of patient data-adding is the gift of chance: a phantom of bad practice. As the histogram of additions shows, about 70% of runs hit the cap of 100 added participants. Pure cost, no benefit.
 
 ### Not pre-specifying the sample size
 
@@ -188,11 +188,12 @@ Now the second scenario. Suppose the analyst had decided to keep flipping until 
 
 ```{r}
 k <- 7
-# probability of needing at least 24 trials
-pnbinom(k, 24, 0.5) * 2
+# probability of needing at least 24 trials to get 7 heads (i.e., at least 17 tails)
+# pnbinom(q, size, prob) is the probability of at most q failures before the size-th success
+(1 - pnbinom(16, k, 0.5)) * 2
 ```
 
-With $\theta = 0.5$, the probability of needing 24 trials to obtain 7 heads is `r pnbinom(7, 24, 0.5) * 2`, significant at the 5% level. This is rare enough that the null $\theta = 0.5$ is suspect. Note that the $p$-value differs from the previous scenario for exactly the same observed data.
+With $\theta = 0.5$, the probability of needing 24 trials to obtain 7 heads is `r round((1 - pnbinom(16, 7, 0.5)) * 2, 4)`, significant at the 5% level. This is rare enough that the null $\theta = 0.5$ is suspect. Note that the $p$-value differs from the previous scenario for exactly the same observed data.
 
 Now the third scenario. Suppose the analyst had not pre-specified the number of trials but had pre-specified a fixed *amount of time*: "I'll flip for about 5 minutes." The result happens to be 24 trials, but it might just as well have been 23 or 25 or 20 or 30. Model the number of trials as Poisson-distributed with mean 24 (a distribution that peaks near 24):[^10.3]
 
@@ -238,7 +239,7 @@ Sample-size planning brings in a new parameter: the **non-centrality parameter**
 
 Take the independent-samples $t$-test. As the name says, the test uses the $t$-distribution to evaluate the realized test statistic under the null. The null is $\mu_0 = \mu_1 - \mu_2 = 0$, and the test statistic is
 
-$$ T = \frac{d - \mu_0}{\sqrt{U^2_p \cdot \frac{n_1 + n_2}{n_1 n_2}}}.$$
+$$ T = \frac{d - \mu_0}{\sqrt{\hat{\sigma}^2_p \cdot \frac{n_1 + n_2}{n_1 n_2}}}.$$
 
 In the numerator, $d - \mu_0 = (\bar{X}_1 - \bar{X}_2) - (\mu_1 - \mu_2)$, and under the null the second term is zero, leaving a $t$-distribution centered at zero. But the null is the theoretical reference point; in the *real* world where the null is false, the test statistic follows a $t$-distribution displaced from zero by an amount that depends on $\mu_1 - \mu_2$. Such a shifted distribution is the **non-central** $t$-distribution, with the offset given by the **non-centrality parameter**. For the $t$-test it is
 
@@ -278,7 +279,7 @@ The further `ncp` is from zero, the smaller the Type II error. The non-centralit
 
 With this, we can plan a $t$-test sample size. For simplicity, assume equal per-group sample sizes.
 
-Recall the denominator $\sqrt{U_p^2 \cdot (n_1+n_2)/(n_1 n_2)}$; the role of $\sqrt{n}$ in the non-centrality is played by the pooled sample size.[^10.6]
+Recall the denominator $\sqrt{\hat{\sigma}_p^2 \cdot (n_1+n_2)/(n_1 n_2)}$; the role of $\sqrt{n}$ in the non-centrality is played by the pooled sample size.[^10.6]
 
 [^10.6]: Under equal population variances, $\sigma^2(1/n_1 + 1/n_2) = \sigma^2 (n_1 + n_2)/(n_1 n_2) = \sigma^2 / (n_1 n_2 / (n_1 + n_2))$.
 

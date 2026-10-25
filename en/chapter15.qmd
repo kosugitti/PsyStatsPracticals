@@ -96,7 +96,7 @@ Before any of this, you should have characterized the data with descriptive stat
 
 #### Determining the number of factors
 
-Mathematically, factor analysis reduces to an eigenvalue decomposition of the correlation matrix $\mathbb{R}$ among the $M$ items. The default correlation is the Pearson product-moment; ordinal items call for polychoric correlations, binary items for tetrachoric correlations.
+Mathematically, factor analysis reduces to an eigenvalue decomposition of the correlation matrix $\boldsymbol{R}$ among the $M$ items. The default correlation is the Pearson product-moment; ordinal items call for polychoric correlations, binary items for tetrachoric correlations.
 
 Eigenvalue decomposition exposes the dimensionality of the correlation matrix. Information in $M$ items occupies $M$ dimensions. With two variables $X, Y$, the data live in the 2-D space with $X$ and $Y$ as axes. If $X$ and $Y$ are correlated, an orthogonal $(X, Y)$ representation may not be the most efficient; a rotated basis with larger variance along one axis may be available. This is the common idea behind factor analysis and PCA: PCA focuses on the axis with the largest variance; factor analysis distinguishes the "useful dimensions" — the common factors — from the rest, which are absorbed into error.
 
@@ -115,27 +115,29 @@ dat <- psych::bfi |> select(-gender, -education, -age)
 fa.parallel(dat)
 ```
 
-A **scree plot** plots the eigenvalues from largest to smallest as a line graph. By default, both PC (principal-component) and FA (factor-analysis) scree plots are shown. The two differ in whether measurement error is assumed: factor analysis posits per-item error, so the per-item information is below 1 ($r_{jj} = 1 - h_j^2 = u^2 < 1$, with $h_j^2$ the communality — the sum of squared common-factor loadings — and $u_j^2$ the uniqueness). The FA curve therefore always lies below the PC curve.
+A **scree plot** plots the eigenvalues from largest to smallest as a line graph. By default, both PC (principal-component) and FA (factor-analysis) scree plots are shown. The two differ in whether measurement error is assumed: factor analysis posits per-item error, so the per-item information is below 1 (the correlation $r_{jj}$ falls below $1.0$; precisely, FA decomposes the reduced correlation matrix whose diagonal elements are replaced by $r_{jj} = h_j^2 = 1 - u_j^2 < 1$, with $h_j^2$ the communality — the sum of squared common-factor loadings — and $u_j^2$ the uniqueness — the squared unique-factor loading). The FA curve therefore always lies below the PC curve.
 
 The legend distinguishes **Actual Data**, **Simulated Data**, and **Resampled Data**. Real data have some semantic structure; their correlation matrix is unevenly distributed across dimensions, producing a gradually decaying scree curve. Simulated data are drawn from random numbers of the same size; resampled data are obtained by shuffling the original matrix. Neither carries semantic structure, so every dimension is uniformly uninformative, and the eigenvalues form a near-flat line. Parallel analysis compares the two: dimensions whose actual eigenvalue exceeds the flat line are meaningful. On this criterion, both the FA and PC solutions support six factors.
 
-A horizontal line at eigenvalue 1 is also drawn, marking the older **Kaiser–Guttman criterion** that a factor must explain at least one variable's worth of variance to qualify as a common factor. By this rule three factors are warranted. Yet another rule of thumb is "what proportion of total variance is explained": if three factors capture less than 50%, that may be too much information discarded, and four or five factors might be retained instead.
+A horizontal line at eigenvalue 1 is also drawn, marking the older **Kaiser–Guttman criterion** that a factor must explain at least one variable's worth of variance to qualify as a common factor. Applied to the FA eigenvalues, this rule warrants three factors. Yet another rule of thumb is "what proportion of total variance is explained": if three factors capture less than 50%, that may be too much information discarded, and four or five factors might be retained instead.
 
 #### Estimating factor loadings
 
 Once the number of factors is set, we estimate the loadings. For instance:
 
 ```{r fa}
+# fix the random seed so that the rotated solution is reproducible
+set.seed(123)
 result.fa <- fa(dat, nfactors = 6, fm = "ML", rotate = "geominQ")
 ```
 
 `psych::fa()` offers many options; here we specify the number of factors (`nfactors`), the estimation method (`fm`), and the rotation method (`rotate`).
 
-For estimation we chose **maximum likelihood (`ML`)**. For samples of more than ~200, ML — assuming multivariate-normal data — is generally most appropriate. For small samples, the **least-squares family** (`ULS`, `OLS`, `WLS`, `GLS`, etc.) minimizes the model–data discrepancy and is the safer choice. Without specification, **minimum residual (`minres`)** — the same as ULS in concept, but with an improved algorithm with better convergence — is the default. The principal-axis option (`pa`) corresponds to a model without estimated errors. The differences across algorithms are usually modest.
+For estimation we chose **maximum likelihood (`ML`)**. For samples of more than ~200, ML — assuming multivariate-normal data — is generally most appropriate. For small samples, the **least-squares family** (`ULS`, `OLS`, `WLS`, `GLS`, etc.) minimizes the model–data discrepancy and is the safer choice. Without specification, **minimum residual (`minres`)** — the same as ULS in concept, but with an improved algorithm with better convergence — is the default. Principal-axis factoring (`pa`, principal axis) can also be chosen. If you want principal component analysis instead, use the `principal` function rather than `fa`. The differences across algorithms are usually modest.
 
 **Rotation** transforms the loadings to ease interpretation. Factor analysis and PCA identify new axes for the data, but those axes can be linearly transformed (rotated) about the origin to any orientation. In practice we want the orientation that is easiest to interpret. Mathematically, this is the rotation that yields **simple structure**: each item loads on one factor and minimally on the others. If items measuring Extraversion load heavily on the first factor, we prefer that they not also load on factors 2, 3, 4, and 5 — otherwise interpretation becomes a headache.
 
-Within this guiding principle, many algorithms exist. The classical **varimax** rotation maximizes the variance of squared loadings on each factor. Other choices include oblimin and geomin; for details see @kosugi2018.
+Within this guiding principle, many algorithms exist. The classical **varimax** rotation computes, for each factor, the variance of the squared loadings and chooses the rotation that maximizes the sum of these variances. Other choices include oblimin and geomin; for details see @kosugi2018.
 
 Rotations split into **orthogonal** and **oblique**. Orthogonal rotations keep the rotated axes orthogonal — i.e., assume no inter-factor correlation. Oblique rotations allow inter-factor correlations. The latter is mathematically the weaker assumption, so a sensible workflow is to do oblique first and, if the inter-factor correlations are small, re-do orthogonal. Here we used `geominQ`, the oblique version of geomin.
 
@@ -149,15 +151,15 @@ There is no absolute standard for rotation either; algorithms reflect different 
 print(result.fa, sort = T, cut = 0.3)
 ```
 
-We set `sort` (sort items by loading) and `cut` (suppress loadings smaller than 0.3 in the display). These are display options; the underlying $5 \times 25$ paths from each factor to each item are all computed.
+We set `sort` (sort items by loading) and `cut` (suppress loadings smaller than 0.3 in the display). These are display options; the underlying $6 \times 25$ paths from each factor to each item are all computed.
 
-The output starts with the loading matrix, the communality $h_j^2$, the uniqueness $u_j^2 = 1 - h_j^2$, and the complexity.[^1] These are the post-rotation **pattern matrix**. In an oblique rotation, the loadings split into the **pattern** (factor effects, projecting variables orthogonally onto an oblique factor system) and the **structure** (factor correlations: variable–factor simple correlations).
+The output starts with the loading matrix, the communality $h_j^2$, the uniqueness $u_j^2 = 1 - h_j^2$, and the complexity.[^1] These are the post-rotation **pattern matrix**. In an oblique rotation, the loadings split into the **pattern** (the coordinates obtained by projecting each variable parallel to the axes of the oblique factor system, interpreted as the direct effects of the factors on the variable) and the **structure** (the shadows obtained by projecting each variable orthogonally onto each factor axis, i.e., the simple variable–factor correlations).
 
 [^1]: Complexity is the index of how cleanly each item loads on a single factor: values near 1 mean the item loads essentially on one factor; larger values mean the item is spread across multiple factors. For loadings $a_{jk}$, complexity is $(\sum_k a_{jk}^2)^2 / \sum_k a_{jk}^4$.
 
 Below the loadings, the sum of squared loadings (SS loadings) shows the variance explained by each factor; the proportions and cumulative proportions follow. Here the cumulative explained variance is 44%, meaning 56% of the information is discarded — from a compression standpoint, potentially too much.
 
-Because the rotation is oblique, inter-factor correlations are reported next. The largest absolute correlation is −0.36. If all inter-factor correlations are within ±0.3, an orthogonal rotation can be considered.
+Because the rotation is oblique, inter-factor correlations are reported next. The largest absolute correlation is `r sprintf("%.2f", max(abs(result.fa$Phi[upper.tri(result.fa$Phi)])))`. If all inter-factor correlations are within ±0.3, an orthogonal rotation can be considered.
 
 Goodness-of-fit indices follow; we omit detailed discussion.
 
@@ -181,16 +183,16 @@ head(dat, 10)
 
 Because factor scores are back-computed from the model, a single missing value blocks the calculation. The scores returned are standardized, hence unitless and only relatively comparable. Some authors argue against subsequent tests of mean differences on relative estimates of this kind.
 
-In practice a simpler **simple-sum factor score** is widely used: identify the items associated with each factor and average their item-level responses. With our example, say the first factor reflects E2, E1, N4, E4, E5. Because E4 and E5 have negative loadings, their values are reverse-scored:
+In practice a simpler **simple-sum factor score** is widely used: identify the items associated with each factor and average their item-level responses. With our example, say the first factor reflects E1, E2, E3, E4, E5. Because E1 and E2 have negative loadings, their values are reverse-scored:
 
 ```{r}
 Fscore1.raw <- dat |>
   # pick out the items relevant to the first factor
-  select(E2, E1, N4, E4, E5) |>
+  select(E1, E2, E3, E4, E5) |>
   # reverse-score
   mutate(
-    E4 = 7 - E4,
-    E5 = 7 - E5
+    E1 = 7 - E1,
+    E2 = 7 - E2
   )
 
 # row-wise mean, ignoring missings
@@ -211,7 +213,7 @@ plot(result.fa$scores[, 1], Fscore1)
 
 ### Confirmatory factor analysis
 
-So far we have discussed exploratory factor analysis. There the number of factors and the loadings are not specified a priori; the data speak, and interpretation is post hoc. In our example the first factor consists mainly of Extraversion items, but a Neuroticism item (N4) also slips in, complicating interpretation. The Big Five name implies five factors, yet the data prefer six.
+So far we have discussed exploratory factor analysis. There the number of factors and the loadings are not specified a priori; the data speak, and interpretation is post hoc. In our example the first factor consists mainly of Extraversion items, but Agreeableness items (A3, A5) also slip in, complicating interpretation. The Big Five name implies five factors, yet the data prefer six.
 
 Sometimes the theory is firmer than that: personality inventories have well-grounded structures, and one prefers to test a hypothesized structure. **Confirmatory factor analysis (CFA)** is the appropriate tool: factor structure is specified in advance and fitted to the data. CFA sits inside **structural equation modeling (SEM)**: the relationships between items and latent variables are expressed as equations and estimated.
 
@@ -280,7 +282,7 @@ That concludes the overview of factor analysis.
 
 Factor analysis is a model of measurement and is heavily used when designing psychological scales. But because it identifies common dimensions from inter-item correlations, neither "the construct has been measured directly" nor "the existence of the construct has been demonstrated" follows. For example, write items about ramen and have respondents rate them quantitatively, and you can extract a "ramen factor" or a "tonkotsu factor" with some interpretive content. That does not mean people have internalized a psychological "tonkotsu factor."
 
-SEM can specify regression or correlation paths between latent variables, but it pays to think about how those relationships actually manifest. Even a strongly fitting model with strong cross-factor influence may have small measurement-model coefficients: ask what concretely changes when a factor score increases by one unit, and how that shows up in behavior or measurement. A statistically valid but substantively meaningless model is a paper exercise.
+SEM can specify regression or correlation paths between latent variables, but it pays to think about how those relationships actually manifest. Even a strongly fitting model with strong cross-factor influence may have small measurement-model coefficients, in which case the influence may barely show up in the observed measures. Ask what concretely changes when a factor score increases by one unit, and how that shows up in behavior or measurement. A statistically valid but substantively meaningless model is a paper exercise.
 
 Issues of measurement and substantive impact run in parallel between factor analysis and item response theory (a relative of factor analysis), to which we now turn.
 
@@ -318,7 +320,7 @@ Next, **item response theory (IRT)**. Sometimes called *modern test theory* in c
 
 A further difference from factor analysis: factor analysis (rooted in personality psychology) emphasizes exploring factor structure, while IRT (rooted in test theory) emphasizes refining factor-score estimation. In personality psychology the number of factors is itself a research question; in test theory a single-factor "ability" structure is preferred. This is why scale construction via factor analysis cultivates "simple structure" and prunes items, while IRT — given a sufficiently large first-factor loading (around 30% variance is typical) — treats the data as essentially unidimensional and pools items rather than discarding them.
 
-**Computer adaptive testing (CAT)** is the leading current application of IRT: items are served dynamically from a pool based on the respondent's pattern of correct/incorrect answers, efficiently estimating the latent ability. CAT requires an IRT-based model, an item pool calibrated for various ability levels, and a database-and-delivery system tying them together.[^5]
+**Computerized adaptive testing (CAT)** is the leading current application of IRT: items are served dynamically from a pool based on the respondent's pattern of correct/incorrect answers, efficiently estimating the latent ability. CAT requires an IRT-based model, an item pool calibrated for various ability levels, and a database-and-delivery system tying them together.[^5]
 
 [^5]: Japan's national university-entrance examinations briefly considered CAT but rejected it: the need for a huge item pool (requiring extensive pre-testing) and the difficulty of providing the same network and operating environment at remote and island sites as in urban areas made it impractical. The existing paper-and-pencil (mark-sheet) system runs an extraordinary error rate below one percent even with 500,000 simultaneous test-takers each year; given its social impact, CAT adoption demands extreme caution.
 
@@ -566,7 +568,7 @@ Knowing the historical roots and theoretical lineage of each model informs its a
 
 Practice the multivariate techniques of this chapter on the following problems, which aim to deepen understanding through hands-on analysis. As an example we use `psych::small.msq` — the Motivational State Questionnaire — a 14-variable, 200-case dataset.[^9]
 
-Its 14 variables comprise energetic arousal (`active`, `alert`, `arousal`, `sleepy`, `tired`, `drowsy`), tense arousal (`anxious`, `jittery`, `nervous`, `calm`, `relaxed`, `at.ease`), plus `gender` and `drug` (a drug-condition factor). Excluding `gender` and `drug`, the structure is presumed two-factor.
+Its 14 variables comprise energetic arousal (`active`, `alert`, `aroused`, `sleepy`, `tired`, `drowsy`), tense arousal (`anxious`, `jittery`, `nervous`, `calm`, `relaxed`, `at.ease`), plus `gender` and `drug` (a drug-condition factor). Excluding `gender` and `drug`, the structure is presumed two-factor.
 
 [^9]: A subset of the more than 2,500 sample MSQ; the full data are in the `psychTools` package.
 
@@ -673,6 +675,6 @@ summary(result.mirt, rotate = "geominQ")
 
 # multidimensional ICC
 plot(result.mirt, type = "trace", which.items = 1)
-# multidimensional information
+# test information function
 plot(result.mirt, type = "info")
 ```

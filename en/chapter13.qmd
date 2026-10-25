@@ -1,6 +1,6 @@
 # Foundations of Linear Algebra
 
-The chapters on multivariate analysis (Chapters 14 and 15) cover factor analysis, principal-components analysis, multidimensional scaling, cluster analysis, and other techniques. Their common mathematical foundation is **linear algebra** — the calculus of vectors and matrices. Statistical packages deliver results instantly, but without the underlying picture it is hard to interpret those results correctly or judge their plausibility.
+The chapters on multivariate analysis (Chapters 15 and 16) cover factor analysis, principal-components analysis, multidimensional scaling, cluster analysis, and other techniques. Their common mathematical foundation is **linear algebra** — the calculus of vectors and matrices. Statistical packages deliver results instantly, but without the underlying picture it is hard to interpret those results correctly or judge their plausibility.
 
 The chief virtue of using matrices is that **collections of many numbers can be written compactly and generically**. Psychological data have the rectangular structure "$n$ respondents $\times$ $m$ variables" — exactly a matrix. In matrix language, means and variances, regression estimation, and the principles of factor analysis are all expressible within one framework.
 
@@ -295,13 +295,13 @@ as.matrix(d)
 
 ## Eigenvalues and eigenvectors
 
-For a square matrix $\boldsymbol{A}$, a scalar $\lambda$ and a vector $\boldsymbol{x}$ satisfying
+For a square matrix $\boldsymbol{A}$, a scalar $\lambda$ and a vector $\boldsymbol{u}$ satisfying
 
 $$
-\boldsymbol{Ax} = \lambda \boldsymbol{x}
+\boldsymbol{Au} = \lambda \boldsymbol{u}
 $$
 
-are called an **eigenvalue** and an **eigenvector**. The left side multiplies $\boldsymbol{x}$ by the matrix; the right side multiplies it only by a scalar. In other words, there exist special vectors that, when multiplied by $\boldsymbol{A}$, do not change direction — they only stretch or shrink. $\lambda$ is the scaling factor.
+are called an **eigenvalue** and an **eigenvector**. The left side multiplies $\boldsymbol{u}$ by the matrix; the right side multiplies it only by a scalar. In other words, there exist special vectors that, when multiplied by $\boldsymbol{A}$, do not change direction — they only stretch or shrink. $\lambda$ is the scaling factor.
 
 Verify with a concrete example:
 
@@ -309,7 +309,7 @@ $$
 \begin{pmatrix} 1 & 6 \\ 2 & 5 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 7 \\ 7 \end{pmatrix} = 7 \begin{pmatrix} 1 \\ 1 \end{pmatrix}.
 $$
 
-So $\lambda = 7$ and $\boldsymbol{x} = (1, 1)'$ satisfy the equation.
+So $\lambda = 7$ and $\boldsymbol{u} = (1, 1)'$ satisfy the equation.
 
 ```{r}
 A <- matrix(c(1, 2, 6, 5), nrow = 2)
@@ -337,10 +337,10 @@ sum(diag(A))       # trace
 
 ### Spectral decomposition
 
-A symmetric matrix $\boldsymbol{A}$ can be decomposed using its eigenvalues on the diagonal (forming $\boldsymbol{\Lambda}$) and its eigenvectors as the columns (forming $\boldsymbol{X}$):
+A symmetric matrix $\boldsymbol{A}$ can be decomposed using its eigenvalues on the diagonal (forming $\boldsymbol{\Lambda}$) and its eigenvectors as the columns (forming $\boldsymbol{U}$):
 
 $$
-\boldsymbol{A} = \boldsymbol{X}\boldsymbol{\Lambda}\boldsymbol{X}'.
+\boldsymbol{A} = \boldsymbol{U}\boldsymbol{\Lambda}\boldsymbol{U}'.
 $$
 
 This is the **spectral decomposition** (or eigenvalue decomposition). It separates the information in the original matrix into "directions" (the eigenvectors) and "magnitudes" (the eigenvalues), and is the mathematical foundation of principal-components analysis and factor analysis.
@@ -403,7 +403,7 @@ Factor analysis approximates the correlation matrix $\boldsymbol{R}$ by $\boldsy
 | inverse | matrix that gives the identity when multiplied | `solve()` |
 | diagonal | $a_{ii}$ of a square matrix | `diag()` |
 | trace | sum of diagonal entries | `sum(diag())` |
-| eigen-decomposition | solve $\boldsymbol{Ax} = \lambda\boldsymbol{x}$ | `eigen()` |
+| eigen-decomposition | solve $\boldsymbol{Au} = \lambda\boldsymbol{u}$ | `eigen()` |
 | correlation matrix | matrix of correlation coefficients | `cor()` |
 | variance--covariance matrix | matrix of variances and covariances | `cov()` |
 | distance matrix | matrix of pairwise distances | `dist()` |

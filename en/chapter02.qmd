@@ -76,7 +76,7 @@ print(A)
 
 Alternatively, the *Environment* tab in RStudio shows the objects currently in memory, with scalar values displayed in the *Value* column.
 
-The following names are reserved and cannot be used as object names: `break`, `else`, `for`, `if`, `in`, `next`, `function`, `repeat`, `return`, `while`, `TRUE`, `FALSE`. These are R's **reserved words**. In particular, `TRUE` and `FALSE` denote the Boolean truth values; their abbreviations `T` and `F` are not reserved words, so technically you can assign to them — but doing so is strongly discouraged, since it introduces a source of subtle bugs.
+The following names are reserved and cannot be used as object names: `break`, `else`, `for`, `if`, `in`, `next`, `function`, `repeat`, `while`, `TRUE`, `FALSE`, `NULL`, `Inf`, `NaN`, `NA`. These are R's **reserved words**. In particular, `TRUE` and `FALSE` denote the Boolean truth values; their abbreviations `T` and `F` are not reserved words, so technically you can assign to them — but doing so is strongly discouraged, since it introduces a source of subtle bugs.
 
 ## Functions
 
@@ -140,7 +140,7 @@ vec3 * 2
 vec1 + vec5
 ```
 
-Note that the last expression does **not** raise an error: `vec1` has length 3 and `vec5` length 6 — mathematically the addition is undefined for unequal lengths, but **R recycles the shorter vector** as long as its length divides the longer. Here the computation is
+Note that the last expression does **not** raise a warning. By contrast, `vec1 + vec4` is computed but triggers a warning, whereas here the result is printed without any warning. `vec1` has length 3 and `vec5` length 6 — mathematically the addition is undefined for unequal lengths, but **R recycles the shorter vector** as long as its length divides the longer. Here the computation is
 
 $$ (2,4,5,2,4,5) + (1,2,3,7,6,5) = (3,6,8,9,10,10). $$
 
@@ -185,12 +185,12 @@ Inspect the matrices $A$ and $B$ produced by the following code:
 
 ```{r}
 A <- matrix(1:6, ncol = 2)
-B <- matrix(1:6, ncol = 2, byrow = T)
+B <- matrix(1:6, ncol = 2, byrow = TRUE)
 ```
 
 The `matrix()` function takes the elements as its first argument, then `ncol` (number of columns), `nrow` (number of rows), and `byrow` (whether to fill row by row). Here we supply `1:6` as the data and specify two columns; `nrow` is then determined automatically. Setting `byrow = TRUE` changes how the elements are arranged — print the matrices to see.
 
-If the number of elements supplied does not equal `nrow × ncol`, and is not a divisor either (so recycling cannot save us), an error is raised.
+If the number of elements supplied does not equal `nrow × ncol`, and recycling cannot fill the matrix cleanly, a warning is issued.
 
 As with vectors, square brackets index a matrix; rows come first, columns second, and either may be omitted to select an entire row or column:
 
@@ -260,7 +260,7 @@ str(df)
 
 You will recall Stevens's [@stevens1946] taxonomy of **levels of measurement** — nominal, ordinal, interval, and ratio — which classifies numeric variables by the operations they admit. Interval and ratio variables may be subjected to ordinary arithmetic; nominal and ordinal variables may not. (Even if a "second favorite" and a "third favorite" are combined, they do not equal a "favorite.")
 
-R provides types corresponding to these levels. Interval and ratio variables are stored as `numeric`. Nominal variables are stored as `factor` (sometimes called "factor type" or "categorical type"). Ordinal variables are stored as `ordered.factor`.
+R provides types corresponding to these levels. Interval and ratio variables are stored as `numeric`. Nominal variables are stored as `factor` (sometimes called "factor type" or "categorical type"). Ordinal variables are stored as ordered factors (`ordered`).
 
 The example below converts an existing character variable to a factor with `as.factor()`:
 

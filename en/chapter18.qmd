@@ -87,7 +87,7 @@ cat("\n```")
 
 The `data` block receives the sample size and observations of each of the two groups. The `parameters` block holds the two population means `mu1`, `mu2` and a common standard deviation `sigma`. Sharing a single standard deviation corresponds to the "equal-variance assumption" of the $t$-test. The `model` block writes the likelihood — each group's data arise from a normal distribution centered on its population mean — and supplies the priors.
 
-The block to note is `generated quantities`. Here we compute the mean difference itself, `diff`, and a standardized effect size `delta` (corresponding to Cohen's $d$) obtained by dividing the difference by the standard deviation. Unlike a test, the strength of Bayes is that the size of the difference is available directly as a probability distribution. We also generate new data from the fitted model as `X_pred`, which we use later for the posterior predictive distribution.
+The block to note is `generated quantities`. Here we compute the mean difference itself, `diff`, and a standardized effect size `d` (corresponding to Cohen's $d$) obtained by dividing the difference by the standard deviation. Unlike a test, the strength of Bayes is that the size of the difference is available directly as a probability distribution. We also generate new data from the fitted model as `X_pred`, which we use later for the posterior predictive distribution.
 
 ### Estimation and reading the results
 
@@ -107,10 +107,10 @@ fit_t <- model_t$sample(
   refresh = 0, save_cmdstan_config = TRUE
 )
 
-fit_t$summary(c("mu1", "mu2", "sigma", "diff", "delta"))
+fit_t$summary(c("mu1", "mu2", "sigma", "diff", "d"))
 ```
 
-The `Rhat` values are all near $1.00$ and `ess_bulk` is large, so sampling went well. `mu1` and `mu2` summarize the posteriors of the population means of Methods A and C. The one to watch is `diff`, the posterior of the mean difference. Beyond a point estimate, we can see at a glance the range in which the difference lies with $90\%$ probability (`q5` to `q95`). The standardized effect size `delta` is also very large, so it seems safe to conclude that there is a substantial difference between Methods A and C.
+The `Rhat` values are all near $1.00$ and `ess_bulk` is large, so sampling went well. `mu1` and `mu2` summarize the posteriors of the population means of Methods A and C. The one to watch is `diff`, the posterior of the mean difference. Beyond a point estimate, we can see at a glance the range in which the difference lies with $90\%$ probability (`q5` to `q95`). The standardized effect size `d` is also very large, so it seems safe to conclude that there is a substantial difference between Methods A and C.
 
 Numbers aside, it helps to picture the posteriors. The `mcmc_areas` function in the `bayesplot` package draws each parameter's posterior as a density "ridge."
 
@@ -123,9 +123,9 @@ bayesplot::mcmc_areas(fit_t$draws("diff")) +
   ggplot2::geom_vline(xintercept = 0, linetype = "dashed")
 ```
 
-We can see at a glance that the two mean ridges are clearly separated, and that the distribution of `diff` lies well to the right of $0$ (the dashed line). Almost all of the difference's ridge is in the positive region, which makes sense given the probability of superiority near $1$ that we compute next.
+We can see at a glance that the two mean ridges are clearly separated, and that the distribution of `diff` lies well to the right of $0$ (the dashed line). Almost all of the difference's ridge lies in the positive region.
 
-A benefit of holding the difference as a probability distribution is that we can freely ask various "data-level hypotheses" after the fact. For example, the probability that Method A's population mean exceeds Method C's is just the proportion of the difference's posterior that is positive. This is called the probability of superiority.
+A benefit of holding the difference as a probability distribution is that we can freely ask various hypotheses after the fact. For example, the probability that Method A's population mean exceeds Method C's is just the proportion of the difference's posterior that is positive. This is called the probability of superiority.
 
 ```{r superiority}
 draws_t <- fit_t$draws(format = "df")
@@ -133,7 +133,7 @@ draws_t <- fit_t$draws(format = "df")
 mean(draws_t$diff > 0)
 ```
 
-We merely count the proportion of positive values among the MCMC samples of the difference. It is essentially $1$: we can be all but certain that "Method A is superior." Whereas the frequentist $p$-value is the indirect quantity "how easily the test statistic arises under the null," here we answer exactly the question we wanted, in terms of probability.
+We merely count the proportion of positive values among the MCMC samples of the difference. It is essentially $1$, consistent with the earlier figure, in which almost all of the difference's ridge lay in the positive region. That is, we can be all but certain that "Method A is superior." Whereas the frequentist $p$-value is the indirect quantity "how easily the test statistic arises under the null," here we answer exactly the question we wanted, in terms of probability.
 
 ## A Bayesian multi-group comparison (ANOVA)
 
@@ -213,7 +213,7 @@ pair |>
   )
 ```
 
-The A–C and B–C differences have $95\%$ intervals that do not straddle $0$, so we can be all but certain that "there is a difference" (the probability of superiority is also near $1$). The A–B difference, by contrast, has a $95\%$ interval that brackets $0$, with a probability of superiority near $0.5$ — so we cannot say there is a clear difference between those two methods. We built a $2$-point gap into the population, but with only $40$ people per group the data could not distinguish it.
+The A–C and B–C differences have $95\%$ credible intervals (ETI) that do not straddle $0$, so we can be all but certain that "there is a difference" (the probability of superiority is also near $1$). The A–B difference, by contrast, has a $95\%$ credible interval that brackets $0$, with a probability of superiority near $0.5$ — so we cannot say there is a clear difference between those two methods. We built a $2$-point gap into the population, but with only $40$ people per group the data could not distinguish it.
 
 Overlaying the posteriors of all pairwise differences makes it easy to see which pairs straddle $0$.
 
@@ -245,7 +245,7 @@ bayestestR::rope(pair$`A-B`, range = c(-2, 2), ci = 1)
 bayestestR::rope(pair$`A-C`, range = c(-2, 2), ci = 1)
 ```
 
-Most of the A–B difference's posterior (over $70\%$) lies inside the ROPE. We can thus positively assert that "the difference between the two is practically negligible." This is something frequentism could not say in principle (accepting the null), and it is a major advantage of Bayes. The A–C difference, on the other hand, lies entirely outside the ROPE, so we judge that there is a practical difference.
+Most of the A–B difference's posterior (over $70\%$) lies inside the ROPE. This supports a small difference, but because the $95\%$ credible interval does not fit entirely inside the ROPE, we cannot go so far as to assert that "the difference between the two is practically negligible." By Kruschke's criterion, we judge "practically equivalent" only when the $95\%$ HDI falls entirely inside the ROPE, and we withhold judgment when only part of it does. Still, the very existence of a route to positively asserting equivalence is something frequentism could not offer in principle (accepting the null), and it is a major advantage of Bayes. The A–C difference, on the other hand, lies entirely outside the ROPE, so we judge that there is a practical difference.
 
 This ROPE-based judgment is also intuitive when we overlay the ROPE band on the posteriors of the differences.
 
@@ -260,7 +260,7 @@ bayesplot::mcmc_areas(as.matrix(pair)) +
   ggplot2::geom_vline(xintercept = 0, linetype = "dashed")
 ```
 
-The red band is the ROPE. The ridge of the A–B difference falls mostly inside the red band (practically equivalent), whereas the ridges of the A–C and B–C differences lie far to the right of the band (a practical difference). Overlaying the ROPE band on the "does the interval straddle $0$" view lets us distinguish "we cannot say there is a difference" from "there is practically no difference."
+The red band is the ROPE. The ridge of the A–B difference falls mostly inside the red band (the difference is small, but we cannot go so far as to call them equivalent), whereas the ridges of the A–C and B–C differences lie far to the right of the band (a practical difference). Overlaying the ROPE band on the "does the interval straddle $0$" view lets us distinguish "we cannot say there is a difference" from "there is practically no difference."
 
 How to set the width of the ROPE is the researcher's judgment and should rest on domain knowledge. When no criterion comes to mind, @kruschke2018rejecting suggests $\pm 0.1$ standardized units as a guide. In `bayestestR`, setting `range = "default"` automatically uses a ROPE based on this standardized criterion.
 
@@ -411,9 +411,9 @@ mean(xC >= 70)
 
 Let us read the results in turn.
 
-For the **probability of superiority**, whereas at the population-mean level it was essentially $1$ (A is certainly higher), at the data level it stays around $0.95$. This means that even though A is clearly higher on average, because of individual variability there is about a $5\%$ chance that "a C person happens to beat an A person." The obvious fact that the group tendency and what happens to a given individual are different is here expressed numerically. This data-level probability of superiority is also called the common-language effect size, and it is well suited to conveying effect size intuitively.
+For the **probability of superiority**, whereas at the population-mean level it was essentially $1$ (A is certainly higher), at the data level it stays around `r round(mean(xA > xC), 2)`. This means that even though A is clearly higher on average, because of individual variability there is about a `r round(100 * (1 - mean(xA > xC)))`% chance that "a C person happens to beat an A person." The obvious fact that the group tendency and what happens to a given individual are different is here expressed numerically. This data-level probability of superiority is also called the common-language effect size, and it is well suited to conveying effect size intuitively.
 
-The **overlap** expresses how much the two groups' predictive distributions overlap. Methods A and C overlap only about $20\%$ (they are $80\%$ separated), showing a large effect. Methods A and B, on the other hand, overlap more than $90\%$ — practically the same distribution. The smaller the overlap, the larger the effect; the conclusion from the ROPE and Bayes factor that "A and B are equivalent while C is clearly different" shows up here as the degree of overlap of the distributions.
+The **overlap** expresses how much the two groups' predictive distributions overlap. Methods A and C overlap only about one quarter (three quarters are separated), showing a large effect. Methods A and B, on the other hand, overlap more than $90\%$ — practically the same distribution. The smaller the overlap, the larger the effect; the conclusion from the ROPE and Bayes factor that "A and B differ only slightly while C is clearly different" shows up here as the degree of overlap of the distributions.
 
 The **proportion above a threshold** is the probability of exceeding some criterion. If we take a passing line of $70$ points, for example, more than $20\%$ of Method A reaches the passing region, whereas almost no one in Method C does. When practical decisions hinge more on "what fraction pass" than on "by how many points the averages differ," it is clearer to fix a criterion and compare the proportions above it like this.
 
@@ -434,8 +434,8 @@ This is not to say frequentist tests are bad. They are clear procedures refined 
 
 The following dataset records a measurement (`y`) for three groups (`group`). You can download it from [ex_anova_bayes.csv](ex_anova_bayes.csv). Using the methods covered in this chapter, report the following in order.
 
-1. Using this chapter's `bayes_anova.stan`, estimate the three-group mean differences in tidy-data form, and report the posterior summaries and $95\%$ intervals of each group's population mean `mu` and effect `delta`.
-2. From the MCMC samples, obtain the posteriors of all three pairwise differences and report each one's $95\%$ interval and probability of superiority.
+1. Using this chapter's `bayes_anova.stan`, estimate the three-group mean differences in tidy-data form, and report the posterior summaries and $95\%$ credible intervals of each group's population mean `mu` and effect `delta`.
+2. From the MCMC samples, obtain the posteriors of all three pairwise differences and report each one's $95\%$ credible interval and probability of superiority.
 3. For each pairwise difference, compute `bayestestR::rope` with a ROPE of $\pm 0.5$ and discuss whether any pair can be called "practically no difference."
 4. Estimate the same model with `brms` (using effect coding), confirm that the coefficients match the Stan results, and then compute the Bayes factor and discuss whether the effects can be said to be non-zero.
 5. Draw the posterior predictive distribution with `ppc_dens_overlay` and assess whether the model assuming a normal distribution reproduces the data well.

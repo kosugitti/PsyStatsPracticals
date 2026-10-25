@@ -16,8 +16,8 @@ A **distance matrix** has distance entries; it is square and symmetric. It share
 
 R builds distance matrices with `dist()`. The default is Euclidean, but several alternatives are available:
 
-- `"euclidean"`: Euclidean distance, $d(x, y) = \sqrt{\sum_{i=1}^{N} (x_i - y_i)^2}$.
-- `"maximum"`: Chebyshev distance, $d(x, y) = \max(|x_i - y_i|)$.
+- `"euclidean"`: Euclidean distance, $d(x, y) = \sqrt{\sum (x_i - y_i)^2}$.
+- `"maximum"`: Chebyshev distance, $d(x, y) = \max_i |x_i - y_i|$.
 - `"manhattan"`: Manhattan distance, $d(x, y) = \sum |x_i - y_i|$.
 - `"canberra"`: Canberra distance, $d(x, y) = \sum \frac{|x_i - y_i|}{|x_i + y_i|}$.
 - `"binary"`: binary (Jaccard) distance, $d(x, y) = (b + c)/(a + b + c + d)$, where $a$ counts positions where both are 1, $b$ where $x = 1$ and $y = 0$, $c$ where $x = 0$ and $y = 1$, and $d$ where both are 0. More shared 1s means a smaller distance.
@@ -45,7 +45,7 @@ Results are displayed as a tree-shaped **dendrogram** and cut at some height to 
 
 Example with `iris`:
 
-```{r hierarical clustering}
+```{r hierarchical clustering}
 data(iris)
 d_matrix <- dist(iris[, -5], method = "euclidean")
 result.h <- hclust(d_matrix, method = "ward.D2")
@@ -85,7 +85,8 @@ A well-known non-hierarchical method is **k-means**:
 k-means handles arbitrary $k$ and converges relatively quickly on large data. In R:
 
 ```{r kmeans}
-result.k <- kmeans(d_matrix, centers = 3)
+set.seed(123)
+result.k <- kmeans(iris[, -5], centers = 3, nstart = 25)
 table(result.k$cluster, iris$Species)
 ```
 
@@ -97,7 +98,8 @@ An example of soft clustering: **fuzzy c-means**.
 
 ```{r fuzzy c-means}
 pacman::p_load(e1071)
-result.c <- cmeans(d_matrix, centers = 3, m = 2)
+set.seed(123)
+result.c <- cmeans(iris[, -5], centers = 3, m = 2)
 head(result.c$membership)
 table(result.c$cluster, iris$Species)
 ```
@@ -164,7 +166,7 @@ dat %>%
 
 Is a single normal distribution a good fit here? The normal is unimodal and symmetric, so forcing one onto this data would distort the description. Better to assume two latent normal distributions whose mixture produced the data.
 
-```{r towmodels}
+```{r twomodels}
 #| message: FALSE
 #| dev: "ragg_png"
 #| echo: false
@@ -276,45 +278,63 @@ Test theory generally treats data as binary, with IRT (Bernoulli likelihood) as 
 
 The biclustering of @TDE2022 classifies items into **fields** and respondents into **classes**. Respondent classes can be ordered by overall correctness and represented as **ranks** (giving rise to **rank-clustering**).
 
-To formalize Shojima's biclustering, define the principal matrices. Let $J$ be the number of items, $S$ the number of respondents, $C$ the number of latent classes/ranks, and $F$ the number of latent fields.
+To formalize Shojima's biclustering, define the principal matrices. Let $J$ be the number of items, $S$ the number of respondents, $C$ the number of latent classes (ranks), and $F$ the number of latent fields.
 
-The **bicluster reference matrix** $\boldsymbol{\Pi}_B$ is
+The data form an $S \times J$ response matrix $\boldsymbol{U} = \{u_{sj}\}$, with $u_{sj} = 1$ if respondent $s$ answers item $j$ correctly and $0$ otherwise. To handle missing data, we also prepare a missing-indicator matrix $\boldsymbol{Z} = \{z_{sj}\}$ of the same size: $z_{sj} = 1$ if the cell is observed and $0$ if missing; missing cells do not contribute to the likelihood.
 
-$$
-\boldsymbol{\Pi}_B = \begin{bmatrix}
-\pi_{11} & \cdots & \pi_{1F} \\
-\vdots & \ddots & \vdots \\
-\pi_{C1} & \cdots & \pi_{CF}
-\end{bmatrix} = \{\pi_{fc}\},
-$$
-
-where $\pi_{fc}$ is the probability that a respondent in class/rank $c$ answers an item in field $f$ correctly.
-
-The **class membership matrix** $\mathbf{M}_C$ and the **field membership matrix** $\mathbf{M}_F$ are
+Item-to-field membership is represented by the $J \times F$ **field membership matrix** $\boldsymbol{M}_F = \{m_{jf}\}$, with $m_{jf} = 1$ if item $j$ belongs to field $f$ and $0$ otherwise; each row contains exactly one $1$. Likewise, respondent-to-class membership is represented by the $S \times C$ **class membership matrix** $\boldsymbol{M}_C = \{m_{sc}\}$:
 
 $$
-\mathbf{M}_C = \begin{bmatrix}
+\boldsymbol{M}_C = \begin{bmatrix}
 m_{11} & \cdots & m_{1C} \\
 \vdots & \ddots & \vdots \\
 m_{S1} & \cdots & m_{SC}
 \end{bmatrix}, \quad
-\mathbf{M}_F = \begin{bmatrix}
+\boldsymbol{M}_F = \begin{bmatrix}
 m_{11} & \cdots & m_{1F} \\
 \vdots & \ddots & \vdots \\
 m_{J1} & \cdots & m_{JF}
 \end{bmatrix}.
 $$
 
-In rank-clustering, the **rank membership matrix** $\mathbf{M}_R$ is obtained from $\mathbf{M}_C$ by multiplying by a filter matrix $\mathbf{F}$ that gently connects adjacent classes:
+The core of the model is the $F \times C$ **bicluster reference matrix** $\boldsymbol{\Pi}_B$:
 
 $$
-\mathbf{M}_R = \mathbf{M}_C \mathbf{F}.
+\boldsymbol{\Pi}_B = \begin{bmatrix}
+\pi_{11} & \cdots & \pi_{1C} \\
+\vdots & \ddots & \vdots \\
+\pi_{F1} & \cdots & \pi_{FC}
+\end{bmatrix} = \{\pi_{fc}\},
 $$
 
-For example, with 6 ranks $\mathbf{F}$ takes the form
+where $\pi_{fc}$ is the probability that a respondent in class $c$ answers an item in field $f$ correctly. In other words, the model partitions the response matrix along both rows (respondents) and columns (items) into $F \times C$ blocks and assumes that the probability of a correct response is constant within each block. If respondent $s$ belongs to class $c$ and item $j$ belongs to field $f$, then
+
+$$ u_{sj} \sim \mathrm{Bernoulli}(\pi_{fc}). $$
+
+Whereas IRT places continuous parameters on each item and each respondent, biclustering explains the data solely through a discrete classification ("which block does a cell fall into?") and the block-wise correct-response probabilities $\pi_{fc}$.
+
+Given the membership matrices, the likelihood function can be written as
 
 $$
-\mathbf{F} = \begin{bmatrix}
+l(\boldsymbol{U} \mid \boldsymbol{\Pi}_B, \boldsymbol{M}_C, \boldsymbol{M}_F) = \prod_{s=1}^{S}\prod_{j=1}^{J}\prod_{f=1}^{F}\prod_{c=1}^{C} \left(\pi_{fc}^{u_{sj}} (1 - \pi_{fc})^{1 - u_{sj}}\right)^{z_{sj}\, m_{sc}\, m_{jf}}.
+$$
+
+The exponent $z_{sj} m_{sc} m_{jf}$ is a switch that equals $1$ only when respondent $s$ belongs to class $c$, item $j$ belongs to field $f$, and the cell is observed. Each cell's response is thus counted as arising from the Bernoulli distribution of the block $(f, c)$ to which it belongs.
+
+Because the membership matrices $\boldsymbol{M}_C$ and $\boldsymbol{M}_F$ are unknown, estimation uses the EM algorithm. In the E-step, the posterior probability that each respondent belongs to each class is computed given the current $\boldsymbol{\Pi}_B$ and field memberships; then the posterior probability that each item belongs to each field is computed given the current $\boldsymbol{\Pi}_B$ and class memberships. Memberships are carried forward as probabilities rather than as $0/1$, so the result is a fuzzy clustering. In the M-step, $\pi_{fc}$ is updated from the numbers of correct and incorrect responses within block $(f, c)$, weighted by the membership probabilities. `exametrika` uses the maximum a posteriori estimate under a beta prior on $\pi_{fc}$ (uniform by default), which by default coincides with the proportion correct within the block. The two steps are repeated until the increase in the log-likelihood becomes sufficiently small.
+
+Rank-clustering orders the classes so that the probability of a correct response increases from rank $1$ to rank $C$. There are two ways to achieve this.
+
+The first is Shojima's original method (the GTM method) [@TDE2022]. The class membership matrix $\boldsymbol{M}_C$ obtained in the E-step is multiplied by a filter matrix $\boldsymbol{F}$ that gently connects adjacent classes, yielding the **rank membership matrix** $\boldsymbol{M}_R$:
+
+$$
+\boldsymbol{M}_R = \boldsymbol{M}_C \boldsymbol{F}.
+$$
+
+For example, with 7 ranks $\boldsymbol{F}$ takes the form
+
+$$
+\boldsymbol{F} = \begin{bmatrix}
 0.864 & 0.120 & & & & & \\
 0.136 & 0.760 & 0.120 & & & & \\
 & 0.120 & 0.760 & 0.120 & & & \\
@@ -325,15 +345,15 @@ $$
 \end{bmatrix}.
 $$
 
-The likelihood is
+The filter matrix distributes a small share of each membership probability to the neighboring ranks. As a result, adjacent ranks have similar correct-response probabilities, and the ranks tend to line up in order of proportion correct. This is smoothing, however, and does not guarantee the ordering itself.
 
-$$
-l(\mathbf{U} \mid \boldsymbol{\Pi}_B) = \prod_{s=1}^{S}\prod_{j=1}^{J}\prod_{f=1}^{F}\prod_{c=1}^{C} \left(\pi_{fc}^{u_{sj}} (1 - \pi_{fc})^{1 - u_{sj}}\right)^{z_{sj}\, m_{sc}\, m_{jf}},
-$$
+The second is order-constrained estimation (the isotonic method), the default since `exametrika` 2.0.0. It uses no filter matrix; instead, in the M-step it obtains $\pi_{fc}$ by directly imposing the constraint that the correct-response probabilities in each field be monotonically non-decreasing in rank, that is,
 
-estimated by EM.
+$$ \pi_{f1} \le \pi_{f2} \le \cdots \le \pi_{fC} \quad (f = 1, \ldots, F). $$
 
-The `exametrika` package implements this. A worked example:
+For binary data this can be solved by weighted isotonic regression (the pool-adjacent-violators algorithm, PAVA), and under the default uniform prior it coincides with the order-constrained maximum likelihood estimator. Because the ordering is guaranteed at the estimation stage, the ranks are clearly interpretable. To estimate with the GTM method instead, specify `estimation = "GTM"` in `Biclustering()`.
+
+Let us look at a worked example using the sample code of the `exametrika` package, which implements these methods:
 
 ```{r exametrika}
 #| message: FALSE
@@ -346,7 +366,7 @@ result.Ranklustering <- Biclustering(J35S515,
 plot(result.Ranklustering, type = "Array")
 ```
 
-`Biclustering()` takes the data, the number of fields `nfld`, the number of classes/ranks `ncls`, and a `method` (`"B"` for biclustering, `"R"` for rank-clustering). Here we use `J35S515`, a sample dataset of 515 respondents on 35 items.
+`Biclustering()` takes the data, the number of fields `nfld`, the number of classes/ranks `ncls`, and a `method` (`"B"` for biclustering, `"R"` for rank-clustering). For rank-clustering, the estimation method is chosen with the `estimation` argument; the default is `"isotonic"`. Here we use `J35S515`, a sample dataset of 515 respondents on 35 items.
 
 The array plot is shown. The left panel is the raw data — respondents on rows, items on columns, with black squares (■) for correct answers and white squares (□) for incorrect. The right panel is the post-analysis arrangement, grouping similar patterns by rank and by field.
 
@@ -356,7 +376,7 @@ Visualizations of the field and rank membership matrices:
 ```{r biclustering}
 #| message: FALSE
 #| dev: "ragg_png"
-#| #| fig-width: 10
+#| fig-width: 10
 #| fig-height: 8
 plot(result.Ranklustering, type = "FRP", nc = 2, nr = 3)
 plot(result.Ranklustering, type = "RMP", students = 1:9, nc = 3, nr = 3)
@@ -371,7 +391,7 @@ The `exametrika` package implements all twelve models in @TDE2022; see [the pack
 
 **Multidimensional scaling (MDS)** is, in one line, the recovery of a map from a distance matrix.
 
-MDS divides into **metric** and **non-metric**. Metric MDS reads coordinates directly off the eigenvalues and eigenvectors of the (transformed) distance matrix and requires the data to be ratio-scale and error-free. The mathematical justification rests on the Young–Householder theorem (look it up if interested).
+MDS divides into **metric** and **non-metric**. Metric MDS takes as coordinates the eigenvectors obtained from the eigenvalue decomposition of the inner-product matrix formed by double-centering the squared distances, and requires the data to be ratio-scale and error-free. The mathematical justification rests on the Young–Householder theorem (look it up if interested).
 
 A metric-MDS example using R's built-in `eurodist` data (distances between European cities) and the base function `cmdscale()`:
 
@@ -404,13 +424,17 @@ grid(lty = 2, col = "lightgray")
 
 Athens sits at upper right and Stockholm at the bottom, which suggests the north–south axis is inverted, but otherwise the relative positions are recovered well. `cmdscale()`'s `k` selects the number of dimensions; we chose 2. Strictly the earth is a sphere, so $k = 3$ would be more accurate, but for visualization a low dimension is usual.
 
-`eurodist` records actual physical distances, so ratio-scale, error-free data is plausible. In psychological applications, however, neither assumption typically holds — and there **non-metric** MDS is used. Non-metric MDS places objects in a multidimensional space so that the *ordering* of distances is preserved: writing the distance between objects $i$ and $j$ as $d_{ij}$,
+`eurodist` records actual physical distances, so ratio-scale, error-free data is plausible. In psychological applications, however, neither assumption typically holds — and there **non-metric** MDS is used. Non-metric MDS places objects in a multidimensional space so that the *ordering* in the data is preserved: writing the dissimilarity between objects $i$ and $j$ given as data as $\delta_{ij}$, and the distance between them computed from the configured coordinates as $d_{ij}$,[^mds-notation]
 
-$$ d_{ij} < d_{kl} \to \delta_{ij} < \delta_{kl}, $$
+$$ \delta_{ij} < \delta_{kl} \to d_{ij} < d_{kl}, $$
 
-where $\delta_{ij}$ are the recovered coordinate distances. Kruskal's classic non-metric MDS minimizes a **stress** value
+it seeks coordinates under which this order relation holds. Kruskal's classic non-metric MDS minimizes the **stress** value
 
-$$ \sum_{i > j} e_{ij}^2 = \sum_{ij} (\delta_{ij} - d_{ij})^2. $$
+$$ \mathrm{Stress} = \sqrt{\frac{\sum_{i<j} (d_{ij}-\hat{d}_{ij})^2}{\sum_{i<j} d_{ij}^2}}, $$
+
+where $\hat{d}_{ij}$ (the **disparity**) is the monotone-regression approximation of $d_{ij}$ that preserves the order of the dissimilarities $\delta_{ij}$.
+
+[^mds-notation]: In statistics, data and statistics are generally written with Latin letters and unknown parameters with Greek letters. MDS reverses this convention: the dissimilarities (the data) are written $\delta_{ij}$, and the distances computed from the model (the coordinates) are written $d_{ij}$. Here $d$ stands for *distance*, and $\delta$ is the Greek letter with the same sound assigned to the corresponding data-side quantity. The unknown coordinates are written with the Latin letter $\boldsymbol{X}$. This section follows the MDS convention.
 
 Many alternative objective functions have been proposed; in R, the `smacof` package (Scaling by Majorizing a COmplicated Function) is convenient.
 
@@ -510,7 +534,7 @@ grid(lty = 2, col = "lightgray")
 print(result$conf)
 ```
 
-The plot reveals the structure of perceptual similarity among facial expressions. The first dimension can be read as valence (pleasant/unpleasant), the second as arousal, and the third as naturalness.
+The plot reveals the structure of perceptual similarity among facial expressions. The three dimensions are often interpreted as pleasantness–unpleasantness, attention–rejection, and tension–sleep (Schlosberg's three dimensions). Because MDS axes can be freely rotated, however, the correspondence between axes and these dimensions may change with the orientation of the solution.
 
 For more objective dimension labels, correlate the coordinates with external variables. Since a correlation is $\cos\theta$ between vectors, plotting auxiliary lines for external variables along each axis makes the labeling easier. See @kosugi2016a for details.
 
@@ -535,7 +559,7 @@ Any multivariate technique can be applied. Cluster analysis and MDS, both discus
 
 Modern text mining at scale often replaces the morphological unit with the **token**[^3], leveraging big data and machine learning.
 
-[^3]: A *token* in machine learning is the minimal semantic unit of text — not necessarily a morpheme, but a numerical-vector unit segmented by similarity.
+[^3]: A *token* is the unit in which machine-learning models process text; it does not necessarily coincide with a morpheme. Each token is converted by a pretrained model into a numerical vector (an embedding).
 
 A morphological-analysis-based example: the `RMeCab` package is a common route in R; install MeCab (the engine) first, then `RMeCab`.[^4] [^5] The newer `gibasa` package bundles a MeCab binary internally, so no external setup is needed; it is on CRAN.[^6] We use `gibasa` here.
 
@@ -615,7 +639,7 @@ dtm <- dat_count |>
 dtm
 ```
 
-```{r textminig_example}
+```{r textmining_example}
 #| dev: "ragg_png"
 #| fig-width: 8
 #| fig-height: 6
@@ -668,11 +692,11 @@ Finally, methods based on the **partial-correlation** matrix.
 
 (Pearson) correlation matrices underpin many linear models, but when a third variable $Z$ influences both $X$ and $Y$, the observed correlation between $X$ and $Y$ may be spuriously inflated; the correlation drops once $Z$ is controlled for.
 
-The statistical control regresses $X$ on $Z$ and $Y$ on $Z$, takes the residuals $R_X$ and $R_Y$, and computes their correlation — the **partial correlation** of $X$ and $Y$ given $Z$, often regarded as capturing the more genuine relationship. With many variables, the partial correlation between any two variables, given the rest, can be obtained without running each regression individually via the following matrix identity. Let $\mathbf{R}$ be the correlation matrix; the entries of the partial-correlation matrix $\mathbf{P}$ are
+The statistical control regresses $X$ on $Z$ and $Y$ on $Z$, takes the residuals $R_X$ and $R_Y$, and computes their correlation — the **partial correlation** of $X$ and $Y$ given $Z$, often regarded as capturing the more genuine relationship. With many variables, the partial correlation between any two variables, given the rest, can be obtained without running each regression individually via the following matrix identity. Let $\boldsymbol{R}$ be the correlation matrix; the entries of the partial-correlation matrix $\boldsymbol{P}$ are
 
 $$p_{ij} = -\frac{r^{ij}}{\sqrt{r^{ii} r^{jj}}},$$
 
-where $r^{ij}$ is the $(i, j)$ entry of $\mathbf{R}^{-1}$.
+where $r^{ij}$ is the $(i, j)$ entry of $\boldsymbol{R}^{-1}$.
 
 Factor analysis starts from a correlation matrix and gathers strongly related variables into factors. **Graphical modeling** inverts this idea: starting from the partial-correlation matrix, it removes the weak ties and visualizes only the genuine pairwise relationships.
 
@@ -748,17 +772,17 @@ par(mfrow = c(1, 1))
 
 Side by side, the patterns differ in places.
 
-A network can be built from either matrix; we use the partial-correlation matrix here.
+A network can be built from either matrix; we use a partial-correlation network here. Specifying `glasso` takes the correlation matrix as input, estimates a regularized partial-correlation matrix, and draws it as a network.
 
 The `qgraph` package handles estimation and drawing. We use `graph = "glasso"`, the Gaussian graphical model with L1 regularization that zeroes out unimportant pairwise relationships, cutting paths by BIC. The `spring` layout produces a natural arrangement; other layouts are available.
 
 ```{r glasso}
 pacman::p_load(qgraph)
 BICgraph <- qgraph(
-  partial_cor_matrix,
+  cor_matrix, # input the correlation matrix (glasso estimates the regularized partial correlations internally)
   graph = "glasso",
-  sampleSize = nrow(bfi),
-  tuning = 0, # 0 selects by BIC; larger = sparser
+  sampleSize = nrow(bfi_clean), # sample size used to compute the correlations (used for EBIC)
+  tuning = 0, # EBIC hyperparameter gamma (0 = ordinary BIC; larger = sparser)
   layout = "spring",
   title = "BIC",
   threshold = TRUE,
@@ -777,9 +801,9 @@ centralityPlot(
 
 The indices:
 
-1. **Strength** — sum of the absolute edge weights incident on a node. How strongly the node connects to the rest of the network. $\text{strength} = \sum |w_{ij}|$.
-2. **Closeness** — the reciprocal of the sum of shortest-path distances to all other nodes. How "close" the node is to the rest of the graph; related to ease of information propagation. $\text{closeness} = 1 / \sum d_{ij}$.
-3. **Betweenness** — how often the node lies on the shortest path between other pairs. Identifies "bridges"; in a psychopathology network, hub symptoms that connect chains of other symptoms.
+1. **Strength** — sum of the absolute edge weights incident on a node. How strongly the node connects to the rest of the network. $\mathrm{strength}_i = \sum_j |w_{ij}|$.
+2. **Closeness** — the reciprocal of the sum of shortest-path distances to all other nodes. How "close" the node is to the rest of the graph; related to ease of information propagation. $\mathrm{closeness}_i = 1 / \sum_j d_{ij}$.
+3. **Betweenness** — how often the node lies on the shortest path between other pairs. Identifies "bridges"; in a network, the "hubs" of the connections among variables.
 4. **Expected influence** — a refinement of strength that distinguishes positive and negative edges (positive adds, negative subtracts). Captures the genuine "influence" of a node by accounting for inhibitory edges as well.
 
 Network models have many estimation refinements and extensions (dynamic, time-series). Plenty to look forward to.
@@ -881,7 +905,7 @@ similarity_matrix[1:5, 1:5]
 **Steps**:
 
 1. Convert similarity to a distance matrix.
-2. Classical MDS in 2D.
+2. Convert the similarities to dissimilarities and obtain a 2D solution by MDS (non-metric MDS is recommended).
 3. Visualize with `ggplot` and `ggrepel`.
 4. Discuss the geographic/cultural patterns implicit in the configuration.
 
@@ -951,28 +975,36 @@ km_result <- kmeans(consumer_scaled, centers = 3, nstart = 25)
 plot(consumer_scaled, col = km_result$cluster, main = "K-means result")
 
 # Exercise 2: MDS
-pacman::p_load(smacof)
+pacman::p_load(smacof, tidyverse)
 
 city_data <- read.csv("city_similarity.csv", fileEncoding = "UTF-8")
-city_dist <- dist(city_data[, -1])
-
-set.seed(123)
-n_cities <- nrow(city_data)
-dist_matrix <- as.dist(matrix(runif(n_cities^2, 0, 10), n_cities, n_cities))
-
-mds_result <- cmdscale(dist_matrix, k = 2)
-plot(mds_result, type = "n", main = "City similarity MDS")
-text(mds_result, labels = rownames(mds_result))
+# reshape the long format back to a 10 x 10 similarity matrix (the diagonal was dropped, so fill in the maximum, 10)
+cities <- unique(city_data$city1)
+sim_mat <- city_data %>%
+  pivot_wider(names_from = city2, values_from = similarity) %>%
+  column_to_rownames("city1") %>%
+  as.matrix()
+sim_mat <- sim_mat[cities, cities]
+diag(sim_mat) <- 10
+# convert similarities to dissimilarities (subtract from the maximum)
+city_dist <- as.dist(10 - sim_mat)
+# non-metric MDS (treat the data as ordinal)
+mds_result <- mds(city_dist, ndim = 2, type = "ordinal")
+plot(mds_result, main = "City similarity MDS")
+mds_result$stress
 
 # Exercise 3: network analysis
 pacman::p_load(qgraph, psych)
 
 personality_data <- read.csv("personality_data.csv", fileEncoding = "UTF-8")
+# correlation matrix
 cor_matrix <- cor(personality_data[, -1])
-partial_cor <- -cov2cor(solve(cor_matrix))
-diag(partial_cor) <- 0
 
-qgraph(partial_cor,
+# estimate a sparse partial-correlation network with glasso
+net <- qgraph(cor_matrix,
+  graph = "glasso",
+  sampleSize = nrow(personality_data),
+  tuning = 0,
   layout = "spring",
   nodeNames = colnames(personality_data)[-1],
   title = "Personality network"

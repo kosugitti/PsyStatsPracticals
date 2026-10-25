@@ -99,7 +99,7 @@ Check, in the Total row of the table, that the total SS equals the sum of the be
 
 We also passed `peta = TRUE` to print **partial $\eta^2$**, an effect-size measure.
 
-Because the omnibus test is significant ($F(2, 12) = 6.59, p < 0.05, \eta^2 = 0.52$), the post hoc analysis is also printed. anovakun supports several post hoc methods; the default is the Shaffer-modified Bonferroni procedure. For details see [@BA33892274]. In outline, the Bonferroni method splits $\alpha$ by the number of hypotheses; Shaffer's modification adjusts the denominator to also account for the number of competing hypotheses.
+Because the omnibus test is significant ($F(2, 12) = 6.59, p < 0.05, \eta_p^2 = 0.52$), the post hoc analysis is also printed. anovakun supports several post hoc methods; the default is the Shaffer-modified Bonferroni procedure. For details see [@BA33892274]. In outline, the Bonferroni method splits $\alpha$ by the number of hypotheses; Shaffer's modification adjusts the denominator to also account for the number of competing hypotheses.
 
 Under this procedure, only the A–C comparison is significant ($t(12) = 3.61, p < 0.05$).
 
@@ -158,13 +158,13 @@ The general reading is the same as for the one-way case. Here we engineered effe
 
 ## Within-subjects designs
 
-Within-subjects designs are best framed via a multivariate normal — as in the paired $t$-test — assuming that the within-subject responses are correlated. The code below illustrates the generative process. Covariances are written as $s_{xy} = \rho_{xy} s_x s_y$, following $\rho_{xy} = s_{xy}/(s_x s_y)$.
+Within-subjects designs are best framed via a multivariate normal — as in the paired $t$-test — assuming that the within-subject responses are correlated. The code below illustrates the generative process. Covariances are set as $\sigma_{xy} = \rho_{xy} \sigma_x \sigma_y$, following $\rho_{xy} = \sigma_{xy}/(\sigma_x \sigma_y)$.
 
 ```{r}
 pacman::p_load(tidyverse)
 pacman::p_load(MASS)
 set.seed(42)
-# sample size per condition
+# number of individuals (replications per condition)
 n <- 10
 # grand mean, effect size, population SDs
 mu <- 10
@@ -174,7 +174,7 @@ rho12 <- 0.1
 rho13 <- 0.3
 rho23 <- 0.8
 mus <- c(mu, mu + s1 * delta, mu - s1 * delta)
-# build the covariance matrix
+# build the variance-covariance matrix
 Sigma <- matrix(NA, ncol = 3, nrow = 3)
 Sigma[1, 1] <- s1^2
 Sigma[2, 2] <- s2^2
@@ -234,7 +234,7 @@ mu4 <- mu + (delta4 * sigma)
 X1 <- rnorm(n1, mu1, sigma) %>% round(2)
 X2 <- rnorm(n2, mu2, sigma) %>% round(2)
 X3 <- rnorm(n3, mu3, sigma) %>% round(2)
-X4 <- rnorm(n4, mu3, sigma) %>% round(2)
+X4 <- rnorm(n4, mu4, sigma) %>% round(2)
 ## assemble
 dat <- data.frame(
   ID = 1:(n1 + n2 + n3 + n4),
@@ -268,7 +268,7 @@ rhos <- matrix(c(
   0.3, 0.3, 1, 0.8,
   0.4, 0.5, 0.8, 1
 ), ncol = 4)
-Sigma <- diag(SDs) %*% rhos
+Sigma <- diag(SDs) %*% rhos %*% diag(SDs)
 # data generation
 X <- mvrnorm(n, Mus, Sigma) %>%
   round(2) %>%

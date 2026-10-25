@@ -13,23 +13,23 @@ $$
 where $y_i$ is the $i$-th observation, $\beta_0$ the intercept, $\beta_1$ the regression coefficient, and $e_i$ the error. The extension to multiple regression is
 
 $$
-y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \cdots + \beta_p x_{pi} + e_i,
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} + e_i,
 $$
 
-with predictors $x_1, \ldots, x_p$ and coefficients $\beta_1, \ldots, \beta_p$.
+where $x_{i1}, \ldots, x_{ip}$ are the values of the $p$ predictors for the $i$-th observation and $\beta_1, \ldots, \beta_p$ are the regression coefficients.
 
 In vector/matrix form,
 
 $$
-y = X\beta + e,
+\boldsymbol{y} = \boldsymbol{X}\boldsymbol{\beta} + \boldsymbol{e},
 $$
 
-where $y$ is an $n$-vector, $X$ is the $n \times p$ **design matrix**, $\beta$ is a $p$-vector, and $e$ is an $n$-vector.
+where $\boldsymbol{y}$ is an $n$-vector, $\boldsymbol{X}$ is the $n \times (p+1)$ **design matrix**, $\boldsymbol{\beta}$ is a $(p+1)$-vector, and $\boldsymbol{e}$ is an $n$-vector.
 
 The design matrix stacks the explanatory-variable data:
 
 $$
-X = \begin{pmatrix}
+\boldsymbol{X} = \begin{pmatrix}
 1 & x_{11} & x_{12} & \cdots & x_{1p}\\
 1 & x_{21} & x_{22} & \cdots & x_{2p}\\
 \vdots & \vdots & \vdots & \ddots & \vdots\\
@@ -37,7 +37,7 @@ X = \begin{pmatrix}
 \end{pmatrix}.
 $$
 
-The first column is the constant 1 carrying the intercept; the remaining columns carry the predictors. The coefficient vector $\beta = (\beta_0, \beta_1, \ldots, \beta_p)^T$ then multiplies in to produce the linear combinations.
+The first column is the constant 1 carrying the intercept; the remaining columns carry the predictors. The coefficient vector $\boldsymbol{\beta} = (\beta_0, \beta_1, \ldots, \beta_p)'$ then multiplies in to produce the linear combinations.
 
 When a predictor $x$ takes only the values 0 and 1, it is a **dummy variable**. With a dummy predictor, the scatter plot looks unusual: only two values along the x-axis.
 
@@ -261,7 +261,7 @@ result.ml <- glm(y ~ x, family = binomial(), data = df_logistic)
 summary(result.ml)
 ```
 
-The MLE and Bayesian estimates differ slightly because of the small sample size. With a binary outcome, the available variance is necessarily small, and accurate estimation requires more data.
+The MLE and Bayesian estimates differ slightly. This is because the Bayesian estimate is the posterior mean (EAP), whereas the MLE is the peak of the likelihood (under the default flat prior, the posterior mode). With binary data the posterior tends to be skewed, so the two are likely to diverge.
 
 Interpreting the coefficients also takes some care. In ordinary regression, a coefficient is "change in $y$ per unit change in $x$"; in logistic regression that direct interpretation does not work, because the logistic function intervenes.
 
@@ -269,9 +269,9 @@ The linear model expresses
 
 $$ \beta_0 + \beta_1 x = \log \frac{p}{1 - p}. $$
 
-The right-hand side $\log\{p/(1-p)\}$ is the **logit**. Logistic regression uses the logit to make the relationship linear. Conversely, the linear model captures the *log of the odds*, with the odds determined by the linear combination of predictors. To interpret a coefficient, exponentiate it and read the result as an odds ratio.
+The right-hand side $\log\{p/(1-p)\}$ is the **logit**. The ratio $p/(1-p)$ of the success probability to the failure probability is called the **odds**, so the logit is the log of the odds (the log-odds). Logistic regression uses the logit to make the relationship linear. Conversely, the linear model captures the *log of the odds*, with the odds determined by the linear combination of predictors. To interpret a coefficient, exponentiate it ($e^{\beta_1}$) and read the result as a ratio of odds (an **odds ratio**).
 
-In our data the estimated slope is 1.36, so $e^{1.36} = 3.89$: a one-unit increase in the predictor multiplies the odds of success by 3.89.
+In our data the estimated slope is `r round(fixef(result.bayes.logistic)["x","Estimate"],2)`, so $e^{\beta_1}$ = `r round(exp(fixef(result.bayes.logistic)["x","Estimate"]),2)`: a one-unit increase in the predictor multiplies the odds of success by `r round(exp(fixef(result.bayes.logistic)["x","Estimate"]),2)`. Note that how many times the probability itself is multiplied depends on the baseline level of $p$.
 
 ### A linear model for the Poisson: Poisson regression
 
@@ -412,11 +412,11 @@ with an additional individual-difference term $SS_s$. The test compares the effe
 
 At the level of individual observations, the between-subjects model is
 
-$$ Y_{ij} = \beta_0 + \beta_1 x_{ij} + e_{ij}, $$
+$$ y_{ij} = \beta_0 + \beta_1 x_{ij} + e_{ij}, $$
 
 while the within-subjects model is
 
-$$ Y_{ij} = \mu + \beta_{0i} + \beta_1 x_{ij} + e_{ij}, $$
+$$ y_{ij} = \mu + \beta_{0i} + \beta_1 x_{ij} + e_{ij}, $$
 
 with $\mu$ the grand mean and $\beta_{0i}$ the deviation of individual $i$'s mean from the grand mean — i.e., the individual difference. With repeated measures on each individual we can compute an individual mean and extract the relative intercept shift as that individual's effect.
 
@@ -433,7 +433,7 @@ We have illustrated individual differences as variation in intercepts; one may e
 In a random-intercept model the intercept varies across individuals. Treating the per-individual intercept as a random draw from a normal:
 
 $$
-\beta_{0i} = \beta_0 + u_{0i}, \quad u_{0i} \sim N(0, \sigma_u).
+\beta_{0i} = \beta_0 + u_{0i}, \quad u_{0i} \sim N(0, \sigma_{u0}).
 $$
 
 The full model is
@@ -633,7 +633,7 @@ With Bayesian estimation, per-individual estimates and their uncertainty can be 
 A random-slope model lets the slope vary across individuals:
 
 $$
-\beta_{1i} = \beta_1 + u_{1i}, \quad u_{1i} \sim N(0, \sigma_u).
+\beta_{1i} = \beta_1 + u_{1i}, \quad u_{1i} \sim N(0, \sigma_{u1}).
 $$
 
 The full model is
@@ -726,10 +726,10 @@ $$
 \beta_{1i} = \beta_1 + u_{1i}.
 $$
 
-Because both random effects belong to the same individual, they are assumed correlated; their joint distribution is bivariate normal, and the correlation is itself estimated:
+Because both random effects belong to the same individual, they may be correlated; rather than giving each its own normal distribution, we assume that they are drawn jointly from a bivariate normal, and the correlation is itself estimated:
 
 $$
-\begin{pmatrix} u_{0i} \\ u_{1i} \end{pmatrix} \sim MVN\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \sigma_{u0}^2 & \sigma_{u01} \\ \sigma_{u01} & \sigma_{u1}^2 \end{pmatrix} \right).
+\begin{pmatrix} u_{0i} \\ u_{1i} \end{pmatrix} \sim \mathrm{MVN}\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \sigma_{u0}^2 & \sigma_{u01} \\ \sigma_{u01} & \sigma_{u1}^2 \end{pmatrix} \right).
 $$
 
 The full model:
@@ -840,6 +840,8 @@ The most basic HLM has two levels. Take students nested in classrooms as an exam
 
 #### Level 1 (individual level)
 
+From here on we follow the convention of the HLM literature [@Raudenbush2000] and reinterpret the subscripts. So far $i$ indexed individuals and $j$ observations; below, $i$ indexes individuals and $j$ classrooms (groups), the individual-level error is written $r_{ij}$ rather than $e_{ij}$, and classroom-level variances are written $\tau$.
+
 For individual $i$ ($i = 1, 2, \ldots, n_j$) in classroom $j$ ($j = 1, 2, \ldots, J$),
 
 $$
@@ -852,7 +854,7 @@ where:
 - $X_{ij}$: a student-level predictor (e.g., study time)
 - $\beta_{0j}$: classroom $j$'s intercept (its average achievement)
 - $\beta_{1j}$: classroom $j$'s slope (its predictor effect)
-- $r_{ij}$: individual-level residual, $r_{ij} \sim N(0, \sigma^2)$
+- $r_{ij}$: individual-level residual, $r_{ij} \sim N(0, \sigma)$
 
 #### Level 2 (classroom level)
 
@@ -878,7 +880,7 @@ where:
 Random effects are assumed multivariate normal:
 
 $$
-\begin{pmatrix} u_{0j} \\ u_{1j} \end{pmatrix} \sim MVN\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \tau_{00} & \tau_{01} \\ \tau_{01} & \tau_{11} \end{pmatrix} \right).
+\begin{pmatrix} u_{0j} \\ u_{1j} \end{pmatrix} \sim \mathrm{MVN}\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \tau_{00} & \tau_{01} \\ \tau_{01} & \tau_{11} \end{pmatrix} \right).
 $$
 
 #### Combined model
@@ -918,7 +920,7 @@ An ICC near 0 indicates little need to model the hierarchy; a larger ICC (typica
 
 ### A picture of the model
 
-A figure may clarify the equations. Read from the bottom up. The data $Y_{ij}$ sit at the bottom, generated from a normal distribution. The spread $\sigma_e^2$ of that distribution gives the individual-level residual $r_{ij}$. The mean of that normal is given by a regression model whose coefficients are themselves drawn from a bivariate normal at the next level. The bivariate normal has its own means (the higher-level fixed effects), its own spreads, and a correlation $\rho$ between intercept and slope. The intercept residual $u_{0j}$ and slope residual $u_{1j}$ have spreads $\tau_{00}$ and $\tau_{11}$, and their means are themselves given by regression on classroom-level variables. Since no information is available a priori about those classroom-level fixed effects, we use a non-informative (uniform) prior. The variance priors must be non-negative; truncated distributions are used, often heavy-tailed Cauchy or $t$.
+A figure may clarify the equations. Read from the bottom up. The data $Y_{ij}$ sit at the bottom, generated from a normal distribution. The spread $\sigma$ of that distribution gives the individual-level residual $r_{ij}$. The mean of that normal is given by a regression model whose coefficients are themselves drawn from a bivariate normal at the next level. The bivariate normal has its own means (the higher-level fixed effects), its own spreads, and a correlation $\rho$ between intercept and slope. The intercept residual $u_{0j}$ and slope residual $u_{1j}$ have spreads $\tau_{00}$ and $\tau_{11}$, and their means are themselves given by regression on classroom-level variables. Since no information is available a priori about those classroom-level fixed effects, we use a non-informative (uniform) prior. The variance priors must be non-negative; truncated distributions are used, often heavy-tailed Cauchy or $t$.
 
 ![HLM model diagram](images/hlm_model.png)
 
@@ -958,7 +960,7 @@ print(paste("Team:Position ICC1:", round(icc_team_position, 3)))
 print(paste("Position ICC1:", round(icc_position, 3)))
 ```
 
-The ICCs are negative — within-group variance exceeds between-group variance, meaning the grouping is not informative. A meaningfully positive ICC would be preferred.[^4] However, the team × position combination introduces within-group similarity, so we use it as the grouping variable for the fit.
+The ICCs are negative — within-group variance exceeds between-group variance, meaning the grouping is not informative. A meaningfully positive ICC would be preferred.[^4] The team × position combination also yields an ICC of almost 0 (slightly negative), but here, as an exercise in hierarchical modeling, we use it as the grouping variable for the fit.
 
 
 [^4]: A common rule of thumb is 0.05 (small), 0.10 (medium), 0.15 (large) — see [@Hox2002, @Raudenbush2000].

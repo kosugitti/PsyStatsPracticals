@@ -10,7 +10,7 @@ The linear part $\hat{y}_i$ is the **fitted value**, and the gap $e_i = y_i - \h
 
 Finding the intercept and slope of a line in the plane is the basic problem. Two points determine a unique line; data analysis, however, fits a line to many points, so an external criterion is needed. The criterion "minimize the variance of the residuals" leads to **ordinary least squares (OLS)**; the criterion "assume normal residuals and maximize their likelihood" leads to **maximum likelihood estimation (MLE)**. The former has a descriptive-statistics flavour; the latter is more thoroughly a probability model. A third option, popular when an informative prior is available, is **Bayesian estimation**.
 
-The OLS estimates have the closed form below. We refer to other texts [@kosugi2018; @Nishiuchi201712] for proofs; in outline, minimize the residual sum of squares $\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2$ by expansion or partial differentiation. It is gratifying that the result is expressible purely in terms of sample statistics — the means $\bar{x}, \bar{y}$, the variances $s_x, s_y$, and the correlation $r_{xy}$:
+The OLS estimates have the closed form below. We refer to other texts [@kosugi2018; @Nishiuchi201712] for proofs; in outline, minimize the residual sum of squares $\sum e_i^2 = \sum (y_i - (\beta_0 + \beta_1 x_i))^2$ by expansion or partial differentiation. It is gratifying that the result is expressible purely in terms of sample statistics — the means $\bar{x}, \bar{y}$, the standard deviations $s_x, s_y$, and the correlation $r_{xy}$:
 
 $$\beta_0 = \bar{y} - \beta_1\bar{x},\quad \beta_1 = r_{xy} \frac{s_y}{s_x}.$$
 
@@ -189,7 +189,7 @@ vif(result.mra)
 
 The values here are below those thresholds, so we are within an acceptable range.
 
-[^11.6]: In a two-predictor multiple regression, VIF $= 3$ corresponds to inter-predictor correlation $r \approx 0.81$; VIF $= 10$ corresponds to $r \approx 0.97$. See @kosugi2023 for details.
+[^11.6]: In a two-predictor multiple regression, VIF $= 3$ corresponds to inter-predictor correlation $r \approx 0.81$; VIF $= 10$ corresponds to $r \approx 0.95$. See @kosugi2023 for details.
 
 ### Variable-entry order
 
@@ -201,7 +201,7 @@ The correlation between $\hat{y}$ (the fitted values from a multiple regression)
 
 Stepwise selection comes in **forward** (start with no predictors and add) and **backward** (start with all and drop) variants. The forward step asks whether adding a candidate predictor significantly increases $R^2$; the backward step asks whether removing one significantly decreases it. The procedure finds the combination of predictors best fitting the data in hand, but the repeated testing has the usual multiple-comparisons issues, and the procedure is also questioned for weak generalisability.
 
-A different motivation for stepwise entry is **hierarchical regression**, developed for examining interactions. Multiple regression prefers uncorrelated predictors, but interactions are essential effects of combinations between predictors — and they are correlated with the main effects by construction. Regression and ANOVA are unified under the general linear model, and regression too can express interaction effects between continuously varying predictors. Because interactions imply non-zero inter-predictor correlations, their inclusion can trip the basic assumption of regression and so deserves care.
+A different motivation for stepwise entry is **hierarchical regression**, developed for examining interactions. Multiple regression prefers uncorrelated predictors, but interactions are essential effects of combinations between predictors — and they are correlated with the main effects by construction. Regression and ANOVA are unified under the general linear model, and regression too can express interaction effects between continuously varying predictors. Because an interaction term (a product of predictors) tends to be correlated with the original predictors, its inclusion can trip the basic assumption of regression and so deserves care.
 
 The recommendation, then, is to enter the main effects first, then add interaction terms, and check whether model fit improves significantly. This stepwise procedure is called **hierarchical regression**. Here "hierarchical" refers to the *ordering* of steps by importance, not to a hierarchical structure of the data.[^11.8]
 
@@ -293,7 +293,7 @@ summary(result.lm)
 
 The $F$-statistic on $($`r summary(result.lm)$fstatistic[2]`, `r summary(result.lm)$fstatistic[3]`$)$ degrees of freedom is `r round(summary(result.lm)$fstatistic[1],4)`, not significant (p = `r round(pf(summary(result.lm)$fstatistic[1], summary(result.lm)$fstatistic[2], summary(result.lm)$fstatistic[3], lower.tail = FALSE),4)`, n.s.).
 
-This is a test of the multiple correlation: the null is that the model as a whole has no explanatory power in the population. With $p$ predictors, sample size $n$, and multiple correlation $R^2$, the test statistic is [@Haebara2014]
+This is a test of the coefficient of determination: the null is that the model as a whole has no explanatory power in the population. With $p$ predictors, sample size $n$, and coefficient of determination $R^2$, the test statistic is [@Haebara2014]
 
 $$ F = \frac{R^2}{1-R^2}\cdot\frac{n-p-1}{p}. $$
 
@@ -325,7 +325,7 @@ for (n in 10:500) {
 print(n)
 ```
 
-Under these settings, $n \geq$ `r n` is sufficient to claim that the model has non-zero explanatory power.
+Under these settings, $n \geq$ `r n` is sufficient to detect this effect size with power 0.8.
 
 ## Summary
 
@@ -333,7 +333,7 @@ Multiple regression is heavily used in the humanities and social sciences, but t
 
 + **Meaning of partial coefficients.** A partial coefficient is conditional on the other predictors; treating coefficients as if independently orthogonal is incorrect.
 + **Normality of errors.** The model assumes normal errors. Do not apply regression blindly to binary or count data. Check normality after the fit with a Q-Q plot.
-+ **Homoscedasticity of errors.** The model assumes errors share the same normal distribution everywhere; heteroscedasticity (variance depending on the predictor) violates this and is unmasked by Q-Q-style diagnostics.
++ **Homoscedasticity of errors.** The model assumes errors share the same normal distribution everywhere; heteroscedasticity (variance depending on the predictor) violates this. Check the homogeneity of the error variance after the fit with a scatterplot of residuals against fitted values.
 + **Independence of errors.** The model assumes errors are i.i.d. Time-series data with serial dependence (autoregression) breaks this; use a state-space model or other approach that models the dependence.
 + **Correct model specification.** All predictors that influence $y$ must be included. Omitting an influential variable $X_o$ that correlates with an included $X_a$ causes $X_o$'s effect to leak through $X_a$, distorting $X_a$'s estimated effect. Deliberately excluding variables to favor a hypothesis is a QRP.
 + **Inter-predictor correlations.** If two predictors are very highly correlated, multicollinearity becomes a concern; coefficient estimates become unstable. Mitigations include combining them via principal component analysis. If the goal is to study interactions rather than collinearity, enter terms one at a time and assess effects carefully (hierarchical regression). Interaction terms are usually constructed from the mean-centered deviation of each variable.
@@ -341,7 +341,7 @@ Multiple regression is heavily used in the humanities and social sciences, but t
 ## Exercises
 
 
-1. The following dataset is sample data for a multiple regression with response $y$ and predictors $x_1, x_2$. Only a few rows are shown; the full dataset ($n = 100$) is available at [ex_regression1.csv](ex_regression1.csv). Run a multiple regression and report the results.
+1. The following dataset is sample data for a multiple regression with response `y` and predictors `x1`, `x2`. Only a few rows are shown; the full dataset ($n = 100$) is available at [ex_regression1.csv](ex_regression1.csv). Run a multiple regression and report the results.
 
 ```{r}
 #| echo: FALSE
@@ -360,7 +360,7 @@ head(sample)
 write.csv(sample, file = "ex_regression1.csv")
 ```
 
-2. The following dataset is sample data for a multiple regression with response $y$ and predictors $x_1, x_2$. Only a few rows are shown; the full dataset ($n = 300$) is available at [ex_regression2.csv](ex_regression2.csv). Run a multiple regression. From the diagnostic plots, identify which of the listed regression assumptions appear to be violated.
+2. The following dataset is sample data for a multiple regression with response `y` and predictors `x1`, `x2`. Only a few rows are shown; the full dataset ($n = 300$) is available at [ex_regression2.csv](ex_regression2.csv). Run a multiple regression. From the diagnostic plots, identify which of the listed regression assumptions appear to be violated.
 
 ```{r}
 #| echo: FALSE

@@ -36,7 +36,7 @@ Quarto is similar: *File > New File > Quarto Document*. R Markdown files convent
 
 ![A sample Quarto file](images/04_QmdSample.png)
 
-In both formats, the top of the file is enclosed by four hyphens, forming the **YAML header**. (YAML stands for "Yet Another Markup Language" — denoting that this header region is not yet the markup body.) The YAML header configures document-wide settings such as title, author, and output format. YAML is sensitive to indentation, and a single malformed line will often prevent the document from compiling, so edit it with care. That said, mastery of the YAML header opens up many advanced customizations, so do experiment when you have time.
+In both formats, the top of the file is enclosed by three hyphens, forming the **YAML header**. (YAML stands for "Yet Another Markup Language" — denoting that this header region is not yet the markup body.) The YAML header configures document-wide settings such as title, author, and output format. YAML is sensitive to indentation, and a single malformed line will often prevent the document from compiling, so edit it with care. That said, mastery of the YAML header opens up many advanced customizations, so do experiment when you have time.
 
 At the top of an Rmd or Qmd file in RStudio, you will see a *Knit* or *Render* button. Clicking it compiles the source into the rendered output.[^4.1] Because the sample document already contains working code, you should get an HTML document populated with text, code, and output. Try knitting the sample once and compare the source to the result.
 
@@ -181,7 +181,7 @@ A *geometric object* (or **geom**) specifies how data should be visualized. `ggp
 - **`geom_bar()`** — bar charts representing per-category quantities. Useful for counts and sums.
 - **`geom_histogram()`** — histograms of continuous data.
 - **`geom_boxplot()`** — box-and-whisker plots summarizing a distribution (median, quartiles, outliers).
-- **`geom_smooth()`** — a smoothing curve overlaid on the data; useful for trends. Options include linear regression and various smoothers.
+- **`geom_smooth()`** — a smoothing curve overlaid on the data; useful for trends. Options include linear regression and local regression (loess).
 
 Each geom is paired with a dataset and an aesthetic mapping. Here is a scatter plot via `geom_point()`:
 
@@ -302,7 +302,7 @@ g1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
 
 # bar chart
 g2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "summary", fun = mean) +
   ggtitle("Bar Chart", "Average MPG by Cylinder")
 
 # combine with patchwork
@@ -331,21 +331,21 @@ ggsave(
   scale = 1, # scaling factor
   width = 5, # width (inches)
   height = 5, # height (inches)
-  dpi = 300, # resolution
+  dpi = 300 # resolution
 )
 ```
 
 
 ### Changing themes (matching the report)
 
-For a report or paper, you may need monochrome figures. `ggplot2` chooses a color scheme automatically by selecting a default **palette**; changing the palette changes the colors used. For grayscale output, use the `Grays` palette.
+For a report or paper, you may need monochrome figures. `ggplot2` chooses a color scheme automatically by selecting a default **palette**; changing the palette changes the colors used. For grayscale output, use the `Greys` palette.
 
 ```{r}
 #| dev: "ragg_png"
 # grayscale plot
 p1 <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
   geom_point(size = 3) +
-  scale_fill_brewer(palette = "Grays") +
+  scale_color_brewer(palette = "Greys") +
   ggtitle("Grays palette")
 
 # load an additional palette package

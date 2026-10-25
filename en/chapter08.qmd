@@ -30,7 +30,7 @@ print(result)
 
 The realized test statistic is `r round(result$statistic,3)`, and the probability of obtaining a value this extreme or more so from the $t$ distribution with `r result$parameter` degrees of freedom is `r round(result$p.value,3)`. This exceeds 5%, so the result is not unusually rare: drawing a sample mean of `r round(mean(X),3)` from a normal population with mean 4 is not surprising, and there is no statistically significant difference.
 
-In a report, the result is conventionally written as "$t(9) = 0.66776, p = 0.5151, \text{n.s.}$", where "n.s." stands for *not significant*.
+In a report, the result is conventionally written as "$t(9) = `r round(result$statistic,3)`, p = `r round(result$p.value,3)`$, n.s.", where "n.s." stands for *not significant*.
 
 This example may feel circular: we drew from a normal with mean 4 and then concluded that the mean is not different from 4. But consider the next example:
 
@@ -57,15 +57,15 @@ Walking through the procedure:
 2. The test statistic is the $T$ from the unknown-variance case.
 3. The decision threshold is 5%.
 
-To check this, generate synthetic data. Let `n1` and `n2` be the per-group sample sizes (here both equal to 10 for simplicity). Set $\mu_1$ as the population mean of group 1 and write $\mu_2 = \mu_1 + \delta$; with $\delta = 0$ the means are equal, and with $\delta \neq 0$ they differ. Finally, set the population SD for both groups.
+To check this, generate synthetic data. Let `n1` and `n2` be the per-group sample sizes (here both equal to 10 for simplicity). Set $\mu_1$ as the population mean of group 1 and write $\mu_2 = \mu_1 + \sigma\delta$, where $\delta$ is the difference in units of the population SD (the population effect size); with $\delta = 0$ the means are equal, and with $\delta \neq 0$ they differ. Finally, set the population SD for both groups.
 
 The test asks whether the observed difference $d$ could plausibly have arisen from a population in which the mean difference is zero. The test statistic $T$ is
 
-$$ T = \frac{d - \mu_0}{\sqrt{U^2_p \cdot \frac{n_1 + n_2}{n_1 n_2}}}$$
+$$ T = \frac{d - \mu_0}{\sqrt{\hat{\sigma}^2_p \cdot \frac{n_1 + n_2}{n_1 n_2}}}$$
 
-where $d$ is the difference of the two sample means and $U^2_p$ is the **pooled unbiased variance** — an estimate of the common population variance pooled across both groups. With $S^2_1$ and $S^2_2$ as the two sample variances,
+where $d = \bar{x}_1 - \bar{x}_2$ is the difference of the two sample means, $\mu_0$ is the population mean difference under the null (here $0$), and $\hat{\sigma}^2_p$ is the **pooled unbiased variance** — an estimate of the common population variance pooled across both groups. With $s^2_1$ and $s^2_2$ as the two sample variances,
 
-$$ U^2_p = \frac{n_1 S^2_1 + n_2 S^2_2}{n_1 + n_2 - 2}. $$
+$$ \hat{\sigma}^2_p = \frac{n_1 s^2_1 + n_2 s^2_2}{n_1 + n_2 - 2}. $$
 
 In essence: weight each sample variance by its sample size, then divide by $n_1 + n_2 - 2$ to obtain an unbiased pooled estimate.
 
@@ -131,7 +131,7 @@ Equality of variances is a *special case* of the more general (unequal-variance)
 
 ### Effect sizes
 
-In the example above the synthetic data had $\mu_1 = 4$ and $\mu_2 = \mu_1 + \sigma d$, so $\mu_1 \neq \mu_2$ by construction — yet we failed to detect the difference. Statistical significance is a *statistical* matter; what we usually want to know in substantive research is whether there is a real, substantive difference. Making "obtain a significant result" the goal of an analysis is therefore plainly the wrong objective.[^8.1]
+In the example above the synthetic data had $\mu_1 = 4$ and $\mu_2 = \mu_1 + \sigma\delta$, so $\mu_1 \neq \mu_2$ by construction — yet we failed to detect the difference. Statistical significance is a *statistical* matter; what we usually want to know in substantive research is whether there is a real, substantive difference. Making "obtain a significant result" the goal of an analysis is therefore plainly the wrong objective.[^8.1]
 
 [^8.1]: In, say, physics, measurement precision is high and one is examining a single physical world: there is no need to reason probabilistically about whether predictions are true or false. In such a setting — let us call it a world of clear theoretical truth — information about statistical significance is at most a supplementary device for supporting a theory, and reporting test results is largely a rhetorical convention for writing papers. The verification of Newton's laws or Einstein's relativity hinges on whether measured values agree with theoretical predictions within the measurement error; statistical significance is, at best, a secondary concern. Psychology, dealing with small human samples, has little choice but to rely on statistical adjudication. But that should not let us forget that the substantive difference is what really matters.
 
@@ -184,11 +184,11 @@ The point: judging whether groups differ depends not just on the mean difference
 
 [^8.2]: Substantive difference is more meaningful than effect size, and effect size more meaningful than statistical significance. See @Toyoda2009 for an extended treatment.
 
-The data above used $\mu_2 - \mu_1 = \sigma d$; the effect size for a mean difference is
+The data above used $\mu_2 - \mu_1 = \sigma\delta$; the population effect size $\delta$ for a mean difference is
 
-$$ es = \frac{\mu_1 - \mu_2}{\sigma}, $$
+$$ \delta = \frac{\mu_2 - \mu_1}{\sigma}, $$
 
-so the $d$ in the simulation was exactly the effect size. In real data the population mean and SD are unknown and the effect size must be estimated from the sample. R's `effsize` package provides routines for this:
+so the $\delta$ in the simulation was exactly the effect size. In real data the population mean and SD are unknown and the effect size must be estimated from the sample. R's `effsize` package provides routines for this:
 
 ```{r}
 pacman::p_load(effsize)
@@ -200,9 +200,9 @@ After a mean-difference test it is standard practice to also report an effect si
 
 ## The paired-samples test
 
-When the two groups are not independent — as in a pre/post within-subjects design — the formulation of the $t$-test changes. For independent samples we considered the distribution of the difference of group means, $\mu_1 - \mu_2$. For paired samples we consider the per-individual difference $X_{i1} - X_{i2} = D_i$. Testing this one statistic makes the paired test a special case of the one-sample test. The standard error of $D$ is estimated as $U_D / \sqrt{n}$, where $U_D$ is the sample SD of the differences.[^8.3] The test statistic $T$ is
+When the two groups are not independent — as in a pre/post within-subjects design — the formulation of the $t$-test changes. For independent samples we considered the distribution of the difference of group means, $\mu_1 - \mu_2$. For paired samples we consider the per-individual difference $X_{i1} - X_{i2} = D_i$. Testing this one statistic makes the paired test a special case of the one-sample test. The standard error of $D$ is estimated as $\hat{\sigma}_D / \sqrt{n}$, where $\hat{\sigma}_D$ is the unbiased SD of $D$.[^8.3] The test statistic $T$ is
 
-$$ T = \frac{\bar{D}}{U_D/\sqrt{n}} = \frac{\sum D_i/n}{\sqrt{\frac{\frac{1}{n-1}\sum(D_i-\bar{D})^2}{n}}}.$$
+$$ T = \frac{\bar{D}}{\hat{\sigma}_D/\sqrt{n}} = \frac{\sum D_i/n}{\sqrt{\frac{\frac{1}{n-1}\sum(D_i-\bar{D})^2}{n}}}.$$
 
 [^8.3]: Since the design is paired, $n$ is the same on both occasions.
 
@@ -221,16 +221,16 @@ X2 <- X1 + sigma * d + rnorm(n, 0, sigma)
 t.test(X1, X2, paired = TRUE)
 ```
 
-Group 1 is sampled around its mean $\mu_1$; group 2 is obtained by adding a constant effect $\sigma d$ to each value of group 1, plus additional measurement noise. This mirrors a concrete data-generation story, but the noise is in some sense double-counted.
+Group 1 is sampled around its mean $\mu_1$; group 2 is obtained by adding a constant effect $\sigma\delta$ to each value of group 1, plus additional measurement noise. This mirrors a concrete data-generation story, but the noise is in some sense double-counted.
 
 The second approach generalizes beyond pre/post designs to any setting that has "pairing." Pairing means the two values are drawn jointly from a **bivariate** normal — i.e., each variable is normally distributed and the two are correlated. The univariate normal is
 $$X \sim N(\mu, \sigma),$$
 while the multivariate normal — generating several variables jointly — is written
-$$ \mathbf{X} \sim MVN(\mathbf{\mu}, \mathbf{\Sigma}),$$
+$$ \boldsymbol{X} \sim \mathrm{MVN}(\boldsymbol{\mu}, \boldsymbol{\Sigma}),$$
 
-where $\mathbf{X}$ and $\mathbf{\mu}$ are $n$-vectors and $\mathbf{\Sigma}$ is the variance–covariance matrix. In the bivariate case,
+where $\boldsymbol{X}$ and $\boldsymbol{\mu}$ are vectors whose dimension equals the number of variables and $\boldsymbol{\Sigma}$ is the variance–covariance matrix. In the bivariate case,
 
-$$\mathbf{\Sigma} = \begin{pmatrix} \sigma_1^2 & \sigma_{12}\\ \sigma_{21} & \sigma_2^2 \end{pmatrix} = \begin{pmatrix} \sigma_1^2 & \rho_{12}\sigma_1\sigma_2 \\ \rho_{21}\sigma_2\sigma_1 & \sigma_2^2 \end{pmatrix}.$$
+$$\boldsymbol{\Sigma} = \begin{pmatrix} \sigma_1^2 & \sigma_{12}\\ \sigma_{21} & \sigma_2^2 \end{pmatrix} = \begin{pmatrix} \sigma_1^2 & \rho_{12}\sigma_1\sigma_2 \\ \rho_{21}\sigma_2\sigma_1 & \sigma_2^2 \end{pmatrix}.$$
 
 The off-diagonal covariance $\sigma_{ij}$ can be written in terms of the correlation $\rho_{ij}$; thus the data-generation process explicitly encodes a between-variable correlation. Synthetic data on this model:
 
@@ -272,7 +272,7 @@ One subtlety: moving from two-tailed to one-tailed *lowers* the critical value t
 $$ group1 = \{45, 50, 55, 60, 65\} $$
 $$ group2 = \{57, 60, 62, 77, 75\} $$
 
-3. Practice the paired-samples $t$-test using bivariate-normal synthetic data. With $n = 20$, mean vector $\mu = (12, 15)$, and covariance matrix $\Sigma = \begin{pmatrix} 4 & 2.8 \\ 2.8 & 4\end{pmatrix}$, generate the sample and run the paired test. Report the result in the same convention.
+3. Practice the paired-samples $t$-test using bivariate-normal synthetic data. With $n = 20$, mean vector $\boldsymbol{\mu} = (12, 15)'$, and covariance matrix $\boldsymbol{\Sigma} = \begin{pmatrix} 4 & 2.8 \\ 2.8 & 4\end{pmatrix}$, generate the sample and run the paired test. Report the result in the same convention.
 
 4. Plot the $t$-density for $\mathrm{df} = 10, 20, 30$ alongside the standard-normal density. How does the $t$-distribution change as the degrees of freedom increase?
 5. For a $t$-distribution with 15 degrees of freedom, compute the critical values (theoretical thresholds for the decision) at the 5% level for one-tailed and two-tailed tests.

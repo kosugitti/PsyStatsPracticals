@@ -23,11 +23,11 @@ model {
 
 generated quantities {
   real diff;                // the mean difference itself
-  real delta;               // standardised effect size (Cohen's d)
+  real d;                   // standardized effect size (Cohen's d)
   array[N1 + N2] real X_pred;  // replicated data for the posterior predictive distribution
 
   diff = mu1 - mu2;
-  delta = (mu1 - mu2) / sigma;
+  d = (mu1 - mu2) / sigma;
   for (i in 1 : N1) {
     X_pred[i] = normal_rng(mu1, sigma);
   }
