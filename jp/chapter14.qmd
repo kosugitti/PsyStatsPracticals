@@ -81,7 +81,7 @@ df_exp <- data.frame(
 )
 
 
-# 散布図2：平均値を通る回帰直線（平均値バー付き）
+# 散布図2: 平均値を通る回帰直線(平均値バー付き)
 p2 <- ggplot(df_exp, aes(x = group, y = value)) +
   geom_point(alpha = 0.6) +
   geom_segment(
@@ -102,7 +102,7 @@ p2 <- ggplot(df_exp, aes(x = group, y = value)) +
   labs(x = "群", y = "従属変数", title = "ダミーデータの場合") +
   theme(text = element_text(family = "IPAexGothic"))
 
-# 散布図3：全体平均を通る直線（平均値バー付き）
+# 散布図3: 全体平均を通る直線(平均値バー付き)
 p3 <- ggplot(df_exp, aes(x = group, y = value)) +
   geom_point(alpha = 0.6) +
   geom_segment(
@@ -140,7 +140,7 @@ plot(p4)
 
 確率分布の多くは，位置パラメータとスケールパラメータを持つ。統計モデルは平均的な挙動について考えるモデルだから，位置パラメータに線型モデルが当てがえるように，数式を変形してやれば良い。以下に例として，ベルヌーイ分布とポアソン分布をGLMで表現したものを考えてみよう。
 
-### ベルヌーイ分布に対する線型モデル；ロジスティック回帰分析
+### ベルヌーイ分布に対する線型モデル; ロジスティック回帰分析
 
 ベルヌーイ分布はコイントスの表/裏のような2値をとるデータに対して用いられる。ベルヌーイ分布の確率関数は次のように表される。
 
@@ -151,37 +151,37 @@ $$
 ここで，$p$は成功確率であり，0から1の範囲の値を取る。
 こうしたデータは現実にも少なくない。生死，病気の有無，テストの正答/誤答のようなデータが代表的である。こうしたデータを目的変数にして，直線回帰を行うと当然おかしなことが生じる。すなわち，予測値が0と1の範囲を超えることがありえるからである。
 
-そこで，線型予測子と確率を適切に結びつけるリンク関数を用いる。ロジスティック回帰では**ロジット関数**（logit function）をリンク関数として使用する：
+そこで，線型予測子と確率を適切に結びつけるリンク関数を用いる。ロジスティック回帰では**ロジット関数**(logit function)をリンク関数として使用する。
 
 $$
 \text{logit}(p) = \log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x
 $$
 
-この関係を$p$について解いてみよう。$\eta = \beta_0 + \beta_1 x$とおくと：
+この関係を$p$について解いてみよう。$\eta = \beta_0 + \beta_1 x$とおくと，
 
 $$
 \log\left(\frac{p}{1-p}\right) = \eta
 $$
 
-両辺の指数を取ると：
+両辺の指数を取ると，
 
 $$
 \frac{p}{1-p} = e^{\eta}
 $$
 
-両辺に$(1-p)$をかけると：
+両辺に$(1-p)$をかけると，
 
 $$
 p = (1-p) \cdot e^{\eta}
 $$
 
-展開すると：
+展開すると，
 
 $$
 p = e^{\eta} - p \cdot e^{\eta}
 $$
 
-$p$について整理すると：
+$p$について整理すると，
 
 $$
 p + p \cdot e^{\eta} = e^{\eta}
@@ -195,13 +195,13 @@ $$
 p = \frac{e^{\eta}}{1 + e^{\eta}}
 $$
 
-分子分母を$e^{\eta}$で割ると：
+分子分母を$e^{\eta}$で割ると，
 
 $$
 p = \frac{1}{e^{-\eta} + 1} = \frac{1}{1 + e^{-\eta}}
 $$
 
-$\eta = \beta_0 + \beta_1 x$を代入すると，**ロジスティック関数**（逆リンク関数）が得られる：
+$\eta = \beta_0 + \beta_1 x$を代入すると，**ロジスティック関数**(逆リンク関数)が得られる。
 
 $$
 p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}}
@@ -257,7 +257,7 @@ p1 + p2
 ```{r logistic_regression}
 #| message: false
 pacman::p_load(brms)
-# brmsのバックエンドをcmdstanrに統一する（rstan非依存）
+# brmsのバックエンドをcmdstanrに統一する(rstan非依存)
 options(brms.backend = "cmdstanr")
 result.bayes.logistic <- brm(
   y ~ x,
@@ -286,7 +286,7 @@ $$ \beta_0 + \beta_1 x = \log \frac{p}{1-p} $$
 
 今回のデータでは説明変数の係数が`r round(fixef(result.bayes.logistic)["x","Estimate"],2)`と推定されたから，$e^{\beta_1}$=`r round(exp(fixef(result.bayes.logistic)["x","Estimate"]),2)`である。これは，説明変数が1単位増加すると，成功のオッズが`r round(exp(fixef(result.bayes.logistic)["x","Estimate"]),2)`倍になる，ということを意味する。確率そのものが何倍になるかは，もとの確率$p$の水準によって変わる点に注意しよう。
 
-### ポアソン分布に対する線型モデル；ポアソン回帰
+### ポアソン分布に対する線型モデル; ポアソン回帰
 
 今度はカウント変数に対するモデルを考えてみよう。カウント変数は正の整数をとるデータであり，ポアソン分布を用いることができる。ポアソン分布の確率関数は次のように表される。
 
@@ -334,13 +334,13 @@ ggplot(poisson_data, aes(x = factor(x), y = prob)) +
   )
 ```
 
-このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよい。ポアソン回帰では**対数関数**をリンク関数として使用する：
+このような正の整数しかとらないデータに対してはポアソン分布で回帰した方がよい。ポアソン回帰では**対数関数**をリンク関数として使用する。
 
 $$
 \log(\lambda_i) = \beta_0 + \beta_1 x_i
 $$
 
-この関係を$\lambda_i$について解くと，**指数関数**（逆リンク関数）が得られる：
+この関係を$\lambda_i$について解くと，**指数関数**(逆リンク関数)が得られる。
 
 $$ \lambda_i = \exp(\beta_0 + \beta_1 x_i) $$
 
@@ -367,20 +367,20 @@ y <- rpois(n, lambda = lambda)
 
 df_pois <- data.frame(x = x, y = y)
 
-# p1: 線型回帰（不適切な例）
+# p1: 線型回帰(不適切な例)
 p1 <- ggplot(df_pois, aes(x = x, y = y)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "lm", se = FALSE, color = "blue") +
   theme_minimal() +
-  labs(x = "説明変数", y = "カウント変数", title = "線型回帰（不適切）") +
+  labs(x = "説明変数", y = "カウント変数", title = "線型回帰(不適切)") +
   theme(text = element_text(family = "IPAexGothic"))
 
-# p2: ポアソン回帰（適切な例）
+# p2: ポアソン回帰(適切な例)
 p2 <- ggplot(df_pois, aes(x = x, y = y)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "glm", method.args = list(family = "poisson"), se = FALSE, color = "red") +
   theme_minimal() +
-  labs(x = "説明変数", y = "カウント変数", title = "ポアソン回帰（適切）") +
+  labs(x = "説明変数", y = "カウント変数", title = "ポアソン回帰(適切)") +
   theme(text = element_text(family = "IPAexGothic"))
 
 # パッチワークで結合
@@ -505,15 +505,15 @@ df_random_intercept <- expand_grid(
 ## データの確認
 df_random_intercept %>% head()
 
-# p1: 線型回帰（全体で一つの回帰線）
+# p1: 線型回帰(全体で一つの回帰線)
 p1 <- ggplot(df_random_intercept, aes(x = x, y = y)) +
   geom_point(alpha = 0.5, size = 1) +
   geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
+  labs(x = "説明変数", y = "目的変数", title = "線型回帰(固定効果のみ)") +
   theme(text = element_text(family = "IPAexGothic"))
 
-# p2: ランダム切片モデル（個人ごとに異なる切片の回帰線）
+# p2: ランダム切片モデル(個人ごとに異なる切片の回帰線)
 p2 <- ggplot(df_random_intercept, aes(x = x, y = y, color = person_factor)) +
   geom_point(alpha = 0.6, size = 1) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
@@ -571,7 +571,7 @@ lm_estimates <- coef(result.ml.random_intercept.ordinal)
 
 変量効果のモデル表記は，固定効果に加えて`(1 | person)`のように表記する。ここで，`1`は切片を表し，`person`は個人を表す。このようにすることで，個人ごとに異なる切片を考慮することができる。
 
-設定したパラメタ（個人差の標準偏差$\sigma_u$ = `r sigma_u`，残差の標準偏差$\sigma_e$ = `r sigma_e`）に対して，ベイズ推定では個人差の標準偏差が`r round(bayes_sigma_u, 3)`，残差の標準偏差が`r round(bayes_sigma_e, 3)`と推定されている。ML推定では個人差の標準偏差が`r round(ml_sigma_u, 3)`，残差の標準偏差が`r round(ml_sigma_e, 3)`と推定された。両手法ともに設定値に近い値が得られており，適切にパラメタが推定されていることがわかる。
+設定したパラメタ(個人差の標準偏差$\sigma_u$ = `r sigma_u`，残差の標準偏差$\sigma_e$ = `r sigma_e`)に対して，ベイズ推定では個人差の標準偏差が`r round(bayes_sigma_u, 3)`，残差の標準偏差が`r round(bayes_sigma_e, 3)`と推定されている。ML推定では個人差の標準偏差が`r round(ml_sigma_u, 3)`，残差の標準偏差が`r round(ml_sigma_e, 3)`と推定された。両手法ともに設定値に近い値が得られており，適切にパラメタが推定されていることがわかる。
 
 このデータに対して，固定効果のみで推定すると切片が`r round(lm_estimates[1], 3)`，傾きが`r round(lm_estimates[2], 3)`と推定される。傾きに対しては同じ値になるが切片の変動を考慮するかどうかで推定値が異なっていることがわかる。固定効果のみのモデルの場合，切片に想定された正規分布の平均値のみ推定したことになっている。実践的な意味としては，Within計画をBetween計画と皆して推定しているようなものであり，せっかく綺麗に取り分けられる個人差分散を無視しているようなものである。
 
@@ -619,15 +619,15 @@ p1 <- ggplot(posterior_samples, aes(x = value, fill = person)) +
 print(p1)
 ```
 
-ここで抜き出された個人の効果は，全体平均からの偏差であり，実際の切片は固定効果＋変量効果の形で得られている。これについても`coef`関数あるいはMCMCサンプルを加工することで，より具体的にイメージしながら利用できるだろう。
+ここで抜き出された個人の効果は，全体平均からの偏差であり，実際の切片は固定効果+変量効果の形で得られている。これについても`coef`関数あるいはMCMCサンプルを加工することで，より具体的にイメージしながら利用できるだろう。
 
 ```{r individual_total_effects}
 #| dev: "ragg_png"
 #| message: false
-# 各個人の実際の切片（固定効果+変量効果）を取得
+# 各個人の実際の切片(固定効果+変量効果)を取得
 individual_coefs <- coef(result.bayes.random_intercept)$person
 
-# 実際の切片の事後分布（固定効果+変量効果）
+# 実際の切片の事後分布(固定効果+変量効果)
 total_intercept_samples <- as_draws_df(result.bayes.random_intercept) %>%
   select(b_Intercept, starts_with("r_person")) %>%
   rowid_to_column("iter") %>%
@@ -643,7 +643,7 @@ p2 <- ggplot(total_intercept_samples, aes(x = total_intercept, fill = person)) +
   facet_wrap(~person, scales = "free_y") +
   theme_minimal() +
   labs(
-    x = "実際の切片（固定効果+変量効果）", y = "事後密度",
+    x = "実際の切片(固定効果+変量効果)", y = "事後密度",
     title = "個人ごとの実際の切片の事後分布"
   ) +
   theme(text = element_text(family = "IPAexGothic"), legend.position = "none")
@@ -722,15 +722,15 @@ df_random_slope <- expand_grid(
 ## データの確認
 df_random_slope %>% head()
 
-# p1: 線型回帰（全体で一つの回帰線）
+# p1: 線型回帰(全体で一つの回帰線)
 p1 <- ggplot(df_random_slope, aes(x = x, y = y)) +
   geom_point(alpha = 0.5, size = 1) +
   geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
+  labs(x = "説明変数", y = "目的変数", title = "線型回帰(固定効果のみ)") +
   theme(text = element_text(family = "IPAexGothic"))
 
-# p2: ランダム傾きモデル（個人ごとに異なる傾きの回帰線）
+# p2: ランダム傾きモデル(個人ごとに異なる傾きの回帰線)
 p2 <- ggplot(df_random_slope, aes(x = x, y = y, color = person_factor)) +
   geom_point(alpha = 0.6, size = 1) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
@@ -821,7 +821,7 @@ Sigma <- matrix(
   nrow = 2
 )
 
-# 個人ごとのランダム効果（切片と傾き）
+# 個人ごとのランダム効果(切片と傾き)
 pacman::p_load(MASS)
 random_effects <- mvrnorm(n_person, mu = c(0, 0), Sigma = Sigma)
 person_intercepts <- random_effects[, 1]
@@ -843,15 +843,15 @@ df_random_both <- expand_grid(
 ## データの確認
 df_random_both %>% head()
 
-# p1: 線型回帰（全体で一つの回帰線）
+# p1: 線型回帰(全体で一つの回帰線)
 p1 <- ggplot(df_random_both, aes(x = x, y = y)) +
   geom_point(alpha = 0.5, size = 1) +
   geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 1.2) +
   theme_minimal() +
-  labs(x = "説明変数", y = "目的変数", title = "線型回帰（固定効果のみ）") +
+  labs(x = "説明変数", y = "目的変数", title = "線型回帰(固定効果のみ)") +
   theme(text = element_text(family = "IPAexGothic"))
 
-# p2: ランダム切片ランダム傾きモデル（個人ごとに異なる切片と傾きの回帰線）
+# p2: ランダム切片ランダム傾きモデル(個人ごとに異なる切片と傾きの回帰線)
 p2 <- ggplot(df_random_both, aes(x = x, y = y, color = person_factor)) +
   geom_point(alpha = 0.6, size = 1) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
@@ -865,7 +865,7 @@ p2 <- ggplot(df_random_both, aes(x = x, y = y, color = person_factor)) +
 p1 + p2
 ```
 
-プロットを見ると，個人ごとに色分けしていない図(左；固定効果のみの線型回帰)だけ見て単純な線型回帰でもいいように思えるが，色分けした図(右；ランダム切片ランダム傾きモデル)をみると，より個体差をうまく捉えていることがわかる。データはまず可視化することが重要であることがわかるだろう。
+プロットを見ると，個人ごとに色分けしていない図(左; 固定効果のみの線型回帰)だけ見て単純な線型回帰でもいいように思えるが，色分けした図(右; ランダム切片ランダム傾きモデル)をみると，より個体差をうまく捉えていることがわかる。データはまず可視化することが重要であることがわかるだろう。
 
 さて，これについての推定コードの書き方も見ておこう。切片と傾きの両方が変量効果として`()`の中に記述される。
 ```{r random_intercept_slope_model}
@@ -889,7 +889,7 @@ summary(result.ml.random_both)
 
 変量効果のモデル表記で，`(1 + x | person)`は切片と傾きの両方にランダム効果を考慮することを表す。`1`は切片，`x`は傾きのランダム効果を指定している。
 
-このモデルでは切片と傾きの相関も推定される。設定した相関（$\rho$ = `r rho`）がどの程度再現されているか確認してみよう。また，個人レベルの推定値も前述の方法で取り出すことができる。
+このモデルでは切片と傾きの相関も推定される。設定した相関($\rho$ = `r rho`)がどの程度再現されているか確認してみよう。また，個人レベルの推定値も前述の方法で取り出すことができる。
 
 
 ## 階層線型モデル(HLM)
@@ -907,29 +907,29 @@ summary(result.ml.random_both)
 
 ### 2レベル階層線型モデル
 
-最も基本的な階層線型モデルは2レベルモデルである。ここでは学級（クラスター）にネストされた生徒の学習データを例に，2レベル階層線型モデルについて説明する。
+最も基本的な階層線型モデルは2レベルモデルである。ここでは学級(クラスター)にネストされた生徒の学習データを例に，2レベル階層線型モデルについて説明する。
 
-#### レベル1（個人レベル）のモデル
+#### レベル1(個人レベル)のモデル
 
 以下では階層線型モデルの文献の慣例 [@Raudenbush2000] に倣って添字を読み替える。ここまでは$i$が個人，$j$が観測の番号であったが，以下では$i$が個人，$j$が学級(集団)の番号を表し，個人レベルの誤差は$e_{ij}$ではなく$r_{ij}$，学級レベルの分散は$\tau$で表す。
 
-個人$i$（$i = 1, 2, \ldots, n_j$）が学級$j$（$j = 1, 2, \ldots, J$）に属している場合，レベル1のモデルは以下のように表される：
+個人$i$($i = 1, 2, \ldots, n_j$)が学級$j$($j = 1, 2, \ldots, J$)に属している場合，レベル1のモデルは以下のように表される。
 
 $$
 Y_{ij} = \beta_{0j} + \beta_{1j}X_{ij} + r_{ij}
 $$
 
-ここで：
+ここで，
 
-- $Y_{ij}$：学級$j$の生徒$i$の学習成績
-- $X_{ij}$：学級$j$の生徒$i$の説明変数（例：学習時間）
-- $\beta_{0j}$：学級$j$の切片（学級$j$の平均的な学習成績）
-- $\beta_{1j}$：学級$j$の傾き（学級$j$における説明変数の効果）
-- $r_{ij}$：個人レベルの誤差項，$r_{ij} \sim N(0, \sigma)$
+- $Y_{ij}$: 学級$j$の生徒$i$の学習成績
+- $X_{ij}$: 学級$j$の生徒$i$の説明変数(例: 学習時間)
+- $\beta_{0j}$: 学級$j$の切片(学級$j$の平均的な学習成績)
+- $\beta_{1j}$: 学級$j$の傾き(学級$j$における説明変数の効果)
+- $r_{ij}$: 個人レベルの誤差項，$r_{ij} \sim N(0, \sigma)$
 
-#### レベル2（学級レベル）のモデル
+#### レベル2(学級レベル)のモデル
 
-学級レベルでは，レベル1の係数が学級レベルの変数の関数として表される：
+学級レベルでは，レベル1の係数が学級レベルの変数の関数として表される。
 
 $$
 \beta_{0j} = \gamma_{00} + \gamma_{01}W_j + u_{0j}
@@ -939,16 +939,16 @@ $$
 \beta_{1j} = \gamma_{10} + \gamma_{11}W_j + u_{1j}
 $$
 
-ここで：
+ここで，
 
-- $W_j$：学級$j$の説明変数（例：学級規模）
-- $\gamma_{00}$：全体の切片（全学級の平均的な学習成績）
-- $\gamma_{01}$：学級レベル変数$W_j$の切片への効果
-- $\gamma_{10}$：全体の傾き（全学級の平均的な効果の大きさ）
-- $\gamma_{11}$：学級レベル変数$W_j$の傾きへの効果
-- $u_{0j}, u_{1j}$：学級レベルの誤差項（変量効果）
+- $W_j$: 学級$j$の説明変数(例: 学級規模)
+- $\gamma_{00}$: 全体の切片(全学級の平均的な学習成績)
+- $\gamma_{01}$: 学級レベル変数$W_j$の切片への効果
+- $\gamma_{10}$: 全体の傾き(全学級の平均的な効果の大きさ)
+- $\gamma_{11}$: 学級レベル変数$W_j$の傾きへの効果
+- $u_{0j}, u_{1j}$: 学級レベルの誤差項(変量効果)
 
-変量効果は多変量正規分布に従うと仮定される：
+変量効果は多変量正規分布に従うと仮定される。
 
 $$
 \begin{pmatrix} u_{0j} \\ u_{1j} \end{pmatrix} \sim \mathrm{MVN}\left( \begin{pmatrix} 0 \\ 0 \end{pmatrix}, \begin{pmatrix} \tau_{00} & \tau_{01} \\ \tau_{01} & \tau_{11} \end{pmatrix} \right)
@@ -956,41 +956,41 @@ $$
 
 #### 統合モデル
 
-レベル1とレベル2のモデルを統合すると：
+レベル1とレベル2のモデルを統合すると，
 
 $$
 Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij} + u_{0j} + u_{1j}X_{ij} + r_{ij}
 $$
 
-この式は以下のように分解できる：
+この式は以下のように分解できる。
 
-**固定効果（Fixed Effects）**：
+**固定効果(Fixed Effects)**:
 
-- $\gamma_{00}$：全体切片
-- $\gamma_{01}$：学級レベル変数の主効果
-- $\gamma_{10}$：個人レベル変数の主効果
-- $\gamma_{11}$：クロスレベル交互作用効果
+- $\gamma_{00}$: 全体切片
+- $\gamma_{01}$: 学級レベル変数の主効果
+- $\gamma_{10}$: 個人レベル変数の主効果
+- $\gamma_{11}$: クロスレベル交互作用効果
 
-**変量効果（Random Effects）**：
+**変量効果(Random Effects)**:
 
-- $u_{0j}$：学級の切片における変量効果
-- $u_{1j}X_{ij}$：学級の傾きにおける変量効果
-- $r_{ij}$：個人レベルの誤差
+- $u_{0j}$: 学級の切片における変量効果
+- $u_{1j}X_{ij}$: 学級の傾きにおける変量効果
+- $r_{ij}$: 個人レベルの誤差
 
-#### 級内相関係数（ICC）
+#### 級内相関係数(ICC)
 
-階層構造の意義を評価するために，級内相関係数（Intraclass Correlation Coefficient: ICC）を計算する。ICCは同じクラスター内の観測値間の相関を表す：
+階層構造の意義を評価するために，級内相関係数(Intraclass Correlation Coefficient: ICC)を計算する。ICCは同じクラスター内の観測値間の相関を表す。
 
 $$
 \text{ICC} = \frac{\tau_{00}}{\tau_{00} + \sigma^2}
 $$
 
-ここで：
+ここで，
 
-- $\tau_{00}$：学級間分散（between-group variance）
-- $\sigma^2$：学級内分散（within-group variance）
+- $\tau_{00}$: 学級間分散(between-group variance)
+- $\sigma^2$: 学級内分散(within-group variance)
 
-ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが大きい場合（一般的に0.05以上），階層モデルの適用が推奨される。
+ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが大きい場合(一般的に0.05以上)，階層モデルの適用が推奨される。
 
 ### モデルの図解
 
@@ -1002,17 +1002,17 @@ ICCが0に近い場合，階層構造を考慮する必要性は低く，ICCが�
 ### 具体例
 
 具体的な応用例を見ておこう。
-ここでは，これまで用いてきた野球のデータを用いる。このデータには選手の個人成績（身長，体重，安打数など）と，選手が所属するチーム，守備位置といった階層構造が含まれている。
+ここでは，これまで用いてきた野球のデータを用いる。このデータには選手の個人成績(身長，体重，安打数など)と，選手が所属するチーム，守備位置といった階層構造が含まれている。
 
 野球データの特徴として，選手は特定のチームに所属し，そのチーム内で特定の守備位置を担当するという階層構造がある。つまり，守備位置はチームにネストされた構造となっている。チームレベルでは戦術や指導方法が共通し，同じチーム内の守備位置レベルでは求められる技能や体格が類似する傾向がある。このような階層構造を無視して分析すると，個人差を過大評価したり，統計的推論に誤りが生じる可能性がある。
 
 本例では2020年度のデータに限定し，投手を除く野手のデータのみを使用する。投手は他の野手とは明らかに異なる特性を持つため，分析から除外することで，より一貫性のあるデータセットとする。
 
-まずは階層構造の意義を確認するため，チームおよび守備位置のICC（級内相関係数）を計算し，階層モデルの適用が適切かどうかを検証する。ICCの計算には`multilevel`パッケージを用いた。
+まずは階層構造の意義を確認するため，チームおよび守備位置のICC(級内相関係数)を計算し，階層モデルの適用が適切かどうかを検証する。ICCの計算には`multilevel`パッケージを用いた。
 
 ```{r hlm}
 pacman::p_load(tidyverse, brms, bayesplot, multilevel)
-# brmsのバックエンドをcmdstanrに統一する（rstan非依存）
+# brmsのバックエンドをcmdstanrに統一する(rstan非依存)
 options(brms.backend = "cmdstanr")
 dat <- read_csv("Baseball.csv") %>%
   filter(Year == "2020年度") %>%
@@ -1030,7 +1030,7 @@ icc_team <- multilevel::ICC1(aov(Hit ~ team, data = dat))
 dat$team_position <- paste(dat$team, dat$position, sep = "_")
 icc_team_position <- multilevel::ICC1(aov(Hit ~ team_position, data = dat))
 
-# 参考：ポジション単独のICC
+# 参考: ポジション単独のICC
 icc_position <- multilevel::ICC1(aov(Hit ~ position, data = dat))
 
 print(paste("Team ICC1:", round(icc_team, 3)))
@@ -1112,9 +1112,9 @@ ggplot(plot_data, aes(x = observed, y = predicted, color = team)) +
 
 ## 課題
 
-### 基本問題：パラメータリカバリ
+### 基本問題: パラメータリカバリ
 
-brmsパッケージを使用してベイズ統計モデリングにおけるパラメータリカバリを実践してください。パラメータリカバリとは、既知のパラメータで生成したデータから、そのパラメータを正しく推定できるかを確認する手法のことです。
+brmsパッケージを使用してベイズ統計モデリングにおけるパラメータリカバリを実践してください。パラメータリカバリとは，既知のパラメータで生成したデータから，そのパラメータを正しく推定できるかを確認する手法のことです。
 
 
 #### 課題1-1: ロジスティック回帰のパラメータリカバリ
@@ -1158,7 +1158,7 @@ plot(model_logistic)
 posterior_summary(model_logistic)
 ```
 
-**課題**: 上記のコードを実行し、真の切片(0.5)と傾き(1.2)が適切に推定されているかを確認してください。また、事後分布の95%信頼区間に真の値が含まれているかを確認してください。
+**課題**: 上記のコードを実行し，真の切片(0.5)と傾き(1.2)が適切に推定されているかを確認してください。また，事後分布の95%信頼区間に真の値が含まれているかを確認してください。
 
 #### 課題1-2: ポアソン回帰のパラメータリカバリ
 
@@ -1196,9 +1196,9 @@ plot(model_poisson)
 
 **課題**: 真の切片(1.0)と傾き(0.8)が適切に推定されているかを確認してください。
 
-### 応用問題：野球データの階層モデリング
+### 応用問題: 野球データの階層モデリング
 
-[野球データBaseball.csv](Baseball.csv)を用いて、Year，teamでネストされた階層構造を持つモデルを構築します。2018年度から2020年度の3年間のデータを使用し、投手のデータに限定します。変数には年俸(salary)、身長(height)、体重(weight)のほか、投手の成績として勝利数(Win)、負け数(Lose)、ホールドポイント(Hold)、セーブポイント(Save)があります。これらの変数を用いて、年度・チームの階層効果を考慮したモデリングを行います。
+[野球データBaseball.csv](Baseball.csv)を用いて，Year，teamでネストされた階層構造を持つモデルを構築します。2018年度から2020年度の3年間のデータを使用し，投手のデータに限定します。変数には年俸(salary)，身長(height)，体重(weight)のほか，投手の成績として勝利数(Win)，負け数(Lose)，ホールドポイント(Hold)，セーブポイント(Save)があります。これらの変数を用いて，年度・チームの階層効果を考慮したモデリングを行います。
 
 ```{r prac_data_handling}
 #| eval: false
@@ -1227,7 +1227,7 @@ model1 <- brm(
 )
 ```
 
-**課題1**: このモデルの構造を説明してください。以下の点について述べてください：
+**課題1**: このモデルの構造を説明してください。以下の点について述べてください。
 
 - 従属変数と確率分布
 - 固定効果(説明変数)の意味
@@ -1239,7 +1239,7 @@ model1 <- brm(
 - 各固定効果の係数の意味と統計的有意性
 - 変量効果の分散の大きさとその解釈
 
-**課題3**: 以下の可視化を行ってください：
+**課題3**: 以下の可視化を行ってください。
 
 - `plot(model1)` でMCMCの収束診断
 - `pp_check(model1)` で事後予測チェック
@@ -1260,7 +1260,7 @@ model2 <- brm(
 ```
 
 
-**課題1**: このモデルの構造を説明してください。以下の点について述べてください：
+**課題1**: このモデルの構造を説明してください。以下の点について述べてください。
 
 - 従属変数の対数変換の理由
 - 固定効果(Win, Lose)の経済的意味
@@ -1268,11 +1268,11 @@ model2 <- brm(
 
 **課題2**: モデルの結果を解釈してください。以下の観点が含まれるといいでしょう。
 
-- 勝利数・敗戦数が年俸に与える影響（%変化として）
+- 勝利数・敗戦数が年俸に与える影響(%変化として)
 - チーム間の年俸格差とGames効果の違い
 - 年度効果の大きさと経済的解釈
 
-**課題3**: 以下の可視化を行ってください：
+**課題3**: 以下の可視化を行ってください。
 
 - `plot(model2)` でMCMCの収束診断
 - チーム別のGames効果の違いを可視化
