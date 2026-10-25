@@ -418,7 +418,7 @@ window.Quarto = {
 </header>
 
 
-<p>The chapters on multivariate analysis (Chapters 14 and 15) cover factor analysis, principal-components analysis, multidimensional scaling, cluster analysis, and other techniques. Their common mathematical foundation is <strong>linear algebra</strong> — the calculus of vectors and matrices. Statistical packages deliver results instantly, but without the underlying picture it is hard to interpret those results correctly or judge their plausibility.</p>
+<p>The chapters on multivariate analysis (Chapters 15 and 16) cover factor analysis, principal-components analysis, multidimensional scaling, cluster analysis, and other techniques. Their common mathematical foundation is <strong>linear algebra</strong> — the calculus of vectors and matrices. Statistical packages deliver results instantly, but without the underlying picture it is hard to interpret those results correctly or judge their plausibility.</p>
 <p>The chief virtue of using matrices is that <strong>collections of many numbers can be written compactly and generically</strong>. Psychological data have the rectangular structure “<span class="math inline">\(n\)</span> respondents <span class="math inline">\(\times\)</span> <span class="math inline">\(m\)</span> variables” — exactly a matrix. In matrix language, means and variances, regression estimation, and the principles of factor analysis are all expressible within one framework.</p>
 <p>This chapter covers the basic operations on matrices and their use in R.</p>
 <div class="cell">
@@ -789,16 +789,16 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 </section>
 <section id="eigenvalues-and-eigenvectors" class="level2" data-number="13.6">
 <h2 data-number="13.6" class="anchored" data-anchor-id="eigenvalues-and-eigenvectors"><span class="header-section-number">13.6</span> Eigenvalues and eigenvectors</h2>
-<p>For a square matrix <span class="math inline">\(\boldsymbol{A}\)</span>, a scalar <span class="math inline">\(\lambda\)</span> and a vector <span class="math inline">\(\boldsymbol{x}\)</span> satisfying</p>
+<p>For a square matrix <span class="math inline">\(\boldsymbol{A}\)</span>, a scalar <span class="math inline">\(\lambda\)</span> and a vector <span class="math inline">\(\boldsymbol{u}\)</span> satisfying</p>
 <p><span class="math display">\[
-\boldsymbol{Ax} = \lambda \boldsymbol{x}
+\boldsymbol{Au} = \lambda \boldsymbol{u}
 \]</span></p>
-<p>are called an <strong>eigenvalue</strong> and an <strong>eigenvector</strong>. The left side multiplies <span class="math inline">\(\boldsymbol{x}\)</span> by the matrix; the right side multiplies it only by a scalar. In other words, there exist special vectors that, when multiplied by <span class="math inline">\(\boldsymbol{A}\)</span>, do not change direction — they only stretch or shrink. <span class="math inline">\(\lambda\)</span> is the scaling factor.</p>
+<p>are called an <strong>eigenvalue</strong> and an <strong>eigenvector</strong>. The left side multiplies <span class="math inline">\(\boldsymbol{u}\)</span> by the matrix; the right side multiplies it only by a scalar. In other words, there exist special vectors that, when multiplied by <span class="math inline">\(\boldsymbol{A}\)</span>, do not change direction — they only stretch or shrink. <span class="math inline">\(\lambda\)</span> is the scaling factor.</p>
 <p>Verify with a concrete example:</p>
 <p><span class="math display">\[
 \begin{pmatrix} 1 &amp; 6 \\ 2 &amp; 5 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 7 \\ 7 \end{pmatrix} = 7 \begin{pmatrix} 1 \\ 1 \end{pmatrix}.
 \]</span></p>
-<p>So <span class="math inline">\(\lambda = 7\)</span> and <span class="math inline">\(\boldsymbol{x} = (1, 1)'\)</span> satisfy the equation.</p>
+<p>So <span class="math inline">\(\lambda = 7\)</span> and <span class="math inline">\(\boldsymbol{u} = (1, 1)'\)</span> satisfy the equation.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">5</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>eig <span class="ot">&lt;-</span> <span class="fu">eigen</span>(A)</span>
@@ -834,9 +834,9 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 </section>
 <section id="spectral-decomposition" class="level3" data-number="13.6.2">
 <h3 data-number="13.6.2" class="anchored" data-anchor-id="spectral-decomposition"><span class="header-section-number">13.6.2</span> Spectral decomposition</h3>
-<p>A symmetric matrix <span class="math inline">\(\boldsymbol{A}\)</span> can be decomposed using its eigenvalues on the diagonal (forming <span class="math inline">\(\boldsymbol{\Lambda}\)</span>) and its eigenvectors as the columns (forming <span class="math inline">\(\boldsymbol{X}\)</span>):</p>
+<p>A symmetric matrix <span class="math inline">\(\boldsymbol{A}\)</span> can be decomposed using its eigenvalues on the diagonal (forming <span class="math inline">\(\boldsymbol{\Lambda}\)</span>) and its eigenvectors as the columns (forming <span class="math inline">\(\boldsymbol{U}\)</span>):</p>
 <p><span class="math display">\[
-\boldsymbol{A} = \boldsymbol{X}\boldsymbol{\Lambda}\boldsymbol{X}'.
+\boldsymbol{A} = \boldsymbol{U}\boldsymbol{\Lambda}\boldsymbol{U}'.
 \]</span></p>
 <p>This is the <strong>spectral decomposition</strong> (or eigenvalue decomposition). It separates the information in the original matrix into “directions” (the eigenvectors) and “magnitudes” (the eigenvalues), and is the mathematical foundation of principal-components analysis and factor analysis.</p>
 </section>
@@ -957,7 +957,7 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 </tr>
 <tr class="even">
 <td>eigen-decomposition</td>
-<td>solve <span class="math inline">\(\boldsymbol{Ax} = \lambda\boldsymbol{x}\)</span></td>
+<td>solve <span class="math inline">\(\boldsymbol{Au} = \lambda\boldsymbol{u}\)</span></td>
 <td><code>eigen()</code></td>
 </tr>
 <tr class="odd">

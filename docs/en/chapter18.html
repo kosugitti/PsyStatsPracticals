@@ -521,11 +521,11 @@ window.Quarto = {
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> diff;                <span class="co">// the mean difference itself</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> delta;               <span class="co">// standardised effect size (Cohen's d)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> d;                   <span class="co">// standardized effect size (Cohen's d)</span></span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N1 + N2] <span class="dt">real</span> X_pred;  <span class="co">// replicated data for the posterior predictive distribution</span></span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  diff = mu1 - mu2;</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  delta = (mu1 - mu2) / sigma;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  d = (mu1 - mu2) / sigma;</span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> : N1) {</span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    X_pred[i] = normal_rng(mu1, sigma);</span>
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  }</span>
@@ -534,7 +534,7 @@ window.Quarto = {
 <span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>data</code> block receives the sample size and observations of each of the two groups. The <code>parameters</code> block holds the two population means <code>mu1</code>, <code>mu2</code> and a common standard deviation <code>sigma</code>. Sharing a single standard deviation corresponds to the “equal-variance assumption” of the <span class="math inline">\(t\)</span>-test. The <code>model</code> block writes the likelihood — each group’s data arise from a normal distribution centered on its population mean — and supplies the priors.</p>
-<p>The block to note is <code>generated quantities</code>. Here we compute the mean difference itself, <code>diff</code>, and a standardized effect size <code>delta</code> (corresponding to Cohen’s <span class="math inline">\(d\)</span>) obtained by dividing the difference by the standard deviation. Unlike a test, the strength of Bayes is that the size of the difference is available directly as a probability distribution. We also generate new data from the fitted model as <code>X_pred</code>, which we use later for the posterior predictive distribution.</p>
+<p>The block to note is <code>generated quantities</code>. Here we compute the mean difference itself, <code>diff</code>, and a standardized effect size <code>d</code> (corresponding to Cohen’s <span class="math inline">\(d\)</span>) obtained by dividing the difference by the standard deviation. Unlike a test, the strength of Bayes is that the size of the difference is available directly as a probability distribution. We also generate new data from the fitted model as <code>X_pred</code>, which we use later for the posterior predictive distribution.</p>
 </section>
 <section id="estimation-and-reading-the-results" class="level3" data-number="18.3.2">
 <h3 data-number="18.3.2" class="anchored" data-anchor-id="estimation-and-reading-the-results"><span class="header-section-number">18.3.2</span> Estimation and reading the results</h3>
@@ -563,7 +563,7 @@ All 4 chains finished successfully.
 Mean chain execution time: 0.0 seconds.
 Total execution time: 0.2 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_t<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">"mu1"</span>, <span class="st">"mu2"</span>, <span class="st">"sigma"</span>, <span class="st">"diff"</span>, <span class="st">"delta"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_t<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">"mu1"</span>, <span class="st">"mu2"</span>, <span class="st">"sigma"</span>, <span class="st">"diff"</span>, <span class="st">"d"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 10
   variable  mean median    sd   mad    q5   q95  rhat ess_bulk ess_tail
@@ -572,10 +572,10 @@ Total execution time: 0.2 seconds.</code></pre>
 2 mu2      46.4   46.4  1.11  1.13  44.6  48.2   1.00    7999.    6340.
 3 sigma     6.87   6.85 0.556 0.556  6.03  7.83  1.00    6844.    5527.
 4 diff     18.3   18.3  1.58  1.56  15.7  20.9   1.00    8728.    5529.
-5 delta     2.68   2.68 0.314 0.312  2.17  3.22  1.00    7784.    5499.</code></pre>
+5 d         2.68   2.68 0.314 0.312  2.17  3.22  1.00    7784.    5499.</code></pre>
 </div>
 </div>
-<p>The <code>Rhat</code> values are all near <span class="math inline">\(1.00\)</span> and <code>ess_bulk</code> is large, so sampling went well. <code>mu1</code> and <code>mu2</code> summarize the posteriors of the population means of Methods A and C. The one to watch is <code>diff</code>, the posterior of the mean difference. Beyond a point estimate, we can see at a glance the range in which the difference lies with <span class="math inline">\(90\%\)</span> probability (<code>q5</code> to <code>q95</code>). The standardized effect size <code>delta</code> is also very large, so it seems safe to conclude that there is a substantial difference between Methods A and C.</p>
+<p>The <code>Rhat</code> values are all near <span class="math inline">\(1.00\)</span> and <code>ess_bulk</code> is large, so sampling went well. <code>mu1</code> and <code>mu2</code> summarize the posteriors of the population means of Methods A and C. The one to watch is <code>diff</code>, the posterior of the mean difference. Beyond a point estimate, we can see at a glance the range in which the difference lies with <span class="math inline">\(90\%\)</span> probability (<code>q5</code> to <code>q95</code>). The standardized effect size <code>d</code> is also very large, so it seems safe to conclude that there is a substantial difference between Methods A and C.</p>
 <p>Numbers aside, it helps to picture the posteriors. The <code>mcmc_areas</code> function in the <code>bayesplot</code> package draws each parameter’s posterior as a density “ridge.”</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># posteriors of the two population means</span></span>
@@ -602,8 +602,8 @@ Total execution time: 0.2 seconds.</code></pre>
 </div>
 </div>
 </div>
-<p>We can see at a glance that the two mean ridges are clearly separated, and that the distribution of <code>diff</code> lies well to the right of <span class="math inline">\(0\)</span> (the dashed line). Almost all of the difference’s ridge is in the positive region, which makes sense given the probability of superiority near <span class="math inline">\(1\)</span> that we compute next.</p>
-<p>A benefit of holding the difference as a probability distribution is that we can freely ask various “data-level hypotheses” after the fact. For example, the probability that Method A’s population mean exceeds Method C’s is just the proportion of the difference’s posterior that is positive. This is called the probability of superiority.</p>
+<p>We can see at a glance that the two mean ridges are clearly separated, and that the distribution of <code>diff</code> lies well to the right of <span class="math inline">\(0\)</span> (the dashed line). Almost all of the difference’s ridge lies in the positive region.</p>
+<p>A benefit of holding the difference as a probability distribution is that we can freely ask various hypotheses after the fact. For example, the probability that Method A’s population mean exceeds Method C’s is just the proportion of the difference’s posterior that is positive. This is called the probability of superiority.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>draws_t <span class="ot">&lt;-</span> fit_t<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># probability that Method A exceeds Method C</span></span>
@@ -612,7 +612,7 @@ Total execution time: 0.2 seconds.</code></pre>
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
-<p>We merely count the proportion of positive values among the MCMC samples of the difference. It is essentially <span class="math inline">\(1\)</span>: we can be all but certain that “Method A is superior.” Whereas the frequentist <span class="math inline">\(p\)</span>-value is the indirect quantity “how easily the test statistic arises under the null,” here we answer exactly the question we wanted, in terms of probability.</p>
+<p>We merely count the proportion of positive values among the MCMC samples of the difference. It is essentially <span class="math inline">\(1\)</span>, consistent with the earlier figure, in which almost all of the difference’s ridge lay in the positive region. That is, we can be all but certain that “Method A is superior.” Whereas the frequentist <span class="math inline">\(p\)</span>-value is the indirect quantity “how easily the test statistic arises under the null,” here we answer exactly the question we wanted, in terms of probability.</p>
 </section>
 </section>
 <section id="a-bayesian-multi-group-comparison-anova" class="level2" data-number="18.4">
@@ -761,7 +761,7 @@ Total execution time: 0.3 seconds.</code></pre>
 3 B-C   19.0   15.7  22.3        1    </code></pre>
 </div>
 </div>
-<p>The A–C and B–C differences have <span class="math inline">\(95\%\)</span> intervals that do not straddle <span class="math inline">\(0\)</span>, so we can be all but certain that “there is a difference” (the probability of superiority is also near <span class="math inline">\(1\)</span>). The A–B difference, by contrast, has a <span class="math inline">\(95\%\)</span> interval that brackets <span class="math inline">\(0\)</span>, with a probability of superiority near <span class="math inline">\(0.5\)</span> — so we cannot say there is a clear difference between those two methods. We built a <span class="math inline">\(2\)</span>-point gap into the population, but with only <span class="math inline">\(40\)</span> people per group the data could not distinguish it.</p>
+<p>The A–C and B–C differences have <span class="math inline">\(95\%\)</span> credible intervals (ETI) that do not straddle <span class="math inline">\(0\)</span>, so we can be all but certain that “there is a difference” (the probability of superiority is also near <span class="math inline">\(1\)</span>). The A–B difference, by contrast, has a <span class="math inline">\(95\%\)</span> credible interval that brackets <span class="math inline">\(0\)</span>, with a probability of superiority near <span class="math inline">\(0.5\)</span> — so we cannot say there is a clear difference between those two methods. We built a <span class="math inline">\(2\)</span>-point gap into the population, but with only <span class="math inline">\(40\)</span> people per group the data could not distinguish it.</p>
 <p>Overlaying the posteriors of all pairwise differences makes it easy to see which pairs straddle <span class="math inline">\(0\)</span>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># posteriors of all pairwise differences (dashed line at zero)</span></span>
@@ -806,7 +806,7 @@ Inside ROPE
 0.00 %     </code></pre>
 </div>
 </div>
-<p>Most of the A–B difference’s posterior (over <span class="math inline">\(70\%\)</span>) lies inside the ROPE. We can thus positively assert that “the difference between the two is practically negligible.” This is something frequentism could not say in principle (accepting the null), and it is a major advantage of Bayes. The A–C difference, on the other hand, lies entirely outside the ROPE, so we judge that there is a practical difference.</p>
+<p>Most of the A–B difference’s posterior (over <span class="math inline">\(70\%\)</span>) lies inside the ROPE. This supports a small difference, but because the <span class="math inline">\(95\%\)</span> credible interval does not fit entirely inside the ROPE, we cannot go so far as to assert that “the difference between the two is practically negligible.” By Kruschke’s criterion, we judge “practically equivalent” only when the <span class="math inline">\(95\%\)</span> HDI falls entirely inside the ROPE, and we withhold judgment when only part of it does. Still, the very existence of a route to positively asserting equivalence is something frequentism could not offer in principle (accepting the null), and it is a major advantage of Bayes. The A–C difference, on the other hand, lies entirely outside the ROPE, so we judge that there is a practical difference.</p>
 <p>This ROPE-based judgment is also intuitive when we overlay the ROPE band on the posteriors of the differences.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay the ROPE band [-2, 2] (red) on the posteriors of the differences</span></span>
@@ -824,7 +824,7 @@ Inside ROPE
 </div>
 </div>
 </div>
-<p>The red band is the ROPE. The ridge of the A–B difference falls mostly inside the red band (practically equivalent), whereas the ridges of the A–C and B–C differences lie far to the right of the band (a practical difference). Overlaying the ROPE band on the “does the interval straddle <span class="math inline">\(0\)</span>” view lets us distinguish “we cannot say there is a difference” from “there is practically no difference.”</p>
+<p>The red band is the ROPE. The ridge of the A–B difference falls mostly inside the red band (the difference is small, but we cannot go so far as to call them equivalent), whereas the ridges of the A–C and B–C differences lie far to the right of the band (a practical difference). Overlaying the ROPE band on the “does the interval straddle <span class="math inline">\(0\)</span>” view lets us distinguish “we cannot say there is a difference” from “there is practically no difference.”</p>
 <p>How to set the width of the ROPE is the researcher’s judgment and should rest on domain knowledge. When no criterion comes to mind, <span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> suggests <span class="math inline">\(\pm 0.1\)</span> standardized units as a guide. In <code>bayestestR</code>, setting <code>range = "default"</code> automatically uses a ROPE based on this standardized criterion.</p>
 </section>
 <section id="the-bayes-factor" class="level3" data-number="18.5.2">
@@ -1013,8 +1013,8 @@ Posterior probabilities of point hypotheses assume equal prior probabilities.</c
 </div>
 </div>
 <p>Let us read the results in turn.</p>
-<p>For the <strong>probability of superiority</strong>, whereas at the population-mean level it was essentially <span class="math inline">\(1\)</span> (A is certainly higher), at the data level it stays around <span class="math inline">\(0.95\)</span>. This means that even though A is clearly higher on average, because of individual variability there is about a <span class="math inline">\(5\%\)</span> chance that “a C person happens to beat an A person.” The obvious fact that the group tendency and what happens to a given individual are different is here expressed numerically. This data-level probability of superiority is also called the common-language effect size, and it is well suited to conveying effect size intuitively.</p>
-<p>The <strong>overlap</strong> expresses how much the two groups’ predictive distributions overlap. Methods A and C overlap only about <span class="math inline">\(20\%\)</span> (they are <span class="math inline">\(80\%\)</span> separated), showing a large effect. Methods A and B, on the other hand, overlap more than <span class="math inline">\(90\%\)</span> — practically the same distribution. The smaller the overlap, the larger the effect; the conclusion from the ROPE and Bayes factor that “A and B are equivalent while C is clearly different” shows up here as the degree of overlap of the distributions.</p>
+<p>For the <strong>probability of superiority</strong>, whereas at the population-mean level it was essentially <span class="math inline">\(1\)</span> (A is certainly higher), at the data level it stays around 0.95. This means that even though A is clearly higher on average, because of individual variability there is about a 5% chance that “a C person happens to beat an A person.” The obvious fact that the group tendency and what happens to a given individual are different is here expressed numerically. This data-level probability of superiority is also called the common-language effect size, and it is well suited to conveying effect size intuitively.</p>
+<p>The <strong>overlap</strong> expresses how much the two groups’ predictive distributions overlap. Methods A and C overlap only about one quarter (three quarters are separated), showing a large effect. Methods A and B, on the other hand, overlap more than <span class="math inline">\(90\%\)</span> — practically the same distribution. The smaller the overlap, the larger the effect; the conclusion from the ROPE and Bayes factor that “A and B differ only slightly while C is clearly different” shows up here as the degree of overlap of the distributions.</p>
 <p>The <strong>proportion above a threshold</strong> is the probability of exceeding some criterion. If we take a passing line of <span class="math inline">\(70\)</span> points, for example, more than <span class="math inline">\(20\%\)</span> of Method A reaches the passing region, whereas almost no one in Method C does. When practical decisions hinge more on “what fraction pass” than on “by how many points the averages differ,” it is clearer to fix a criterion and compare the proportions above it like this.</p>
 <p>In this way, the posterior predictive distribution lets us examine the effect from many angles — not just the difference in means but the individual-level probability of superiority, the overlap of the distributions, and the proportion above a criterion. Going beyond a binary “is there a difference or not” to “what the difference actually means in practice” is a strength of the Bayesian approach that starts from a data-generating mechanism.</p>
 </section>
@@ -1035,8 +1035,8 @@ Posterior probabilities of point hypotheses assume equal prior probabilities.</c
 <h2 data-number="18.7" class="anchored" data-anchor-id="exercises"><span class="header-section-number">18.7</span> Exercises</h2>
 <p>The following dataset records a measurement (<code>y</code>) for three groups (<code>group</code>). You can download it from <a href="ex_anova_bayes.csv">ex_anova_bayes.csv</a>. Using the methods covered in this chapter, report the following in order.</p>
 <ol type="1">
-<li>Using this chapter’s <code>bayes_anova.stan</code>, estimate the three-group mean differences in tidy-data form, and report the posterior summaries and <span class="math inline">\(95\%\)</span> intervals of each group’s population mean <code>mu</code> and effect <code>delta</code>.</li>
-<li>From the MCMC samples, obtain the posteriors of all three pairwise differences and report each one’s <span class="math inline">\(95\%\)</span> interval and probability of superiority.</li>
+<li>Using this chapter’s <code>bayes_anova.stan</code>, estimate the three-group mean differences in tidy-data form, and report the posterior summaries and <span class="math inline">\(95\%\)</span> credible intervals of each group’s population mean <code>mu</code> and effect <code>delta</code>.</li>
+<li>From the MCMC samples, obtain the posteriors of all three pairwise differences and report each one’s <span class="math inline">\(95\%\)</span> credible interval and probability of superiority.</li>
 <li>For each pairwise difference, compute <code>bayestestR::rope</code> with a ROPE of <span class="math inline">\(\pm 0.5\)</span> and discuss whether any pair can be called “practically no difference.”</li>
 <li>Estimate the same model with <code>brms</code> (using effect coding), confirm that the coefficients match the Stan results, and then compute the Bayes factor and discuss whether the effects can be said to be non-zero.</li>
 <li>Draw the posterior predictive distribution with <code>ppc_dens_overlay</code> and assess whether the model assuming a normal distribution reproduces the data well.</li>

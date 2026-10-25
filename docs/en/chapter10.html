@@ -506,7 +506,7 @@ window.Quarto = {
 <pre><code>[1] 0.9444895</code></pre>
 </div>
 </div>
-<p>Each call is one analysis; <code>num_studies</code> such calls together count as “one paper.” Set <code>num_studies = 3</code>. Using <code>replicate()</code> we obtain a <span class="math inline">\(p\)</span>-value vector and check whether <em>any</em> test is significant using <code>any()</code>. We evaluate two thresholds: the raw <span class="math inline">\(\alpha\)</span> and the Bonferroni-adjusted <span class="math inline">\(\alpha_{\text{adj}}\)</span>.</p>
+<p>Each call corresponds to one study (one test); <code>num_studies</code> such calls together count as “one paper.” Set <code>num_studies = 3</code>. Using <code>replicate()</code> we obtain a <span class="math inline">\(p\)</span>-value vector and check whether <em>any</em> test is significant using <code>any()</code>. We evaluate two thresholds: the raw <span class="math inline">\(\alpha\)</span> and the Bonferroni-adjusted <span class="math inline">\(\alpha_{\text{adj}}\)</span>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
@@ -594,7 +594,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>The empirical Type I error rate is 0.306 — wildly above 5%. The “significance” wrung out of patient data-adding is the gift of chance: a phantom of bad practice. As the histogram of additions shows, 75% of runs hit the cap of 100 added participants. Pure cost, no benefit.</p>
+<p>The empirical Type I error rate is 0.306 — wildly above 5%. The “significance” wrung out of patient data-adding is the gift of chance: a phantom of bad practice. As the histogram of additions shows, about 70% of runs hit the cap of 100 added participants. Pure cost, no benefit.</p>
 </section>
 <section id="not-pre-specifying-the-sample-size" class="level3" data-number="10.1.4">
 <h3 data-number="10.1.4" class="anchored" data-anchor-id="not-pre-specifying-the-sample-size"><span class="header-section-number">10.1.4</span> Not pre-specifying the sample size</h3>
@@ -613,13 +613,14 @@ window.Quarto = {
 <p>Now the second scenario. Suppose the analyst had decided to keep flipping until 7 heads were obtained, and it just happened to take 24 trials. The distribution of the number of trials needed is a <em>negative</em> binomial, available as <code>pnbinom()</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># probability of needing at least 24 trials</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnbinom</span>(k, <span class="dv">24</span>, <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># probability of needing at least 24 trials to get 7 heads (i.e., at least 17 tails)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pnbinom(q, size, prob) is the probability of at most q failures before the size-th success</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnbinom</span>(<span class="dv">16</span>, k, <span class="fl">0.5</span>)) <span class="sc">*</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.003326893</code></pre>
+<pre><code>[1] 0.03468966</code></pre>
 </div>
 </div>
-<p>With <span class="math inline">\(\theta = 0.5\)</span>, the probability of needing 24 trials to obtain 7 heads is 0.0033269, significant at the 5% level. This is rare enough that the null <span class="math inline">\(\theta = 0.5\)</span> is suspect. Note that the <span class="math inline">\(p\)</span>-value differs from the previous scenario for exactly the same observed data.</p>
+<p>With <span class="math inline">\(\theta = 0.5\)</span>, the probability of needing 24 trials to obtain 7 heads is 0.0347, significant at the 5% level. This is rare enough that the null <span class="math inline">\(\theta = 0.5\)</span> is suspect. Note that the <span class="math inline">\(p\)</span>-value differs from the previous scenario for exactly the same observed data.</p>
 <p>Now the third scenario. Suppose the analyst had not pre-specified the number of trials but had pre-specified a fixed <em>amount of time</em>: “I’ll flip for about 5 minutes.” The result happens to be 24 trials, but it might just as well have been 23 or 25 or 20 or 30. Model the number of trials as Poisson-distributed with mean 24 (a distribution that peaks near 24):<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
@@ -660,7 +661,7 @@ window.Quarto = {
 <h3 data-number="10.2.1" class="anchored" data-anchor-id="independent-samples-t-test"><span class="header-section-number">10.2.1</span> Independent-samples t-test</h3>
 <p>Sample-size planning brings in a new parameter: the <strong>non-centrality parameter</strong> of the test statistic.</p>
 <p>Take the independent-samples <span class="math inline">\(t\)</span>-test. As the name says, the test uses the <span class="math inline">\(t\)</span>-distribution to evaluate the realized test statistic under the null. The null is <span class="math inline">\(\mu_0 = \mu_1 - \mu_2 = 0\)</span>, and the test statistic is</p>
-<p><span class="math display">\[ T = \frac{d - \mu_0}{\sqrt{U^2_p \cdot \frac{n_1 + n_2}{n_1 n_2}}}.\]</span></p>
+<p><span class="math display">\[ T = \frac{d - \mu_0}{\sqrt{\hat{\sigma}^2_p \cdot \frac{n_1 + n_2}{n_1 n_2}}}.\]</span></p>
 <p>In the numerator, <span class="math inline">\(d - \mu_0 = (\bar{X}_1 - \bar{X}_2) - (\mu_1 - \mu_2)\)</span>, and under the null the second term is zero, leaving a <span class="math inline">\(t\)</span>-distribution centered at zero. But the null is the theoretical reference point; in the <em>real</em> world where the null is false, the test statistic follows a <span class="math inline">\(t\)</span>-distribution displaced from zero by an amount that depends on <span class="math inline">\(\mu_1 - \mu_2\)</span>. Such a shifted distribution is the <strong>non-central</strong> <span class="math inline">\(t\)</span>-distribution, with the offset given by the <strong>non-centrality parameter</strong>. For the <span class="math inline">\(t\)</span>-test it is</p>
 <p><span class="math display">\[ \lambda = \frac{(\mu_1 - \mu_2) - \mu_0}{\sigma}\sqrt{n}. \]</span></p>
 <p>The non-central <span class="math inline">\(t\)</span>-distribution differs from the central <span class="math inline">\(t\)</span> by this <span class="math inline">\(\lambda\)</span>. In R, <code>dt()</code> has an <code>ncp</code> argument, defaulting to 0. Let us plot both:</p>
@@ -700,7 +701,7 @@ window.Quarto = {
 </div>
 <p>The further <code>ncp</code> is from zero, the smaller the Type II error. The non-centrality can be written in terms of the population effect size <span class="math inline">\(\delta = ((\mu_1 - \mu_2) - \mu_0)/\sigma\)</span> as <span class="math inline">\(\lambda = \delta \sqrt{n}\)</span>.</p>
 <p>With this, we can plan a <span class="math inline">\(t\)</span>-test sample size. For simplicity, assume equal per-group sample sizes.</p>
-<p>Recall the denominator <span class="math inline">\(\sqrt{U_p^2 \cdot (n_1+n_2)/(n_1 n_2)}\)</span>; the role of <span class="math inline">\(\sqrt{n}\)</span> in the non-centrality is played by the pooled sample size.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>Recall the denominator <span class="math inline">\(\sqrt{\hat{\sigma}_p^2 \cdot (n_1+n_2)/(n_1 n_2)}\)</span>; the role of <span class="math inline">\(\sqrt{n}\)</span> in the non-centrality is played by the pooled sample size.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>

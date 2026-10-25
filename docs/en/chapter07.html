@@ -475,7 +475,7 @@ window.Quarto = {
 <p><strong>Correlation</strong></p>
 <p><span class="math display">\[r_{xy} = \frac{s_{xy}}{s_xs_y} = \frac{\frac{1}{n}\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\frac{1}{n}\sum (x_i - \bar{x})^2}\sqrt{\frac{1}{n}\sum (y_i - \bar{y})^2}}\]</span></p>
 <p><strong>Variance–covariance matrix</strong></p>
-<p><span class="math display">\[\Sigma = \begin{pmatrix} s_x^2 &amp; s_{xy} \\ s_{yx} &amp; s_y^2 \end{pmatrix}
+<p><span class="math display">\[\boldsymbol{S} = \begin{pmatrix} s_x^2 &amp; s_{xy} \\ s_{yx} &amp; s_y^2 \end{pmatrix}
 = \begin{pmatrix} s_x^2 &amp; r_{xy}s_xs_y \\ r_{xy}s_xs_y &amp; s_y^2 \end{pmatrix}\]</span></p>
 <p>Setting <code>Sigma = matrix(c(1, 0, 0, 1), ncol = 2)</code> specifies that the two variables are uncorrelated (each with SD 1). The option <code>empirical = TRUE</code> rescales the generated draws so that their <em>empirical</em> correlation matches the specified one exactly.</p>
 <p>Visualize the result:</p>
@@ -633,11 +633,11 @@ cor
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> intervals <span class="sc">%&gt;%</span></span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FLG =</span> <span class="fu">ifelse</span>(Lower <span class="sc">&lt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> Upper <span class="sc">&gt;=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">type1error =</span> <span class="fu">mean</span>(FLG)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">coverage =</span> <span class="fu">mean</span>(FLG)) <span class="sc">%&gt;%</span></span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  type1error
-1       0.95</code></pre>
+<pre><code>  coverage
+1     0.95</code></pre>
 </div>
 </div>
 <p>In this run, the intervals contained the true correlation 95% of the time — i.e., they missed 5% of the time. The goal of holding the Type I error rate at 5% has been met.</p>
@@ -675,7 +675,7 @@ cor
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p =</span> judges) <span class="sc">%&gt;%</span></span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FLG =</span> <span class="fu">ifelse</span>(p <span class="sc">&lt;=</span> <span class="fl">0.05</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sig =</span> <span class="fu">sum</span>(FLG <span class="sc">==</span> <span class="dv">1</span>),</span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">non.sig =</span> <span class="fu">sum</span>(FLG <span class="sc">==</span> <span class="dv">0</span>),</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">type2error =</span> non.sig <span class="sc">/</span> iter</span>
@@ -687,7 +687,7 @@ cor
 </div>
 </div>
 <p>The population correlation is 0.5 — the null should be rejected — but 35.58% of tests fail to reach significance. In psychology, the conventional target is <span class="math inline">\(\beta &lt; 0.2\)</span> (equivalently, power <span class="math inline">\(&gt; 0.8\)</span>), so this design is underpowered.</p>
-<p>In practice we do not know the true population correlation; it could be 0.3, or <span class="math inline">\(-0.5\)</span>, or something else. Type II error is therefore not directly under the researcher’s control; the best one can do is choose variables for which a non-trivial correlation seems plausible.</p>
+<p>In practice we do not know the true population correlation; it could be 0.3, or <span class="math inline">\(-0.5\)</span>, or something else. The effect size is therefore not under the researcher’s control; the best one can do is choose variables for which a non-trivial correlation seems plausible.</p>
 <p>Both Type I and Type II error rates are functions of the sample size and the <strong>effect size</strong> (here, the magnitude of the population correlation). The researcher can choose the sample size, so given a target effect and a target error rate, sample size can be chosen rationally.</p>
 </section>
 <section id="exercises" class="level2" data-number="7.5">

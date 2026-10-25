@@ -550,7 +550,7 @@ window.Quarto = {
 <p>Before any of this, you should have characterized the data with descriptive statistics and visualization.</p>
 <section id="determining-the-number-of-factors" class="level4" data-number="15.2.1.1">
 <h4 data-number="15.2.1.1" class="anchored" data-anchor-id="determining-the-number-of-factors"><span class="header-section-number">15.2.1.1</span> Determining the number of factors</h4>
-<p>Mathematically, factor analysis reduces to an eigenvalue decomposition of the correlation matrix <span class="math inline">\(\mathbb{R}\)</span> among the <span class="math inline">\(M\)</span> items. The default correlation is the Pearson product-moment; ordinal items call for polychoric correlations, binary items for tetrachoric correlations.</p>
+<p>Mathematically, factor analysis reduces to an eigenvalue decomposition of the correlation matrix <span class="math inline">\(\boldsymbol{R}\)</span> among the <span class="math inline">\(M\)</span> items. The default correlation is the Pearson product-moment; ordinal items call for polychoric correlations, binary items for tetrachoric correlations.</p>
 <p>Eigenvalue decomposition exposes the dimensionality of the correlation matrix. Information in <span class="math inline">\(M\)</span> items occupies <span class="math inline">\(M\)</span> dimensions. With two variables <span class="math inline">\(X, Y\)</span>, the data live in the 2-D space with <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> as axes. If <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are correlated, an orthogonal <span class="math inline">\((X, Y)\)</span> representation may not be the most efficient; a rotated basis with larger variance along one axis may be available. This is the common idea behind factor analysis and PCA: PCA focuses on the axis with the largest variance; factor analysis distinguishes the “useful dimensions” — the common factors — from the rest, which are absorbed into error.</p>
 <p>The number of factors is chosen by the analyst, and the determination of “useful dimensions” has a subjective component. Many objective criteria have been proposed and are routinely used today, but treating mathematically extracted dimensions as substantive common factors is the analyst’s responsibility.</p>
 <p>A common rule for setting the number of factors is <strong>parallel analysis</strong> based on the scree plot. We illustrate with the <code>psych</code> package and its <code>bfi</code> sample data — five-item-per-factor measurements of the Big Five.</p>
@@ -570,23 +570,25 @@ window.Quarto = {
 <pre><code>Parallel analysis suggests that the number of factors =  6  and the number of components =  6 </code></pre>
 </div>
 </div>
-<p>A <strong>scree plot</strong> plots the eigenvalues from largest to smallest as a line graph. By default, both PC (principal-component) and FA (factor-analysis) scree plots are shown. The two differ in whether measurement error is assumed: factor analysis posits per-item error, so the per-item information is below 1 (<span class="math inline">\(r_{jj} = 1 - h_j^2 = u^2 &lt; 1\)</span>, with <span class="math inline">\(h_j^2\)</span> the communality — the sum of squared common-factor loadings — and <span class="math inline">\(u_j^2\)</span> the uniqueness). The FA curve therefore always lies below the PC curve.</p>
+<p>A <strong>scree plot</strong> plots the eigenvalues from largest to smallest as a line graph. By default, both PC (principal-component) and FA (factor-analysis) scree plots are shown. The two differ in whether measurement error is assumed: factor analysis posits per-item error, so the per-item information is below 1 (the correlation <span class="math inline">\(r_{jj}\)</span> falls below <span class="math inline">\(1.0\)</span>; precisely, FA decomposes the reduced correlation matrix whose diagonal elements are replaced by <span class="math inline">\(r_{jj} = h_j^2 = 1 - u_j^2 &lt; 1\)</span>, with <span class="math inline">\(h_j^2\)</span> the communality — the sum of squared common-factor loadings — and <span class="math inline">\(u_j^2\)</span> the uniqueness — the squared unique-factor loading). The FA curve therefore always lies below the PC curve.</p>
 <p>The legend distinguishes <strong>Actual Data</strong>, <strong>Simulated Data</strong>, and <strong>Resampled Data</strong>. Real data have some semantic structure; their correlation matrix is unevenly distributed across dimensions, producing a gradually decaying scree curve. Simulated data are drawn from random numbers of the same size; resampled data are obtained by shuffling the original matrix. Neither carries semantic structure, so every dimension is uniformly uninformative, and the eigenvalues form a near-flat line. Parallel analysis compares the two: dimensions whose actual eigenvalue exceeds the flat line are meaningful. On this criterion, both the FA and PC solutions support six factors.</p>
-<p>A horizontal line at eigenvalue 1 is also drawn, marking the older <strong>Kaiser–Guttman criterion</strong> that a factor must explain at least one variable’s worth of variance to qualify as a common factor. By this rule three factors are warranted. Yet another rule of thumb is “what proportion of total variance is explained”: if three factors capture less than 50%, that may be too much information discarded, and four or five factors might be retained instead.</p>
+<p>A horizontal line at eigenvalue 1 is also drawn, marking the older <strong>Kaiser–Guttman criterion</strong> that a factor must explain at least one variable’s worth of variance to qualify as a common factor. Applied to the FA eigenvalues, this rule warrants three factors. Yet another rule of thumb is “what proportion of total variance is explained”: if three factors capture less than 50%, that may be too much information discarded, and four or five factors might be retained instead.</p>
 </section>
 <section id="estimating-factor-loadings" class="level4" data-number="15.2.1.2">
 <h4 data-number="15.2.1.2" class="anchored" data-anchor-id="estimating-factor-loadings"><span class="header-section-number">15.2.1.2</span> Estimating factor loadings</h4>
 <p>Once the number of factors is set, we estimate the loadings. For instance:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>result.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(dat, <span class="at">nfactors =</span> <span class="dv">6</span>, <span class="at">fm =</span> <span class="st">"ML"</span>, <span class="at">rotate =</span> <span class="st">"geominQ"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the random seed so that the rotated solution is reproducible</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>result.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(dat, <span class="at">nfactors =</span> <span class="dv">6</span>, <span class="at">fm =</span> <span class="st">"ML"</span>, <span class="at">rotate =</span> <span class="st">"geominQ"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>要求されたパッケージ GPArotation をロード中です</code></pre>
 </div>
 </div>
 <p><code>psych::fa()</code> offers many options; here we specify the number of factors (<code>nfactors</code>), the estimation method (<code>fm</code>), and the rotation method (<code>rotate</code>).</p>
-<p>For estimation we chose <strong>maximum likelihood (<code>ML</code>)</strong>. For samples of more than ~200, ML — assuming multivariate-normal data — is generally most appropriate. For small samples, the <strong>least-squares family</strong> (<code>ULS</code>, <code>OLS</code>, <code>WLS</code>, <code>GLS</code>, etc.) minimizes the model–data discrepancy and is the safer choice. Without specification, <strong>minimum residual (<code>minres</code>)</strong> — the same as ULS in concept, but with an improved algorithm with better convergence — is the default. The principal-axis option (<code>pa</code>) corresponds to a model without estimated errors. The differences across algorithms are usually modest.</p>
+<p>For estimation we chose <strong>maximum likelihood (<code>ML</code>)</strong>. For samples of more than ~200, ML — assuming multivariate-normal data — is generally most appropriate. For small samples, the <strong>least-squares family</strong> (<code>ULS</code>, <code>OLS</code>, <code>WLS</code>, <code>GLS</code>, etc.) minimizes the model–data discrepancy and is the safer choice. Without specification, <strong>minimum residual (<code>minres</code>)</strong> — the same as ULS in concept, but with an improved algorithm with better convergence — is the default. Principal-axis factoring (<code>pa</code>, principal axis) can also be chosen. If you want principal component analysis instead, use the <code>principal</code> function rather than <code>fa</code>. The differences across algorithms are usually modest.</p>
 <p><strong>Rotation</strong> transforms the loadings to ease interpretation. Factor analysis and PCA identify new axes for the data, but those axes can be linearly transformed (rotated) about the origin to any orientation. In practice we want the orientation that is easiest to interpret. Mathematically, this is the rotation that yields <strong>simple structure</strong>: each item loads on one factor and minimally on the others. If items measuring Extraversion load heavily on the first factor, we prefer that they not also load on factors 2, 3, 4, and 5 — otherwise interpretation becomes a headache.</p>
-<p>Within this guiding principle, many algorithms exist. The classical <strong>varimax</strong> rotation maximizes the variance of squared loadings on each factor. Other choices include oblimin and geomin; for details see <span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>Within this guiding principle, many algorithms exist. The classical <strong>varimax</strong> rotation computes, for each factor, the variance of the squared loadings and chooses the rotation that maximizes the sum of these variances. Other choices include oblimin and geomin; for details see <span class="citation" data-cites="kosugi2018">小杉 (<a href="references.html#ref-kosugi2018" role="doc-biblioref">2018</a>)</span>.</p>
 <p>Rotations split into <strong>orthogonal</strong> and <strong>oblique</strong>. Orthogonal rotations keep the rotated axes orthogonal — i.e., assume no inter-factor correlation. Oblique rotations allow inter-factor correlations. The latter is mathematically the weaker assumption, so a sensible workflow is to do oblique first and, if the inter-factor correlations are small, re-do orthogonal. Here we used <code>geominQ</code>, the oblique version of geomin.</p>
 <p>The <span class="citation" data-cites="GPArotation">(<a href="references.html#ref-GPArotation" role="doc-biblioref">Bernaards and Jennrich 2005</a>)</span> package implements many rotations selectable via <code>rotate</code>; consult its help.</p>
 <p>There is no absolute standard for rotation either; algorithms reflect different premises. Unlike estimation, however, loadings can change appreciably under different rotations. Choose whichever rotation makes interpretation easiest, but be ready to explain — in your own words — what the rotation is and what it assumes.</p>
@@ -599,50 +601,50 @@ window.Quarto = {
 <pre><code>Factor Analysis using method =  ml
 Call: fa(r = dat, nfactors = 6, rotate = "geominQ", fm = "ML")
 Standardized loadings (pattern matrix) based upon correlation matrix
-   item   ML6   ML3   ML4   ML2   ML1   ML5   h2   u2 com
-E2   12  0.70                               0.55 0.45 1.0
-E1   11  0.58                               0.39 0.61 1.4
-N4   19  0.51  0.35                         0.48 0.52 2.0
-E4   14 -0.50                          0.33 0.56 0.44 2.2
-E5   15 -0.41                               0.40 0.60 2.8
-N2   17        0.84                         0.69 0.31 1.1
-N1   16        0.83                         0.71 0.29 1.1
-N3   18        0.61                         0.52 0.48 1.3
-N5   20  0.33  0.37                         0.34 0.66 2.8
-A2    2              0.70                   0.50 0.50 1.2
-A3    3              0.65                   0.51 0.49 1.1
-A1    1             -0.57              0.37 0.33 0.67 1.8
-A5    5              0.50                   0.48 0.52 1.7
-A4    4              0.42                   0.28 0.72 1.7
-C2    7                    0.67             0.50 0.50 1.2
-C4    9                   -0.60        0.35 0.55 0.45 1.9
-C3    8                    0.54             0.31 0.69 1.1
-C1    6                    0.53             0.35 0.65 1.4
-C5   10                   -0.51             0.43 0.57 1.8
-O3   23                          0.67       0.48 0.52 1.0
-O1   21                          0.58       0.34 0.66 1.1
-O5   25                         -0.49  0.41 0.37 0.63 2.0
-O2   22                         -0.40  0.34 0.29 0.71 2.3
-O4   24  0.40                    0.40       0.25 0.75 2.4
-E3   13                          0.38       0.48 0.52 3.0
+   item   ML6   ML2   ML1   ML3   ML5   ML4   h2   u2 com
+E4   14  0.68                               0.56 0.44 1.2
+E3   13  0.67                               0.48 0.52 1.2
+A5    5  0.56                               0.48 0.52 1.7
+E2   12 -0.55              0.45             0.55 0.45 1.9
+E1   11 -0.49              0.37             0.39 0.61 2.3
+A3    3  0.48                          0.46 0.51 0.49 2.0
+E5   15  0.43                               0.40 0.60 3.0
+N2   17        0.83                         0.69 0.31 1.0
+N1   16        0.82                         0.71 0.29 1.0
+N3   18        0.60                         0.52 0.48 1.4
+N5   20        0.37        0.34             0.34 0.66 2.4
+C2    7              0.69                   0.50 0.50 1.1
+C4    9             -0.60  0.38             0.55 0.45 2.0
+C3    8              0.55                   0.31 0.69 1.1
+C1    6              0.55                   0.35 0.65 1.2
+C5   10             -0.52                   0.43 0.57 1.8
+N4   19        0.35        0.42             0.48 0.52 2.6
+O3   23  0.44                    0.56       0.48 0.52 1.9
+O5   25                         -0.55       0.37 0.63 1.4
+O1   21  0.33                    0.47       0.34 0.66 2.0
+O2   22                         -0.46       0.29 0.71 1.6
+O4   24                          0.38       0.25 0.75 2.3
+A2    2  0.31                          0.58 0.50 0.50 1.6
+A1    1                               -0.56 0.33 0.67 1.2
+A4    4                                     0.28 0.72 3.7
 
-                       ML6  ML3  ML4  ML2  ML1  ML5
-SS loadings           2.34 2.25 2.00 1.89 1.77 0.82
-Proportion Var        0.09 0.09 0.08 0.08 0.07 0.03
-Cumulative Var        0.09 0.18 0.26 0.34 0.41 0.44
-Proportion Explained  0.21 0.20 0.18 0.17 0.16 0.07
-Cumulative Proportion 0.21 0.41 0.59 0.77 0.93 1.00
+                       ML6  ML2  ML1  ML3  ML5  ML4
+SS loadings           2.88 2.24 1.92 1.43 1.37 1.23
+Proportion Var        0.12 0.09 0.08 0.06 0.05 0.05
+Cumulative Var        0.12 0.20 0.28 0.34 0.39 0.44
+Proportion Explained  0.26 0.20 0.17 0.13 0.12 0.11
+Cumulative Proportion 0.26 0.46 0.64 0.76 0.89 1.00
 
  With factor correlations of 
-      ML6   ML3   ML4   ML2   ML1   ML5
-ML6  1.00  0.24 -0.36 -0.20 -0.28 -0.08
-ML3  0.24  1.00 -0.01 -0.12  0.05  0.25
-ML4 -0.36 -0.01  1.00  0.19  0.28  0.26
-ML2 -0.20 -0.12  0.19  1.00  0.14  0.04
-ML1 -0.28  0.05  0.28  0.14  1.00  0.11
-ML5 -0.08  0.25  0.26  0.04  0.11  1.00
+      ML6   ML2   ML1   ML3   ML5   ML4
+ML6  1.00 -0.09  0.26 -0.11 -0.03  0.14
+ML2 -0.09  1.00 -0.13  0.30  0.04 -0.11
+ML1  0.26 -0.13  1.00 -0.07  0.14  0.16
+ML3 -0.11  0.30 -0.07  1.00 -0.03 -0.03
+ML5 -0.03  0.04  0.14 -0.03  1.00  0.02
+ML4  0.14 -0.11  0.16 -0.03  0.02  1.00
 
-Mean item complexity =  1.7
+Mean item complexity =  1.8
 Test of the hypothesis that 6 factors are sufficient.
 
 df null model =  300  with the objective function =  7.23 with Chi Square =  20163.79
@@ -659,16 +661,16 @@ RMSEA index =  0.043  and the 90 % confidence intervals are  0.04 0.045
 BIC =  -295.88
 Fit based upon off diagonal values = 0.99
 Measures of factor score adequacy             
-                                                   ML6  ML3  ML4  ML2  ML1  ML5
-Correlation of (regression) scores with factors   0.81 0.89 0.81 0.85 0.82 0.74
-Multiple R square of scores with factors          0.66 0.80 0.66 0.72 0.67 0.54
-Minimum correlation of possible factor scores     0.32 0.59 0.33 0.44 0.34 0.09</code></pre>
+                                                   ML6  ML2  ML1  ML3  ML5  ML4
+Correlation of (regression) scores with factors   0.88 0.89 0.85 0.77 0.82 0.78
+Multiple R square of scores with factors          0.77 0.79 0.71 0.59 0.67 0.61
+Minimum correlation of possible factor scores     0.53 0.57 0.43 0.19 0.35 0.21</code></pre>
 </div>
 </div>
-<p>We set <code>sort</code> (sort items by loading) and <code>cut</code> (suppress loadings smaller than 0.3 in the display). These are display options; the underlying <span class="math inline">\(5 \times 25\)</span> paths from each factor to each item are all computed.</p>
-<p>The output starts with the loading matrix, the communality <span class="math inline">\(h_j^2\)</span>, the uniqueness <span class="math inline">\(u_j^2 = 1 - h_j^2\)</span>, and the complexity.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> These are the post-rotation <strong>pattern matrix</strong>. In an oblique rotation, the loadings split into the <strong>pattern</strong> (factor effects, projecting variables orthogonally onto an oblique factor system) and the <strong>structure</strong> (factor correlations: variable–factor simple correlations).</p>
+<p>We set <code>sort</code> (sort items by loading) and <code>cut</code> (suppress loadings smaller than 0.3 in the display). These are display options; the underlying <span class="math inline">\(6 \times 25\)</span> paths from each factor to each item are all computed.</p>
+<p>The output starts with the loading matrix, the communality <span class="math inline">\(h_j^2\)</span>, the uniqueness <span class="math inline">\(u_j^2 = 1 - h_j^2\)</span>, and the complexity.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> These are the post-rotation <strong>pattern matrix</strong>. In an oblique rotation, the loadings split into the <strong>pattern</strong> (the coordinates obtained by projecting each variable parallel to the axes of the oblique factor system, interpreted as the direct effects of the factors on the variable) and the <strong>structure</strong> (the shadows obtained by projecting each variable orthogonally onto each factor axis, i.e., the simple variable–factor correlations).</p>
 <p>Below the loadings, the sum of squared loadings (SS loadings) shows the variance explained by each factor; the proportions and cumulative proportions follow. Here the cumulative explained variance is 44%, meaning 56% of the information is discarded — from a compression standpoint, potentially too much.</p>
-<p>Because the rotation is oblique, inter-factor correlations are reported next. The largest absolute correlation is −0.36. If all inter-factor correlations are within ±0.3, an orthogonal rotation can be considered.</p>
+<p>Because the rotation is oblique, inter-factor correlations are reported next. The largest absolute correlation is 0.30. If all inter-factor correlations are within ±0.3, an orthogonal rotation can be considered.</p>
 <p>Goodness-of-fit indices follow; we omit detailed discussion.</p>
 </section>
 <section id="factor-score-estimation" class="level4" data-number="15.2.1.4">
@@ -679,17 +681,17 @@ Minimum correlation of possible factor scores     0.32 0.59 0.33 0.44 0.34 0.09<
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result.fa<span class="sc">$</span>scores, <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>              ML6         ML3         ML4         ML2         ML1         ML5
-61617 -0.04014969 -0.13419707 -0.69145726 -1.29301559 -1.64304036 -0.12400128
-61618 -0.35266658  0.09081578 -0.04504754 -0.60268302 -0.05661505  0.39619512
-61620 -0.05291168  0.69698477 -0.68173415 -0.03704645  0.23347294  0.01284197
-61621  0.22194662 -0.07729858 -0.15481426 -0.90539275 -0.91258323  0.95276756
-61622 -0.39698494 -0.28824871 -0.61034943 -0.12384519 -0.58141009  0.21980917
-61623 -1.05221509  0.41587923  0.29454911  1.35905669  0.84580522  0.45992967
-61624 -0.43876719 -1.21974799  0.06875246  0.03201126  0.60022232 -0.69270565
-61629  1.42556703  0.35290981 -2.23061957 -0.99433758 -1.21668688 -1.00632233
-61630          NA          NA          NA          NA          NA          NA
-61633 -0.62397398  1.11012057  0.53807395  1.05138680  0.48706216  0.04328972</code></pre>
+<pre><code>              ML6         ML2         ML1        ML3         ML5        ML4
+61617 -0.67487624 -0.06370580 -1.50532590 -0.4445620 -1.44976776 -0.5355587
+61618  0.34632503  0.04818408 -0.61043095 -0.1181848 -0.30201863 -0.3599592
+61620 -0.08463945  0.76215521 -0.02893026 -0.1497545  0.30012962 -0.7672220
+61621  0.07562521 -0.17026817 -0.97980321  0.5719921 -1.19680643 -0.5298080
+61622 -0.03388064 -0.26751144 -0.23091434 -0.4502600 -0.66492871 -0.8117066
+61623  1.05991165  0.33787504  1.39368295 -0.5902136  0.28365845 -0.2424655
+61624  0.02154770 -1.16850257  0.08501653 -0.6578860  0.78507943  0.2247084
+61629 -2.15402385  0.67042182 -1.12938107  0.1900516 -0.04178476 -1.3772832
+61630          NA          NA          NA         NA          NA         NA
+61633  0.63849939  1.07066268  1.06204462 -0.4196446  0.16315312  0.3949454</code></pre>
 </div>
 </div>
 <p>Some scores are <code>NA</code> (e.g., ID 61630): this happens when any response is missing.</p>
@@ -721,15 +723,15 @@ Minimum correlation of possible factor scores     0.32 0.59 0.33 0.44 0.34 0.09<
 </div>
 </div>
 <p>Because factor scores are back-computed from the model, a single missing value blocks the calculation. The scores returned are standardized, hence unitless and only relatively comparable. Some authors argue against subsequent tests of mean differences on relative estimates of this kind.</p>
-<p>In practice a simpler <strong>simple-sum factor score</strong> is widely used: identify the items associated with each factor and average their item-level responses. With our example, say the first factor reflects E2, E1, N4, E4, E5. Because E4 and E5 have negative loadings, their values are reverse-scored:</p>
+<p>In practice a simpler <strong>simple-sum factor score</strong> is widely used: identify the items associated with each factor and average their item-level responses. With our example, say the first factor reflects E1, E2, E3, E4, E5. Because E1 and E2 have negative loadings, their values are reverse-scored:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Fscore1.raw <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pick out the items relevant to the first factor</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(E2, E1, N4, E4, E5) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(E1, E2, E3, E4, E5) <span class="sc">|&gt;</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># reverse-score</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">E4 =</span> <span class="dv">7</span> <span class="sc">-</span> E4,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">E5 =</span> <span class="dv">7</span> <span class="sc">-</span> E5</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">E1 =</span> <span class="dv">7</span> <span class="sc">-</span> E1,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">E2 =</span> <span class="dv">7</span> <span class="sc">-</span> E2</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># row-wise mean, ignoring missings</span></span>
@@ -737,7 +739,7 @@ Minimum correlation of possible factor scores     0.32 0.59 0.33 0.44 0.34 0.09<
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Fscore1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.000   2.000   2.800   2.892   3.600   6.000 </code></pre>
+  1.000   3.400   4.200   4.145   5.000   6.000 </code></pre>
 </div>
 </div>
 <p>Reverse-scoring is done by subtracting from 7 (for a 6-point scale starting at 1). The advantage is that the score retains its scale-anchored meaning (above the midpoint = agreement, below = disagreement) and is computable as long as some responses are present.</p>
@@ -746,7 +748,7 @@ Minimum correlation of possible factor scores     0.32 0.59 0.33 0.44 0.34 0.09<
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(result.fa<span class="sc">$</span>scores[, <span class="dv">1</span>], Fscore1, <span class="at">use =</span> <span class="st">"pairwise"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9594963</code></pre>
+<pre><code>[1] 0.9037091</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.fa<span class="sc">$</span>scores[, <span class="dv">1</span>], Fscore1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -761,7 +763,7 @@ Minimum correlation of possible factor scores     0.32 0.59 0.33 0.44 0.34 0.09<
 </section>
 <section id="confirmatory-factor-analysis" class="level3" data-number="15.2.2">
 <h3 data-number="15.2.2" class="anchored" data-anchor-id="confirmatory-factor-analysis"><span class="header-section-number">15.2.2</span> Confirmatory factor analysis</h3>
-<p>So far we have discussed exploratory factor analysis. There the number of factors and the loadings are not specified a priori; the data speak, and interpretation is post hoc. In our example the first factor consists mainly of Extraversion items, but a Neuroticism item (N4) also slips in, complicating interpretation. The Big Five name implies five factors, yet the data prefer six.</p>
+<p>So far we have discussed exploratory factor analysis. There the number of factors and the loadings are not specified a priori; the data speak, and interpretation is post hoc. In our example the first factor consists mainly of Extraversion items, but Agreeableness items (A3, A5) also slip in, complicating interpretation. The Big Five name implies five factors, yet the data prefer six.</p>
 <p>Sometimes the theory is firmer than that: personality inventories have well-grounded structures, and one prefers to test a hypothesized structure. <strong>Confirmatory factor analysis (CFA)</strong> is the appropriate tool: factor structure is specified in advance and fitted to the data. CFA sits inside <strong>structural equation modeling (SEM)</strong>: the relationships between items and latent variables are expressed as equations and estimated.</p>
 <p>SEM fits equations involving latent variables to a covariance/correlation structure. The relationships are often drawn as a <strong>path diagram</strong>: bidirectional arrows for correlations, unidirectional arrows for regressions, rectangles for observed variables, ovals for latent variables. The diagram makes the difference between factor analysis and PCA stark:</p>
 <div class="quarto-figure quarto-figure-center">
@@ -978,7 +980,7 @@ Variances:
 </div>
 <p>That concludes the overview of factor analysis.</p>
 <p>Factor analysis is a model of measurement and is heavily used when designing psychological scales. But because it identifies common dimensions from inter-item correlations, neither “the construct has been measured directly” nor “the existence of the construct has been demonstrated” follows. For example, write items about ramen and have respondents rate them quantitatively, and you can extract a “ramen factor” or a “tonkotsu factor” with some interpretive content. That does not mean people have internalized a psychological “tonkotsu factor.”</p>
-<p>SEM can specify regression or correlation paths between latent variables, but it pays to think about how those relationships actually manifest. Even a strongly fitting model with strong cross-factor influence may have small measurement-model coefficients: ask what concretely changes when a factor score increases by one unit, and how that shows up in behavior or measurement. A statistically valid but substantively meaningless model is a paper exercise.</p>
+<p>SEM can specify regression or correlation paths between latent variables, but it pays to think about how those relationships actually manifest. Even a strongly fitting model with strong cross-factor influence may have small measurement-model coefficients, in which case the influence may barely show up in the observed measures. Ask what concretely changes when a factor score increases by one unit, and how that shows up in behavior or measurement. A statistical model without such substantive impact, that is, without validity, is merely an armchair exercise.</p>
 <p>Issues of measurement and substantive impact run in parallel between factor analysis and item response theory (a relative of factor analysis), to which we now turn.</p>
 </section>
 <section id="sem-applications" class="level3" data-number="15.2.3">
@@ -1014,7 +1016,7 @@ contrast in perspective. -->
 <h2 data-number="15.3" class="anchored" data-anchor-id="sec-irt-model"><span class="header-section-number">15.3</span> Item response theory</h2>
 <p>Next, <strong>item response theory (IRT)</strong>. Sometimes called <em>modern test theory</em> in contrast to classical test theory (CTT), IRT is grounded in test theory and so assumes a binary outcome (0 = incorrect, 1 = correct). It can also be viewed as factor analysis with a binary indicator, and its mathematical equivalence to categorical factor analysis is established.</p>
 <p>A further difference from factor analysis: factor analysis (rooted in personality psychology) emphasizes exploring factor structure, while IRT (rooted in test theory) emphasizes refining factor-score estimation. In personality psychology the number of factors is itself a research question; in test theory a single-factor “ability” structure is preferred. This is why scale construction via factor analysis cultivates “simple structure” and prunes items, while IRT — given a sufficiently large first-factor loading (around 30% variance is typical) — treats the data as essentially unidimensional and pools items rather than discarding them.</p>
-<p><strong>Computer adaptive testing (CAT)</strong> is the leading current application of IRT: items are served dynamically from a pool based on the respondent’s pattern of correct/incorrect answers, efficiently estimating the latent ability. CAT requires an IRT-based model, an item pool calibrated for various ability levels, and a database-and-delivery system tying them together.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<p><strong>Computerized adaptive testing (CAT)</strong> is the leading current application of IRT: items are served dynamically from a pool based on the respondent’s pattern of correct/incorrect answers, efficiently estimating the latent ability. CAT requires an IRT-based model, an item pool calibrated for various ability levels, and a database-and-delivery system tying them together.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
 <section id="logistic-models" class="level3" data-number="15.3.1">
 <h3 data-number="15.3.1" class="anchored" data-anchor-id="logistic-models"><span class="header-section-number">15.3.1</span> Logistic models</h3>
 <p>IRT is a single-factor model for binary data. Because of the binary outcome, dimensional analysis uses tetrachoric correlations rather than Pearson’s. Modeling treats item responses as regressed on a person parameter <span class="math inline">\(\theta\)</span> that corresponds to the factor — a logistic-regression-like setup.</p>
@@ -1382,7 +1384,7 @@ Log.Lik: -2998.129</code></pre>
 <section id="exercises" class="level2" data-number="15.5">
 <h2 data-number="15.5" class="anchored" data-anchor-id="exercises"><span class="header-section-number">15.5</span> Exercises</h2>
 <p>Practice the multivariate techniques of this chapter on the following problems, which aim to deepen understanding through hands-on analysis. As an example we use <code>psych::small.msq</code> — the Motivational State Questionnaire — a 14-variable, 200-case dataset.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
-<p>Its 14 variables comprise energetic arousal (<code>active</code>, <code>alert</code>, <code>arousal</code>, <code>sleepy</code>, <code>tired</code>, <code>drowsy</code>), tense arousal (<code>anxious</code>, <code>jittery</code>, <code>nervous</code>, <code>calm</code>, <code>relaxed</code>, <code>at.ease</code>), plus <code>gender</code> and <code>drug</code> (a drug-condition factor). Excluding <code>gender</code> and <code>drug</code>, the structure is presumed two-factor.</p>
+<p>Its 14 variables comprise energetic arousal (<code>active</code>, <code>alert</code>, <code>aroused</code>, <code>sleepy</code>, <code>tired</code>, <code>drowsy</code>), tense arousal (<code>anxious</code>, <code>jittery</code>, <code>nervous</code>, <code>calm</code>, <code>relaxed</code>, <code>at.ease</code>), plus <code>gender</code> and <code>drug</code> (a drug-condition factor). Excluding <code>gender</code> and <code>drug</code>, the structure is presumed two-factor.</p>
 <section id="exercise-1-exploratory-factor-analysis" class="level3" data-number="15.5.1">
 <h3 data-number="15.5.1" class="anchored" data-anchor-id="exercise-1-exploratory-factor-analysis"><span class="header-section-number">15.5.1</span> Exercise 1: exploratory factor analysis</h3>
 <p>Perform an exploratory factor analysis.</p>
@@ -1428,7 +1430,7 @@ Log.Lik: -2998.129</code></pre>
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># multidimensional ICC</span></span>
 <span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.mirt, <span class="at">type =</span> <span class="st">"trace"</span>, <span class="at">which.items =</span> <span class="dv">1</span>)</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co"># multidimensional information</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co"># test information function</span></span>
 <span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result.mirt, <span class="at">type =</span> <span class="st">"info"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
@@ -1471,7 +1473,7 @@ Bernaards, Coen A., and Robert I. Jennrich. 2005. <span>“Gradient Projection A
 <li id="fn2"><p>An idiosyncratic name; “lavaan” stands for <em>LAtent VAriable ANalysis</em>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>The <code>lavaangui</code> package lets you specify models via a GUI.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p><code>Std.all</code> standardizes both observed and latent variables to unit variance; <code>Std.lv</code> standardizes only the latent variables.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>Japan’s national university-entrance examinations briefly considered CAT but rejected it: the need for a huge item pool (requiring extensive pre-testing) and the difficulty of providing the same network and operating environment at remote and island sites as in urban areas made it impractical. The existing paper-and-pencil (mark-sheet) system runs an extraordinary error rate below one percent even with 500,000 simultaneous test-takers each year; given its social impact, CAT adoption demands extreme caution.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Japan’s national university-entrance examinations briefly considered CAT but rejected it: the need for a huge item pool (requiring extensive pre-testing) and the difficulty of providing the same network and operating environment at remote and island sites as in urban areas made it impractical. The existing paper-and-pencil (mark-sheet) system runs with an extraordinary error rate of a single-digit percentage or less even with 500,000 simultaneous test-takers each year; given its social impact, CAT adoption demands extreme caution.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>It is also possible, of course, to model with the normal CDF directly.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>With MLE, a respondent who gets everything right or everything wrong has an infinite <span class="math inline">\(\theta\)</span> estimate — not practically useful.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>Frequently asked: “If the prior literature uses 5 points, do we have to?” and “Can we mix 5-point and 7-point scales?” The correct answers: if you are using the prior literature’s scoring or standardization, follow the prior literature; otherwise (e.g., when running EFA and setting your own loadings), design the scale around what respondents can actually distinguish. If you do not know in advance, use a graded-response IRT model to check responses to each category.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>

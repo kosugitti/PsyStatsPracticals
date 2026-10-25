@@ -393,6 +393,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#estimating-variances" id="toc-estimating-variances" class="nav-link" data-scroll-target="#estimating-variances"><span class="header-section-number">17.2.1</span> Estimating variances</a></li>
   <li><a href="#making-use-of-missing-data" id="toc-making-use-of-missing-data" class="nav-link" data-scroll-target="#making-use-of-missing-data"><span class="header-section-number">17.2.2</span> Making use of missing data</a></li>
+  <li><a href="#extending-to-more-variables-an-lkj-prior-on-the-correlation-matrix" id="toc-extending-to-more-variables-an-lkj-prior-on-the-correlation-matrix" class="nav-link" data-scroll-target="#extending-to-more-variables-an-lkj-prior-on-the-correlation-matrix"><span class="header-section-number">17.2.3</span> Extending to more variables: an LKJ prior on the correlation matrix</a></li>
   </ul></li>
   <li><a href="#models-with-non-normal-distributions" id="toc-models-with-non-normal-distributions" class="nav-link" data-scroll-target="#models-with-non-normal-distributions"><span class="header-section-number">17.3</span> Models with non-normal distributions</a>
   <ul class="collapse">
@@ -459,7 +460,7 @@ window.Quarto = {
 <p>The most frequently used are 1, 3, and 5. The <strong>data block</strong> declares everything Stan receives from outside; a type mismatch raises an error (e.g., a Stan-side <code>int x;</code> but an R-side <code>x &lt;- 1.2</code> will fail).</p>
 <p>The <strong>parameters block</strong> declares the quantities to be estimated; Stan returns posterior samples for these. The <strong>model block</strong> describes the probability model (the likelihood) and is the heart of the file.</p>
 <p>The remaining blocks are supplementary and not always needed. The <strong>transformed data block</strong> modifies data declared in the data block; the <strong>transformed parameters block</strong> transforms parameters declared in the parameters block. Such transformations make subsequent computation more readable. For example, in regression the parameters are the intercept <span class="math inline">\(\beta_0\)</span> and the slope <span class="math inline">\(\beta_1\)</span>, combined with the predictor <span class="math inline">\(x_i\)</span> to form the fitted value <span class="math inline">\(\hat{y}_i\)</span>. With <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> declared as parameters and <code>yhat</code> declared in transformed parameters as</p>
-<p><span class="math display">\[ yhat = \beta_0 + \beta_1 x, \]</span></p>
+<p><span class="math display">\[ \hat{y}_i = \beta_0 + \beta_1 x_i, \]</span></p>
 <p>the model block uses <code>yhat</code> directly. When a derived parameter is a combination of others, writing it as a transformed parameter often improves clarity.</p>
 <p>The <strong>generated quantities block</strong> processes the sampled values. The same processing can be done on the R side after sampling, so this block is optional — but if you need certain transformed quantities, computing them inside (compiled, fast) Stan can be convenient. We will see uses below.</p>
 </section>
@@ -475,7 +476,7 @@ window.Quarto = {
 <p>What does a regression, a multiple regression, an HLM look like in Stan? <code>brms</code> would spare you that effort, but writing the model yourself reveals exactly how each model is expressed.</p>
 <p>The key shift in perspective is to view analysis as describing a <strong>data-generating mechanism</strong>. We often start with data and search for a method to fit, or — if our analytic methods are limited — collect data that fit the methods we have. This is backwards. If your statistical package only does regression, “give up on the discrete variable and redesign the study” is an impoverished move.</p>
 <p>The goal of statistics is to turn natural human behavior and responses into numbers and read meaning out of them; budget or environment should not be allowed to bend the behavior itself. Keep the data as raw as possible, and <em>think</em> about how to analyze them. Approach the question from “what mechanism generated this data?” The “mechanism” can equally be called a probability distribution. A single response cannot be deterministic; the possible alternative values, together, form a probability distribution. The parameters of that distribution are then specified by a mathematical structure.</p>
-<p>In regression, each observation <span class="math inline">\(y_i\)</span> is the true value <span class="math inline">\(\hat{y}_i\)</span> plus error <span class="math inline">\(e_i\)</span>. The error is normal, so <span class="math inline">\(y_i \sim N(\hat{y}_i, \sigma^2)\)</span>. The mean <span class="math inline">\(\hat{y}_i\)</span> is the linear combination of predictors <span class="math inline">\(x_i\)</span>: <span class="math inline">\(y_i \sim N(\beta_0 + \beta_1 x_i, \sigma^2)\)</span>. And so on.</p>
+<p>In regression, each observation <span class="math inline">\(y_i\)</span> is the true value <span class="math inline">\(\hat{y}_i\)</span> plus error <span class="math inline">\(e_i\)</span>. The error is normal, so <span class="math inline">\(y_i \sim N(\hat{y}_i, \sigma)\)</span>. The mean <span class="math inline">\(\hat{y}_i\)</span> is the linear combination of predictors <span class="math inline">\(x_i\)</span>: <span class="math inline">\(y_i \sim N(\beta_0 + \beta_1 x_i, \sigma)\)</span>. And so on.</p>
 <p>The <span class="math inline">\(t\)</span>-test and ANOVA can be described the same way. Rewriting them clarifies aspects of the model you had not noticed: which distribution does the model assume? What constraints sit on the parameters? What priors are in play? Writing it all explicitly in Stan brings these to light. That is the educational value of rewriting.</p>
 </section>
 <section id="step-3-try-various-models" class="level3" data-number="17.1.3">
@@ -532,11 +533,11 @@ window.Quarto = {
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Three blocks: <code>data</code>, <code>parameters</code>, <code>model</code>. Note the <code>int</code>, <code>array</code>, and <code>real</code> type declarations.</p>
 <p>The <code>data</code> block first declares the sample size as an integer, so the same code works for 7, 50, or any other sample size. <code>array[N] real Y;</code> declares a length-<code>N</code> real array.</p>
-<p><code>parameters</code> declares the unknowns <span class="math inline">\(\mu\)</span> (a single real) and <span class="math inline">\(\sigma_i\)</span> (a real array of length <code>N</code>). The constraint <code>&lt;lower=0&gt;</code> restricts <span class="math inline">\(\sigma_i\)</span> to non-negative values — variances cannot be negative, and the constraint helps the sampler explore appropriate regions.</p>
+<p><code>parameters</code> declares the unknowns <span class="math inline">\(\mu\)</span> (a single real) and <span class="math inline">\(\sigma_i\)</span> (a real array of length <code>N</code>). The constraint <code>&lt;lower=0&gt;</code> restricts <span class="math inline">\(\sigma_i\)</span> to non-negative values — standard deviations cannot be negative, and the constraint helps the sampler explore appropriate regions.</p>
 <p><code>model</code> is the probabilistic model. Bayesian models require a likelihood and a prior. The line <code>Y[i] ~ normal(mu, sigma[i])</code> inside a <code>for</code> loop is:</p>
-<p><span class="math display">\[ \prod_{i=1}^{N} N(Y_i \mid \mu, \sigma_i). \]</span></p>
+<p><span class="math display">\[ \prod_{i=1}^{n} N(y_i \mid \mu, \sigma_i). \]</span></p>
 <p>Internally Stan works with the log-likelihood:</p>
-<p><span class="math display">\[ \sum_{i=1}^{N} \log N(Y_i \mid \mu, \sigma_i). \]</span></p>
+<p><span class="math display">\[ \sum_{i=1}^{n} \log N(y_i \mid \mu, \sigma_i). \]</span></p>
 <p>Anyone who can write down a probabilistic model can therefore obtain estimates from Stan.</p>
 <p>Here the priors are uniform on <span class="math inline">\([0, 200]\)</span> for <span class="math inline">\(\mu\)</span> and Cauchy for <span class="math inline">\(\sigma_i\)</span>. Any prior is acceptable; without specification Stan supplies a wide uniform automatically. Heavy-tailed priors — Cauchy, Student’s <span class="math inline">\(t\)</span>, exponential — are typical for scale parameters.</p>
 <p>Run from R:</p>
@@ -568,10 +569,10 @@ window.Quarto = {
 <pre><code>Running MCMC with 4 parallel chains...</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Chain 3 finished in 0.1 seconds.
-Chain 1 finished in 0.2 seconds.
+<pre><code>Chain 1 finished in 0.2 seconds.
 Chain 2 finished in 0.2 seconds.
-Chain 4 finished in 0.2 seconds.
+Chain 3 finished in 0.2 seconds.
+Chain 4 finished in 0.1 seconds.
 
 All 4 chains finished successfully.
 Mean chain execution time: 0.2 seconds.
@@ -579,17 +580,17 @@ Total execution time: 0.3 seconds.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> variable   mean median   sd  mad     q5    q95 rhat ess_bulk ess_tail
- lp__     -18.51 -18.14 2.22 2.11 -22.62 -15.58 1.00     1704     2125
- mu       150.53 150.66 0.66 0.64 149.43 151.40 1.00     1053     5009
- sigma[1]   2.97   1.43 6.25 1.56   0.12   9.93 1.01     1091      952
- sigma[2]   4.39   2.73 7.51 2.13   0.71  12.53 1.01      425     1603
- sigma[3]   4.23   2.75 6.32 2.08   0.71  11.87 1.01     3045     5445
- sigma[4]   3.00   1.63 5.43 1.68   0.08   9.63 1.02      205       60
- sigma[5]   2.94   1.56 6.28 1.72   0.11   9.50 1.01      684      464
- sigma[6]   5.84   3.97 8.25 2.67   1.35  15.05 1.00     1870     5729
- sigma[7]   3.03   1.56 7.28 1.70   0.11   9.98 1.02      354      315
- sigma[8]   3.03   1.64 5.08 1.69   0.04  10.21 1.04      133       37
+<pre><code> variable   mean median    sd  mad     q5    q95 rhat ess_bulk ess_tail
+ lp__     -18.61 -18.28  2.26 2.13 -22.73 -15.59 1.00     2303     4353
+ mu       150.52 150.66  0.67 0.62 149.30 151.40 1.00     1890     2032
+ sigma[1]   3.20   1.61  9.51 1.70   0.15  11.45 1.01      793      235
+ sigma[2]   4.50   2.82  6.81 2.17   0.70  12.67 1.00     1788     2189
+ sigma[3]   4.66   2.82 15.41 2.18   0.74  13.08 1.00     3654     3544
+ sigma[4]   3.40   1.76  7.37 1.74   0.20  10.91 1.01     1169     2164
+ sigma[5]   2.98   1.48  8.60 1.57   0.11   9.68 1.01      587      230
+ sigma[6]   5.99   3.70 15.40 2.35   1.31  16.01 1.00     4938     5524
+ sigma[7]   2.89   1.47  6.00 1.64   0.08   9.25 1.01      436      116
+ sigma[8]   3.16   1.69  7.06 1.64   0.14   9.69 1.01      750      277
 
  # showing 10 of 12 rows (change via 'max_rows' argument or 'cmdstanr_max_rows' option)</code></pre>
 </div>
@@ -623,16 +624,16 @@ Total execution time: 0.3 seconds.</code></pre>
 
 Parameter | Median |   Mean |   MAP |          95% CI
 -----------------------------------------------------
-sigma[1]  |   1.43 |   2.97 |  0.34 | [ 0.04,   9.93]
-sigma[2]  |   2.73 |   4.39 |  1.29 | [ 0.05,  12.55]
-sigma[3]  |   2.75 |   4.23 |  1.70 | [ 0.05,  11.88]
-sigma[4]  |   1.63 |   3.00 |  0.21 | [ 0.02,   9.64]
-sigma[5]  |   1.56 |   2.94 |  0.38 | [ 0.02,   9.50]
-sigma[6]  |   3.97 |   5.84 |  2.08 | [ 0.39,  15.26]
-sigma[7]  |   1.56 |   3.03 |  0.62 | [ 0.02,  10.00]
-sigma[8]  |   1.64 |   3.03 |  0.19 | [ 0.02,  10.25]
-sigma[9]  |  60.04 |  89.18 | 39.53 | [19.30, 238.04]
-sigma[10] |  80.62 | 111.27 | 56.92 | [25.47, 260.69]</code></pre>
+sigma[1]  |   1.61 |   3.20 |  0.75 | [ 0.03,  11.48]
+sigma[2]  |   2.82 |   4.50 |  1.38 | [ 0.02,  12.68]
+sigma[3]  |   2.82 |   4.66 |  1.52 | [ 0.06,  13.09]
+sigma[4]  |   1.76 |   3.40 |  0.76 | [ 0.04,  10.91]
+sigma[5]  |   1.48 |   2.98 |  0.53 | [ 0.04,   9.68]
+sigma[6]  |   3.70 |   5.99 |  3.18 | [ 0.37,  16.28]
+sigma[7]  |   1.47 |   2.89 |  0.25 | [ 0.03,   9.25]
+sigma[8]  |   1.69 |   3.16 |  0.79 | [ 0.02,   9.69]
+sigma[9]  |  59.52 |  85.50 | 40.89 | [18.52, 221.05]
+sigma[10] |  81.93 | 115.16 | 56.79 | [23.87, 275.30]</code></pre>
 </div>
 </div>
 <p>Because the posterior is a distribution, mean (EAP), median, and mode (MAP) give different summaries. Variance parameters in particular tend to have skewed posteriors, for which the EAP is not the best summary.</p>
@@ -698,7 +699,7 @@ sigma[10] |  80.62 | 111.27 | 56.92 | [25.47, 260.69]</code></pre>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>[<span class="dv">2</span>] mu;</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">100</span>&gt;[<span class="dv">2</span>] mu;</span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd1;</span>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd2;</span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">1</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; rho;</span>
@@ -726,9 +727,9 @@ sigma[10] |  80.62 | 111.27 | 56.92 | [25.47, 260.69]</code></pre>
 <p>In the data block, <code>Nobs</code> and <code>Nmiss</code> are integer counts: the number of cases observed on both variables, and the number missing on one. Stan does not represent <code>NA</code> directly, so only the valid data are passed; the counts make sure both groups are handled.</p>
 <p><code>vector[2] obsX[Nobs]</code> declares an array of length <code>Nobs</code> of 2-vectors — pairs of observed values. The data with one variable missing are passed as <code>Nmiss</code> real values (not vectors).</p>
 <p>The target is the correlation <code>rho</code>, which appears in the variance–covariance matrix of a bivariate normal. The likelihood is</p>
-<p><span class="math display">\[ obsX \sim MN(\mathbb{\mu}, \mathbb{\Sigma}), \]</span></p>
+<p><span class="math display">\[ \boldsymbol{x}_i \sim \mathrm{MVN}(\boldsymbol{\mu}, \boldsymbol{\Sigma}), \]</span></p>
 <p>with</p>
-<p><span class="math display">\[ \mathbb{\Sigma} = \begin{pmatrix}
+<p><span class="math display">\[ \boldsymbol{\Sigma} = \begin{pmatrix}
 \sigma_1^2 &amp; \sigma_{12}\\
 \sigma_{21} &amp; \sigma_2^2
 \end{pmatrix}
@@ -740,7 +741,7 @@ sigma[10] |  80.62 | 111.27 | 56.92 | [25.47, 260.69]</code></pre>
 <p>where <span class="math inline">\(\sigma_1, \sigma_2\)</span> are the per-variable SDs and <span class="math inline">\(\rho\)</span> the correlation.</p>
 <p>The <code>parameters</code> block declares <span class="math inline">\(\sigma_1\)</span>, <span class="math inline">\(\sigma_2\)</span>, <span class="math inline">\(\rho\)</span>, and the <code>transformed parameters</code> block rebuilds the covariance matrix from them. Stan has a dedicated <code>cov_matrix</code> type for this.</p>
 <p>Now look at the <code>model</code> block carefully. For complete pairs <code>obsX</code> we use the multivariate normal. For the half-missing <code>missX</code> we still have the <span class="math inline">\(X_1\)</span> values, which under the model are univariate normal with mean <span class="math inline">\(\mu_1\)</span> and SD <span class="math inline">\(\sigma_1\)</span>; we add that likelihood to leverage the remaining information.</p>
-<p>The priors: a <code>uniform(0, 100)</code> on each mean (a test score), Cauchy on the SDs, and Stan’s <code>lkj_corr</code> (with shape 1) on the correlation — a non-informative prior for correlations.</p>
+<p>The priors: a <code>uniform(0, 100)</code> on each mean, since a test score lies somewhere between 0 and 100 (the <code>parameters</code> block also constrains <code>mu</code> to the range 0 to 100); a heavy-tailed Cauchy <code>cauchy(0, 5)</code> on the SDs; and a uniform distribution from <span class="math inline">\(-1\)</span> to <span class="math inline">\(1\)</span>, <code>uniform(-1, 1)</code>, on the correlation.</p>
 <p>Compile, fit, and inspect <code>rho</code>. Mind how the data are passed:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"missing_corr.stan"</span>)</span>
@@ -763,13 +764,13 @@ sigma[10] |  80.62 | 111.27 | 56.92 | [25.47, 260.69]</code></pre>
 <pre><code>Running MCMC with 4 parallel chains...</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Chain 1 finished in 0.7 seconds.
-Chain 2 finished in 0.7 seconds.
-Chain 3 finished in 0.7 seconds.
-Chain 4 finished in 0.7 seconds.
+<pre><code>Chain 1 finished in 0.6 seconds.
+Chain 2 finished in 0.6 seconds.
+Chain 3 finished in 0.6 seconds.
+Chain 4 finished in 0.6 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.7 seconds.
+Mean chain execution time: 0.6 seconds.
 Total execution time: 0.7 seconds.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"rho"</span>),</span>
@@ -780,10 +781,78 @@ Total execution time: 0.7 seconds.</code></pre>
 
 Parameter | Median | Mean |  MAP |       95% CI
 -----------------------------------------------
-rho       |   0.73 | 0.71 | 0.76 | [0.50, 0.88]</code></pre>
+rho       |   0.73 | 0.71 | 0.78 | [0.48, 0.88]</code></pre>
 </div>
 </div>
-<p>The recovered correlation is 0.711 — essentially the true value. Because each margin of a bivariate normal is itself a (univariate) normal, adding the <span class="math inline">\(X_1\)</span> information to the likelihood lets us use all the data we have. Even when observed data are limited, modeling the generating mechanism can recover the missing information. Truncated or censored data — say, scores capped at an upper or lower bound — can be similarly modeled to estimate what the “uncensored” value would have been.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>The recovered correlation is 0.7099 — essentially the true value. Because each margin of a bivariate normal is itself a (univariate) normal, adding the <span class="math inline">\(X_1\)</span> information to the likelihood lets us use all the data we have. Even when observed data are limited, modeling the generating mechanism can recover the missing information. Truncated or censored data — say, scores capped at an upper or lower bound — can be similarly modeled to estimate what the “uncensored” value would have been.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+</section>
+<section id="extending-to-more-variables-an-lkj-prior-on-the-correlation-matrix" class="level3" data-number="17.2.3">
+<h3 data-number="17.2.3" class="anchored" data-anchor-id="extending-to-more-variables-an-lkj-prior-on-the-correlation-matrix"><span class="header-section-number">17.2.3</span> Extending to more variables: an LKJ prior on the correlation matrix</h3>
+<p>The code above declares the correlation <span class="math inline">\(\rho\)</span> as a single parameter and assembles the four elements of the variance–covariance matrix by hand. That is fine for two variables, but as the number of variables grows to three, four, and beyond, the number of correlations and of elements to assemble grows as well, and assigning values arbitrarily can produce combinations that are not positive definite (that is, that do not form a valid variance–covariance matrix). Multivariate models therefore conventionally declare the correlations not one at a time but as a <strong>correlation matrix</strong> <span class="math inline">\(\boldsymbol{\Omega}\)</span>, and place on it the LKJ distribution, a prior designed for correlation matrices.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nobs;</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nmiss;</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nobs] <span class="dt">vector</span>[<span class="dv">2</span>] obsX;</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nmiss] <span class="dt">real</span> missX;</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">100</span>&gt;[<span class="dv">2</span>] mu;</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd1;</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd2;</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">corr_matrix</span>[<span class="dv">2</span>] Omega;</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span>{</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> rho = Omega[<span class="dv">1</span>,<span class="dv">2</span>];</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">cov_matrix</span>[<span class="dv">2</span>] Sig = quad_form_diag(Omega, [sd1, sd2]');</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    obsX ~ multi_normal(mu, Sig);</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    missX ~ normal(mu[<span class="dv">1</span>], sd1);</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    mu ~ uniform(<span class="dv">0</span>,<span class="dv">100</span>);</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    sd1 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    sd2 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>    Omega ~ lkj_corr(<span class="dv">1</span>);</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>corr_matrix</code> type is Stan’s dedicated type for correlation matrices; its values are constrained to symmetric positive-definite matrices with ones on the diagonal. A two-variable correlation matrix is <span class="math inline">\(\begin{pmatrix} 1 &amp; \rho \\ \rho &amp; 1 \end{pmatrix}\)</span>, so the <code>transformed parameters</code> block extracts its off-diagonal element as the correlation <code>rho</code>. The variance–covariance matrix is the correlation matrix sandwiched between the diagonal matrix of standard deviations <span class="math inline">\(\boldsymbol{D} = \mathrm{diag}(\sigma_1, \sigma_2)\)</span>,</p>
+<p><span class="math display">\[ \boldsymbol{\Sigma} = \boldsymbol{D}\boldsymbol{\Omega}\boldsymbol{D}, \]</span></p>
+<p>which is what the <code>quad_form_diag</code> function computes. However many variables there are, this one line stays the same.</p>
+<p>The prior <code>lkj_corr(1)</code> on the correlation matrix, with parameter <code>1</code>, is equivalent to a uniform prior over all correlation matrices; with two variables it is mathematically the same as the earlier model’s uniform prior from <span class="math inline">\(-1\)</span> to <span class="math inline">\(1\)</span> on <span class="math inline">\(\rho\)</span>. Setting the parameter above 1 gives higher prior probability to matrices whose correlations are closer to 0.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model_lkj <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"missing_corr_lkj.stan"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fit_lkj <span class="ot">&lt;-</span> model_lkj<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 2 finished in 0.6 seconds.
+Chain 1 finished in 0.6 seconds.
+Chain 4 finished in 0.6 seconds.
+Chain 3 finished in 0.8 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.7 seconds.
+Total execution time: 0.9 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit_lkj<span class="sc">$</span><span class="fu">summary</span>(<span class="st">"rho"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 10
+  variable  mean median    sd    mad    q5   q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 rho      0.710  0.731 0.110 0.0948 0.507 0.845  1.00    1285.    1473.</code></pre>
+</div>
+</div>
+<p>The estimated <code>rho</code> is 0.7098, nearly the same value as in the earlier model.</p>
 </section>
 </section>
 <section id="models-with-non-normal-distributions" class="level2" data-number="17.3">
@@ -791,118 +860,118 @@ rho       |   0.73 | 0.71 | 0.76 | [0.50, 0.88]</code></pre>
 <p>Bayesian modeling sets a mathematical structure on the parameters of a probability distribution. Here are some non-normal examples.</p>
 <section id="item-response-theory" class="level3" data-number="17.3.1">
 <h3 data-number="17.3.1" class="anchored" data-anchor-id="item-response-theory"><span class="header-section-number">17.3.1</span> Item response theory</h3>
-<p>As we saw in <a href="chapter15.html#sec-irt-model" class="quarto-xref"><span>Section 15.3</span></a>, IRT is exactly a non-normal model in this sense: the response variable is binary, the distribution is Bernoulli, and the success probability is given a logistic structure on a latent ability <span class="math inline">\(\theta\)</span>.</p>
+<p>As we saw in <a href="chapter15.html#sec-irt-model" class="quarto-xref"><span>Section 15.3</span></a>, IRT is exactly a non-normal model in this sense: the response variable is binary, the distribution is Bernoulli, and the success probability <span class="math inline">\(p_{ij}\)</span> is given a logistic structure on a latent ability <span class="math inline">\(\theta_i\)</span>.</p>
 <p>In symbols, the response of person <span class="math inline">\(i\)</span> to item <span class="math inline">\(j\)</span> is</p>
 <p><span class="math display">\[ Y_{ij} \sim \text{Bernoulli}(p_{ij}), \]</span> <span class="math display">\[ p_{ij} = \frac{1}{1 + \exp\bigl(-a_j (\theta_i - b_j)\bigr)}. \]</span></p>
 <p>In Stan:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; <span class="co">// data length</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// number of persons</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; M; <span class="co">// number of questions</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Pid;  <span class="co">// personal ID</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Qid;  <span class="co">// question ID</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; resp; <span class="co">// response</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; a;</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">5</span>,<span class="kw">upper</span>=<span class="dv">5</span>&gt; b;</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">real</span> theta;</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">//likelihood</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(l <span class="cf">in</span> <span class="dv">1</span>:L){</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    resp[l] ~ bernoulli_logit(<span class="fl">1.7</span>*a[Qid[l]]*(theta[Pid[l]]-b[Qid[l]]));</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">//prior</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  a ~ lognormal(<span class="dv">0</span>,sqrt(<span class="fl">0.5</span>));</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  b ~ normal(<span class="dv">0</span>,<span class="dv">3</span>);</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  theta ~ normal(<span class="dv">0</span>,<span class="dv">1</span>);</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; <span class="co">// data length</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// number of persons</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; M; <span class="co">// number of questions</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Pid;  <span class="co">// personal ID</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Qid;  <span class="co">// question ID</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; resp; <span class="co">// response</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; a;</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">5</span>,<span class="kw">upper</span>=<span class="dv">5</span>&gt; b;</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">real</span> theta;</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">//likelihood</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(l <span class="cf">in</span> <span class="dv">1</span>:L){</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    resp[l] ~ bernoulli_logit(<span class="fl">1.7</span>*a[Qid[l]]*(theta[Pid[l]]-b[Qid[l]]));</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">//prior</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  a ~ lognormal(<span class="dv">0</span>,sqrt(<span class="fl">0.5</span>));</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  b ~ normal(<span class="dv">0</span>,<span class="dv">3</span>);</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  theta ~ normal(<span class="dv">0</span>,<span class="dv">1</span>);</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We assume long-format tidy data: one row per response, with columns for person ID, item ID, and the binary outcome.</p>
 <p>The <code>data</code> block receives the total number of rows <code>L</code>, the number of persons <code>N</code>, the number of items <code>M</code>, and length-<code>L</code> vectors of person IDs (<code>Pid</code>), item IDs (<code>Qid</code>), and responses (<code>resp</code>). Note the allowed ranges.</p>
 <p><code>parameters</code> declares item parameters <code>a_j</code> and <code>b_j</code> of length <code>M</code> and the person parameters <code>theta</code> of length <code>N</code>.</p>
 <p>The <code>model</code> block uses <code>bernoulli_logit</code>, a fused Bernoulli + logistic that Stan provides for convenience. The double indexing <code>theta[Pid[l]]</code> — <code>Pid[l]</code> returns an integer that picks out the corresponding <span class="math inline">\(\theta\)</span>. The priors are log-normal on <code>a_j</code>, normal on <code>b_j</code>, and standard normal on <code>theta_i</code>.</p>
 <p>Fit on <code>exametrika</code>’s <code>J15S500</code>, reshaped to long format:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika, tidyverse)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> J15S500<span class="sc">$</span>U</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>dat_long <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"irt2pl.stan"</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">NROW</span>(dat_long),</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">M =</span> <span class="dv">15</span>,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="dv">500</span>,</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pid =</span> dat_long<span class="sc">$</span>ID,</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Qid =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(dat_long<span class="sc">$</span>name)),</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">resp =</span> dat_long<span class="sc">$</span>value</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika, tidyverse)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> J15S500<span class="sc">$</span>U</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>dat_long <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"irt2pl.stan"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">NROW</span>(dat_long),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">M =</span> <span class="dv">15</span>,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="dv">500</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pid =</span> dat_long<span class="sc">$</span>ID,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Qid =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(dat_long<span class="sc">$</span>name)),</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">resp =</span> dat_long<span class="sc">$</span>value</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 53.8 seconds.
-Chain 3 finished in 55.3 seconds.
-Chain 2 finished in 55.4 seconds.
-Chain 4 finished in 55.7 seconds.
+Chain 2 finished in 49.4 seconds.
+Chain 4 finished in 53.4 seconds.
+Chain 3 finished in 54.4 seconds.
+Chain 1 finished in 57.4 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 55.0 seconds.
-Total execution time: 55.8 seconds.</code></pre>
+Mean chain execution time: 53.6 seconds.
+Total execution time: 57.5 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_posterior</span>(</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_posterior</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary of Posterior Distribution
 
 Parameter | Median |  Mean |   MAP |         95% CI
 ---------------------------------------------------
-a[1]      |   0.40 |  0.41 |  0.40 | [ 0.24,  0.57]
-a[2]      |   0.47 |  0.48 |  0.45 | [ 0.30,  0.65]
-a[3]      |   0.31 |  0.32 |  0.31 | [ 0.18,  0.45]
-a[4]      |   0.87 |  0.88 |  0.88 | [ 0.61,  1.17]
-a[5]      |   0.39 |  0.39 |  0.39 | [ 0.23,  0.56]
-a[6]      |   0.59 |  0.60 |  0.59 | [ 0.37,  0.82]
-a[7]      |   0.65 |  0.65 |  0.64 | [ 0.46,  0.87]
-a[8]      |   0.40 |  0.41 |  0.40 | [ 0.25,  0.56]
-a[9]      |   0.18 |  0.18 |  0.18 | [ 0.08,  0.28]
-a[10]     |   0.27 |  0.27 |  0.27 | [ 0.15,  0.40]
-a[11]     |   0.68 |  0.68 |  0.64 | [ 0.46,  0.92]
-a[12]     |   0.74 |  0.74 |  0.73 | [ 0.50,  0.99]
-a[13]     |   0.51 |  0.52 |  0.51 | [ 0.35,  0.69]
-a[14]     |   0.72 |  0.73 |  0.73 | [ 0.50,  0.97]
-a[15]     |   0.48 |  0.49 |  0.48 | [ 0.32,  0.67]
-b[1]      |  -1.73 | -1.79 | -1.63 | [-2.53, -1.15]
-b[2]      |  -1.58 | -1.62 | -1.48 | [-2.24, -1.08]
-b[3]      |  -1.94 | -2.01 | -1.80 | [-3.00, -1.24]
-b[4]      |  -1.16 | -1.17 | -1.10 | [-1.46, -0.91]
-b[5]      |  -2.33 | -2.41 | -2.22 | [-3.46, -1.55]
-b[6]      |  -2.16 | -2.22 | -2.07 | [-3.01, -1.59]
-b[7]      |  -1.03 | -1.05 | -1.01 | [-1.37, -0.75]
-b[8]      |  -0.57 | -0.59 | -0.53 | [-0.95, -0.24]
-b[9]      |   1.86 |  1.98 |  1.59 | [ 0.86,  3.35]
-b[10]     |  -1.52 | -1.59 | -1.38 | [-2.56, -0.89]
-b[11]     |   1.00 |  1.02 |  0.95 | [ 0.72,  1.35]
-b[12]     |   1.01 |  1.02 |  0.95 | [ 0.73,  1.32]
-b[13]     |  -0.73 | -0.74 | -0.74 | [-1.07, -0.45]
-b[14]     |  -1.22 | -1.23 | -1.19 | [-1.59, -0.90]
-b[15]     |  -1.21 | -1.24 | -1.19 | [-1.69, -0.81]</code></pre>
+a[1]      |   0.40 |  0.40 |  0.39 | [ 0.24,  0.56]
+a[2]      |   0.47 |  0.47 |  0.46 | [ 0.30,  0.66]
+a[3]      |   0.31 |  0.31 |  0.29 | [ 0.17,  0.46]
+a[4]      |   0.87 |  0.88 |  0.86 | [ 0.62,  1.17]
+a[5]      |   0.39 |  0.39 |  0.37 | [ 0.23,  0.55]
+a[6]      |   0.59 |  0.59 |  0.59 | [ 0.38,  0.83]
+a[7]      |   0.65 |  0.65 |  0.66 | [ 0.44,  0.85]
+a[8]      |   0.40 |  0.41 |  0.41 | [ 0.25,  0.56]
+a[9]      |   0.18 |  0.18 |  0.17 | [ 0.09,  0.28]
+a[10]     |   0.27 |  0.28 |  0.26 | [ 0.15,  0.40]
+a[11]     |   0.68 |  0.68 |  0.66 | [ 0.47,  0.91]
+a[12]     |   0.73 |  0.74 |  0.73 | [ 0.51,  0.98]
+a[13]     |   0.52 |  0.52 |  0.51 | [ 0.35,  0.70]
+a[14]     |   0.73 |  0.73 |  0.70 | [ 0.53,  0.98]
+a[15]     |   0.48 |  0.49 |  0.47 | [ 0.31,  0.66]
+b[1]      |  -1.74 | -1.79 | -1.69 | [-2.53, -1.14]
+b[2]      |  -1.58 | -1.63 | -1.50 | [-2.26, -1.07]
+b[3]      |  -1.96 | -2.05 | -1.85 | [-3.09, -1.18]
+b[4]      |  -1.16 | -1.17 | -1.16 | [-1.47, -0.89]
+b[5]      |  -2.33 | -2.41 | -2.19 | [-3.41, -1.52]
+b[6]      |  -2.18 | -2.23 | -2.10 | [-2.96, -1.57]
+b[7]      |  -1.03 | -1.05 | -1.02 | [-1.40, -0.75]
+b[8]      |  -0.57 | -0.59 | -0.55 | [-0.97, -0.25]
+b[9]      |   1.85 |  2.00 |  1.67 | [ 0.95,  3.51]
+b[10]     |  -1.52 | -1.58 | -1.34 | [-2.50, -0.84]
+b[11]     |   1.00 |  1.01 |  0.97 | [ 0.71,  1.33]
+b[12]     |   1.01 |  1.02 |  1.00 | [ 0.73,  1.33]
+b[13]     |  -0.72 | -0.74 | -0.70 | [-1.05, -0.43]
+b[14]     |  -1.21 | -1.23 | -1.18 | [-1.57, -0.94]
+b[15]     |  -1.21 | -1.24 | -1.14 | [-1.69, -0.82]</code></pre>
 </div>
 </div>
 <p><code>exametrika</code> and most IRT software integrate out the (numerous) person parameters and use EM for efficient analytic estimation. MCMC explores the entire joint parameter space and so is much slower, but writing the Stan code makes the underlying computation explicit and gives you the freedom to customize.</p>
@@ -920,44 +989,44 @@ b[15]     |  -1.21 | -1.24 | -1.19 | [-1.69, -0.81]</code></pre>
 <p><span class="math display">\[ P(X = k) = \frac{\binom{x}{k} \binom{t - x}{n - k}}{\binom{t}{n}}, \]</span></p>
 <p>where <span class="math inline">\(t\)</span> is the population size, <span class="math inline">\(x\)</span> the first-sample size, <span class="math inline">\(n\)</span> the second-sample size, and <span class="math inline">\(k\)</span> the number of recaptured units. The second sample consists of <span class="math inline">\(k\)</span> drawn from the first <span class="math inline">\(x\)</span> marked and <span class="math inline">\(n - k\)</span> from the <span class="math inline">\(t - x\)</span> unmarked.</p>
 <p>In distributional notation,</p>
-<p><span class="math display">\[ k \sim \text{Hypergeometric}(n, x, t - x). \]</span><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<p><span class="math display">\[ X \sim \text{Hypergeometric}(n, x, t - x). \]</span><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 <p>The Stan model:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; x;  <span class="co">// size of first sample (captures)</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; n;  <span class="co">// size of second sample</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>, <span class="kw">upper</span> = n&gt; k;  <span class="co">// number of recaptures from n</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = x&gt; maxT;  <span class="co">// maximum population size</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=x&gt; minT;</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  minT = x + n - k;</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[maxT] lp;</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:maxT){ </span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i &lt; minT)</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + negative_infinity();</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + hypergeometric_lpmf(k | n, x, i - x);</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> log_sum_exp(lp);</span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = minT, <span class="kw">upper</span> = maxT&gt; t;</span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">simplex</span>[maxT] tp;</span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  tp = softmax(lp);</span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  t = categorical_rng(tp);</span>
-<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; x;  <span class="co">// size of first sample (captures)</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; n;  <span class="co">// size of second sample</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>, <span class="kw">upper</span> = n&gt; k;  <span class="co">// number of recaptures from n</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = x&gt; maxT;  <span class="co">// maximum population size</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=x&gt; minT;</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  minT = x + n - k;</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[maxT] lp;</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:maxT){ </span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i &lt; minT)</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + negative_infinity();</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + hypergeometric_lpmf(k | n, x, i - x);</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> log_sum_exp(lp);</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = minT, <span class="kw">upper</span> = maxT&gt; t;</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">simplex</span>[maxT] tp;</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>  tp = softmax(lp);</span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>  t = categorical_rng(tp);</span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The model bundles several techniques worth reviewing.</p>
 <section id="priors" class="level4" data-number="17.3.2.1">
 <h4 data-number="17.3.2.1" class="anchored" data-anchor-id="priors"><span class="header-section-number">17.3.2.1</span> Priors</h4>
-<p>The data: first-sample size <code>x</code>, second-sample size <code>n</code>, recapture count <code>t</code>, and a maximum value <code>maxT</code> for the population (e.g., 30 outfits is plenty).</p>
+<p>The data: first-sample size <code>x</code>, second-sample size <code>n</code>, recapture count <code>k</code>, and a maximum value <code>maxT</code> for the population (e.g., 30 outfits is plenty).</p>
 <p>The prior is uniform on <span class="math inline">\(\{1, 2, \ldots, \text{maxT}\}\)</span>: <span class="math inline">\(1/\text{maxT}\)</span>.</p>
 </section>
 <section id="target-notation" class="level4" data-number="17.3.2.2">
@@ -978,7 +1047,7 @@ b[15]     |  -1.21 | -1.24 | -1.19 | [-1.69, -0.81]</code></pre>
 <li>loop <span class="math inline">\(i\)</span> from 1 to <code>maxT</code>,</li>
 <li>for <span class="math inline">\(i &lt; \text{minT}\)</span>, set <code>lp[i]</code> to the prior plus <span class="math inline">\(-\infty\)</span>:</li>
 </ol>
-<p><code>lp[t] = log(1.0 / maxT) + negative_infinity();</code></p>
+<p><code>lp[i] = log(1.0 / maxT) + negative_infinity();</code></p>
 <p>(<code>negative_infinity()</code> is Stan’s <span class="math inline">\(-\infty\)</span>), and</p>
 <ol start="3" type="1">
 <li>for <span class="math inline">\(i \geq \text{minT}\)</span>, set <code>lp[i]</code> to the prior plus the hypergeometric log-likelihood <span class="math inline">\(\log \text{Hypergeometric}(k \mid n, x, i - x)\)</span>.</li>
@@ -990,30 +1059,30 @@ b[15]     |  -1.21 | -1.24 | -1.19 | [-1.69, -0.81]</code></pre>
 <h4 data-number="17.3.2.4" class="anchored" data-anchor-id="generated-quantities"><span class="header-section-number">17.3.2.4</span> Generated quantities</h4>
 <p>The <code>generated quantities</code> block processes the MCMC results. It computes the estimated total <code>t</code>. By type, <code>t</code> is an integer bounded between <code>minT</code> and <code>maxT</code>.</p>
 <p><code>tp</code> is obtained by applying <code>softmax</code> to <code>lp</code>. Recall that <code>lp</code> is a vector of log-posteriors; softmax turns it into normalized probabilities:</p>
-<p><span class="math display">\[ \mathbf{x} = \frac{\exp(\mathbf{x})}{\sum \exp(\mathbf{x})}. \]</span></p>
+<p><span class="math display">\[ \mathrm{softmax}(\boldsymbol{x}) = \frac{\exp(\boldsymbol{x})}{\sum_t \exp(x_t)}. \]</span></p>
 <p><code>tp</code> has Stan’s <code>simplex</code> type — a non-negative vector summing to 1 — and can be read as the probabilities that the true <span class="math inline">\(t\)</span> takes each candidate value.</p>
 <p><code>categorical_rng(tp)</code> then draws categorical samples whose probabilities are <code>tp</code>, giving us MCMC draws for the discrete unknown <span class="math inline">\(t\)</span>.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
 <p>For a die,</p>
 <p><span class="math display">\[ x \sim \text{Categorical}(1/6, 1/6, 1/6, 1/6, 1/6, 1/6). \]</span></p>
 <p>Long explanation aside — compile and fit. No <code>parameters</code> block means we pass <code>fixed_param = TRUE</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"recapture.stan"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">7</span>  <span class="co"># first observation</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span>  <span class="co"># second observation</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span>  <span class="co"># number of repeats</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>maxT <span class="ot">&lt;-</span> <span class="dv">30</span>  <span class="co"># upper bound</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x =</span> x, <span class="at">k =</span> k, <span class="at">n =</span> n, <span class="at">maxT =</span> maxT)</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_param =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"recapture.stan"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">7</span>  <span class="co"># first observation</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span>  <span class="co"># second observation</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span>  <span class="co"># number of repeats</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>maxT <span class="ot">&lt;-</span> <span class="dv">30</span>  <span class="co"># upper bound</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x =</span> x, <span class="at">k =</span> k, <span class="at">n =</span> n, <span class="at">maxT =</span> maxT)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_param =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
@@ -1026,20 +1095,20 @@ All 4 chains finished successfully.
 Mean chain execution time: 0.0 seconds.
 Total execution time: 0.2 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>MAP_value <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>),</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>MAP_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>MAP_value <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>),</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>MAP_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary of Posterior Distribution
 
 Parameter | Median |  Mean | MAP |        95% CI
 ------------------------------------------------
-t         |     10 | 11.44 |   8 | [8.00, 20.00]</code></pre>
+t         |     10 | 11.43 |   8 | [8.00, 20.00]</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>), <span class="at">point_est =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> MAP_value<span class="sc">$</span>MAP, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>), <span class="at">point_est =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> MAP_value<span class="sc">$</span>MAP, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1061,10 +1130,10 @@ t         |     10 | 11.44 |   8 | [8.00, 20.00]</code></pre>
 <h3 data-number="17.4.1" class="anchored" data-anchor-id="detecting-a-change-point"><span class="header-section-number">17.4.1</span> Detecting a change point</h3>
 <p>Inspect <a href="myWeights.csv">this dataset</a>. Loaded and plotted:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"myWeights.csv"</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"myWeights.csv"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1075,117 +1144,110 @@ t         |     10 | 11.44 |   8 | [8.00, 20.00]</code></pre>
 </div>
 <p>The author’s weight from 1 January to 1 June 2024. The trend obviously changes at some point — apparently downwards around early April. A generative model assuming a single regime throughout would misfit; different mechanisms before and after the change call for different models.</p>
 <p>Treat the change point as itself unknown. The Stan model:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[L] <span class="dt">real</span> w;</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=L&gt; tau;</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0a;</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0b;</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta1a;</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">upper</span>=<span class="dv">0</span>&gt; beta1b;</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sig;</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:L){</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(i &lt; tau){</span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0a + beta1a * i, sig);</span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0b + beta1b * (i-tau+<span class="dv">1</span>), sig);</span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    tau ~ uniform(<span class="dv">1</span>,L);</span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    beta0a ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    beta0b ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    beta1a ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    beta1b ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>    sig ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[L] <span class="dt">real</span> w;</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=L&gt; tau;</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0a;</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0b;</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta1a;</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">upper</span>=<span class="dv">0</span>&gt; beta1b;</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sig;</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:L){</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(i &lt; tau){</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0a + beta1a * i, sig);</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0b + beta1b * (i-tau+<span class="dv">1</span>), sig);</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    tau ~ uniform(<span class="dv">1</span>,L);</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>    beta0a ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>    beta0b ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>    beta1a ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>    beta1b ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>    sig ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The data block is minimal: data length <code>L</code> and the weights <code>w</code>.</p>
 <p>The <code>parameters</code> block starts with a parameter <span class="math inline">\(\tau\)</span> — the change point in <span class="math inline">\(\{1, \ldots, L\}\)</span>. We do not know when the regime changed; that is exactly what we estimate (in Bayes, we represent “don’t know” as a probability!).</p>
 <p>The <code>model</code> block writes the likelihood in two pieces: for <span class="math inline">\(i &lt; \tau\)</span>, the mean follows <code>beta0a + beta1a * i</code> (a slope of <code>beta1a</code> from day 1); for <span class="math inline">\(i \geq \tau\)</span>, the mean follows <code>beta0b + beta1b * (i - tau + 1)</code> (a slope of <code>beta1b</code> indexed by days <em>since</em> the change point).</p>
 <p>A single residual SD <code>sig</code> is used. The prior on <span class="math inline">\(\tau\)</span> is non-informative; the intercepts <code>beta0a</code> and <code>beta0b</code> are centered near 80 kg; the slopes <code>beta1a</code> and <code>beta1b</code> are wide enough to permit either sign.</p>
 <p>Run:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"change_point.stan"</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">nrow</span>(w),</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> w<span class="sc">$</span>weight</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">3000</span>,</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"change_point.stan"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">nrow</span>(w),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> w<span class="sc">$</span>weight</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">3000</span>,</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 22.5 seconds.
-Chain 3 finished in 23.6 seconds.
-Chain 4 finished in 23.8 seconds.
-Chain 2 finished in 24.1 seconds.
+Chain 1 finished in 23.4 seconds.
+Chain 3 finished in 23.4 seconds.
+Chain 2 finished in 23.8 seconds.
+Chain 4 finished in 24.0 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 23.5 seconds.
+Mean chain execution time: 23.7 seconds.
 Total execution time: 24.1 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 10
   variable    mean  median      sd     mad      q5     q95  rhat ess_bulk
   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-1 lp__     23.1    23.4    1.79    1.67    19.7    25.5     1.01     533.
-2 tau      87.7    88.4    2.86    1.45    80.6    90.5     1.02     170.
-3 beta0a   84.5    84.5    0.108   0.105   84.3    84.7     1.02     176.
-4 beta0b   85.4    85.4    0.282   0.230   85.0    86.0     1.05     105.
-5 beta1a    0.0178  0.0178 0.00218 0.00215  0.0142  0.0215  1.01     174.
-6 beta1b   -0.0574 -0.0576 0.00540 0.00543 -0.0661 -0.0483  1.04     110.
-7 sig       0.515   0.514  0.0328  0.0337   0.463   0.572   1.03     102.
+1 lp__     23.0    23.2    1.86    1.80    19.5    25.5     1.01     501.
+2 tau      87.3    88.3    3.19    1.62    79.4    90.3     1.01     164.
+3 beta0a   84.5    84.5    0.106   0.103   84.3    84.7     1.01     348.
+4 beta0b   85.5    85.4    0.304   0.240   85.1    86.1     1.02     139.
+5 beta1a    0.0182  0.0182 0.00216 0.00213  0.0147  0.0218  1.01     363.
+6 beta1b   -0.0582 -0.0581 0.00551 0.00569 -0.0672 -0.0491  1.01     232.
+7 sig       0.514   0.512  0.0333  0.0327   0.464   0.572   1.00     509.
 # ℹ 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># echo: false</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>MAPs <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(),</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Recovered values: the change point <span class="math inline">\(\tau\)</span> at MAP 88.67 (day 89); before that day, slope 0.018 (upward trend); after, slope -0.058 (downward).</p>
+<p>Recovered values: the change point <span class="math inline">\(\tau\)</span> at MAP 88.716 (day 89); before that day, slope 0.019 (upward trend); after, slope -0.057 (downward).</p>
 <p>Locate the change-point date and overlay it on the plot:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Xday <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"tau"</span>),</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP <span class="sc">|&gt;</span> <span class="fu">round</span>()</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Change began at:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Xday <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"tau"</span>),</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP <span class="sc">|&gt;</span> <span class="fu">round</span>()</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Change began at:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Change began at:</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(w[Xday, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(w[Xday, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   date                weight
   &lt;dttm&gt;               &lt;dbl&gt;
 1 2024-04-07 08:21:32   85.5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> w<span class="sc">$</span>date[Xday], <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> w<span class="sc">$</span>date[Xday], <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1200,15 +1262,15 @@ Total execution time: 24.1 seconds.</code></pre>
 </section>
 <section id="modeling-a-heterogeneous-group" class="level3" data-number="17.4.2">
 <h3 data-number="17.4.2" class="anchored" data-anchor-id="modeling-a-heterogeneous-group"><span class="header-section-number">17.4.2</span> Modeling a heterogeneous group</h3>
-<p>Another baseball example. Restrict the <a href="Baseball.csv">baseball data</a> to the 2020 Central League teams and plot the histogram of hits:</p>
+<p>Another baseball example. Restrict the <a href="Baseball.csv">baseball data</a> to the 2022 Central League teams and plot the histogram of hits:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2020年度"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Giants"</span>, <span class="st">"Tigers"</span>, <span class="st">"Carp"</span>, <span class="st">"Swallows"</span>, <span class="st">"DeNA"</span>, <span class="st">"Dragons"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(position, Hit, team) <span class="sc">|&gt;</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Hit =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Hit), <span class="dv">0</span>, Hit))</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>y <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Hit)) <span class="sc">+</span></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2022年度"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Giants"</span>, <span class="st">"Tigers"</span>, <span class="st">"Carp"</span>, <span class="st">"Swallows"</span>, <span class="st">"DeNA"</span>, <span class="st">"Dragons"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(position, Hit, team) <span class="sc">|&gt;</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Hit =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Hit), <span class="dv">0</span>, Hit))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>y <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Hit)) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1216,117 +1278,117 @@ Total execution time: 24.1 seconds.</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y<span class="sc">$</span>Hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y<span class="sc">$</span>Hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   0.00    0.00    0.00   17.94   14.25  146.00 </code></pre>
+   0.00    0.00    0.00   20.06   18.00  161.00 </code></pre>
 </div>
 </div>
-<p>A large number of players have essentially zero hits. The reason is that the 2020 Central League required pitchers to bat. Pitchers’ job is pitching, not hitting; they rarely swing, so their hit counts are essentially zero.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
+<p>A large number of players have essentially zero hits. The reason is that the 2022 Central League required pitchers to bat. Pitchers’ job is pitching, not hitting; they rarely swing, so their hit counts are essentially zero.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
 <p>The hit count is a count variable, so the Poisson would be the textbook choice — but with non-hitters mixed in, the model should distinguish “this is a hitter” from “this is a non-hitter.” A zero observation could mean “this person never bats” or “this person bats but happened to get zero hits”; a non-zero observation must come from a hitter.</p>
 <p>A mixture distribution that includes this “structural zero” possibility is the <strong>zero-inflated Poisson</strong> (or zero-inflated negative binomial). We will use the latter below.</p>
-<p>A word about the Poisson: its only parameter, <span class="math inline">\(\lambda\)</span>, is the mean — and also the variance, by construction. When the data are over-dispersed (variance greater than the mean), a single-<span class="math inline">\(\lambda\)</span> Poisson fits poorly. The <strong>negative binomial</strong> distribution generalizes the Poisson with a separate dispersion parameter:</p>
-<p><span class="math display">\[ \text{NegBinomial}(n \mid \alpha, \beta) = \frac{\Gamma(\alpha + n)}{\Gamma(\alpha)\,\Gamma(n + 1)} \left(\frac{\alpha}{\alpha + \beta}\right)^{\alpha} \left(\frac{\beta}{\alpha + \beta}\right)^{n}. \]</span></p>
+<p>A word about the Poisson: its only parameter, <span class="math inline">\(\lambda\)</span>, is the mean — and also the variance, by construction. When the data are over-dispersed (variance greater than the mean), a single-<span class="math inline">\(\lambda\)</span> Poisson fits poorly. The <strong>negative binomial</strong> distribution generalizes the Poisson with a separate dispersion parameter. Stan’s <code>neg_binomial</code> defines it with a shape parameter <span class="math inline">\(\alpha\)</span> and an inverse-scale parameter <span class="math inline">\(\beta\)</span>:</p>
+<p><span class="math display">\[ \text{NegBinomial}(n \mid \alpha, \beta) = \frac{\Gamma(n + \alpha)}{\Gamma(\alpha)\, n!} \left(\frac{\beta}{1 + \beta}\right)^{\alpha} \left(\frac{1}{1 + \beta}\right)^{n}. \]</span></p>
 <p>Its mean and variance are</p>
-<p><span class="math display">\[ E[N] = \beta, \]</span> <span class="math display">\[ \text{Var}[N] = \beta + \frac{\beta^2}{\alpha} = \beta\left(1 + \frac{\beta}{\alpha}\right). \]</span></p>
+<p><span class="math display">\[ E[n] = \frac{\alpha}{\beta}, \]</span> <span class="math display">\[ \text{Var}[n] = \frac{\alpha}{\beta^2}(\beta + 1). \]</span></p>
 <p>This parameterization is hard to read. Stan supplies the alternative <code>neg_binomial_2</code>, parameterized by the mean <span class="math inline">\(\mu\)</span> and a dispersion <span class="math inline">\(\phi\)</span>:</p>
 <p><span class="math display">\[ \text{NegBinomial2}(n \mid \mu, \phi) = \frac{\Gamma(\phi + n)}{\Gamma(\phi)\,\Gamma(n + 1)} \left(\frac{\phi}{\phi + \mu}\right)^{\phi} \left(\frac{\mu}{\phi + \mu}\right)^{n}, \]</span></p>
 <p>with</p>
-<p><span class="math display">\[ E[N] = \mu, \]</span> <span class="math display">\[ \text{Var}[N] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right). \]</span></p>
+<p><span class="math display">\[ E[n] = \mu, \]</span> <span class="math display">\[ \text{Var}[n] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right). \]</span></p>
 <p>Large <span class="math inline">\(\phi\)</span> pushes the variance toward the mean; in the limit <span class="math inline">\(\phi \to \infty\)</span>, the negative binomial coincides with the Poisson.</p>
 <p>The zero-inflated negative-binomial model in Stan:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;           <span class="co">// データ数</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; y;  <span class="co">// 観測値</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; theta;</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; mu;              <span class="co">// 負の二項分布の平均</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; phi;             <span class="co">// 負の二項分布の過分散パラメータ</span></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 事前分布</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  theta ~ beta(<span class="dv">1</span>, <span class="dv">1</span>);</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  mu ~ gamma(<span class="dv">5</span>, <span class="fl">0.1</span>);</span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  phi ~ gamma(<span class="dv">2</span>, <span class="fl">0.1</span>);</span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 尤度関数 (0過剰負の二項分布)</span></span>
-<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
-<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (y[i] == <span class="dv">0</span>) {</span>
-<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log_mix(theta,</span>
-<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">0</span>,</span>
-<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>                        neg_binomial_2_lpmf(<span class="dv">0</span> | mu, phi));</span>
-<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log(<span class="dv">1</span> - theta) + neg_binomial_2_lpmf(y[i] | mu, phi);</span>
-<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span> y_pred;     <span class="co">// 事後予測分布</span></span>
-<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
-<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 事後予測分布の生成</span></span>
-<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (bernoulli_rng(theta) == <span class="dv">1</span>) {</span>
-<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = <span class="dv">0</span>;  <span class="co">// 構造的ゼロ</span></span>
-<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = neg_binomial_2_rng(mu, phi);  <span class="co">// 負の二項分布から生成</span></span>
-<span id="cb48-39"><a href="#cb48-39" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb48-40"><a href="#cb48-40" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb48-41"><a href="#cb48-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The <code>parameters</code> block declares a mixing probability <code>theta</code> ∈ [0, 1] (a Bernoulli-flavoured coin flip: heads = “non-hitter,” tails = “hitter who happened to get zero”) and the negative-binomial parameters <code>mu</code> and <code>phi</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;           <span class="co">// データ数</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; y;  <span class="co">// 観測値</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; theta;</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; mu;              <span class="co">// 負の二項分布の平均</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; phi;             <span class="co">// 負の二項分布の過分散パラメータ</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 事前分布</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  theta ~ beta(<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  mu ~ gamma(<span class="dv">5</span>, <span class="fl">0.1</span>);</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>  phi ~ gamma(<span class="dv">2</span>, <span class="fl">0.1</span>);</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 尤度関数 (0過剰負の二項分布)</span></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (y[i] == <span class="dv">0</span>) {</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log_mix(theta,</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">0</span>,</span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>                        neg_binomial_2_lpmf(<span class="dv">0</span> | mu, phi));</span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log(<span class="dv">1</span> - theta) + neg_binomial_2_lpmf(y[i] | mu, phi);</span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span> y_pred;     <span class="co">// 事後予測分布</span></span>
+<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 事後予測分布の生成</span></span>
+<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (bernoulli_rng(theta) == <span class="dv">1</span>) {</span>
+<span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = <span class="dv">0</span>;  <span class="co">// 構造的ゼロ</span></span>
+<span id="cb53-37"><a href="#cb53-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb53-38"><a href="#cb53-38" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = neg_binomial_2_rng(mu, phi);  <span class="co">// 負の二項分布から生成</span></span>
+<span id="cb53-39"><a href="#cb53-39" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb53-40"><a href="#cb53-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb53-41"><a href="#cb53-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>parameters</code> block declares a mixing probability <code>theta</code> ∈ [0, 1] (a Bernoulli-flavored coin flip: heads = “non-hitter,” tails = “hitter who happened to get zero”) and the negative-binomial parameters <code>mu</code> and <code>phi</code>.</p>
 <p>The <code>model</code> block makes the branching explicit. If <code>y_i = 0</code>, use <code>log_mix(theta, 0, neg_binomial_2_lpmf(0 | mu, phi))</code>:</p>
 <p><span class="math display">\[
-p(y_i \mid \theta, \mu, \phi) =
+P(y_i = 0 \mid \theta, \mu, \phi) =
   \theta + (1 - \theta) \cdot \text{NegBinomial2}(0 \mid \mu, \phi),
 \]</span></p>
 <p>with probability <span class="math inline">\(\theta\)</span> for “structural zero”<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a> and <span class="math inline">\(1 - \theta\)</span> for “negative binomial gives zero.”</p>
 <p>If <code>y_i &gt; 0</code>, the contribution is the <span class="math inline">\(1 - \theta\)</span> branch times the negative-binomial likelihood. We use <code>target +=</code> to add to the log posterior directly.</p>
 <p>In <code>generated quantities</code> we also draw posterior-predictive data from the model: flip the Bernoulli with <code>theta</code>, and if “non-hitter” output 0, else draw from <code>neg_binomial_2</code>. These predictive draws form the <strong>posterior predictive distribution</strong>, used to check whether the model can produce data resembling what we observed.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"zero_inflated_negbinom.stan"</span>)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">length</span>(y<span class="sc">$</span>Hit),</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> y<span class="sc">$</span>Hit</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"zero_inflated_negbinom.stan"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">length</span>(y<span class="sc">$</span>Hit),</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> y<span class="sc">$</span>Hit</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Chain 1 finished in 0.4 seconds.
-Chain 2 finished in 0.4 seconds.
-Chain 3 finished in 0.4 seconds.
-Chain 4 finished in 0.4 seconds.
+Chain 2 finished in 0.5 seconds.
+Chain 3 finished in 0.5 seconds.
+Chain 4 finished in 0.5 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.4 seconds.
-Total execution time: 0.5 seconds.</code></pre>
+Mean chain execution time: 0.5 seconds.
+Total execution time: 0.6 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"theta"</span>, <span class="st">"mu"</span>, <span class="st">"phi"</span>)),</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"theta"</span>, <span class="st">"mu"</span>, <span class="st">"phi"</span>)),</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary of Posterior Distribution
 
 Parameter | Median |  Mean |   MAP |         95% CI
 ---------------------------------------------------
-theta     |   0.45 |  0.44 |  0.45 | [ 0.35,  0.52]
-mu        |  33.26 | 33.50 | 32.37 | [25.66, 41.85]
-phi       |   0.43 |  0.43 |  0.42 | [ 0.27,  0.59]</code></pre>
+theta     |   0.45 |  0.45 |  0.45 | [ 0.36,  0.52]
+mu        |  37.12 | 37.36 | 36.85 | [28.59, 45.56]
+phi       |   0.46 |  0.47 |  0.45 | [ 0.32,  0.62]</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"y_pred"</span>, <span class="at">format =</span> <span class="st">"matrix"</span>)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(y<span class="sc">$</span>Hit, y_pred[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"y_pred"</span>, <span class="at">format =</span> <span class="st">"matrix"</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(y<span class="sc">$</span>Hit, y_pred[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1401,7 +1463,7 @@ Makowski, Dominique, Mattan S. Ben-Shachar, and Daniel Lüdecke. 2019. <span>“
 <li id="fn10"><p>The denominator of Bayes’s theorem, <span class="math inline">\(P(D)\)</span>, is a normalizing constant unnecessary for the <em>shape</em> of the posterior. Sampling notation drops it for speed; <code>target</code> notation does not, so it is needed when the marginal likelihood matters.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn11"><p>Stan suffixes distribution names: <code>normal_lpdf</code> is the log-pdf of the normal, <code>normal_rng</code> generates normal random samples. Likewise <code>categorical_lpmf</code> for the categorical log-pmf and <code>categorical_rng</code> for the random samples.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn12"><p>For non-baseball readers: Japan’s professional baseball has 12 teams divided between the Central League (CL) and the Pacific League (PL), six teams each. The PL uses a designated hitter; the CL did not (until the 2027 season). Pitchers in the CL therefore had to bat, but typically did not perform meaningfully at the plate. Yes, Shohei Ohtani is an exception.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn13"><p><code>log_mix</code>’s first argument is the mixing proportion; the second and third are log-probability densities. A second argument of <code>0</code> corresponds to <span class="math inline">\(\exp(0) = 1\)</span> — i.e., 100% — so the structural-zero branch contributes its full prior weight. The third argument, <code>neg_binomial_2_lpmf</code>, is the log-pmf of <code>neg_binomial_2</code>.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p><code>log_mix</code>’s first argument is the mixing proportion; the second and third are log-probability masses. A second argument of <code>0</code> corresponds to <span class="math inline">\(\exp(0) = 1\)</span> — i.e., 100% — so the structural-zero branch contributes its full prior weight. The third argument, <code>neg_binomial_2_lpmf</code>, is the log-pmf of <code>neg_binomial_2</code>.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

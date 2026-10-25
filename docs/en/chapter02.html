@@ -512,7 +512,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Alternatively, the <em>Environment</em> tab in RStudio shows the objects currently in memory, with scalar values displayed in the <em>Value</em> column.</p>
-<p>The following names are reserved and cannot be used as object names: <code>break</code>, <code>else</code>, <code>for</code>, <code>if</code>, <code>in</code>, <code>next</code>, <code>function</code>, <code>repeat</code>, <code>return</code>, <code>while</code>, <code>TRUE</code>, <code>FALSE</code>. These are R’s <strong>reserved words</strong>. In particular, <code>TRUE</code> and <code>FALSE</code> denote the Boolean truth values; their abbreviations <code>T</code> and <code>F</code> are not reserved words, so technically you can assign to them — but doing so is strongly discouraged, since it introduces a source of subtle bugs.</p>
+<p>The following names are reserved and cannot be used as object names: <code>break</code>, <code>else</code>, <code>for</code>, <code>if</code>, <code>in</code>, <code>next</code>, <code>function</code>, <code>repeat</code>, <code>while</code>, <code>TRUE</code>, <code>FALSE</code>, <code>NULL</code>, <code>Inf</code>, <code>NaN</code>, <code>NA</code>. These are R’s <strong>reserved words</strong>. In particular, <code>TRUE</code> and <code>FALSE</code> denote the Boolean truth values; their abbreviations <code>T</code> and <code>F</code> are not reserved words, so technically you can assign to them — but doing so is strongly discouraged, since it introduces a source of subtle bugs.</p>
 </section>
 <section id="functions" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="functions"><span class="header-section-number">2.3</span> Functions</h2>
@@ -571,7 +571,7 @@ window.Quarto = {
 <pre><code>[1]  3  6  8  9 10 10</code></pre>
 </div>
 </div>
-<p>Note that the last expression does <strong>not</strong> raise an error: <code>vec1</code> has length 3 and <code>vec5</code> length 6 — mathematically the addition is undefined for unequal lengths, but <strong>R recycles the shorter vector</strong> as long as its length divides the longer. Here the computation is</p>
+<p>Note that the last expression does <strong>not</strong> raise a warning. By contrast, <code>vec1 + vec4</code> is computed but triggers a warning, whereas here the result is printed without any warning. <code>vec1</code> has length 3 and <code>vec5</code> length 6 — mathematically the addition is undefined for unequal lengths, but <strong>R recycles the shorter vector</strong> as long as its length divides the longer. Here the computation is</p>
 <p><span class="math display">\[ (2,4,5,2,4,5) + (1,2,3,7,6,5) = (3,6,8,9,10,10). \]</span></p>
 <p>Be aware of recycling, lest it produce unintended results.</p>
 <p>Square brackets (<code>[ ]</code>) access elements of a vector. The bracket may contain either positional indices or a logical vector; the latter is especially useful when combined with <code>if</code>-style conditions to select elements.</p>
@@ -631,10 +631,10 @@ window.Quarto = {
 <p>Inspect the matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> produced by the following code:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The <code>matrix()</code> function takes the elements as its first argument, then <code>ncol</code> (number of columns), <code>nrow</code> (number of rows), and <code>byrow</code> (whether to fill row by row). Here we supply <code>1:6</code> as the data and specify two columns; <code>nrow</code> is then determined automatically. Setting <code>byrow = TRUE</code> changes how the elements are arranged — print the matrices to see.</p>
-<p>If the number of elements supplied does not equal <code>nrow × ncol</code>, and is not a divisor either (so recycling cannot save us), an error is raised.</p>
+<p>If the number of elements supplied does not equal <code>nrow × ncol</code>, and recycling cannot fill the matrix cleanly, a warning is issued.</p>
 <p>As with vectors, square brackets index a matrix; rows come first, columns second, and either may be omitted to select an entire row or column:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">2</span>, <span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -730,7 +730,7 @@ window.Quarto = {
 </div>
 </div>
 <p>You will recall Stevens’s <span class="citation" data-cites="stevens1946">(<a href="references.html#ref-stevens1946" role="doc-biblioref">Stevens 1946</a>)</span> taxonomy of <strong>levels of measurement</strong> — nominal, ordinal, interval, and ratio — which classifies numeric variables by the operations they admit. Interval and ratio variables may be subjected to ordinary arithmetic; nominal and ordinal variables may not. (Even if a “second favorite” and a “third favorite” are combined, they do not equal a “favorite.”)</p>
-<p>R provides types corresponding to these levels. Interval and ratio variables are stored as <code>numeric</code>. Nominal variables are stored as <code>factor</code> (sometimes called “factor type” or “categorical type”). Ordinal variables are stored as <code>ordered.factor</code>.</p>
+<p>R provides types corresponding to these levels. Interval and ratio variables are stored as <code>numeric</code>. Nominal variables are stored as <code>factor</code> (sometimes called “factor type” or “categorical type”). Ordinal variables are stored as ordered factors (<code>ordered</code>).</p>
 <p>The example below converts an existing character variable to a factor with <code>as.factor()</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>origin <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>origin)</span>
