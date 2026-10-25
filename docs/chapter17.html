@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -98,7 +98,7 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -384,13 +384,16 @@ window.Quarto = {
   <ul>
   <li><a href="#ベイジアンモデリングの学習方法" id="toc-ベイジアンモデリングの学習方法" class="nav-link active" data-scroll-target="#ベイジアンモデリングの学習方法"><span class="header-section-number">17.1</span> ベイジアンモデリングの学習方法</a>
   <ul class="collapse">
-  <li><a href="#学習のステップ1確率的プログラミング言語stanの学習" id="toc-学習のステップ1確率的プログラミング言語stanの学習" class="nav-link" data-scroll-target="#学習のステップ1確率的プログラミング言語stanの学習"><span class="header-section-number">17.1.1</span> 学習のステップ1;確率的プログラミング言語Stanの学習</a></li>
-  <li><a href="#学習のステップ2これまでの分析方法を書き直してみる" id="toc-学習のステップ2これまでの分析方法を書き直してみる" class="nav-link" data-scroll-target="#学習のステップ2これまでの分析方法を書き直してみる"><span class="header-section-number">17.1.2</span> 学習のステップ2;これまでの分析方法を書き直してみる</a></li>
+  <li><a href="#学習のステップ1-確率的プログラミング言語stanの学習" id="toc-学習のステップ1-確率的プログラミング言語stanの学習" class="nav-link" data-scroll-target="#学習のステップ1-確率的プログラミング言語stanの学習"><span class="header-section-number">17.1.1</span> 学習のステップ1: 確率的プログラミング言語Stanの学習</a></li>
+  <li><a href="#学習のステップ2-これまでの分析方法を書き直してみる" id="toc-学習のステップ2-これまでの分析方法を書き直してみる" class="nav-link" data-scroll-target="#学習のステップ2-これまでの分析方法を書き直してみる"><span class="header-section-number">17.1.2</span> 学習のステップ2: これまでの分析方法を書き直してみる</a></li>
+  <li><a href="#学習のステップ3-様々なモデルを試してみる" id="toc-学習のステップ3-様々なモデルを試してみる" class="nav-link" data-scroll-target="#学習のステップ3-様々なモデルを試してみる"><span class="header-section-number">17.1.3</span> 学習のステップ3: 様々なモデルを試してみる</a></li>
+  <li><a href="#学習のステップ4-限界について知っておこう" id="toc-学習のステップ4-限界について知っておこう" class="nav-link" data-scroll-target="#学習のステップ4-限界について知っておこう"><span class="header-section-number">17.1.4</span> 学習のステップ4: 限界について知っておこう</a></li>
   </ul></li>
   <li><a href="#正規分布を使ったモデル" id="toc-正規分布を使ったモデル" class="nav-link" data-scroll-target="#正規分布を使ったモデル"><span class="header-section-number">17.2</span> 正規分布を使ったモデル</a>
   <ul class="collapse">
   <li><a href="#分散を推定する" id="toc-分散を推定する" class="nav-link" data-scroll-target="#分散を推定する"><span class="header-section-number">17.2.1</span> 分散を推定する</a></li>
   <li><a href="#欠測のあるデータを有効に使う" id="toc-欠測のあるデータを有効に使う" class="nav-link" data-scroll-target="#欠測のあるデータを有効に使う"><span class="header-section-number">17.2.2</span> 欠測のあるデータを有効に使う</a></li>
+  <li><a href="#多変量への拡張相関行列にlkj分布を置く" id="toc-多変量への拡張相関行列にlkj分布を置く" class="nav-link" data-scroll-target="#多変量への拡張相関行列にlkj分布を置く"><span class="header-section-number">17.2.3</span> 多変量への拡張:相関行列にLKJ分布を置く</a></li>
   </ul></li>
   <li><a href="#正規分布以外の分布を使う" id="toc-正規分布以外の分布を使う" class="nav-link" data-scroll-target="#正規分布以外の分布を使う"><span class="header-section-number">17.3</span> 正規分布以外の分布を使う</a>
   <ul class="collapse">
@@ -427,12 +430,12 @@ window.Quarto = {
 </header>
 
 
-<p>ここまでは定型的な統計モデルをいろいろ紹介してきた。定型的といったのは，モデルの形や求めるパラメータの数，その解釈の仕方が決まっていて，データの種類や型に合えば適用できるモデルという意味である。これに対してベイジアンモデリングは，データに合う形のモデルを形作る＝モデリングするということであり，その推定方法としてベイズ法をつかうというものである。推定法は必ずしもベイズ法である必要はなく，最尤法でも最小二乗法でも良いのだが，これらの手法による推定は推定手順も自らで開発しなければならない。これに対し，すでにみた確率的プログラミング言語によるベイズ推定は，確率モデルさえ記述できれば推定結果が得られる。これにより，研究者は自らのデータとその背景に合ったモデルを考えて記述するだけでよく，テクニカルな推定手順を考える必要がなくなる。確率的プログラミング言語は，その言葉にあるようにプログラミングの知識を必要とするが，逆に言えばこの知識・技能さえ習得しておけば，あとは分析者のアイデア次第で、自身のオリジナルな分析ができる。</p>
+<p>ここまでは定型的な統計モデルをいろいろ紹介してきた。定型的といったのは，モデルの形や求めるパラメータの数，その解釈の仕方が決まっていて，データの種類や型に合えば適用できるモデルという意味である。これに対してベイジアンモデリングは，データに合う形のモデルを形作る=モデリングするということであり，その推定方法としてベイズ法をつかうというものである。推定法は必ずしもベイズ法である必要はなく，最尤法でも最小二乗法でも良いのだが，これらの手法による推定は推定手順も自らで開発しなければならない。これに対し，すでにみた確率的プログラミング言語によるベイズ推定は，確率モデルさえ記述できれば推定結果が得られる。これにより，研究者は自らのデータとその背景に合ったモデルを考えて記述するだけでよく，テクニカルな推定手順を考える必要がなくなる。確率的プログラミング言語は，その言葉にあるようにプログラミングの知識を必要とするが，逆に言えばこの知識・技能さえ習得しておけば，あとは分析者のアイデア次第で，自身のオリジナルな分析ができる。</p>
 <p>以下ではStanによるプログラミングと，その特徴的な利用例についてみていくが，その前にベイジアンモデリングを学ぶ上での指針を示しておく。</p>
 <section id="ベイジアンモデリングの学習方法" class="level2" data-number="17.1">
 <h2 data-number="17.1" class="anchored" data-anchor-id="ベイジアンモデリングの学習方法"><span class="header-section-number">17.1</span> ベイジアンモデリングの学習方法</h2>
-<section id="学習のステップ1確率的プログラミング言語stanの学習" class="level3" data-number="17.1.1">
-<h3 data-number="17.1.1" class="anchored" data-anchor-id="学習のステップ1確率的プログラミング言語stanの学習"><span class="header-section-number">17.1.1</span> 学習のステップ1;確率的プログラミング言語Stanの学習</h3>
+<section id="学習のステップ1-確率的プログラミング言語stanの学習" class="level3" data-number="17.1.1">
+<h3 data-number="17.1.1" class="anchored" data-anchor-id="学習のステップ1-確率的プログラミング言語stanの学習"><span class="header-section-number">17.1.1</span> 学習のステップ1: 確率的プログラミング言語Stanの学習</h3>
 <p>ここではRを使った統計分析を扱ってきたので，改めてプログラミングとは，という話をする必要はないだろう。ただ，確率的プログラミング言語としてここで取り上げるStanは，Rよりもやや上級者向けの，C++と呼ばれる言語に基づいたものである。初学者にとって大きな違いは，「インタプリタ型とコンパイル型」，および「型宣言」の2点だろう。</p>
 <section id="インタプリタ型とコンパイル型" class="level4" data-number="17.1.1.1">
 <h4 data-number="17.1.1.1" class="anchored" data-anchor-id="インタプリタ型とコンパイル型"><span class="header-section-number">17.1.1.1</span> インタプリタ型とコンパイル型</h4>
@@ -456,9 +459,9 @@ window.Quarto = {
 </ol>
 <p>もっともよく使われるのは1.dataブロックと，3.parametersブロック，5.modelブロックである。dataブロックはStan外部とのやりとり，すなわちStanが外部から受け取るデータを宣言，記述するところである。ここで型が異なるデータが与えられるとエラーになる。すなわち，Stanの側で<code>int x;</code>と宣言してあるのに対し，R側から<code>x &lt;- 1.2</code>のような実数が与えられると，実行時にエラーになる。このように，型宣言をすることで，エラーを防ぐものであると理解してほしい。</p>
 <p>parametersブロックは推定したいパラメータを宣言するものであり，ここで宣言されたパラメータについて，Stanはサンプリング結果を返すことになる。modelブロックは確率モデルを記述するところ(尤度関数を記述するところ)であるので，もっとも重要なブロックであると言えるだろう。</p>
-<p>そのほかのブロックは捕捉的なものであり，必ずしも使う必要があるわけではない。transformed dataブロックは，dataブロックで宣言されたデータを変換するところであり，transformed parametersブロックは，parametersブロックで宣言されたパラメータを変換するところである。なぜそのような変換をするかといえば，内部で以後の計算をやりやすくするためである。例えば複数のパラメータを組み合わせて，確率分布に与える場合は一旦返還しておいた方が可読性が高い。具体例として回帰分析のことを考えると，パラメータは切片<span class="math inline">\(\beta_0\)</span>と傾き<span class="math inline">\(\beta_1\)</span>であり，これが説明変数<span class="math inline">\(x_i\)</span>と組み合わさって予測値<span class="math inline">\(\hat{y}_i\)</span>を作るのであった。パラメータブロックには<span class="math inline">\(\beta_0\)</span>と<span class="math inline">\(\beta_1\)</span>を宣言するが，transformed parametersブロックで<code>yhat</code>を宣言して</p>
-<p><span class="math display">\[ yhat = \beta_0 + \beta_1 x\]</span></p>
-<p>とかいておくと，モデルブロックでは<code>yhat</code>を使って記述できる。このように，あるパラメータがほかのパラメータの組み合わせで作られる場合などは，一旦その置き換えられる形を書いておいた方がわかりやすだろう。</p>
+<p>そのほかのブロックは補足的なものであり，必ずしも使う必要があるわけではない。transformed dataブロックは，dataブロックで宣言されたデータを変換するところであり，transformed parametersブロックは，parametersブロックで宣言されたパラメータを変換するところである。なぜそのような変換をするかといえば，内部で以後の計算をやりやすくするためである。例えば複数のパラメータを組み合わせて，確率分布に与える場合は一旦変換しておいた方が可読性が高い。具体例として回帰分析のことを考えると，パラメータは切片<span class="math inline">\(\beta_0\)</span>と傾き<span class="math inline">\(\beta_1\)</span>であり，これが説明変数<span class="math inline">\(x_i\)</span>と組み合わさって予測値<span class="math inline">\(\hat{y}_i\)</span>を作るのであった。パラメータブロックには<span class="math inline">\(\beta_0\)</span>と<span class="math inline">\(\beta_1\)</span>を宣言するが，transformed parametersブロックで<code>yhat</code>を宣言して</p>
+<p><span class="math display">\[ \hat{y}_i = \beta_0 + \beta_1 x_i\]</span></p>
+<p>とかいておくと，モデルブロックでは<code>yhat</code>を使って記述できる。このように，あるパラメータがほかのパラメータの組み合わせで作られる場合などは，一旦その置き換えられる形を書いておいた方がわかりやすいだろう。</p>
 <p>generated quantitiesブロックは，サンプリングされた値を加工して使う場合に用いる。サンプリングされたものの加工は，結果を受け取ったRの側でも可能なので，このブロックは必ずしも必要ではない。しかし，サンプリングが終わった時に自分に必要な加工された値も(コンパイルして高速で)計算しておいてくれると便利である。他にも色々な用途があるので，このブロックに関しては続く実践例のところでみていこう。</p>
 </section>
 <section id="そのほかの細かな違い" class="level4" data-number="17.1.1.3">
@@ -467,25 +470,25 @@ window.Quarto = {
 <p>プログラミングの基本は<strong>思った通りに動くのではなく，書いた通りに動く</strong>ことである。もし思い通りにいかず，エラーが表示されれば，それもあなたが書いたコードに原因がある<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。そのためエラーがでたら恐れ慄くのではなく，<em>解決のためのヒントが表示された</em>ぐらいに理解すれば良い。問題点を一つ一つ解決していけば，必ず望むところに到達できるはずである。最近は生成AIが発達しているので，エラーメッセージを丸ごと生成AIに与えて，どこにどのような問題があるかを聞くという方法があるので，それを利用すると良い。</p>
 </section>
 </section>
-<section id="学習のステップ2これまでの分析方法を書き直してみる" class="level3" data-number="17.1.2">
-<h3 data-number="17.1.2" class="anchored" data-anchor-id="学習のステップ2これまでの分析方法を書き直してみる"><span class="header-section-number">17.1.2</span> 学習のステップ2;これまでの分析方法を書き直してみる</h3>
+<section id="学習のステップ2-これまでの分析方法を書き直してみる" class="level3" data-number="17.1.2">
+<h3 data-number="17.1.2" class="anchored" data-anchor-id="学習のステップ2-これまでの分析方法を書き直してみる"><span class="header-section-number">17.1.2</span> 学習のステップ2: これまでの分析方法を書き直してみる</h3>
 <p>ここまで様々な統計モデルを見てきた。ベイジアンモデリングの学習のステップ2は，これまでの分析方法をStanに書き直してみることである。</p>
-<p>例えば回帰分析を，重回帰分析を，階層線形モデルをStanの言葉で書いたらどうなるだろうか。もちろん<code>brms</code>パッケージを使うとこうした苦労は必要ないのだが，改めて自分で既知のモデルを描いてみると，どのようなモデルがどのように記述されるかがわかるだろう。</p>
-<p>この時のポイントは，分析に際して<strong>データ生成メカニズム</strong>という視点を持つことである。我々はつい，データがあってそれに合う分析方法を探す，という発想になってしまう。あるいは分析方法のバリエーションがないばあい，分析方法に合うようなデータを取る，という考え方になってしまう。これはおかしなことだとは思わないだろうか。自分の購入した統計ソフトが回帰分析しかできないので，離散変数は諦めて研究計画を練り直そう，というのは大変貧しい話である。</p>
+<p>例えば回帰分析を，重回帰分析を，階層線型モデルをStanの言葉で書いたらどうなるだろうか。もちろん<code>brms</code>パッケージを使うとこうした苦労は必要ないのだが，改めて自分で既知のモデルを書いてみると，どのようなモデルがどのように記述されるかがわかるだろう。</p>
+<p>この時のポイントは，分析に際して<strong>データ生成メカニズム</strong>という視点を持つことである。我々はつい，データがあってそれに合う分析方法を探す，という発想になってしまう。あるいは分析方法のバリエーションがない場合，分析方法に合うようなデータを取る，という考え方になってしまう。これはおかしなことだとは思わないだろうか。自分の購入した統計ソフトが回帰分析しかできないので，離散変数は諦めて研究計画を練り直そう，というのは大変貧しい話である。</p>
 <p>本来，自然な人間の振る舞いや反応の仕方を数値におとして，そこから意味を読み取ることが統計学であり，予算や環境の問題で人間の振る舞いの方を変えさせるというのはおかしいのである。なるべくデータは生のままで，これをどのように分析するかを考えるべきである。その時，「このデータはどのようなメカニズムで生まれてきたのか」という視点からアプローチする。ここでのメカニズムは確率分布と言い換えても良いかもしれない。すなわち，個々の反応は確定した一つの値しか取らないわけがないので，その反応のあり得るほかの値をかんがえ，その総覧を確率分布として表現するのである。その上で，その確率分布が持つパラメータが，どのような仕組みを持っているかを数式で記述する。</p>
-<p>回帰分析は，個々の値<span class="math inline">\(y_i\)</span>が，本来取りうる値<span class="math inline">\(\hat{y}_i\)</span>に誤差<span class="math inline">\(e_i\)</span>がついて生じた，と考えている。この誤差は正規分布に従うから，<span class="math inline">\(y_i \sim N(\hat{y}_i, \sigma^2)\)</span>と記述される。この<span class="math inline">\(\hat{y}_i\)</span>は説明変数<span class="math inline">\(x_i\)</span>の線形結合で表現されるから，<span class="math inline">\(y_i \sim N(\beta_0 + \beta_1 x_i, \sigma^2)\)</span>とする，といった具合である。</p>
+<p>回帰分析は，個々の値<span class="math inline">\(y_i\)</span>が，本来取りうる値<span class="math inline">\(\hat{y}_i\)</span>に誤差<span class="math inline">\(e_i\)</span>がついて生じた，と考えている。この誤差は正規分布に従うから，<span class="math inline">\(y_i \sim N(\hat{y}_i, \sigma)\)</span>と記述される。この<span class="math inline">\(\hat{y}_i\)</span>は説明変数<span class="math inline">\(x_i\)</span>の線型結合で表現されるから，<span class="math inline">\(y_i \sim N(\beta_0 + \beta_1 x_i, \sigma)\)</span>とする，といった具合である。</p>
 <p>回帰分析がこのようなメカニズムであったように，t検定や分散分析なども同様に記述することができる。こうした既存のモデルを改めて記述すると，これまで意識していなかったモデルの性質が見えてくる。例えば，確率分布として何を仮定していたのか，パラメータの制約として何をおいていたのか，事前分布として何を考えていたのか，といったことが，Stanの言語で逐一記述することでわかるようになる。これが，既存のモデルをStanの言語で書き直すことによる学習の利点である。</p>
-<ol start="3" type="1">
-<li>様々なモデルを試してみる</li>
-</ol>
+</section>
+<section id="学習のステップ3-様々なモデルを試してみる" class="level3" data-number="17.1.3">
+<h3 data-number="17.1.3" class="anchored" data-anchor-id="学習のステップ3-様々なモデルを試してみる"><span class="header-section-number">17.1.3</span> 学習のステップ3: 様々なモデルを試してみる</h3>
 <p>既存のモデルが確率的プログラミング言語で表現できることがわかれば，つぎは確率的プログラミング言語でないと表現できないことに目を向けてみよう。</p>
 <p>例えばt検定や分散分析は「平均値の差の検定」である。ここで行われていたことは，正規分布に従うデータの，平均値の差があるかどうか，全ての群間に差がないと言って間違える可能性はどれぐらいあるか，ということであった。データ生成メカニズムの観点から見ると，この手法はごく限定的な一部分しか見ていなかったことに気づく。</p>
 <p>平均値以外のパラメータを考えることはできないのだろうか。特定の群間の差だけを考えることはできないのだろうか。差があるかないかだけではなく，どれぐらい差があるのかとか，一方が他方より大きい確率はどれぐらいか，といったことを考えることはできないのだろうか。</p>
 <p>これらの疑問に対して，ベイジアンモデリングは答えを与える。実験計画法によって得られたデータであっても，これまで以上に多角的な視点，様々な仮説を持って考えることができる。</p>
 <p>もちろん実験計画法による要因効果の特定だけがベイジアンモデリングではない。正規分布ではないデータに対しても，特定の離散的な区別をしていないデータに対しても，データ生成の観点からモデルを組み込んでいくことができる。以下ではこうした例をいくつか見ていくが，これらを見ることで統計分析の視点が一変することを感じてほしい。統計分析は，与えられたデータに既存の分析を制約の中で考えるのではなく，データの生成メカニズムをクリエイティブに考える楽しい営みなのである。</p>
-<ol start="4" type="1">
-<li>限界について知っておこう</li>
-</ol>
+</section>
+<section id="学習のステップ4-限界について知っておこう" class="level3" data-number="17.1.4">
+<h3 data-number="17.1.4" class="anchored" data-anchor-id="学習のステップ4-限界について知っておこう"><span class="header-section-number">17.1.4</span> 学習のステップ4: 限界について知っておこう</h3>
 <p>ベイジアンモデリングの自由さ，創造性に目覚めてしばらくすると，その限界に気づくこともあるだろう。まずは楽しんでいってほしいというところだが，先にどのような壁に直面しがちなのか，みておこう。</p>
 <p>一つはモデル評価の問題である。例えば帰無仮説検定の場合，これは評価・判断をするための技術であるから，「設定した有意水準を下回る<span class="math inline">\(p\)</span>値を得れば差があると言って良い」といった評価基準が明確であった。これに対して，ベイジアンモデリングを行うと，こうした「YesかNoか」といった答えは出しにくい。帰無仮説と対立仮説というモデル，あるいは自分が開発したモデルが既存のモデルに比べて，良いのか悪いのかといった判断基準をどう持てば良いのか。</p>
 <p>これについての答えは明確で，<strong>ベイズファクター(Bayes Factor)</strong>をみよ，というのがそれである。ベイズ的モデル評価はこのBFに一元化できるといっても過言ではない。BFはモデルとデータの当てはまりの良さを，モデル同士の相対比較で表現するものであるから，対立仮説よりも帰無仮説のほうが良い，という結論を出すこともできる。ただし，この「当てはまりのよさ」(周辺対数尤度)を計算するプロセスが少し複雑で，またモデルによっては解析的に計算できず推定するしかないこともある<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>。この点については，今後の計算機科学の発展が望まれる。</p>
@@ -493,7 +496,7 @@ window.Quarto = {
 <p>ただし，BFも「3.0より大きければ優っていると判断して良い」という数値基準もあるが，こうした「YesかNoか！」という二値判断が，過大な解釈を許したり基準を超えるための不正を生んだりしてきたという歴史を鑑みると，使い方には注意が必要である。またBFは事前分布の置き方によっては同じモデルでも大きく値を変えることが知られており，客観的な事前分布の置き方については様々な議論がある。</p>
 <p>BFを離れてモデルを評価するのであれば，得られた事後分布やパラメータを見て色々判断するしかないだろう。<span class="citation" data-cites="kruschke2018rejecting">Kruschke (<a href="references.html#ref-kruschke2018rejecting" role="doc-biblioref">2018</a>)</span> は事前に判断するパラメータの領域を宣言しておく方法を考えているし，<span class="citation" data-cites="Toyoda202003">豊田 (<a href="references.html#ref-Toyoda202003" role="doc-biblioref">2020</a>)</span> は事後分布の関数の形で判断する方法を提示したりしている。これらは帰無仮説検定に対する代案として提示されているものである。今後どのような形で議論が進むのか，まだ確定していないというのが現状である。</p>
 <p>モデルの評価はBFでできるとして，次に初学者が直面する問題は，「自分でモデルを作るのが難しい」というものである。以下に続く様々なモデルはどれも魅力的であるが，自分では思いつかないよ，と思って挫けそうになるという相談をよく耳にすることがある。これについては特効薬があるわけではないが，そもそもゼロから全てのモデルを作り上げよう，とするのが大きすぎる野望のように思われる。まずは色々なモデルを知って，このモデルを自分のデータにはこのように応用できそうだ，と想像力を働かせるところから進めよう。あるいは非常に限定的な，小さなおもちゃのようなモデル(Toyモデル)を作って，それを徐々に発展させていくことで大きなモデルに育てる，という観点を持つことである。<span class="citation" data-cites="Hamada201812">浜田 (<a href="references.html#ref-Hamada201812" role="doc-biblioref">2018</a>)</span> や <span class="citation" data-cites="Hamada2020">浜田 (<a href="references.html#ref-Hamada2020" role="doc-biblioref">2020</a>)</span> を読むと，このステップの重要さがよくわかるだろう。</p>
-<p>そもそも，線形モデルでも十分なシーンというのも結構あるものである。ベイジアンモデリングで自分似合ったデータをカスタマイズする，と豪語しておいた後で言うのもおかしいが，はっきりした傾向があるのであれば線形モデルで大体うまくいく。線形モデルはピッタリとは言わないが大体当てはまっていて理解できるモデルであり，モデリングは細かな違いに当てはめていこうとする「作り込み」の技術であるから，実践的にはそこまで必要のないことも少なくない。もちろん線形モデルといってもただの単回帰分析で良い，といってるのではなく，データの生成メカニズムにあった一般化線形モデル，混合モデルなど工夫できるところは色々あるのだから。</p>
+<p>そもそも，線型モデルでも十分なシーンというのも結構あるものである。ベイジアンモデリングで自分に合ったモデルをカスタマイズする，と豪語しておいた後で言うのもおかしいが，はっきりした傾向があるのであれば線形モデルで大体うまくいく。線形モデルはピッタリとは言わないが大体当てはまっていて理解できるモデルであり，モデリングは細かな違いに当てはめていこうとする「作り込み」の技術であるから，実践的にはそこまで必要のないことも少なくない。もちろん線形モデルといってもただの単回帰分析で良い，といっているのではなく，データの生成メカニズムにあった一般化線形モデル，混合モデルなど工夫できるところは色々あるのだから。</p>
 <p>こうした問題やぶつかりそうな壁があると知ってもなお，ベイジアンモデリングはおすすめできる。この自由で創造的な世界を知らずして，統計分析が苦手だと思ってしまうのは非常にもったいないからである。以下の用例で，ベイジアンモデリングの様々な可能性を味わっていただきたい。</p>
 </section>
 </section>
@@ -502,7 +505,7 @@ window.Quarto = {
 <p>まずはこれまでもよく用いられてきた，正規分布を使ったモデルについて見てみよう。</p>
 <section id="分散を推定する" class="level3" data-number="17.2.1">
 <h3 data-number="17.2.1" class="anchored" data-anchor-id="分散を推定する"><span class="header-section-number">17.2.1</span> 分散を推定する</h3>
-<p>正規分布を使ったモデルといえば，一般線形モデルのような平均値に関するモデルがほとんどである。正規分布は位置パラメータ<span class="math inline">\(\mu\)</span>と，スケールパラメータすなわち幅のパラメータ<span class="math inline">\(\sigma\)</span>でその形状が定まるが<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>，後者はブレの大きさ，誤差の大きさに関するものと考えられるから，そうした指標としてモデルを考えてみよう。</p>
+<p>正規分布を使ったモデルといえば，一般線型モデルのような平均値に関するモデルがほとんどである。正規分布は位置パラメータ<span class="math inline">\(\mu\)</span>と，スケールパラメータすなわち幅のパラメータ<span class="math inline">\(\sigma\)</span>でその形状が定まるが<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>，後者はブレの大きさ，誤差の大きさに関するものと考えられるから，そうした指標としてモデルを考えてみよう。</p>
 <p>カバーストーリーとして次のようなシーンを考える<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>。 ある牛丼チェーン店では，並盛り一人前につき150gの肉を載せて提供すること，という決まりになっている。ここである店舗で社員による抜き打ち検査があり，提供係10名に牛丼を作らせ，その肉の量を計測した。10名のうち2名はまだ日の浅いアルバイトであることがわかっている。計測した肉の量は以下の通りであった。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">151</span>, <span class="dv">149</span>, <span class="dv">152</span>, <span class="dv">150</span>, <span class="dv">151</span>, <span class="dv">148</span>, <span class="dv">151</span>, <span class="dv">150</span>, <span class="dv">221</span>, <span class="dv">245</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -530,21 +533,21 @@ window.Quarto = {
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>コードが<code>data</code>と<code>parameters</code>，<code>model</code>の3つのブロックに分かれていることに注意してほしい。また，各ブロックで<code>int</code>や<code>array</code>などの型宣言があることに注意してほしい。</p>
 <p>まずは<code>data</code>ブロックを見よう。<code>int</code>は整数型で，まずデータのサイズを外部から入力するようにしている。これで，例えばデータが7件とか50件と変わった時でも同じコードが使えるようにしている。また<code>array</code>は配列の型宣言であり，同じ変数名で複数の値が入るようになっている。ここでは<code>N</code>人分のデータを扱うために<code>array[N] real Y;</code>というように宣言している。</p>
-<p>続く<code>paramters</code>ブロックでは，知りたい未知数の<span class="math inline">\(\mu\)</span>と<span class="math inline">\(\sigma_i\)</span>をそれぞれ<code>real mu;</code>と<code>array[N] real&lt;lower=0&gt; sigma;</code>としている。<code>real</code>は実数型，<code>array</code>はすでに述べたように配列で，<span class="math inline">\(\sigma_i\)</span>の<span class="math inline">\(i\)</span>によって異なる<span class="math inline">\(\sigma\)</span>である様を表現している。<code>&lt;lower=0&gt;</code>としているのは変数に対する制約で，この<span class="math inline">\(\sigma_i\)</span>は下限が<span class="math inline">\(0\)</span>，すなわち正の数しかとらないことにしている。分散は負になることがないので，こうしておくとStanがMCMCサンプリングにおいて可能な値の候補を探す領域が適切に制限されることになる。</p>
+<p>続く<code>parameters</code>ブロックでは，知りたい未知数の<span class="math inline">\(\mu\)</span>と<span class="math inline">\(\sigma_i\)</span>をそれぞれ<code>real mu;</code>と<code>array[N] real&lt;lower=0&gt; sigma;</code>としている。<code>real</code>は実数型，<code>array</code>はすでに述べたように配列で，<span class="math inline">\(\sigma_i\)</span>の<span class="math inline">\(i\)</span>によって異なる<span class="math inline">\(\sigma\)</span>である様を表現している。<code>&lt;lower=0&gt;</code>としているのは変数に対する制約で，この<span class="math inline">\(\sigma_i\)</span>は下限が<span class="math inline">\(0\)</span>，すなわち正の数しかとらないことにしている。標準偏差は負になることがないので，こうしておくとStanがMCMCサンプリングにおいて可能な値の候補を探す領域が適切に制限されることになる。</p>
 <p>最後の<code>model</code>ブロックは，確率モデルを記述する。ベイズ的確率モデルは尤度と事前分布が必要で，まず尤度を記述している。 <code>Y[i] ~ normal(mu, sigma[i])</code>のところがそれで，<span class="math inline">\(i\)</span>がfor文によって繰り返されている。数式で言えば，次の計算と同じである。</p>
-<p><span class="math display">\[ \prod_{i=1}^{N} N(Y_i | \mu, \sigma_i) \]</span></p>
+<p><span class="math display">\[ \prod_{i=1}^{n} N(y_i \mid \mu, \sigma_i) \]</span></p>
 <p>実際の計算は対数尤度をとって，次の計算を行っているが，Stanでは「データが次の確率分布に従う」という形で書けるので，確率分布を使ったモデルさえかければ誰でも推定ができる。</p>
-<p><span class="math display">\[ \sum _{i=1}^{N} \log\{N(Y_i | \mu, \sigma_i)\} \]</span></p>
+<p><span class="math display">\[ \sum_{i=1}^{n} \log\{N(y_i \mid \mu, \sigma_i)\} \]</span></p>
 <p>また今回はそれぞれの事前分布として，<span class="math inline">\(\mu\)</span>に<span class="math inline">\(0\)</span>から<span class="math inline">\(200\)</span>までの一様分布を，<span class="math inline">\(\sigma\)</span>にコーシー分布を置いた。どのような事前分布をおくかは自由だし，特段指定がなければStanは十分にひろい一様分布を自動的に設定する。分散(標準偏差)パラメータの事前分布には裾の重い分布をおくことが一般的で，コーシー分布やStudentのt分布，指数分布などがよく用いられる。</p>
-<p>さてこのコードを，次のRコードから呼び出して実行する。手順は(必要なライブラリを読み込んだ上で)，stanファイルをコンパイルし，できたオブジェクトにサンプリングの設定を与えて出力する，というものである。</p>
-<p>サンプリングに際してはデータを外部から与える必要があるため，<code>dataSet</code>オブジェクトを作って渡すようにした。与えるデータはリスト型であり，stanファイル側の<code>data</code>ブロックと同じ変数名をつける必要がある。サンプリングのその他の設定は次のとおりである。</p>
+<p>さてこのコードを，次のRコードから呼び出して実行する。手順は(必要なライブラリを読み込んだ上で)，Stanファイルをコンパイルし，できたオブジェクトにサンプリングの設定を与えて出力する，というものである。</p>
+<p>サンプリングに際してはデータを外部から与える必要があるため，<code>dataSet</code>オブジェクトを作って渡すようにした。与えるデータはリスト型であり，Stanファイル側の<code>data</code>ブロックと同じ変数名をつける必要がある。サンプリングのその他の設定は次のとおりである。</p>
 <ul>
 <li><code>data</code>…データを与える</li>
 <li><code>chains</code>…MCMCチェインを走らせる数</li>
 <li><code>parallel_chains</code>…MCMCチェインのうち，並列で走らせるチェインの数。実行環境のCPUが持っているコア数-1程度にするのが良い。</li>
 <li><code>iter_warmup</code>…サンプリングに入る前の調整期間。詳しくは@sec-mcmc-evaluation を参照</li>
 <li><code>iter_sampling</code>…サンプリングの数。詳しくは@sec-mcmc-evaluation を参照</li>
-<li><code>reflesh</code>…サンプリングの途中経過をどの程度の頻度で出力するかの設定。必ずしも設定しなくとも良い。</li>
+<li><code>refresh</code>…サンプリングの途中経過をどの程度の頻度で出力するかの設定。必ずしも設定しなくとも良い。</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(cmdstanr)</span>
@@ -567,7 +570,7 @@ window.Quarto = {
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Chain 1 finished in 0.2 seconds.
-Chain 2 finished in 0.2 seconds.
+Chain 2 finished in 0.1 seconds.
 Chain 3 finished in 0.2 seconds.
 Chain 4 finished in 0.2 seconds.
 
@@ -577,17 +580,17 @@ Total execution time: 0.3 seconds.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> variable   mean median    sd  mad     q5    q95 rhat ess_bulk ess_tail
- lp__     -18.65 -18.31  2.23 2.09 -22.76 -15.66 1.00     4165     5289
- mu       150.56 150.70  0.65 0.59 149.44 151.42 1.00     2820     4221
- sigma[1]   3.06   1.57  6.50 1.67   0.13  10.57 1.01     1617     1147
- sigma[2]   4.53   2.82  8.19 2.16   0.70  12.47 1.00     2118     1339
- sigma[3]   4.62   2.79 12.58 2.17   0.71  12.63 1.00     3553     3785
- sigma[4]   3.20   1.75  5.79 1.75   0.14  10.42 1.01     1172      445
- sigma[5]   2.96   1.53  5.79 1.64   0.11   9.66 1.00     1380      507
- sigma[6]   5.57   3.73  8.17 2.40   1.32  15.16 1.00     5041     5985
- sigma[7]   3.05   1.50  9.24 1.60   0.13   9.70 1.00     1919     1247
- sigma[8]   3.12   1.74  5.09 1.71   0.14  10.26 1.01     1157      394
+<pre><code> variable   mean median   sd  mad     q5    q95 rhat ess_bulk ess_tail
+ lp__     -18.60 -18.25 2.29 2.15 -22.96 -15.61 1.00     1577     4516
+ mu       150.56 150.73 0.66 0.55 149.36 151.39 1.00     3292     5282
+ sigma[1]   2.91   1.42 7.24 1.62   0.08   9.78 1.00      465      149
+ sigma[2]   4.63   2.90 9.44 2.18   0.72  13.82 1.00     3284     3060
+ sigma[3]   4.36   2.84 6.50 2.09   0.73  12.64 1.00     5017     6727
+ sigma[4]   3.31   1.79 5.83 1.70   0.22  10.54 1.00     2581     2973
+ sigma[5]   2.99   1.55 6.54 1.71   0.10   9.66 1.01      455      164
+ sigma[6]   5.82   3.78 9.02 2.51   1.33  15.35 1.00     4472     6851
+ sigma[7]   2.84   1.44 5.25 1.59   0.11   9.85 1.00      918      547
+ sigma[8]   3.20   1.81 5.76 1.69   0.20  10.20 1.00     2451     1443
 
  # showing 10 of 12 rows (change via 'max_rows' argument or 'cmdstanr_max_rows' option)</code></pre>
 </div>
@@ -621,16 +624,16 @@ Total execution time: 0.3 seconds.</code></pre>
 
 Parameter | Median |   Mean |   MAP |          95% CI
 -----------------------------------------------------
-sigma[1]  |   1.57 |   3.06 |  0.39 | [ 0.04,  10.58]
-sigma[2]  |   2.82 |   4.53 |  1.78 | [ 0.04,  12.47]
-sigma[3]  |   2.79 |   4.62 |  1.24 | [ 0.07,  12.64]
-sigma[4]  |   1.75 |   3.20 |  0.33 | [ 0.04,  10.42]
-sigma[5]  |   1.53 |   2.96 |  0.19 | [ 0.02,   9.67]
-sigma[6]  |   3.73 |   5.57 |  2.41 | [ 0.42,  15.45]
-sigma[7]  |   1.50 |   3.05 |  0.81 | [ 0.04,   9.70]
-sigma[8]  |   1.74 |   3.12 |  0.67 | [ 0.02,  10.27]
-sigma[9]  |  60.05 |  97.45 | 41.59 | [19.32, 221.21]
-sigma[10] |  79.87 | 121.03 | 54.21 | [23.70, 298.02]</code></pre>
+sigma[1]  |   1.42 |   2.91 |  0.46 | [ 0.02,   9.79]
+sigma[2]  |   2.90 |   4.63 |  1.89 | [ 0.05,  13.83]
+sigma[3]  |   2.84 |   4.36 |  1.67 | [ 0.09,  12.66]
+sigma[4]  |   1.79 |   3.31 |  0.74 | [ 0.04,  10.54]
+sigma[5]  |   1.55 |   2.99 |  0.38 | [ 0.02,   9.66]
+sigma[6]  |   3.78 |   5.82 |  2.49 | [ 0.17,  15.43]
+sigma[7]  |   1.44 |   2.84 |  0.26 | [ 0.03,   9.85]
+sigma[8]  |   1.81 |   3.20 |  0.71 | [ 0.02,  10.22]
+sigma[9]  |  60.81 |  91.63 | 46.93 | [17.82, 226.22]
+sigma[10] |  81.54 | 119.65 | 61.38 | [24.61, 293.79]</code></pre>
 </div>
 </div>
 <p>ここにあるように，結果は確率分布の形で得られるので，平均値(Mean, EAP)でみるのか，中央値(Median)でみるのか，密度が最大になるところ(MAP)でみるのかによって大きく値が異なる。特に分散パラメータは左右対称ではなく歪んだ分布になるので，EAP推定値は適切ではない。 また，確信区間は今回HDIを指定した。HDIはHighest Density Intervalsの略で，最高密度を含む95%の領域を指す。いわゆるパーセンタイルのように，上下2.5%を除外した領域を取る方法はETI(Equal-Tailed Intervals)と呼ばれるが，これだと歪んだ分布に対してやや偏った結果になることがある。詳しくは <span class="citation" data-cites="Maeda2017">クルシュケ (<a href="references.html#ref-Maeda2017" role="doc-biblioref">[2014] 2017</a>)</span> や <span class="citation" data-cites="bayestestR">Makowski et al. (<a href="references.html#ref-bayestestR" role="doc-biblioref">2019</a>)</span> ，あるいは単に<a href="https://easystats.github.io/bayestestR/">bayestestRのサイト</a>を参照して欲しい。</p>
@@ -694,7 +697,7 @@ sigma[10] |  79.87 | 121.03 | 54.21 | [23.70, 298.02]</code></pre>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>[<span class="dv">2</span>] mu;</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">100</span>&gt;[<span class="dv">2</span>] mu;</span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd1;</span>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd2;</span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">1</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; rho;</span>
@@ -720,10 +723,10 @@ sigma[10] |  79.87 | 121.03 | 54.21 | [23.70, 298.02]</code></pre>
 <span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    rho ~ uniform(-<span class="dv">1</span>,<span class="dv">1</span>);</span>
 <span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>このコードでは，まずデータブロックで<code>Nobs</code>と<code>Nmiss</code>という二つの整数値をとっている。これは2つの変数が両方とも観測されたケースの数と，一方が欠測値であったケースの数である。Stanでは<code>NA</code>を直接扱うことができず，有効なデータの数だけ渡す必要があり，冒頭にその数を明示しておいた。</p>
-<p>次に<code>vector</code>型で<code>obsX[Nobs]</code>を宣言している。<code>vector[2]</code>とあるのは2つの要素を持つベクトルで1セットの変数であることを意味し，それが<code>Nobs</code>個あることを表している。最後に，一方の変数が欠落していたデータも活用するために，<code>Nmiss</code>個の配列変数を用意した。こちらはベクトルではなく，サイズをしていした実数の配列の扱いである。</p>
-<p>今回推定したいのは相関係数<code>rho</code>だが，これは2次元の多変量正規分布を想定した時の分散共分散行列の中に現れる。尤度のところにあるように，平均ベクトル<span class="math inline">\(\mathbb{\mu}\)</span>と，分散共分散行列<span class="math inline">\(\mathbb{\Sigma}\)</span>からデータは生成されている。</p>
-<p><span class="math display">\[ obsX \sim MN(\mathbb{\mu},\mathbb{\Sigma})\]</span></p>
-<p>ここで分散共分散行列の要素を紐解くと， <span class="math display">\[ \mathbb{\Sigma} = \begin{pmatrix}
+<p>次に<code>vector</code>型で<code>obsX[Nobs]</code>を宣言している。<code>vector[2]</code>とあるのは2つの要素を持つベクトルで1セットの変数であることを意味し，それが<code>Nobs</code>個あることを表している。最後に，一方の変数が欠落していたデータも活用するために，<code>Nmiss</code>個の配列変数を用意した。こちらはベクトルではなく，サイズを指定した実数の配列の扱いである。</p>
+<p>今回推定したいのは相関係数<code>rho</code>だが，これは2次元の多変量正規分布を想定した時の分散共分散行列の中に現れる。尤度のところにあるように，平均ベクトル<span class="math inline">\(\boldsymbol{\mu}\)</span>と，分散共分散行列<span class="math inline">\(\boldsymbol{\Sigma}\)</span>からデータは生成されている。</p>
+<p><span class="math display">\[ \boldsymbol{x}_i \sim \mathrm{MVN}(\boldsymbol{\mu},\boldsymbol{\Sigma})\]</span></p>
+<p>ここで分散共分散行列の要素を紐解くと， <span class="math display">\[ \boldsymbol{\Sigma} = \begin{pmatrix}
 \sigma_1^2 &amp; \sigma_{12}\\
 \sigma_{21} &amp; \sigma_2^2
 \end{pmatrix}
@@ -735,7 +738,7 @@ sigma[10] |  79.87 | 121.03 | 54.21 | [23.70, 298.02]</code></pre>
 <p>となる。ここで<span class="math inline">\(\sigma_1, \sigma_2\)</span>はそれぞれの変数の標準偏差であり，<span class="math inline">\(\rho\)</span>は相関係数である。</p>
 <p><code>parameters</code>ブロックでは，この<span class="math inline">\(\sigma_1,\sigma_2,\rho\)</span>を宣言しておき，これを<code>transformed parameters</code>ブロックで分散共分散行列に書き直している。なお<code>cov_matrix</code>型はStanのもつ分散共分散行列専用の型である。</p>
 <p><code>model</code>ブロックも注意深くみて欲しい。まず2つの変数が揃っている<code>obsX</code>は多変量正規分布から生成されている。そして1つの変数が欠如している<code>missX</code>も，<code>X1</code>側のデータは残っているので，これをいわゆる普通の(単変量の)正規分布から生成されたものとしている。<code>mu[1]</code>と<code>sd1</code>の尤度を追加することで補正を試みているのだ。</p>
-<p>平均値の事前分布には，テストなので0点から100点の間のどこかにあるから，<code>uniform(0,1)</code>を置いた。標準偏差の事前分布には裾の重いコーシー分布を，相関係数の事前分布には，Stanがもつ相関係数用の分布である<code>lkj_corr</code>を置いた。これのパラメータが<code>1</code>であれば，相関係数に適した無情報分布を置いたことと同義である。</p>
+<p>平均値の事前分布には，テストなので0点から100点の間のどこかにあるから，<code>uniform(0,100)</code>を置いた(<code>parameters</code>ブロックでも<code>mu</code>の範囲を0から100に制約している)。標準偏差の事前分布には裾の重いコーシー分布<code>cauchy(0,5)</code>を，相関係数の事前分布には<span class="math inline">\(-1\)</span>から<span class="math inline">\(1\)</span>の一様分布<code>uniform(-1,1)</code>を置いた。</p>
 <p>さて，このモデルをコンパイルし，データを与えて<code>rho</code>がどうなるかみてみよう。 データの与え方に注意して欲しい。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"missing_corr.stan"</span>)</span>
@@ -758,13 +761,13 @@ sigma[10] |  79.87 | 121.03 | 54.21 | [23.70, 298.02]</code></pre>
 <pre><code>Running MCMC with 4 parallel chains...</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Chain 3 finished in 0.7 seconds.
-Chain 4 finished in 0.7 seconds.
-Chain 1 finished in 0.7 seconds.
-Chain 2 finished in 0.7 seconds.
+<pre><code>Chain 1 finished in 0.6 seconds.
+Chain 2 finished in 0.6 seconds.
+Chain 4 finished in 0.6 seconds.
+Chain 3 finished in 0.7 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.7 seconds.
+Mean chain execution time: 0.6 seconds.
 Total execution time: 0.8 seconds.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"rho"</span>),</span>
@@ -775,10 +778,78 @@ Total execution time: 0.8 seconds.</code></pre>
 
 Parameter | Median | Mean |  MAP |       95% CI
 -----------------------------------------------
-rho       |   0.73 | 0.71 | 0.76 | [0.50, 0.88]</code></pre>
+rho       |   0.73 | 0.71 | 0.78 | [0.48, 0.88]</code></pre>
 </div>
 </div>
-<p>今回推定された<code>rho</code>は0.711と，ほぼ理論通りの値を復元できている。 多変量正規分布は，各変数に限って見てみると一変数の正規分布と同じであり，今回欠測のない<code>X1</code>の情報を尤度に追加することで，持ちうるデータの情報全てを活用することができた。このように，得られたデータが限定的であってもそのデータ生成メカニズムを考えることで補正できることは少なくない。たとえば上限や下限の値が決まっているデータに対し，そうした打ち切りがなければ本当は何点だったのか，といったこともモデルの工夫で推定することができるようになる。<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>今回推定された<code>rho</code>は0.7099と，ほぼ理論通りの値を復元できている。 多変量正規分布は，各変数に限って見てみると一変数の正規分布と同じであり，今回欠測のない<code>X1</code>の情報を尤度に追加することで，持ちうるデータの情報全てを活用することができた。このように，得られたデータが限定的であってもそのデータ生成メカニズムを考えることで補正できることは少なくない。たとえば上限や下限の値が決まっているデータに対し，そうした打ち切りがなければ本当は何点だったのか，といったこともモデルの工夫で推定することができるようになる。<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+</section>
+<section id="多変量への拡張相関行列にlkj分布を置く" class="level3" data-number="17.2.3">
+<h3 data-number="17.2.3" class="anchored" data-anchor-id="多変量への拡張相関行列にlkj分布を置く"><span class="header-section-number">17.2.3</span> 多変量への拡張:相関行列にLKJ分布を置く</h3>
+<p>上のコードは，相関係数<span class="math inline">\(\rho\)</span>を1つのパラメータとして宣言し，分散共分散行列の4つの要素を手で組み立てた。2変数ならこれで十分だが，変数が3つ，4つと増えると相関係数の数も組み立てる要素も増え，しかも勝手に値を置くと正定値でない(分散共分散行列として成り立たない)組み合わせが生じてしまう。そこで多変量のモデルでは，相関係数を1つずつではなく<strong>相関行列</strong><span class="math inline">\(\boldsymbol{\Omega}\)</span>として宣言し，これに相関行列用の事前分布であるLKJ分布を置くのが標準的な書き方である。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nobs;</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Nmiss;</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nobs] <span class="dt">vector</span>[<span class="dv">2</span>] obsX;</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[Nmiss] <span class="dt">real</span> missX;</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">100</span>&gt;[<span class="dv">2</span>] mu;</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd1;</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sd2;</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">corr_matrix</span>[<span class="dv">2</span>] Omega;</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span>{</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> rho = Omega[<span class="dv">1</span>,<span class="dv">2</span>];</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">cov_matrix</span>[<span class="dv">2</span>] Sig = quad_form_diag(Omega, [sd1, sd2]');</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    obsX ~ multi_normal(mu, Sig);</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    missX ~ normal(mu[<span class="dv">1</span>], sd1);</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    mu ~ uniform(<span class="dv">0</span>,<span class="dv">100</span>);</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    sd1 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    sd2 ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>    Omega ~ lkj_corr(<span class="dv">1</span>);</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>corr_matrix</code>型はStanのもつ相関行列専用の型で，対角が1の正定値対称行列に値が制約される。2変数の相関行列は<span class="math inline">\(\begin{pmatrix} 1 &amp; \rho \\ \rho &amp; 1 \end{pmatrix}\)</span>なので，<code>transformed parameters</code>ブロックでその非対角要素を相関係数<code>rho</code>として取り出している。分散共分散行列は，標準偏差を対角に並べた行列<span class="math inline">\(\boldsymbol{D} = \mathrm{diag}(\sigma_1, \sigma_2)\)</span>で相関行列を左右から挟んだ</p>
+<p><span class="math display">\[ \boldsymbol{\Sigma} = \boldsymbol{D}\boldsymbol{\Omega}\boldsymbol{D} \]</span></p>
+<p>であり，これを計算するのが<code>quad_form_diag</code>関数である。変数がいくつに増えても，この1行は変わらない。</p>
+<p>相関行列の事前分布<code>lkj_corr(1)</code>は，パラメータが<code>1</code>のとき相関行列全体に一様な事前分布を置いたことと同義で，2変数の場合は<span class="math inline">\(\rho\)</span>に<span class="math inline">\(-1\)</span>から<span class="math inline">\(1\)</span>の一様分布を置いた先のモデルと数学的に同じになる。パラメータを1より大きくすると，相関が0に近い行列ほど事前確率が高くなる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model_lkj <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"missing_corr_lkj.stan"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fit_lkj <span class="ot">&lt;-</span> model_lkj<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 1 finished in 0.7 seconds.
+Chain 2 finished in 0.6 seconds.
+Chain 4 finished in 0.7 seconds.
+Chain 3 finished in 0.8 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.7 seconds.
+Total execution time: 0.9 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit_lkj<span class="sc">$</span><span class="fu">summary</span>(<span class="st">"rho"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 10
+  variable  mean median    sd    mad    q5   q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 rho      0.710  0.731 0.110 0.0948 0.507 0.845  1.00    1285.    1473.</code></pre>
+</div>
+</div>
+<p>推定された<code>rho</code>は0.7098で，先のモデルとほぼ同じ値になっている。</p>
 </section>
 </section>
 <section id="正規分布以外の分布を使う" class="level2" data-number="17.3">
@@ -786,121 +857,121 @@ rho       |   0.73 | 0.71 | 0.76 | [0.50, 0.88]</code></pre>
 <p>ベイジアンモデリングは，確率分布のパラメータに数式的構造を仮定することでもある。ここでは正規分布以外の確率分布を使った例を見てみよう。</p>
 <section id="項目反応理論" class="level3" data-number="17.3.1">
 <h3 data-number="17.3.1" class="anchored" data-anchor-id="項目反応理論"><span class="header-section-number">17.3.1</span> 項目反応理論</h3>
-<p>すでに <a href="chapter15.html#sec-irt-model" class="quarto-xref"><span>Section 15.3</span></a> で見たように，項目反応理論はまさに正規分布以外のパラメータに数式的構造を持たせたものであった。すなわち，結果変数が0/1のバイナリデータであるから，確率分布としてはベルヌーイ分布を用い，パラメータ<span class="math inline">\(\theta\)</span>は1が出る確率(正答する確率)と考えられるから，この<span class="math inline">\(\theta\)</span>に潜在的な学力を仮定したロジスティックモデルを入れるのであった。</p>
+<p>すでに <a href="chapter15.html#sec-irt-model" class="quarto-xref"><span>Section 15.3</span></a> で見たように，項目反応理論はまさに正規分布以外の分布のパラメータに数式的構造を持たせたものであった。すなわち，結果変数が0/1のバイナリデータであるから，確率分布としてはベルヌーイ分布を用い，パラメータ<span class="math inline">\(p_{ij}\)</span>は1が出る確率(正答する確率)と考えられるから，この<span class="math inline">\(p_{ij}\)</span>に潜在的な学力<span class="math inline">\(\theta_i\)</span>を仮定したロジスティックモデルを入れるのであった。</p>
 <p>この観点で数式を書き表すと，ある項目<span class="math inline">\(j\)</span>に個人<span class="math inline">\(i\)</span>が回答したパターン<span class="math inline">\(Y_{ij}\)</span>は次のように表現できる。</p>
-<p><span class="math display">\[ Y_{ij} \sim Bernoulli(p_{ij})  \]</span> <span class="math display">\[ p_{ij} = \frac{1}{1+\exp(-a_j(\theta_i - b_j))} \]</span></p>
+<p><span class="math display">\[ Y_{ij} \sim \mathrm{Bernoulli}(p_{ij})  \]</span> <span class="math display">\[ p_{ij} = \frac{1}{1+\exp(-a_j(\theta_i - b_j))} \]</span></p>
 <p>これをStanによるモデルで実装してみよう。コードは次のようになる。</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; <span class="co">// data length</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// number of persons</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; M; <span class="co">// number of questions</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Pid;  <span class="co">// personal ID</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Qid;  <span class="co">// question ID</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; resp; <span class="co">// response</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; a;</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">5</span>,<span class="kw">upper</span>=<span class="dv">5</span>&gt; b;</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">real</span> theta;</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">//likelihood</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(l <span class="cf">in</span> <span class="dv">1</span>:L){</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    resp[l] ~ bernoulli_logit(<span class="fl">1.7</span>*a[Qid[l]]*(theta[Pid[l]]-b[Qid[l]]));</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">//prior</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  a ~ lognormal(<span class="dv">0</span>,sqrt(<span class="fl">0.5</span>));</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  b ~ normal(<span class="dv">0</span>,<span class="dv">3</span>);</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  theta ~ normal(<span class="dv">0</span>,<span class="dv">1</span>);</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>ここではデータがLong型の整然データになっていることが前提である。すなわち，一行には受験者ID，項目番号(項目ID)と正答誤答の反応が入った3列のデータである。</p>
-<p>これを受けて<code>data</code>ブロックでは，まずデータ全体の長さ<code>L</code>と，受験者数<code>N</code>，項目数<code>M</code>の値を整数型で受け取り，これらの数字に応じた配列の変数を用意している。受験者のIDは<code>Pid</code>，項目のIDは<code>Qid</code>，反応は<code>resp</code>であり，それぞれ長さ<code>L</code>の配列である。受け取る数値の範囲にも注意してもらいたい。</p>
-<p><code>parameters</code>ブロックでは，項目パラメータの<code>a_j</code>と<code>b_j</code>をサイズ<code>M</code>で，受験者パラメータの<code>theta</code>をサイズ<code>N</code>で用意している。</p>
-<p><code>model</code>ブロックでは<code>bernoulli_logit</code>という関数で表しているが，これはロジスティック関数とベルヌーイ関数を組み合わせたものがStanに最初から用意されているからである。<code>l</code>行目の反応<code>resp[l]</code>に対し，項目パラメータと受験者パラメータを使って数式が組み込まれている。<code>theta[Pid[l]]</code>のように二重の代入になっている。こうすることで<code>l</code>行目の<code>Pid[l]</code>が整数値を返し，<code>l</code>行目の<code>theta_i</code>を表している。事前分布に関して，<code>a_j</code>と<code>b_j</code>それぞれに対数正規分布と正規分布を，<code>theta_i</code>に標準正規分布をおいた。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; <span class="co">// data length</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N; <span class="co">// number of persons</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; M; <span class="co">// number of questions</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Pid;  <span class="co">// personal ID</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; Qid;  <span class="co">// question ID</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[L] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>,<span class="kw">upper</span>=<span class="dv">1</span>&gt; resp; <span class="co">// response</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; a;</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[M] <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">5</span>,<span class="kw">upper</span>=<span class="dv">5</span>&gt; b;</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">real</span> theta;</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">//likelihood</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(l <span class="cf">in</span> <span class="dv">1</span>:L){</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    resp[l] ~ bernoulli_logit(<span class="fl">1.7</span>*a[Qid[l]]*(theta[Pid[l]]-b[Qid[l]]));</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">//prior</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  a ~ lognormal(<span class="dv">0</span>,sqrt(<span class="fl">0.5</span>));</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  b ~ normal(<span class="dv">0</span>,<span class="dv">3</span>);</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  theta ~ normal(<span class="dv">0</span>,<span class="dv">1</span>);</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>ここではデータがLong型の整然データになっていることが前提である。すなわち，一行には受検者ID，項目番号(項目ID)と正答誤答の反応が入った3列のデータである。</p>
+<p>これを受けて<code>data</code>ブロックでは，まずデータ全体の長さ<code>L</code>と，受検者数<code>N</code>，項目数<code>M</code>の値を整数型で受け取り，これらの数字に応じた配列の変数を用意している。受検者のIDは<code>Pid</code>，項目のIDは<code>Qid</code>，反応は<code>resp</code>であり，それぞれ長さ<code>L</code>の配列である。受け取る数値の範囲にも注意してもらいたい。</p>
+<p><code>parameters</code>ブロックでは，項目パラメータの<code>a_j</code>と<code>b_j</code>をサイズ<code>M</code>で，受検者パラメータの<code>theta</code>をサイズ<code>N</code>で用意している。</p>
+<p><code>model</code>ブロックでは<code>bernoulli_logit</code>という関数で表しているが，これはロジスティック関数とベルヌーイ分布を組み合わせたものがStanに最初から用意されているからである。<code>l</code>行目の反応<code>resp[l]</code>に対し，項目パラメータと受検者パラメータを使って数式が組み込まれている。<code>theta[Pid[l]]</code>のように二重の代入になっている。こうすることで<code>l</code>行目の<code>Pid[l]</code>が整数値を返し，<code>l</code>行目の<code>theta_i</code>を表している。事前分布に関して，<code>a_j</code>と<code>b_j</code>それぞれに対数正規分布と正規分布を，<code>theta_i</code>に標準正規分布をおいた。</p>
 <p>実際に推定してみよう。今回も<code>exametrika</code>パッケージの<code>J15S500</code>データセットを使うが，Long型に加工して用いていることに注意してほしい。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika, tidyverse)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> J15S500<span class="sc">$</span>U</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>dat_long <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"irt2pl.stan"</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">NROW</span>(dat_long),</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">M =</span> <span class="dv">15</span>,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="dv">500</span>,</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pid =</span> dat_long<span class="sc">$</span>ID,</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Qid =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(dat_long<span class="sc">$</span>name)),</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">resp =</span> dat_long<span class="sc">$</span>value</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(exametrika, tidyverse)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> J15S500<span class="sc">$</span>U</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>dat_long <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>ID)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"irt2pl.stan"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">NROW</span>(dat_long),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">M =</span> <span class="dv">15</span>,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="dv">500</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pid =</span> dat_long<span class="sc">$</span>ID,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Qid =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(dat_long<span class="sc">$</span>name)),</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">resp =</span> dat_long<span class="sc">$</span>value</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 4 finished in 42.0 seconds.
-Chain 2 finished in 51.2 seconds.
-Chain 1 finished in 56.7 seconds.
-Chain 3 finished in 59.1 seconds.
+Chain 2 finished in 51.9 seconds.
+Chain 4 finished in 55.3 seconds.
+Chain 3 finished in 57.1 seconds.
+Chain 1 finished in 60.3 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 52.3 seconds.
-Total execution time: 59.3 seconds.</code></pre>
+Mean chain execution time: 56.2 seconds.
+Total execution time: 60.5 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_posterior</span>(</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describe_posterior</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary of Posterior Distribution
 
 Parameter | Median |  Mean |   MAP |         95% CI
 ---------------------------------------------------
-a[1]      |   0.40 |  0.41 |  0.41 | [ 0.25,  0.58]
-a[2]      |   0.47 |  0.48 |  0.47 | [ 0.30,  0.66]
+a[1]      |   0.40 |  0.40 |  0.39 | [ 0.24,  0.56]
+a[2]      |   0.47 |  0.47 |  0.46 | [ 0.30,  0.66]
 a[3]      |   0.31 |  0.31 |  0.29 | [ 0.17,  0.46]
-a[4]      |   0.87 |  0.88 |  0.83 | [ 0.61,  1.18]
-a[5]      |   0.39 |  0.39 |  0.39 | [ 0.23,  0.55]
-a[6]      |   0.58 |  0.59 |  0.57 | [ 0.36,  0.84]
-a[7]      |   0.65 |  0.65 |  0.65 | [ 0.45,  0.86]
+a[4]      |   0.87 |  0.88 |  0.86 | [ 0.62,  1.17]
+a[5]      |   0.39 |  0.39 |  0.37 | [ 0.23,  0.55]
+a[6]      |   0.59 |  0.59 |  0.59 | [ 0.38,  0.83]
+a[7]      |   0.65 |  0.65 |  0.66 | [ 0.44,  0.85]
 a[8]      |   0.40 |  0.41 |  0.41 | [ 0.25,  0.56]
-a[9]      |   0.18 |  0.18 |  0.17 | [ 0.09,  0.29]
-a[10]     |   0.27 |  0.27 |  0.26 | [ 0.15,  0.40]
-a[11]     |   0.68 |  0.69 |  0.66 | [ 0.47,  0.92]
-a[12]     |   0.74 |  0.75 |  0.74 | [ 0.50,  0.99]
-a[13]     |   0.51 |  0.52 |  0.49 | [ 0.35,  0.70]
-a[14]     |   0.73 |  0.73 |  0.69 | [ 0.48,  0.96]
-a[15]     |   0.48 |  0.49 |  0.48 | [ 0.32,  0.66]
-b[1]      |  -1.73 | -1.79 | -1.65 | [-2.56, -1.11]
-b[2]      |  -1.56 | -1.61 | -1.50 | [-2.22, -1.09]
-b[3]      |  -1.95 | -2.05 | -1.82 | [-3.08, -1.14]
-b[4]      |  -1.16 | -1.17 | -1.12 | [-1.48, -0.90]
-b[5]      |  -2.33 | -2.41 | -2.20 | [-3.51, -1.56]
-b[6]      |  -2.18 | -2.26 | -2.08 | [-3.07, -1.54]
-b[7]      |  -1.03 | -1.05 | -1.00 | [-1.38, -0.75]
-b[8]      |  -0.57 | -0.59 | -0.56 | [-0.95, -0.23]
-b[9]      |   1.85 |  1.95 |  1.64 | [ 0.86,  3.20]
-b[10]     |  -1.52 | -1.60 | -1.45 | [-2.53, -0.85]
-b[11]     |   1.00 |  1.01 |  0.98 | [ 0.72,  1.35]
-b[12]     |   1.01 |  1.02 |  0.98 | [ 0.75,  1.35]
-b[13]     |  -0.73 | -0.74 | -0.68 | [-1.06, -0.43]
-b[14]     |  -1.22 | -1.23 | -1.20 | [-1.59, -0.89]
-b[15]     |  -1.21 | -1.23 | -1.15 | [-1.71, -0.84]</code></pre>
+a[9]      |   0.18 |  0.18 |  0.17 | [ 0.09,  0.28]
+a[10]     |   0.27 |  0.28 |  0.26 | [ 0.15,  0.40]
+a[11]     |   0.68 |  0.68 |  0.66 | [ 0.47,  0.91]
+a[12]     |   0.73 |  0.74 |  0.73 | [ 0.51,  0.98]
+a[13]     |   0.52 |  0.52 |  0.51 | [ 0.35,  0.70]
+a[14]     |   0.73 |  0.73 |  0.70 | [ 0.53,  0.98]
+a[15]     |   0.48 |  0.49 |  0.47 | [ 0.31,  0.66]
+b[1]      |  -1.74 | -1.79 | -1.69 | [-2.53, -1.14]
+b[2]      |  -1.58 | -1.63 | -1.50 | [-2.26, -1.07]
+b[3]      |  -1.96 | -2.05 | -1.85 | [-3.09, -1.18]
+b[4]      |  -1.16 | -1.17 | -1.16 | [-1.47, -0.89]
+b[5]      |  -2.33 | -2.41 | -2.19 | [-3.41, -1.52]
+b[6]      |  -2.18 | -2.23 | -2.10 | [-2.96, -1.57]
+b[7]      |  -1.03 | -1.05 | -1.02 | [-1.40, -0.75]
+b[8]      |  -0.57 | -0.59 | -0.55 | [-0.97, -0.25]
+b[9]      |   1.85 |  2.00 |  1.67 | [ 0.95,  3.51]
+b[10]     |  -1.52 | -1.58 | -1.34 | [-2.50, -0.84]
+b[11]     |   1.00 |  1.01 |  0.97 | [ 0.71,  1.33]
+b[12]     |   1.01 |  1.02 |  1.00 | [ 0.73,  1.33]
+b[13]     |  -0.72 | -0.74 | -0.70 | [-1.05, -0.43]
+b[14]     |  -1.21 | -1.23 | -1.18 | [-1.57, -0.94]
+b[15]     |  -1.21 | -1.24 | -1.14 | [-1.69, -0.82]</code></pre>
 </div>
 </div>
-<p><code>exametrika</code>やそのほかのIRTモデルでは一般に，数が多くなる受験者パラメータを積分消去することで計算を効率化し，EMアルゴリズムなどで解析的に解く。一方ここで示したMCMCによるベイズ推定は，全てのパラメータが同時に成立しうる可能な空間を探索しながら代表値(MCMCサンプル)を得るため，計算効率は非常に悪く，結果の出力まで少し時間を要する環境もあるだろう。しかしStanのコードを書くことによって，どのような計算がなされているかが確認できるし，データ生成メカニズムがわかれば，様々な加工，工夫もやりやすくなるだろう。</p>
+<p><code>exametrika</code>やそのほかのIRTモデルでは一般に，数が多くなる受検者パラメータを積分消去することで計算を効率化し，EMアルゴリズムなどで解析的に解く。一方ここで示したMCMCによるベイズ推定は，全てのパラメータが同時に成立しうる可能な空間を探索しながら代表値(MCMCサンプル)を得るため，計算効率は非常に悪く，結果の出力まで少し時間を要する環境もあるだろう。しかしStanのコードを書くことによって，どのような計算がなされているかが確認できるし，データ生成メカニズムがわかれば，様々な加工，工夫もやりやすくなるだろう。</p>
 </section>
 <section id="再捕獲法による全体の推論" class="level3" data-number="17.3.2">
 <h3 data-number="17.3.2" class="anchored" data-anchor-id="再捕獲法による全体の推論"><span class="header-section-number">17.3.2</span> 再捕獲法による全体の推論</h3>
@@ -912,48 +983,48 @@ b[15]     |  -1.21 | -1.23 | -1.15 | [-1.71, -0.84]</code></pre>
 <li>ある調査では，大学のイメージを自由記述で回答してもらうことにした。調査結果をまとめると，<code>X</code>件のカテゴリに分類できるようだ。また第二回調査を同様に行うと，今度は<code>N</code>件のカテゴリに分類することができ，第一回調査との重複は<code>K</code>件であった。このとき，この調査を続けて「回答の全体像」を考えるとすると，どれぐらいのカテゴリが得られるだろうか。</li>
 </ul>
 <p>第2の例，池の魚の総数を推定する方法は実際にも行われる調査方法であり，第3の例は質問紙調査における理論的飽和を参考にしたサンプルサイズ設計<span class="citation" data-cites="ToyodaRecapture2013">(<a href="references.html#ref-ToyodaRecapture2013" role="doc-biblioref">豊田 et al. 2013</a>)</span>などに応用可能であることが議論されている。これらの手法は応用シーンが全く異なるものであるが，確率モデルとしては同じで一般に捕獲–再捕獲法と呼ばれている。</p>
-<p>さて，では捕獲–再捕獲問題を確率モデルを確率モデルとして考えよう。ここで用いるのは超幾何分布(Hypergeometric Distribution)である。超幾何分布は有限母集団から，非復元抽出を行う際の確率分布であり，次のように定式化される。</p>
-<p><span class="math display">\[ P(X=k) = \frac{{}_xC_k \times {}_{(t-k)}C_{n-k} }{ {}_tC_n }\]</span></p>
-<p>ここで<code>t</code>は母集団のサイズ，<code>x</code>は最初のサンプルサイズ，<code>n</code>が2回目のサンプルサイズで，<code>k</code>が再捕獲された標本の数である。また，<code>C</code>は組み合わせの数を表す。2回目のサンプル<code>n</code>は，全体<code>t</code>からとりうる組み合わせのうち，1回目のサンプル<code>x</code>から<code>k</code>が得られる組み合わせ，かつ，残りの<code>t-k</code>から印のない<code>n-k</code>を取り出す組み合わせ，から構成されていると言える。</p>
+<p>さて，では捕獲–再捕獲問題を確率モデルとして考えよう。ここで用いるのは超幾何分布(Hypergeometric Distribution)である。超幾何分布は有限母集団から，非復元抽出を行う際の確率分布であり，次のように定式化される。</p>
+<p><span class="math display">\[ P(X=k) = \frac{{}_xC_k \times {}_{(t-x)}C_{n-k} }{ {}_tC_n }\]</span></p>
+<p>ここで<code>t</code>は母集団のサイズ，<code>x</code>は最初のサンプルサイズ，<code>n</code>が2回目のサンプルサイズで，<code>k</code>が再捕獲された標本の数である。また，<code>C</code>は組み合わせの数を表す。2回目のサンプル<code>n</code>は，全体<code>t</code>からとりうる組み合わせのうち，1回目のサンプル<code>x</code>から<code>k</code>が得られる組み合わせ，かつ，残りの<code>t-x</code>から印のない<code>n-k</code>を取り出す組み合わせ，から構成されていると言える。</p>
 <p>確率分布を使って表現すると，次のようになる<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>。</p>
-<p><span class="math display">\[ k \sim Hypergeometric(n, x, t-x) \]</span></p>
+<p><span class="math display">\[ X \sim \mathrm{Hypergeometric}(n, x, t-x) \]</span></p>
 <p>Stanモデルで見てみよう。</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; x;  <span class="co">// size of first sample (captures)</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; n;  <span class="co">// size of second sample</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>, <span class="kw">upper</span> = n&gt; k;  <span class="co">// number of recaptures from n</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = x&gt; maxT;  <span class="co">// maximum population size</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=x&gt; minT;</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  minT = x + n - k;</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[maxT] lp;</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:maxT){ </span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i &lt; minT)</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + negative_infinity();</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + hypergeometric_lpmf(k | n, x, i - x);</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> log_sum_exp(lp);</span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = minT, <span class="kw">upper</span> = maxT&gt; t;</span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">simplex</span>[maxT] tp;</span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  tp = softmax(lp);</span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  t = categorical_rng(tp);</span>
-<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; x;  <span class="co">// size of first sample (captures)</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; n;  <span class="co">// size of second sample</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>, <span class="kw">upper</span> = n&gt; k;  <span class="co">// number of recaptures from n</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = x&gt; maxT;  <span class="co">// maximum population size</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=x&gt; minT;</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  minT = x + n - k;</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[maxT] lp;</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:maxT){ </span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i &lt; minT)</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + negative_infinity();</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>      lp[i] = log(<span class="fl">1.0</span> / maxT) + hypergeometric_lpmf(k | n, x, i - x);</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">target +=</span> log_sum_exp(lp);</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = minT, <span class="kw">upper</span> = maxT&gt; t;</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">simplex</span>[maxT] tp;</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>  tp = softmax(lp);</span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>  t = categorical_rng(tp);</span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>このStanモデルには色々なテクニックが内包されているので，順に確認していこう。</p>
 <section id="事前分布について" class="level4" data-number="17.3.2.1">
 <h4 data-number="17.3.2.1" class="anchored" data-anchor-id="事前分布について"><span class="header-section-number">17.3.2.1</span> 事前分布について</h4>
-<p>データとしては，最初のサンプルサイズ<code>x</code>，2度目のサンプルサイズ<code>n</code>，再捕獲した個体数<code>t</code>と，推定に必要なおおよその最大数<code>maxT</code>を与える。たとえば例1のコーディネートパターンであれば，30もあれば十分だろう。</p>
+<p>データとしては，最初のサンプルサイズ<code>x</code>，2度目のサンプルサイズ<code>n</code>，再捕獲した個体数<code>k</code>と，推定に必要なおおよその最大数<code>maxT</code>を与える。たとえば例1のコーディネートパターンであれば，30もあれば十分だろう。</p>
 <p>事前分布としては，1から<code>maxT</code>のどこにでもありうるのだから，無情報事前分布として一様に<code>1.0/maxT</code>を置くといいだろう。</p>
 </section>
 <section id="target記法について" class="level4" data-number="17.3.2.2">
@@ -969,55 +1040,55 @@ b[15]     |  -1.21 | -1.23 | -1.15 | [-1.71, -0.84]</code></pre>
 <section id="尤度について" class="level4" data-number="17.3.2.3">
 <h4 data-number="17.3.2.3" class="anchored" data-anchor-id="尤度について"><span class="header-section-number">17.3.2.3</span> 尤度について</h4>
 <p>target記法について理解したところで，もう一度コードに目を向けてみよう。</p>
-<p>データの入力後に<code>transformed data</code>ブロックで，<code>minT</code>という値を定義してる。数式から，1度目のサンプルサイズ+2度目のサンプルサイズ-重複(再捕獲)した個体の数であることがわかる。すなわちオリジナルな(重複しない)個体が確認されている数を<code>minT</code>としている。</p>
-<p>続いて<code>paramters</code>ブロックが来るはずだが，ここにそれは存在しない。<code>paramters</code>ブロックに書くのは推定対象のパラメータであるが，今回はパラメータが推定対象ではない。特定の<code>n,x,t</code>の値から，データ<code>k</code>が得られたとするモデルだからである。</p>
-<p><code>transformed paramters</code>ブロックで記述されているものが，実質的なモデルの対数尤度である。まず考えうる<code>1</code>から<code>maxT</code>までのベクトル<code>lp</code>を用意する。このベクトルのうち，少なくとも<code>minT</code>までは考えなくても良い。そこで</p>
+<p>データの入力後に<code>transformed data</code>ブロックで，<code>minT</code>という値を定義している。数式から，1度目のサンプルサイズ+2度目のサンプルサイズ-重複(再捕獲)した個体の数であることがわかる。すなわちオリジナルな(重複しない)個体が確認されている数を<code>minT</code>としている。</p>
+<p>続いて<code>parameters</code>ブロックが来るはずだが，ここにそれは存在しない。<code>parameters</code>ブロックに書くのは推定対象のパラメータであるが，今回はパラメータが推定対象ではない。特定の<code>n,x,t</code>の値から，データ<code>k</code>が得られたとするモデルだからである。</p>
+<p><code>transformed parameters</code>ブロックで記述されているものが，実質的なモデルの対数尤度である。まず考えうる<code>1</code>から<code>maxT</code>までのベクトル<code>lp</code>を用意する。このベクトルのうち，少なくとも<code>minT</code>までは考えなくても良い。そこで</p>
 <ol type="1">
 <li><code>i</code>を<code>1</code>から<code>maxT</code>までのfor文で回しつつ，</li>
 <li><code>i &lt; minT</code>の間は確率ゼロとする。</li>
 </ol>
 <p>この「確率をゼロにする」というのは，対数を取ると<span class="math inline">\(\log(0)=-\infty\)</span>だから，事前分布を加えて</p>
-<p><code>lp[t] = log(1.0 / maxT) + negative_infinity();</code></p>
+<p><code>lp[i] = log(1.0 / maxT) + negative_infinity();</code></p>
 <p>とする(<code>negative_infinity()</code>はStanの<span class="math inline">\(-\infty\)</span>表記)。</p>
 <p>また，</p>
 <ol start="3" type="1">
 <li><code>i &gt;= minT</code> の間は，事前分布(<code>1.0/maxT</code>)と超幾何分布<code>hypergeometric(n, x, i - x)</code>のなかから<code>k</code>という値が観測される尤度</li>
 </ol>
-<p>の組み合わせである。ただし，対数を取るために事前分布に<span class="math inline">\(\log\)</span>をとり，尤度を<code>hypergeometric_lpdf</code>で表して，積を和に変えている。</p>
+<p>の組み合わせである。ただし，対数を取るために事前分布に<span class="math inline">\(\log\)</span>をとり，尤度を<code>hypergeometric_lpmf</code>で表して，積を和に変えている。</p>
 <p>このようにして<code>lp</code>を構成する要素はすでに準備したので，<code>model</code>ブロックではこれらを使うだけで良い。</p>
-<p>ここでもう一工夫必要なのだが，<code>lp[t]</code>には考えるべき<code>t</code>のそれぞれ(ここでは1,2,3,…,30)について，対数事後確率(対数尤度＋対数事前確率)が計算されている。これは対数を取った確率だから，<code>exp</code>関数(指数関数)で事後確率に置き換え，各パターンを足し合わせる(<code>sum</code>)ことで全体の事後確率とし，計算の安定性を保ちつつ尤度を計算するために対数を取って<code>log</code>をする，という作業が必要である。これを一つの関数<code>log_sum_exp</code>が担っている。</p>
+<p>ここでもう一工夫必要なのだが，<code>lp[i]</code>には考えるべき母集団サイズ<code>i</code>のそれぞれ(ここでは1,2,3,…,30)について，対数事後確率(対数尤度+対数事前確率)が計算されている。これは対数を取った確率だから，<code>exp</code>関数(指数関数)で事後確率に置き換え，各パターンを足し合わせる(<code>sum</code>)ことで全体の事後確率とし，計算の安定性を保ちつつ尤度を計算するために対数を取って<code>log</code>をする，という作業が必要である。これを一つの関数<code>log_sum_exp</code>が担っている。</p>
 </section>
 <section id="生成量について" class="level4" data-number="17.3.2.4">
 <h4 data-number="17.3.2.4" class="anchored" data-anchor-id="生成量について"><span class="header-section-number">17.3.2.4</span> 生成量について</h4>
 <p>最後にもうひとつ，<code>generated quantities</code>ブロックについて見ておく。</p>
 <p>このブロックは，MCMCの推定が終わった後の変数を加工し，生成量とも呼ばれる出力を計算する箇所である。 今回はここで，推定される総個体数<code>t</code>を計算している。<code>t</code>は少なくとも<code>minT</code>で多くとも<code>maxT</code>な整数値であるから，型宣言は理解できるだろう。</p>
 <p>続いて，<code>lp</code>を<code>softmax</code>関数に入れて<code>tp</code>を計算する。<code>lp</code>には対数事後確率が入っていたことを思い出そう。また，<code>softmax</code>関数は数学的には次のような操作をしている。</p>
-<p><span class="math display">\[ \mathbb{x} = \frac{\exp(\mathbb{x})}{\sum\exp(\mathbb{x})} \]</span></p>
-<p>ここで<span class="math inline">\(\mathbb{x}\)</span>はベクトルであり，今回はサイズ <code>maxT</code> の<code>simplex</code>型で宣言した。<code>simplex</code>型とは，全ての要素を足し合わせると<code>1.0</code>になるという制約付きベクトルである。総和が1.0なので確率として解釈でき，<code>maxT</code>個のサイズであることから察せられるように，総数<code>t</code>が1,2,3,…,30の各ケースそれぞれでどの程度起こりやすいかを表している。カテゴリカルな分布の確率パラメータのベクトルとして用いられる型である。</p>
-<p>さて，総数<code>t</code>がどういう値をとりやすいかは，対数事後確率に寄るところである。対数事後確率も1,2,3,…,30の各ケースの起こりやすさであるから，指数関数で対数をとり，総和を取ったうちの当該要素の確率，すなっわち各ケースの相対確率に置き直すのが<code>softmax</code>関数の仕事である。</p>
+<p><span class="math display">\[ \mathrm{softmax}(\boldsymbol{x}) = \frac{\exp(\boldsymbol{x})}{\sum_t \exp(x_t)} \]</span></p>
+<p>ここで<span class="math inline">\(\boldsymbol{x}\)</span>はベクトルであり，今回はサイズ <code>maxT</code> の<code>simplex</code>型で宣言した。<code>simplex</code>型とは，全ての要素を足し合わせると<code>1.0</code>になるという制約付きベクトルである。総和が1.0なので確率として解釈でき，<code>maxT</code>個のサイズであることから察せられるように，総数<code>t</code>が1,2,3,…,30の各ケースそれぞれでどの程度起こりやすいかを表している。カテゴリカルな分布の確率パラメータのベクトルとして用いられる型である。</p>
+<p>さて，総数<code>t</code>がどういう値をとりやすいかは，対数事後確率によるところである。対数事後確率も1,2,3,…,30の各ケースの起こりやすさであるから，指数関数で対数を外し，総和を取ったうちの当該要素の確率，すなわち各ケースの相対確率に置き直すのが<code>softmax</code>関数の仕事である。</p>
 <p>ここで計算された<code>tp</code>は確率に置き換えられた，各ケースの出やすさ(確率質量)である。また，<code>categorical</code>はカテゴリカル分布であり，<code>categorical_rng</code>はStanの<code>categorical</code>分布を使った乱数発生関数である。<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
 <p>例えばサイコロの目は1,2,3,4,5,6であり，各<span class="math inline">\(1/6\)</span>の確率で生じるが，カテゴリカル分布では出目<code>x</code>を</p>
-<p><span class="math display">\[ x \sim Categorical(1/6,1/6,1/6,1/6,1/6,1/6) \]</span></p>
+<p><span class="math display">\[ x \sim \mathrm{Categorical}(1/6,1/6,1/6,1/6,1/6,1/6) \]</span></p>
 <p>のように表す。今回は<code>tp</code>で<code>t</code>がどのようになるか，乱数で生成することで，MCMCサンプルの後でどのような出目が出やすいかを取り出すことにしている。</p>
 <p>さぁ，長かったコードの説明もこれで終わり。実際にコンパイルして推定してみよう。 推定の際には<code>parameters</code> ブロックをおいていないことから，<code>fixed_param = TRUE</code>のオプションを入れるのを忘れずに。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"recapture.stan"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">7</span> <span class="co"># 最初の観測</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># 二度目の観測</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="co"># 同じ服だった回数</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>maxT <span class="ot">&lt;-</span> <span class="dv">30</span> <span class="co"># 上限</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x =</span> x, <span class="at">k =</span> k, <span class="at">n =</span> n, <span class="at">maxT =</span> maxT) </span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_param =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"recapture.stan"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">7</span> <span class="co"># 最初の観測</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># 二度目の観測</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="co"># 同じ服だった回数</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>maxT <span class="ot">&lt;-</span> <span class="dv">30</span> <span class="co"># 上限</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x =</span> x, <span class="at">k =</span> k, <span class="at">n =</span> n, <span class="at">maxT =</span> maxT) </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_param =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
@@ -1030,20 +1101,20 @@ All 4 chains finished successfully.
 Mean chain execution time: 0.0 seconds.
 Total execution time: 0.2 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>MAP_value <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>),</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>MAP_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>MAP_value <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>),</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>MAP_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary of Posterior Distribution
 
 Parameter | Median |  Mean | MAP |        95% CI
 ------------------------------------------------
-t         |     10 | 11.44 |   8 | [8.00, 20.00]</code></pre>
+t         |     10 | 11.43 |   8 | [8.00, 20.00]</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>), <span class="at">point_est =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> MAP_value<span class="sc">$</span>MAP, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_areas</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"t"</span>), <span class="at">point_est =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> MAP_value<span class="sc">$</span>MAP, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1066,10 +1137,10 @@ t         |     10 | 11.44 |   8 | [8.00, 20.00]</code></pre>
 <h3 data-number="17.4.1" class="anchored" data-anchor-id="変化点を検出する"><span class="header-section-number">17.4.1</span> 変化点を検出する</h3>
 <p><a href="myWeights.csv">こちらのデータ</a>をみてもらいたい。読み込んでプロットしたのが次の図である。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"myWeights.csv"</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date,<span class="at">y=</span>weight))<span class="sc">+</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"myWeights.csv"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date,<span class="at">y=</span>weight))<span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1080,117 +1151,110 @@ t         |     10 | 11.44 |   8 | [8.00, 20.00]</code></pre>
 </div>
 <p>これは筆者の体重の推移で，2024年の1月1日から同年6月1日までの変化である。 これを見ると明らかにある時期から推移の傾向が変わっているのが見て取れる。おそらく4月の初旬から下降傾向に入ったようだ。 このデータに対してなんらかの生成モデルを考える時，4月までと4月からではメカニズムが異なるようなので，別のモデルが必要ではないだろうか。</p>
 <p>そこで，ある時点を境に異なるメカニズムであることをモデル化してみよう。Stanのコードは次のようになる。</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[L] <span class="dt">real</span> w;</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=L&gt; tau;</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0a;</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0b;</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta1a;</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">upper</span>=<span class="dv">0</span>&gt; beta1b;</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sig;</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:L){</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(i &lt; tau){</span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0a + beta1a * i, sig);</span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0b + beta1b * (i-tau+<span class="dv">1</span>), sig);</span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    tau ~ uniform(<span class="dv">1</span>,L);</span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    beta0a ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    beta0b ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    beta1a ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    beta1b ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>    sig ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>data</code>ブロックはシンプルで，データの長さ<code>L</code>と体重<code>w</code>の値だけをとるようになっている。 <code>parameters</code>ブロックの最初に，<span class="math inline">\(\tau\)</span>というパラメータを用意した。 データの長さ<code>L</code>の範囲内で，時点<code>tau</code>で動きが変わったこと考えるのである。もちろんこの<code>tau</code>がいつなのかはわからない。わからないので，パラメータとして推定するのである(ベイズではわからないことを確率として表現する！)。</p>
-<p><code>model</code>ブロックの尤度には，<code>i</code>から<code>L</code>の間で，<code>i &lt; tau</code>の時と<code>i &gt;= tau</code>の時とで分けて書いている。データ自体の生成は単純な回帰モデルで，<code>i &lt; tau</code>の時は<code>beta0a + beta1a * i</code>で平均が推移する。つまり2024年の<code>i</code>日目から傾き<code>beta1a</code>で変化するというモデルである。次に変化点を超えた<code>i&gt;=tau</code>のときは<code>beta0b + beta1b * (i-tau+1)</code>，すなわち変化点から何日経ったか(<code>i-tau+1</code>)という日数を説明変数に，傾き<code>beta1b</code>で変化する。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span>{</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; L; </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">array</span>[L] <span class="dt">real</span> w;</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span>{</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=L&gt; tau;</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0a;</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta0b;</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span> beta1a;</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">upper</span>=<span class="dv">0</span>&gt; beta1b;</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sig;</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span>{</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">//likelihood</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span>:L){</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(i &lt; tau){</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0a + beta1a * i, sig);</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>            w[i] ~ normal(beta0b + beta1b * (i-tau+<span class="dv">1</span>), sig);</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">//prior</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    tau ~ uniform(<span class="dv">1</span>,L);</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>    beta0a ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>    beta0b ~ normal(<span class="dv">80</span>,<span class="dv">10</span>);</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>    beta1a ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>    beta1b ~ normal(<span class="dv">0</span>,<span class="dv">10</span>);</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>    sig ~ cauchy(<span class="dv">0</span>,<span class="dv">5</span>);</span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>data</code>ブロックはシンプルで，データの長さ<code>L</code>と体重<code>w</code>の値だけをとるようになっている。 <code>parameters</code>ブロックの最初に，<span class="math inline">\(\tau\)</span>というパラメータを用意した。 データの長さ<code>L</code>の範囲内で，時点<code>tau</code>で動きが変わったことを考えるのである。もちろんこの<code>tau</code>がいつなのかはわからない。わからないので，パラメータとして推定するのである(ベイズではわからないことを確率として表現する！)。</p>
+<p><code>model</code>ブロックの尤度には，<code>1</code>から<code>L</code>の間で，<code>i &lt; tau</code>の時と<code>i &gt;= tau</code>の時とで分けて書いている。データ自体の生成は単純な回帰モデルで，<code>i &lt; tau</code>の時は<code>beta0a + beta1a * i</code>で平均が推移する。つまり2024年の<code>i</code>日目から傾き<code>beta1a</code>で変化するというモデルである。次に変化点を超えた<code>i&gt;=tau</code>のときは<code>beta0b + beta1b * (i-tau+1)</code>，すなわち変化点から何日経ったか(<code>i-tau+1</code>)という日数を説明変数に，傾き<code>beta1b</code>で変化する。</p>
 <p>誤差に対してはいずれも同じ<code>sig</code>を置き，事前分布として<code>tau</code>には無情報分布を，<code>beta0a,0b</code>という切片は80kg付近の値を，<code>beta1a,1b</code>には正負どちらの値も取りうるような事前分布を置いた。</p>
 <p>このモデルを次のコードで実行する。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"change_point.stan"</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">nrow</span>(w),</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> w<span class="sc">$</span>weight</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">3000</span>,</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"change_point.stan"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">nrow</span>(w),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> w<span class="sc">$</span>weight</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">3000</span>,</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_sampling =</span> <span class="dv">2000</span>,</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...
 
-Chain 1 finished in 29.6 seconds.
-Chain 3 finished in 29.6 seconds.
-Chain 2 finished in 29.8 seconds.
-Chain 4 finished in 29.9 seconds.
+Chain 1 finished in 23.7 seconds.
+Chain 3 finished in 23.8 seconds.
+Chain 2 finished in 24.2 seconds.
+Chain 4 finished in 24.3 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 29.7 seconds.
-Total execution time: 30.0 seconds.</code></pre>
+Mean chain execution time: 24.0 seconds.
+Total execution time: 24.4 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span><span class="fu">summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 10
   variable    mean  median      sd     mad      q5     q95  rhat ess_bulk
   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-1 lp__     22.9    23.2    1.97    1.87    19.3    25.5     1.01    283. 
-2 tau      87.1    88.3    3.35    1.55    79.4    90.3     1.06     61.2
-3 beta0a   84.5    84.5    0.118   0.112   84.3    84.7     1.11     36.8
-4 beta0b   85.4    85.4    0.322   0.245   85.0    86.1     1.13     27.4
-5 beta1a    0.0179  0.0180 0.00243 0.00237  0.0137  0.0217  1.09     55.0
-6 beta1b   -0.0575 -0.0575 0.00566 0.00595 -0.0667 -0.0484  1.10     32.7
-7 sig       0.509   0.508  0.0325  0.0301   0.456   0.562   1.04     92.8
+1 lp__     23.0    23.2    1.86    1.80    19.5    25.5     1.01     501.
+2 tau      87.3    88.3    3.19    1.62    79.4    90.3     1.01     164.
+3 beta0a   84.5    84.5    0.106   0.103   84.3    84.7     1.01     348.
+4 beta0b   85.5    85.4    0.304   0.240   85.1    86.1     1.02     139.
+5 beta1a    0.0182  0.0182 0.00216 0.00213  0.0147  0.0218  1.01     363.
+6 beta1b   -0.0582 -0.0581 0.00551 0.00569 -0.0672 -0.0491  1.01     232.
+7 sig       0.514   0.512  0.0333  0.0327   0.464   0.572   1.00     509.
 # ℹ 1 more variable: ess_tail &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># echo: false</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>MAPs <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(),</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>分析の結果から，変化が生じたXデーである<code>tau</code>は88.589，つまり89日目であり，それまでは傾き0.018で上昇傾向だったが，それ以後は-0.056で下降傾向に減じたことがわかる。</p>
+<p>分析の結果から，変化が生じたXデーである<code>tau</code>は88.716，つまり89日目であり，それまでは傾き0.019で上昇傾向だったが，それ以後は-0.057で下降傾向に減じたことがわかる。</p>
 <p>データからMAP推定値を取り出して，図とともに確認してみよう。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Xday <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"tau"</span>),</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP <span class="sc">|&gt;</span> <span class="fu">round</span>()</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"変化したのは次の日から"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Xday <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"tau"</span>),</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>)<span class="sc">$</span>MAP <span class="sc">|&gt;</span> <span class="fu">round</span>()</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"変化したのは次の日から"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>変化したのは次の日から</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(w[Xday,])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(w[Xday,])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   date                weight
   &lt;dttm&gt;               &lt;dbl&gt;
 1 2024-04-07 08:21:32   85.5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date,<span class="at">y=</span>weight))<span class="sc">+</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> w<span class="sc">$</span>date[Xday],</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">|&gt;</span>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date,<span class="at">y=</span>weight))<span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> w<span class="sc">$</span>date[Xday],</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1199,20 +1263,20 @@ Total execution time: 30.0 seconds.</code></pre>
 </div>
 </div>
 </div>
-<p>今回はデータの分布を見て，変化点が1点だろうと考えてモデリングを行った。もちろん分布を詳細に観察することで，違うモデルの立て方(変化点が複数あり得る，など)を考えることができる。また，今回は変化点までの体重の推移に単回帰モデルを当てはめたり，変化点前後で体重のブレ(<code>sig</code>)が一定であろう，という仮定も含まれている。このように，モデルの数式をよく見てどのような仮定が含まれているか，それらは妥当であるかといったことを吟味したり，何か気付きがあれば，それが改良の余地になることもあるだろう。</p>
+<p>今回はデータの分布を見て，変化点が1点だろうと考えてモデリングを行った。もちろん分布を詳細に観察することで，違うモデルの立て方(変化点が複数あり得る，など)を考えることができる。また，今回は変化点までの体重の推移に単回帰モデルを当てはめており，また変化点前後で体重のブレ(<code>sig</code>)が一定であろう，という仮定も含まれている。このように，モデルの数式をよく見てどのような仮定が含まれているか，それらは妥当であるかといったことを吟味したり，何か気付きがあれば，それが改良の余地になることもあるだろう。</p>
 <p>変化点検出はデータに語らせることができるという点で重要で，目で見て主観的に「この辺りからおかしい」と断ずるのではなく，(仮定は多く含まれているものの)より客観的な統計モデルを活用する例を示した。実際に，測定値の異常値を検出するとか，状況が変わったことを検出するなどの際に用いることができるし，皮膚電位反応による隠匿情報に対する反応(一般に嘘発見器と呼ばれるもの)を診断するようなシーンにも使えるものである。</p>
 <p>一点注意を促しておくと，今回は回帰モデルを適用したが，正しくは回帰モデルを用いるべきではない。というのも，回帰モデルの前提として全ての観測点が独立であるという仮定があるからである。時系列データは，観測点は前の時点のデータに依存することが多く，誤差間に相関を仮定する必要がある。時系列データに対してはそうした自己相関を仮定した状態空間モデルを適用するべきであった。状態空間モデルもStanで記述することができるが，発展的な内容になるため今回は説明を省略する。興味がある人は <span class="citation" data-cites="Komori2022">小森 (<a href="references.html#ref-Komori2022" role="doc-biblioref">2022</a>)</span> や <span class="citation" data-cites="LOBSST2018">馬場 (<a href="references.html#ref-LOBSST2018" role="doc-biblioref">2018</a>)</span> ，<span class="citation" data-cites="kosugi2022b">小杉 (<a href="references.html#ref-kosugi2022b" role="doc-biblioref">2022</a>)</span> などを参考にされたい。</p>
 </section>
 <section id="異質な群を分けて考察する" class="level3" data-number="17.4.2">
 <h3 data-number="17.4.2" class="anchored" data-anchor-id="異質な群を分けて考察する"><span class="header-section-number">17.4.2</span> 異質な群を分けて考察する</h3>
-<p>続いて，またも<a href="&quot;Baseball.csv&quot;">野球のデータ</a>を使った例をみてみよう。 このデータの中から，2022年度のセリーグのチームを抜き出し，ヒットの本数をグラフにするのが次のコードである。</p>
+<p>続いて，またも<a href="Baseball.csv">野球のデータ</a>を使った例をみてみよう。 このデータの中から，2022年度のセ・リーグのチームを抜き出し，ヒットの本数をグラフにするのが次のコードである。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2020年度"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Giants"</span>,<span class="st">"Tigers"</span>,<span class="st">"Carp"</span>,<span class="st">"Swallows"</span>,<span class="st">"DeNA"</span>,<span class="st">"Dragons"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(position, Hit, team) <span class="sc">|&gt;</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Hit =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Hit),<span class="dv">0</span>,Hit))</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>y <span class="sc">|&gt;</span>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Hit)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2022年度"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Giants"</span>,<span class="st">"Tigers"</span>,<span class="st">"Carp"</span>,<span class="st">"Swallows"</span>,<span class="st">"DeNA"</span>,<span class="st">"Dragons"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(position, Hit, team) <span class="sc">|&gt;</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Hit =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Hit),<span class="dv">0</span>,Hit))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>y <span class="sc">|&gt;</span>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Hit)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1220,118 +1284,118 @@ Total execution time: 30.0 seconds.</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y<span class="sc">$</span>Hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y<span class="sc">$</span>Hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   0.00    0.00    0.00   17.94   14.25  146.00 </code></pre>
+   0.00    0.00    0.00   20.06   18.00  161.00 </code></pre>
 </div>
 </div>
 <p>これを見ると，ほとんどヒットを打たない人がかなりいることがわかる。これは当然で，2022年のセ・リーグは投手も打席に立つからである。投手は投げることが仕事なので，バットを振らないことがほとんどであり，当然安打数は基本的に0なのである<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>。</p>
 <p>このヒストグラムに対してモデリングすることを考える。安打数(Hit)はカウント変数だから，理論的に言えばポアソン分布を当てはめるのがよかろう。しかし上で述べたように，打たない人もいるのだから，「打つ人なのかどうか」を判別してモデルを変えるべきである。もし安打数が0だというデータがあれば，それは「打たない人だから0」なのか，「打つ人なんだけど0」なのか，のどちらかであり，安打数が0でなければ「打つ人」であるはずだ。</p>
 <p>こうした「構造的な0の可能性」を考える混合分布モデルを<strong>ゼロ過剰ポアソン分布</strong>という。今回はこの「ゼロ過剰」のモデルを見ていく。</p>
-<p>その前に，ポアソン分布についてもう一つ。ポアソン分布のパラメータは<span class="math inline">\(\lambda\)</span>だけである。これは平均値パラメータと言われるが，ポアソン分賦の平均値と分散は同じになるという特徴を持つ。そのため，単一のパラメータ<span class="math inline">\(\lambda\)</span>だけでモデルを当てはめると，分散が大きい場合(過分散という)，得てしておかしな推定値になる。幸にして，ポアソン分布の特徴を持ちつつ，平均パラメータと分散パラメータの両方を持つ分布があり，これを負の二項分布という。</p>
-<p>負の二項分布は次のように定義される。</p>
-<p><span class="math display">\[ NegBinomial(n|\alpha,\beta) = \frac{\Gamma(\alpha + n)}{\Gamma(\alpha)\Gamma(n+1)} \left(\frac{\alpha}{\alpha + \beta}\right)^{\alpha} \left(\frac{\beta}{\alpha + \beta}\right)^{n} \]</span></p>
+<p>その前に，ポアソン分布についてもう一つ。ポアソン分布のパラメータは<span class="math inline">\(\lambda\)</span>だけである。これは平均値パラメータと言われるが，ポアソン分布の平均値と分散は同じになるという特徴を持つ。そのため，単一のパラメータ<span class="math inline">\(\lambda\)</span>だけでモデルを当てはめると，分散が大きい場合(過分散という)，得てしておかしな推定値になる。幸いにして，ポアソン分布の特徴を持ちつつ，平均パラメータと分散パラメータの両方を持つ分布があり，これを負の二項分布という。</p>
+<p>負の二項分布は，Stanの<code>neg_binomial</code>では形状パラメータ<span class="math inline">\(\alpha\)</span>と逆尺度パラメータ<span class="math inline">\(\beta\)</span>を用いて次のように定義される。</p>
+<p><span class="math display">\[ \mathrm{NegBinomial}(n\mid\alpha,\beta) = \frac{\Gamma(n + \alpha)}{\Gamma(\alpha)\, n!} \left(\frac{\beta}{1 + \beta}\right)^{\alpha} \left(\frac{1}{1 + \beta}\right)^{n} \]</span></p>
 <p>この定義から導出される平均と分散は次のようになる。</p>
-<p><span class="math display">\[ E[N] = \frac{\alpha \beta}{\alpha} = \beta \]</span> <span class="math display">\[ Var[N] = \beta + \frac{\beta^2}{\alpha} = \beta\left(1 + \frac{\beta}{\alpha}\right) \]</span></p>
+<p><span class="math display">\[ E[n] = \frac{\alpha}{\beta} \]</span> <span class="math display">\[ \mathrm{Var}[n] = \frac{\alpha}{\beta^2}(\beta + 1) \]</span></p>
 <p>ただ，この表現はややこしいし直感的でない。そこでStanでは平均<span class="math inline">\(\mu\)</span>と過分散パラメータ<span class="math inline">\(\phi\)</span>を用いた<code>neg_binomial_2</code>の書式が用意されている。</p>
-<p><span class="math display">\[ NegBinomial2(n|\mu,\phi) = \frac{\Gamma(\phi + n)}{\Gamma(\phi)\Gamma(n+1)} \left(\frac{\phi}{\phi + \mu}\right)^{\phi} \left(\frac{\mu}{\phi + \mu}\right)^{n} \]</span></p>
+<p><span class="math display">\[ \mathrm{NegBinomial2}(n\mid\mu,\phi) = \frac{\Gamma(\phi + n)}{\Gamma(\phi)\Gamma(n+1)} \left(\frac{\phi}{\phi + \mu}\right)^{\phi} \left(\frac{\mu}{\phi + \mu}\right)^{n} \]</span></p>
 <p>この場合の平均と分散は次のようになる。</p>
-<p><span class="math display">\[ E[N] = \mu \]</span> <span class="math display">\[ Var[N] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right) \]</span></p>
-<p><span class="math inline">\(\phi\)</span>が大きいほど分散は平均に近づき、<span class="math inline">\(\phi \to \infty\)</span>でポアソン分布と一致する。</p>
+<p><span class="math display">\[ E[n] = \mu \]</span> <span class="math display">\[ \mathrm{Var}[n] = \mu + \frac{\mu^2}{\phi} = \mu\left(1 + \frac{\mu}{\phi}\right) \]</span></p>
+<p><span class="math inline">\(\phi\)</span>が大きいほど分散は平均に近づき，<span class="math inline">\(\phi \to \infty\)</span>でポアソン分布と一致する。</p>
 <p>さて今回はゼロ過剰な負の二項分布モデルでアプローチしよう。Stanのコードは次のようになる。</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;           <span class="co">// データ数</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; y;  <span class="co">// 観測値</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; theta;</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; mu;              <span class="co">// 負の二項分布の平均</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; phi;             <span class="co">// 負の二項分布の過分散パラメータ</span></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 事前分布</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  theta ~ beta(<span class="dv">1</span>, <span class="dv">1</span>);</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  mu ~ gamma(<span class="dv">5</span>, <span class="fl">0.1</span>);</span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  phi ~ gamma(<span class="dv">2</span>, <span class="fl">0.1</span>);</span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 尤度関数 (0過剰負の二項分布)</span></span>
-<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
-<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (y[i] == <span class="dv">0</span>) {</span>
-<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log_mix(theta,</span>
-<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">0</span>,</span>
-<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>                        neg_binomial_2_lpmf(<span class="dv">0</span> | mu, phi));</span>
-<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log(<span class="dv">1</span> - theta) + neg_binomial_2_lpmf(y[i] | mu, phi);</span>
-<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span> y_pred;     <span class="co">// 事後予測分布</span></span>
-<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
-<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 事後予測分布の生成</span></span>
-<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (bernoulli_rng(theta) == <span class="dv">1</span>) {</span>
-<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = <span class="dv">0</span>;  <span class="co">// 構造的ゼロ</span></span>
-<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = neg_binomial_2_rng(mu, phi);  <span class="co">// 負の二項分布から生成</span></span>
-<span id="cb48-39"><a href="#cb48-39" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb48-40"><a href="#cb48-40" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb48-41"><a href="#cb48-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;           <span class="co">// データ数</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; y;  <span class="co">// 観測値</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; theta;</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; mu;              <span class="co">// 負の二項分布の平均</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; phi;             <span class="co">// 負の二項分布の過分散パラメータ</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 事前分布</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  theta ~ beta(<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  mu ~ gamma(<span class="dv">5</span>, <span class="fl">0.1</span>);</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>  phi ~ gamma(<span class="dv">2</span>, <span class="fl">0.1</span>);</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 尤度関数 (0過剰負の二項分布)</span></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (y[i] == <span class="dv">0</span>) {</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log_mix(theta,</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">0</span>,</span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>                        neg_binomial_2_lpmf(<span class="dv">0</span> | mu, phi));</span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>      <span class="kw">target +=</span> log(<span class="dv">1</span> - theta) + neg_binomial_2_lpmf(y[i] | mu, phi);</span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span> y_pred;     <span class="co">// 事後予測分布</span></span>
+<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 事後予測分布の生成</span></span>
+<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (bernoulli_rng(theta) == <span class="dv">1</span>) {</span>
+<span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = <span class="dv">0</span>;  <span class="co">// 構造的ゼロ</span></span>
+<span id="cb53-37"><a href="#cb53-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb53-38"><a href="#cb53-38" aria-hidden="true" tabindex="-1"></a>      y_pred[i] = neg_binomial_2_rng(mu, phi);  <span class="co">// 負の二項分布から生成</span></span>
+<span id="cb53-39"><a href="#cb53-39" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb53-40"><a href="#cb53-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb53-41"><a href="#cb53-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>parameters</code>ブロックには，「打つ人なのかどうか」を判断するパラメータ<code>theta</code>を用意した。これは0から1の間に入る実数だからベルヌーイ分布のイメージで，コイントスをして表が出れば「打たない人」，裏が出れば「打つ人だけど0だった人」という分岐をすると考える。また負の二項分布のパラメータとして，平均<code>mu</code>と分散<code>phi</code>についてのパラメータを置いた。</p>
 <p><code>model</code>ブロックをみると，この分岐がよくわかるだろう。もしデータ<code>y_i</code>が0なら，<code>log_mix</code>関数を通る。Stanの<code>log_mix</code>関数は混合率とそれぞれのケースの尤度を記載する。 <code>log_mix(theta,0,neg_binomial_2_lpmf(0 | mu, phi)</code>の式が表すのは，</p>
-<p><span class="math display">\[p(y_i|\theta,\mu,\phi) =
+<p><span class="math display">\[P(y_i = 0 \mid \theta,\mu,\phi) =
   \theta +
-  (1-\theta)\cdot NegBinomial2(0|\mu,\phi)
+  (1-\theta)\cdot \mathrm{NegBinomial2}(0 \mid \mu,\phi)
 \]</span></p>
 <p>であり，確率<span class="math inline">\(\theta\)</span>で0が出ている<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a>か，<span class="math inline">\(1-\theta\)</span>で負の二項分布から0が出ている確率か，を表している。</p>
 <p>もちろん<code>y_i &gt; 0</code>の場合は「打つ人」であるから，<code>1-theta</code>の確率で負の二項分布から出るコースになる。両者ともtarget記法で，事後対数尤度に直接加えていることを確認しておこう。</p>
 <p>また今回は，生成量としてこのモデルから生み出されるデータを生成させてみた。メカニズムは同じで，<code>theta</code>をベルヌーイ分布にいれて<code>1</code>が出たら「打たない人」だから0だし，そうでなければ負の二項分布からある値が生成されるだろう，という形である。このように，モデルが生み出す予測データのことを<strong>事後予測分布</strong>といい，これを視認することで「モデルから今回と同じようなデータが生成されるか」を確認することができる。</p>
 <p>これを次のRコードで実行する。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"zero_inflated_negbinom.stan"</span>)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">length</span>(y<span class="sc">$</span>Hit),</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> y<span class="sc">$</span>Hit</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">"zero_inflated_negbinom.stan"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>dataSet <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">length</span>(y<span class="sc">$</span>Hit),</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> y<span class="sc">$</span>Hit</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> model<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataSet,</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel_chains =</span> <span class="dv">4</span>,</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">save_cmdstan_config =</span> <span class="cn">TRUE</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running MCMC with 4 parallel chains...</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Chain 1 finished in 0.6 seconds.
-Chain 2 finished in 0.6 seconds.
-Chain 3 finished in 0.6 seconds.
+<pre><code>Chain 1 finished in 0.4 seconds.
+Chain 2 finished in 0.5 seconds.
+Chain 3 finished in 0.5 seconds.
 Chain 4 finished in 0.5 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 0.6 seconds.
-Total execution time: 0.7 seconds.</code></pre>
+Mean chain execution time: 0.5 seconds.
+Total execution time: 0.6 seconds.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"theta"</span>,<span class="st">"mu"</span>,<span class="st">"phi"</span>)),</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(fit<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">"theta"</span>,<span class="st">"mu"</span>,<span class="st">"phi"</span>)),</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"MAP"</span>), <span class="at">ci =</span> <span class="fl">0.95</span>,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_method =</span> <span class="st">"hdi"</span>, <span class="at">test =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary of Posterior Distribution
 
 Parameter | Median |  Mean |   MAP |         95% CI
 ---------------------------------------------------
-theta     |   0.45 |  0.44 |  0.45 | [ 0.35,  0.52]
-mu        |  33.26 | 33.50 | 32.37 | [25.66, 41.85]
-phi       |   0.43 |  0.43 |  0.42 | [ 0.27,  0.59]</code></pre>
+theta     |   0.45 |  0.45 |  0.45 | [ 0.36,  0.52]
+mu        |  37.12 | 37.36 | 36.85 | [28.59, 45.56]
+phi       |   0.46 |  0.47 |  0.45 | [ 0.32,  0.62]</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"y_pred"</span>, <span class="at">format =</span> <span class="st">"matrix"</span>)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(y<span class="sc">$</span>Hit, y_pred[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="st">"y_pred"</span>, <span class="at">format =</span> <span class="st">"matrix"</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>bayesplot<span class="sc">::</span><span class="fu">ppc_dens_overlay</span>(y<span class="sc">$</span>Hit, y_pred[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1341,7 +1405,7 @@ phi       |   0.43 |  0.43 |  0.42 | [ 0.27,  0.59]</code></pre>
 </div>
 </div>
 <p>出力結果から，混合率<code>theta</code>や平均，分散の値が見て取れるだろう。 加えて事後予測分布を見てみよう。<code>bayesplot</code>パッケージには事後予測分布に関する関数が複数用意されており，モデルが生み出すデータと実際のデータを重ねて描画してくれる。ここでは<code>ppc_dens_overlay</code>(posterior predictive distributionの密度を重ね書きする関数)を使って，最初の50個のデータを重ね書きしてみた。実際のデータとモデルの予測値がしっかり重なっており，うまく適合していることがわかるだろう。</p>
-<p>今回は「打つ人」と「打たない人」をデータから識別しながらモデルを適合するというモデルをみた。このモデルは例えば，「お店に初めて来る人とリピーターあるいは常連」で売上が異なるのではないかとか，例えば質問紙調査などで中心の回答(「どちらともいえない」など)を選びがちな群とそうでない群を分けるとか，健常者群と臨床群との違いを反応から見つけてモデルを変える，など色々な研究的応用も可能である。</p>
+<p>今回は「打つ人」と「打たない人」をデータから識別しながら当てはめるモデルをみた。このモデルは例えば，「お店に初めて来る人とリピーターあるいは常連」で売上が異なるのではないかとか，例えば質問紙調査などで中心の回答(「どちらともいえない」など)を選びがちな群とそうでない群を分けるとか，健常者群と臨床群との違いを反応から見つけてモデルを変える，など色々な研究的応用も可能である。</p>
 <p><span class="citation" data-cites="Lee201709">リー and ワゲンメーカーズ (<a href="references.html#ref-Lee201709" role="doc-biblioref">[2013] 2017</a>)</span> もいうように，<strong>ベイズモデルの限界はユーザの想像力だけ</strong>である。皆さんも色々なデータ生成メカニズムを想像し，面白いモデルを創造してもらいたい。</p>
 
 
@@ -1396,7 +1460,7 @@ Makowski, Dominique, Mattan S. Ben-Shachar, and Daniel Lüdecke. 2019. <span>“
 <ol>
 <li id="fn1"><p>エディタがその言語に対応していたら，おかしな記述に下線が引かれるなど注意を促してくる機能もある。またRStudioでStan言語を書いていると，コンパイルの前に文法のチェックをする機能もある。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>とはいえ，コードに原因がない場合もある。それはStanを導入する際のシステム的なエラーであり，書かれた内容ではなく動かす環境全体の問題である。解決策としては，表示されるエラーを解読して問題を解決するか，環境を再構築する(Stanを再インストールする，最新バージョンに入れ替える等)必要がある。この場合も，生成AIが助力してくれるだろう。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>詳しくは<span class="citation" data-cites="Hamada201912">(<a href="references.html#ref-Hamada201912" role="doc-biblioref">浜田 et al. 2019</a>)</span>を参照してほしい<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>詳しくは<span class="citation" data-cites="Hamada201912">(<a href="references.html#ref-Hamada201912" role="doc-biblioref">浜田 et al. 2019</a>)</span>を参照してほしい。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>正規分布の幅のパラメータは，テキストによっては分散<span class="math inline">\(\sigma^2\)</span>で記載されていることが多いが，ここでは標準偏差<span class="math inline">\(\sigma\)</span>で記述する。Stanでは標準偏差で記述するようになっているので，それに合わせたいからである。標準偏差を二乗したものが分散であるから，意味するところは本質的に変わりがない。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>このカバーストーリーとモデルは <span class="citation" data-cites="Lee201709">リー and ワゲンメーカーズ (<a href="references.html#ref-Lee201709" role="doc-biblioref">[2013] 2017</a>)</span> の「七人の科学者」P.48–49を参考に作ったものである。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>たとえば <span class="citation" data-cites="kinosada2018">紀ノ定 (<a href="references.html#ref-kinosada2018" role="doc-biblioref">2018</a>)</span> が参考になる。<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1405,8 +1469,8 @@ Makowski, Dominique, Mattan S. Ben-Shachar, and Daniel Lüdecke. 2019. <span>“
 <li id="fn9"><p>これは各ケースが独立に同じ分布(独立同分布，independent and identically distributed,i.i.d.)から得られているという仮定が成り立つときになされる計算である。サイコロの目が2回連続で1が出る場合などは，<span class="math inline">\(1/6 \times 1/6\)</span>と計算するが，これは<span class="math inline">\(1/6\)</span>の確率が独立しているから掛け合わせよう，ということに他ならない。<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn10"><p>ベイズの公式にある右辺の分母，すなわち周辺尤度<span class="math inline">\(P(D)\)</span>は，結果を確率分布にするための定数であり，事後分布の形状を算出するのには不要な要素である。Sampling記法はこの計算をしないことで高速化している。しかしベイズファクターなど周辺尤度をつかう必要がある時は，この計算をカットすることができないため，target記法が必要になる。<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn11"><p>Stanはこのように確率分布の後ろに<code>_</code>をつけることで同じ確率分布の別の側面を表す。Rで正規分布を<code>norm</code>と表し，確率密度を<code>dnorm</code>，累積確率を<code>pnorm</code>，累積確率の逆関数を<code>qnorm</code>，正規乱数を<code>rnorm</code>としているように，Stanでは<code>normal</code>の対数確率密度を<code>normal_lpdf</code>，正規乱数を<code>normal_rng</code>とする。カテゴリカル分布の場合は，その対数確率質量を<code>categorical_lpmf</code>(log-probability mass function)とし，カテゴリカル乱数を<code>categorical_rng</code>としているのである。<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn12"><p>野球に詳しくない人のためにコメントしておくと，まず日本のプロ野球は129段あるが，セントラルリーグ(セ・リーグ)とパシフィックリーグ(パ・リーグ)に6チームずつ分かれて普段のリーグ戦を行っている。両リーグの違いとして，パ・リーグでは指名打者制を取っており，投手の打順のところに別の選手が打者として入るため，投手は打席に立たない。セ・リーグでも2027年のシーズンから指名打者制を取ることが決まった。野球は9人でやるものだが，投手は打ったり走ったりして体力を使わないようにするため，打席に立っても仕事をしないものなのである。そう，大谷翔平選手が異常なのだ。<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn13"><p><code>log_mix</code>の第一引数は混合率であり，第2・第3引数には対数確率密度を記述する。第2引数の<code>0</code>は対数確率密度なので，<code>exp(0)=1</code>，すなわち100%の確率であることを意味する。第3引数は<code>neg_binomial_2_lpmf</code>であり，<code>lpmf</code>とあることから，これは負の二項分布(第二形態)の対数確率密度であることがわかる。<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>野球に詳しくない人のためにコメントしておくと，まず日本のプロ野球は12球団あるが，セントラルリーグ(セ・リーグ)とパシフィックリーグ(パ・リーグ)に6チームずつ分かれて普段のリーグ戦を行っている。両リーグの違いとして，パ・リーグでは指名打者制を取っており，投手の打順のところに別の選手が打者として入るため，投手は打席に立たない。セ・リーグでも2027年のシーズンから指名打者制を取ることが決まった。野球は9人でやるものだが，投手は打ったり走ったりして体力を使わないようにするため，打席に立っても仕事をしないものなのである。そう，大谷翔平選手が異常なのだ。<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p><code>log_mix</code>の第一引数は混合率であり，第2・第3引数には対数確率質量を記述する。第2引数の<code>0</code>は対数確率質量なので，<code>exp(0)=1</code>，すなわち100%の確率であることを意味する。第3引数は<code>neg_binomial_2_lpmf</code>であり，<code>lpmf</code>とあることから，これは負の二項分布(第二形態)の対数確率質量であることがわかる。<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

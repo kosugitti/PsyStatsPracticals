@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -98,7 +98,7 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -636,7 +636,7 @@ Chain 4 finished in 0.0 seconds.
 
 All 4 chains finished successfully.
 Mean chain execution time: 0.0 seconds.
-Total execution time: 0.5 seconds.</code></pre>
+Total execution time: 0.6 seconds.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>要求されたパッケージ rstan をロード中です</code></pre>
@@ -656,20 +656,20 @@ Formula: y ~ x
 
 Regression Coefficients:
           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept     2.02      0.04     1.93     2.11 1.00     4187     2968
-x             3.00      0.01     2.99     3.02 1.00     4547     2980
+Intercept     2.02      0.04     1.93     2.11 1.00     4044     3315
+x             3.00      0.01     2.99     3.02 1.00     4510     3365
 
 Further Distributional Parameters:
       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sigma     1.01      0.03     0.95     1.07 1.00     3106     2736
+sigma     1.01      0.03     0.95     1.07 1.00     3632     2562
 
 Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
 and Tail_ESS are effective sample size measures, and Rhat is the potential
 scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 </div>
-<p>Look first at <em>Regression Coefficients</em> and check that the recovery worked. The point estimates <code>Estimate</code> show 2.0206785 and 3.0021181 — correctly recovered. There is a standard error (SE) and then <code>l-95% CI</code> and <code>u-95% CI</code>, the lower and upper bounds of an interval.</p>
-<p>Bayesian statistics expresses unknowns as probability distributions. The unknowns here are the regression coefficients, so the intercept <span class="math inline">\(\beta_0\)</span> and slope <span class="math inline">\(\beta_1\)</span> are themselves random variables whose posterior distributions are the result. The interval shown is therefore the 95% interval of the posterior: <span class="math inline">\(\beta_0\)</span> lies between 1.9330752 and 2.1095861.</p>
+<p>Look first at <em>Regression Coefficients</em> and check that the recovery worked. The point estimates <code>Estimate</code> show 2.0213009 and 3.0022194 — correctly recovered. There is a standard error (SE) and then <code>l-95% CI</code> and <code>u-95% CI</code>, the lower and upper bounds of an interval.</p>
+<p>Bayesian statistics expresses unknowns as probability distributions. The unknowns here are the regression coefficients, so the intercept <span class="math inline">\(\beta_0\)</span> and slope <span class="math inline">\(\beta_1\)</span> are themselves random variables whose posterior distributions are the result. The interval shown is therefore the 95% interval of the posterior: <span class="math inline">\(\beta_0\)</span> lies between 1.9332124 and 2.1097326.</p>
 <p>Where maximum likelihood produced a point estimate, Bayesian estimation produces a distribution, and the printed estimate is a summary of that distribution — typically the mean, mode, or median. The posterior mean is the <strong>EAP</strong> (expectation a posteriori) estimate; the posterior median is the <strong>MED</strong> (median a posteriori); and the peak of the distribution is the <strong>MAP</strong> (maximum a posteriori). The posterior here is not given as a closed-form function but is reconstructed from sampled draws, so the MAP is found either by (a) inspecting a histogram and taking the modal bin’s center, or (b) fitting a smooth function to the histogram and reading off its peak. Package functions handle the computation. The key point is that the summary statistic should be chosen with the posterior’s shape in mind: for a symmetric (e.g., normal) posterior, mean, median, and mode coincide; if they differ, the posterior is skewed and the median or MAP may be preferable. Always inspect the posterior histogram.</p>
 </section>
 <section id="sec-mcmc-evaluation" class="level3" data-number="12.4.2">
@@ -708,12 +708,12 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  b_Intercept      b_x     sigma Intercept    lprior      lp__ .chain
-1    2.043952 3.008112 0.9987509  1.760208 -7.430641 -719.4657      1
-2    1.977235 2.997184 0.9795715  1.694522 -7.430310 -720.1073      1
-3    2.009560 3.004681 1.0159795  1.726140 -7.430547 -719.1872      1
-4    2.052064 3.008638 1.0013805  1.768271 -7.430683 -719.6048      1
-5    2.051816 2.993277 1.0075065  1.769471 -7.430706 -719.9127      1
-6    1.983225 3.012142 1.0038503  1.699101 -7.430399 -720.2288      1
+1    2.045937 3.010126 1.0188082  1.762003 -7.430708 -719.7529      1
+2    2.027499 3.000161 1.0081641  1.744505 -7.430601 -719.0903      1
+3    2.027499 3.000161 1.0081641  1.744505 -7.430601 -719.0903      1
+4    1.953243 3.001970 1.0139517  1.670078 -7.430311 -720.2282      1
+5    2.090870 2.999214 0.9675091  1.807966 -7.430758 -721.1541      1
+6    2.003814 2.997996 1.0167250  1.721024 -7.430528 -719.3219      1
   .iteration .draw
 1          1     1
 2          2     2
@@ -754,9 +754,9 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <pre><code># A tibble: 3 × 7
   name          EAP   MED   MAP      SD   L95   U95
   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 b_Intercept  2.02  2.02  2.02 0.0446  1.93   2.11
-2 b_x          3.00  3.00  3.00 0.00784 2.99   3.02
-3 sigma        1.01  1.01  1.00 0.0314  0.949  1.07</code></pre>
+1 b_Intercept  2.02  2.02  2.03 0.0446  1.93   2.11
+2 b_x          3.00  3.00  3.00 0.00783 2.99   3.02
+3 sigma        1.01  1.01  1.00 0.0324  0.946  1.07</code></pre>
 </div>
 </div>
 <p>We have walked through the place of Bayesian statistics and the practice of MCMC-based estimation via a package. <strong>brms</strong> is powerful for linear models and their extensions and is, in practice, the workhorse. For non-linear models you will often write Stan code yourself. Keep that wider statistical-modeling world in view — it is not bounded by the linear-model framework.</p>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -79,7 +79,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -418,7 +418,7 @@ window.Quarto = {
 </header>
 
 
-<p>多変量解析の章(14章，15章)では，因子分析，主成分分析，多次元尺度構成法，クラスター分析などさまざまな手法を紹介した。これらの手法に共通する数学的基盤が<strong>線型代数</strong>――ベクトルや行列の演算体系――である。統計パッケージが瞬時に結果を出してくれる時代ではあるが，その仕組みを知らなければ結果の意味を正しく理解できないし，出力の妥当性を判断することもできない。</p>
+<p>多変量解析の章(15章，16章)では，因子分析，主成分分析，多次元尺度構成法，クラスター分析などさまざまな手法を紹介する。これらの手法に共通する数学的基盤が<strong>線型代数</strong>――ベクトルや行列の演算体系――である。統計パッケージが瞬時に結果を出してくれる時代ではあるが，その仕組みを知らなければ結果の意味を正しく理解できないし，出力の妥当性を判断することもできない。</p>
 <p>行列を使う最大の利点は，<strong>多くの数字のセットを簡潔な記号で一般的に表現できること</strong>にある。心理学のデータは「<span class="math inline">\(n\)</span>人の回答者 <span class="math inline">\(\times\)</span> <span class="math inline">\(m\)</span>個の変数」という長方形の構造をしているが，これはまさに行列そのものである。行列の言葉で記述すると，平均や分散の計算も，回帰分析の推定も，因子分析の原理も，統一的な枠組みで表現できる。</p>
 <p>この章では，行列の基本的な計算規則とRでの操作方法を学ぶ。</p>
 <div class="cell">
@@ -440,19 +440,19 @@ window.Quarto = {
 <p><span class="math inline">\(\boldsymbol{a}\)</span>はサイズ<span class="math inline">\(1 \times 3\)</span>の行ベクトル，<span class="math inline">\(\boldsymbol{b}\)</span>はサイズ<span class="math inline">\(3 \times 1\)</span>の列ベクトルである。行列やベクトルは慣例として太字(<span class="math inline">\(\boldsymbol{A}\)</span>, <span class="math inline">\(\boldsymbol{x}\)</span>)で書く。</p>
 <p>Rのベクトルには行・列の区別がないが，<code>matrix()</code>で明示できる。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rのベクトル（行・列の区別なし）</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rのベクトル(行・列の区別なし)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>a</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 3 5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 行ベクトル（1×3の行列として）</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 行ベクトル(1×3の行列として)</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(a, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2] [,3]
 [1,]    1    3    5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 列ベクトル（3×1の行列として）</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 列ベクトル(3×1の行列として)</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(a, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1]
@@ -471,7 +471,7 @@ window.Quarto = {
 <p>これは<span class="math inline">\(n\)</span>行<span class="math inline">\(m\)</span>列の行列で，サイズを<span class="math inline">\(n \times m\)</span>と表す。成分<span class="math inline">\(a_{ij}\)</span>の添え字は，最初が行番号，次が列番号である。心理学のデータ行列では，行が回答者(ケース)，列が変数(項目)に対応するのが一般的である。</p>
 <p>Rでは<code>matrix()</code>関数で行列を作る。デフォルトでは<strong>列優先</strong>(column-major order)で要素が埋められる。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 列優先（デフォルト）: 1列目→2列目の順に埋まる</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 列優先(デフォルト): 1列目→2列目の順に埋まる</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>A</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -494,11 +494,11 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">1</span>, ]    <span class="co"># 1行目全体（ベクトル）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">1</span>, ]    <span class="co"># 1行目全体(ベクトル)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 3 5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>A[, <span class="dv">2</span>]    <span class="co"># 2列目全体（ベクトル）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>A[, <span class="dv">2</span>]    <span class="co"># 2列目全体(ベクトル)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3 4</code></pre>
 </div>
@@ -598,14 +598,14 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 行列積（%*%）</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 行列積(%*%)</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>A <span class="sc">%*%</span> b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1]
 [1,]    4
 [2,]   10</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 要素ごとの積（*）…行列積とはまったく異なる</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 要素ごとの積(*)…行列積とはまったく異なる</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>A <span class="sc">*</span> b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2]
@@ -642,10 +642,10 @@ window.Quarto = {
 </section>
 <section id="逆行列" class="level3" data-number="13.3.5">
 <h3 data-number="13.3.5" class="anchored" data-anchor-id="逆行列"><span class="header-section-number">13.3.5</span> 逆行列</h3>
-<p><strong>逆行列</strong>は，行列における「割り算」のような存在である。ある正方行列<span class="math inline">\(\boldsymbol{A}\)</span>に対して，<span class="math inline">\(\boldsymbol{A}\boldsymbol{A}^{-1} = \boldsymbol{I}\)</span>（単位行列）となる行列<span class="math inline">\(\boldsymbol{A}^{-1}\)</span>を逆行列と呼ぶ。スカラーでいえば「逆数をかけると1になる」のと同じ考え方である。</p>
+<p><strong>逆行列</strong>は，行列における「割り算」のような存在である。ある正方行列<span class="math inline">\(\boldsymbol{A}\)</span>に対して，<span class="math inline">\(\boldsymbol{A}\boldsymbol{A}^{-1} = \boldsymbol{I}\)</span>(単位行列)となる行列<span class="math inline">\(\boldsymbol{A}^{-1}\)</span>を逆行列と呼ぶ。スカラーでいえば「逆数をかけると1になる」のと同じ考え方である。</p>
 <p><span class="math inline">\(2 \times 2\)</span>行列の場合，逆行列は次の公式で求められる。</p>
 <p><span class="math display">\[
-\boldsymbol{A} = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} のとき，\quad
+\boldsymbol{A} = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} \text{のとき，}\quad
 \boldsymbol{A}^{-1} = \frac{1}{ad - bc}\begin{pmatrix} d &amp; -b \\ -c &amp; a \end{pmatrix}
 \]</span></p>
 <p>分母の<span class="math inline">\(ad - bc\)</span>は<strong>行列式</strong>と呼ばれ，これが0のとき逆行列は存在しない。Rでは<code>solve()</code>で計算する。</p>
@@ -664,7 +664,7 @@ window.Quarto = {
 [1,]    3   -1
 [2,]   -5    2</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AA^{-1} = I の確認（丸め誤差が出るので round する）</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AA^{-1} = I の確認(丸め誤差が出るので round する)</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(A <span class="sc">%*%</span> <span class="fu">solve</span>(A), <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2]
@@ -729,7 +729,7 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 平均偏差行列</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> X <span class="sc">-</span> one <span class="sc">%*%</span> <span class="fu">t</span>(m)</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 分散共分散行列（nで割る = 標本分散）</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 分散共分散行列(nで割る = 標本分散)</span></span>
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">t</span>(V) <span class="sc">%*%</span> V <span class="sc">/</span> n</span>
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 標準偏差の対角行列</span></span>
@@ -789,16 +789,16 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 </section>
 <section id="固有値と固有ベクトル" class="level2" data-number="13.6">
 <h2 data-number="13.6" class="anchored" data-anchor-id="固有値と固有ベクトル"><span class="header-section-number">13.6</span> 固有値と固有ベクトル</h2>
-<p>正方行列<span class="math inline">\(\boldsymbol{A}\)</span>に対して，次の関係を満たすスカラー<span class="math inline">\(\lambda\)</span>とベクトル<span class="math inline">\(\boldsymbol{x}\)</span>を，それぞれ<strong>固有値</strong>(eigenvalue)と<strong>固有ベクトル</strong>(eigenvector)と呼ぶ。</p>
+<p>正方行列<span class="math inline">\(\boldsymbol{A}\)</span>に対して，次の関係を満たすスカラー<span class="math inline">\(\lambda\)</span>とベクトル<span class="math inline">\(\boldsymbol{u}\)</span>を，それぞれ<strong>固有値</strong>(eigenvalue)と<strong>固有ベクトル</strong>(eigenvector)と呼ぶ。</p>
 <p><span class="math display">\[
-\boldsymbol{Ax} = \lambda \boldsymbol{x}
+\boldsymbol{Au} = \lambda \boldsymbol{u}
 \]</span></p>
 <p>左辺は「行列をかける」操作だが，右辺は「スカラーをかける」だけ。つまり，行列をかけても方向が変わらず，伸び縮みだけするような特別なベクトルがあるということである。<span class="math inline">\(\lambda\)</span>がその伸び率を表す。</p>
 <p>具体例で確認しよう。</p>
 <p><span class="math display">\[
 \begin{pmatrix} 1 &amp; 6 \\ 2 &amp; 5 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 7 \\ 7 \end{pmatrix} = 7 \begin{pmatrix} 1 \\ 1 \end{pmatrix}
 \]</span></p>
-<p>確かに<span class="math inline">\(\lambda = 7\)</span>，<span class="math inline">\(\boldsymbol{x} = (1, 1)'\)</span>で成り立っている。</p>
+<p>確かに<span class="math inline">\(\lambda = 7\)</span>，<span class="math inline">\(\boldsymbol{u} = (1, 1)'\)</span>で成り立っている。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">5</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>eig <span class="ot">&lt;-</span> <span class="fu">eigen</span>(A)</span>
@@ -806,7 +806,7 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  7 -1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>eig<span class="sc">$</span>vectors   <span class="co"># 固有ベクトル（各列が各固有値に対応）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>eig<span class="sc">$</span>vectors   <span class="co"># 固有ベクトル(各列が各固有値に対応)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           [,1]       [,2]
 [1,] -0.7071068 -0.9486833
@@ -834,7 +834,7 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 </section>
 <section id="スペクトル分解" class="level3" data-number="13.6.2">
 <h3 data-number="13.6.2" class="anchored" data-anchor-id="スペクトル分解"><span class="header-section-number">13.6.2</span> スペクトル分解</h3>
-<p>対称行列<span class="math inline">\(\boldsymbol{A}\)</span>は，固有値を対角に並べた行列<span class="math inline">\(\boldsymbol{\Lambda}\)</span>と固有ベクトルを列に並べた行列<span class="math inline">\(\boldsymbol{X}\)</span>を使って，次のように分解できる。</p>
+<p>対称行列<span class="math inline">\(\boldsymbol{A}\)</span>は，固有値を対角に並べた行列<span class="math inline">\(\boldsymbol{\Lambda}\)</span>と固有ベクトルを列に並べた行列<span class="math inline">\(\boldsymbol{U}\)</span>を使って，次のように分解できる。</p>
 <p><span class="math display">\[
 \boldsymbol{A} = \boldsymbol{X}\boldsymbol{\Lambda}\boldsymbol{X}'
 \]</span></p>
@@ -853,7 +853,7 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.91849782 0.91403047 0.14675688 0.02071484</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 寄与率（各固有値が全体に占める割合）</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 寄与率(各固有値が全体に占める割合)</span></span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>eig_R<span class="sc">$</span>values <span class="sc">/</span> <span class="fu">sum</span>(eig_R<span class="sc">$</span>values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.729624454 0.228507618 0.036689219 0.005178709</code></pre>
@@ -866,7 +866,7 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 </div>
 <p>第1固有値が全体の約73%を説明している。つまり4変数の情報の大部分が1つの主成分(次元)でまとめられるということである。これが主成分分析(PCA)の原理であり，<code>prcomp()</code>の内部で行われている計算そのものである。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 固有値の大きさを可視化（スクリープロット）</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 固有値の大きさを可視化(スクリープロット)</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Component =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
 <span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Eigenvalue =</span> eig_R<span class="sc">$</span>values</span>
@@ -877,7 +877,7 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 <span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">+</span></span>
 <span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"スクリープロット（iris 相関行列）"</span>,</span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"スクリープロット(iris 相関行列)"</span>,</span>
 <span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"成分番号"</span>,</span>
 <span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"固有値"</span></span>
 <span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
@@ -957,7 +957,7 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 </tr>
 <tr class="even">
 <td>固有値分解</td>
-<td><span class="math inline">\(\boldsymbol{Ax} = \lambda\boldsymbol{x}\)</span>を求める</td>
+<td><span class="math inline">\(\boldsymbol{Au} = \lambda\boldsymbol{u}\)</span>を求める</td>
 <td><code>eigen()</code></td>
 </tr>
 <tr class="odd">
@@ -981,14 +981,14 @@ Petal.Width      0.817941   -0.366126     0.962865    1.000000</code></pre>
 <section id="課題" class="level2" data-number="13.8">
 <h2 data-number="13.8" class="anchored" data-anchor-id="課題"><span class="header-section-number">13.8</span> 課題</h2>
 <ol type="1">
-<li><p><code>iris</code>データセットの数値4変数について，相関行列と分散共分散行列を計算し，それぞれの対角成分に何が入っているか確認しよう。また，数値4変数を標準化(<code>scale()</code>)したデータの分散共分散行列が相関行列と一致することを確かめよう。</p></li>
-<li><p>次の2つの行列<span class="math inline">\(\boldsymbol{A}\)</span>，<span class="math inline">\(\boldsymbol{B}\)</span>について，<span class="math inline">\(\boldsymbol{AB}\)</span>と<span class="math inline">\(\boldsymbol{BA}\)</span>を計算し，結果が異なることを確認しよう。 <span class="math display">\[
+<li><p><code>iris</code>データセットの数値4変数について，相関行列と分散共分散行列を計算し，それぞれの対角成分に何が入っているか確認してください。また，数値4変数を標準化(<code>scale()</code>)したデータの分散共分散行列が相関行列と一致することを確かめてください。</p></li>
+<li><p>次の2つの行列<span class="math inline">\(\boldsymbol{A}\)</span>，<span class="math inline">\(\boldsymbol{B}\)</span>について，<span class="math inline">\(\boldsymbol{AB}\)</span>と<span class="math inline">\(\boldsymbol{BA}\)</span>を計算し，結果が異なることを確認してください。 <span class="math display">\[
 \boldsymbol{A} = \begin{pmatrix} 1 &amp; 2 \\ 3 &amp; 4 \end{pmatrix}, \quad
 \boldsymbol{B} = \begin{pmatrix} 5 &amp; 6 \\ 7 &amp; 8 \end{pmatrix}
-\]</span> さらに，積の転置<span class="math inline">\((\boldsymbol{AB})' = \boldsymbol{B}'\boldsymbol{A}'\)</span>が成り立つことも確認しよう。</p></li>
-<li><p><code>iris</code>の数値4変数のうち最初の5ケースについて，中心化(各列から平均を引く)した行列<span class="math inline">\(\boldsymbol{V}\)</span>を<code>scale(center = TRUE, scale = FALSE)</code>で作成し，<span class="math inline">\(\frac{1}{n}\boldsymbol{V}'\boldsymbol{V}\)</span>が<code>cov()</code>の結果と近い値になることを確認しよう。ヒント: <code>cov()</code>は<span class="math inline">\(n\)</span>ではなく<span class="math inline">\(n-1\)</span>で割る不偏分散を返す。</p></li>
-<li><p><code>iris</code>の相関行列を固有値分解し，各成分の寄与率を求めよう。次に<code>prcomp(iris[, 1:4], scale. = TRUE)</code>を実行し，その<code>sdev</code>の二乗(各主成分の分散)が固有値と一致することを確かめよう。</p></li>
-<li><p>距離行列と相関行列のどちらも対称行列だが，対角成分の意味が異なる。<code>iris</code>の数値4変数の最初の10ケースについて距離行列を求め，対角成分がすべて0であること，相関行列の対角成分がすべて1であることを確認しよう。その違いがなぜ生じるか考察してみよう。</p></li>
+\]</span> さらに，積の転置<span class="math inline">\((\boldsymbol{AB})' = \boldsymbol{B}'\boldsymbol{A}'\)</span>が成り立つことも確認してください。</p></li>
+<li><p><code>iris</code>の数値4変数のうち最初の5ケースについて，中心化(各列から平均を引く)した行列<span class="math inline">\(\boldsymbol{V}\)</span>を<code>scale(center = TRUE, scale = FALSE)</code>で作成し，<span class="math inline">\(\frac{1}{n}\boldsymbol{V}'\boldsymbol{V}\)</span>が<code>cov()</code>の結果と近い値になることを確認してください。ヒント: <code>cov()</code>は<span class="math inline">\(n\)</span>ではなく<span class="math inline">\(n-1\)</span>で割る不偏分散を返す。</p></li>
+<li><p><code>iris</code>の相関行列を固有値分解し，各成分の寄与率を求めてください。次に<code>prcomp(iris[, 1:4], scale. = TRUE)</code>を実行し，その<code>sdev</code>の二乗(各主成分の分散)が固有値と一致することを確かめてください。</p></li>
+<li><p>距離行列と相関行列のどちらも対称行列だが，対角成分の意味が異なる。<code>iris</code>の数値4変数の最初の10ケースについて距離行列を求め，対角成分がすべて0であること，相関行列の対角成分がすべて1であることを確認してください。その違いがなぜ生じるか考察してください。</p></li>
 </ol>
 
 
