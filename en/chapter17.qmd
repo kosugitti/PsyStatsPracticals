@@ -674,14 +674,14 @@ A caveat: regression is not strictly appropriate for time series because regress
 
 ### Modeling a heterogeneous group
 
-Another baseball example. Restrict the [baseball data](Baseball.csv) to the 2022 Central League teams and plot the histogram of hits:
+Another baseball example. Restrict the [baseball data](Baseball.csv) to the 2016 National League teams and plot the histogram of hits:
 
 ```{r Hit_hist}
 #| dev: "ragg_png"
 #| message: false
 y <- read_csv("Baseball.csv") |>
-  filter(Year == "2022年度") |>
-  filter(team %in% c("Giants", "Tigers", "Carp", "Swallows", "DeNA", "Dragons")) |>
+  filter(Year == 2016) |>
+  filter(league == "NL") |>
   select(position, Hit, team) |>
   mutate(Hit = ifelse(is.na(Hit), 0, Hit))
 y |> ggplot(aes(x = Hit)) +
@@ -689,9 +689,9 @@ y |> ggplot(aes(x = Hit)) +
 summary(y$Hit)
 ```
 
-A large number of players have essentially zero hits. The reason is that the 2022 Central League required pitchers to bat. Pitchers' job is pitching, not hitting; they rarely swing, so their hit counts are essentially zero.[^12]
+A large number of players have essentially zero hits. The reason is that in 2016 the National League required pitchers to bat. Pitchers' job is pitching, not hitting; they rarely swing, so their hit counts are essentially zero.[^12]
 
-[^12]: For non-baseball readers: Japan's professional baseball has 12 teams divided between the Central League (CL) and the Pacific League (PL), six teams each. The PL uses a designated hitter; the CL did not (until the 2027 season). Pitchers in the CL therefore had to bat, but typically did not perform meaningfully at the plate. Yes, Shohei Ohtani is an exception.
+[^12]: For non-baseball readers: Major League Baseball has 30 teams divided between the American League (AL) and the National League (NL). The AL adopted the designated hitter in 1973, whereas the NL did not use it until MLB made it universal in 2022. Pitchers in the NL therefore had to bat, but typically did not perform meaningfully at the plate.
 
 The hit count is a count variable, so the Poisson would be the textbook choice — but with non-hitters mixed in, the model should distinguish "this is a hitter" from "this is a non-hitter." A zero observation could mean "this person never bats" or "this person bats but happened to get zero hits"; a non-zero observation must come from a hitter.
 
@@ -772,7 +772,7 @@ y_pred <- fit$draws("y_pred", format = "matrix")
 bayesplot::ppc_dens_overlay(y$Hit, y_pred[1:50, ])
 ```
 
-The output reports the mixing proportion `theta`, the mean `mu`, and the dispersion `phi`. The posterior predictive plot overlays draws from the model on the observed data and the two should overlap closely — they do, so the fit is good.
+The output reports the mixing proportion `theta`, the mean `mu`, and the dispersion `phi`. The posterior predictive plot overlays draws from the model on the observed data. The model reproduces the spike at zero and the long decline that follows, but it misses the second hump around 150 hits, formed by the regulars who play almost every day. A single negative binomial for the "hitters" cannot express this two-peaked shape; separating regulars from part-time players would be a natural next step.
 
 This model classifies "hitters" and "non-hitters" while fitting. The same template applies far afield: a store's first-time customers vs. repeat customers, modal vs. avoidant survey responders ("neutral" stalwarts), control vs. clinical groups — any case in which a heterogeneous population mixes structurally distinct sub-populations.
 

@@ -183,14 +183,14 @@ iris %>%
 
 + Read `Baseball.csv` into a data frame named `df`.
 + The data frame `df` contains many variables. `names(df)` returns the variable names. List them.
-+ From `df`, retain only `Year` (year), `Name` (player name), `team` (team), `height`, `weight`, `salary`, and `position`. Assign the result to `df2`.
-+ `df2` covers several seasons; we want only the 2020 data. Filter accordingly.
-+ Now filter further to keep only the 2020 *Hanshin Tigers* records.
-+ Conversely, filter to the 2020 data *excluding* the Hanshin Tigers.
-+ Create a body-mass-index variable, BMI = weight (kg) / height (m)². Note that `height` is in centimetres.
++ From `df`, retain only `Year` (year), `Name` (player name), `team` (team), `league`, `height`, `weight`, `salary`, and `position`. Assign the result to `df2`.
++ `df2` covers several seasons; we want only the 2016 data. Filter accordingly.
++ Now filter further to keep only the 2016 *New York Yankees* records.
++ Conversely, filter to the 2016 data *excluding* the Yankees.
++ Create a body-mass-index variable, BMI = weight (kg) / height (m)². Note that `height` is in centimeters.
 + Create a new factor variable `position2` distinguishing pitchers from fielders. Fielders are everyone who is not a pitcher (infielders, outfielders, and catchers).
-+ Japanese professional baseball is divided into the *Central League* and the *Pacific League*. The Central League teams are Giants, Carp, Tigers, Swallows, Dragons, and DeNA; the Pacific League is everything else. Add a factor variable `League` to `df2` accordingly.
-+ The `Year` variable is stored as a string because each value ends in 年度 ("season"). Strip that suffix and convert the variable to numeric.
++ Major League Baseball is divided into the *American League* and the *National League*. In 2016 the American League teams were the Orioles, Red Sox, Yankees, Rays, Blue Jays, White Sox, Indians, Tigers, Royals, Twins, Astros, Angels, Athletics, Mariners, and Rangers; the National League is everything else. Using the 2016 data, add a factor variable `League2` built from these team names, and confirm that it agrees with the `league` variable already in the data.
++ The `salary` variable is recorded in thousands of US dollars. Create a new variable `salary_m` that expresses salary in millions of dollars.
 
 ## Long and wide formats {#sec-Long_and_Wide}
 
@@ -283,18 +283,18 @@ Here `Species` is dropped and a per-row `ID` column is added. With `ID` as the k
 
 ## Grouping and summary statistics
 
-Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine `group_by()` with `summarize()` (or `reframe()`). An example:
+Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine `group_by()` with `summarise()` (or `reframe()`). An example:
 
 ```{r}
 iris %>% group_by(Species)
 ```
 
-The displayed contents look unchanged, but the output now shows `Species[3]`, indicating that the data are grouped into three levels of `Species`. Now `summarize()`:
+The displayed contents look unchanged, but the output now shows `Species[3]`, indicating that the data are grouped into three levels of `Species`. Now `summarise()`:
 
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarize(
+  summarise(
     n = n(),
     Mean = mean(Sepal.Length),
     Max = max(Sepal.Length),
@@ -311,7 +311,7 @@ The example above summarizes only `Sepal.Length`. To apply the same calculation 
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarize(across(
+  summarise(across(
     c(Sepal.Length, Sepal.Width, Petal.Length),
     ~ mean(.x)
   ))
@@ -322,7 +322,7 @@ A note on the `~ mean(.x)` syntax. Expressions beginning with a tilde (`~`) are 
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarize(across(
+  summarise(across(
     c(Sepal.Length, Sepal.Width, Petal.Length),
     function(x) {
       mean(x)
@@ -335,7 +335,7 @@ We will return to functions and lambdas in detail later; for now, focus on the p
 ```{r}
 iris %>%
   group_by(Species) %>%
-  summarize(across(starts_with("Sepal"),
+  summarise(across(starts_with("Sepal"),
     .fns = list(
       M = ~ mean(.x),
       Q1 = ~ quantile(.x, 0.25),

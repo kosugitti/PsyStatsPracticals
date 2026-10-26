@@ -76,7 +76,7 @@ df_exp <- data.frame(
 p2 <- ggplot(df_exp, aes(x = group, y = value)) +
   geom_point(alpha = 0.6) +
   geom_segment(
-    data = df_exp %>% group_by(group) %>% summarize(mean_value = mean(value)),
+    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
     aes(
       x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
       y = mean_value, yend = mean_value
@@ -95,7 +95,7 @@ p2 <- ggplot(df_exp, aes(x = group, y = value)) +
 p3 <- ggplot(df_exp, aes(x = group, y = value)) +
   geom_point(alpha = 0.6) +
   geom_segment(
-    data = df_exp %>% group_by(group) %>% summarize(mean_value = mean(value)),
+    data = df_exp %>% group_by(group) %>% summarise(mean_value = mean(value)),
     aes(
       x = as.numeric(group) - 0.1, xend = as.numeric(group) + 0.1,
       y = mean_value, yend = mean_value
@@ -561,7 +561,7 @@ posterior_samples <- as_draws_df(result.bayes.random_intercept) %>%
 # summary statistics from the MCMC samples
 posterior_samples %>%
   group_by(person) %>%
-  summarize(
+  summarise(
     EAP = mean(value),
     median = quantile(value, 0.5),
     q025 = quantile(value, 0.025),
@@ -614,7 +614,7 @@ print(p2)
 # credible intervals for the absolute intercepts
 total_intercept_summary <- total_intercept_samples %>%
   group_by(person) %>%
-  summarize(
+  summarise(
     EAP = mean(total_intercept),
     median = quantile(total_intercept, 0.5),
     q025 = quantile(total_intercept, 0.025),
@@ -930,7 +930,7 @@ A concrete application. We use the baseball data introduced earlier. The data co
 
 A player belongs to a specific team and plays a specific position within that team — i.e., position is nested in team. Team-level features (tactics, coaching) are shared across players on the same team; within a team, similar physical and technical attributes are expected at each position. Ignoring this structure can inflate individual-difference variance and lead to faulty inference.
 
-We restrict to the 2020 season and exclude pitchers (whose characteristics differ markedly from those of fielders), yielding a more homogeneous dataset.
+We restrict to the 2016 season and exclude pitchers (whose characteristics differ markedly from those of fielders), yielding a more homogeneous dataset.
 
 First, the ICCs at team and team-by-position levels, using `multilevel::ICC1`:
 
@@ -939,11 +939,11 @@ pacman::p_load(tidyverse, brms, bayesplot, multilevel)
 # pin brms's backend to cmdstanr
 options(brms.backend = "cmdstanr")
 dat <- read_csv("Baseball.csv") %>%
-  filter(Year == "2020年度") %>%
+  filter(Year == 2016) %>%
   mutate(
     position = as.factor(position)
   ) %>%
-  filter(position != "投手")
+  filter(position != "Pitcher")
 
 # team-level ICC
 icc_team <- multilevel::ICC1(aov(Hit ~ team, data = dat))
@@ -960,7 +960,7 @@ print(paste("Team:Position ICC1:", round(icc_team_position, 3)))
 print(paste("Position ICC1:", round(icc_position, 3)))
 ```
 
-The ICCs are negative — within-group variance exceeds between-group variance, meaning the grouping is not informative. A meaningfully positive ICC would be preferred.[^4] The team × position combination also yields an ICC of almost 0 (slightly negative), but here, as an exercise in hierarchical modeling, we use it as the grouping variable for the fit.
+The team-level ICC is negative (`r sprintf("%.3f", icc_team)`) — within-team variance exceeds between-team variance, meaning team membership alone is not informative. Position, by contrast, yields a positive ICC (`r sprintf("%.3f", icc_position)`). A meaningfully positive ICC would be preferred.[^4] The team × position combination yields an ICC of almost 0 (`r sprintf("%.3f", icc_team_position)`), but here, as an exercise in hierarchical modeling, we use it as the grouping variable for the fit.
 
 
 [^4]: A common rule of thumb is 0.05 (small), 0.10 (medium), 0.15 (large) — see [@Hox2002, @Raudenbush2000].
@@ -987,18 +987,18 @@ MCMC diagnostics. The $\hat{R}$ and ESS values are good.
 plot(model_hit)
 ```
 
-A standard model-check is the **posterior predictive check**: draw datasets from the fitted model and compare them visually to the observed data. `bayesplot::pp_check()` overlays a sample of model-generated densities on the data. Here the fit at very low hit counts is imperfect, which suggests room for improvement.
+A standard model-check is the **posterior predictive check**: draw datasets from the fitted model and compare them visually to the observed data. `bayesplot::pp_check()` overlays a sample of model-generated densities on the data. Here the model does not reproduce the shape of the observed distribution well between about 50 and 120 hits, which suggests room for improvement.
 
 ```{r pp_check}
 pp_check(model_hit, ndraws = 100)
 ```
 
-Finally, a per-group plot. The fine adjustments across teams and positions can be seen to track the data well.
+Finally, a per-position plot, with points colored by league. The fine adjustments across teams and positions can be seen to track the data well.
 
 ```{r model_fit_visualize}
 #| dev: "ragg_png"
-#| fig-height: 16
-#| fig-width: 16
+#| fig-height: 8
+#| fig-width: 10
 #| out-width: "100%"
 
 predicted_hit <- fitted(model_hit,
@@ -1010,19 +1010,19 @@ predicted_hit <- fitted(model_hit,
 plot_data <- data.frame(
   observed = dat$Hit,
   predicted = predicted_hit$Estimate,
-  team = dat$team,
+  league = dat$league,
   position = dat$position
 )
 
-ggplot(plot_data, aes(x = observed, y = predicted, color = team)) +
+ggplot(plot_data, aes(x = observed, y = predicted, color = league)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
   labs(
     x = "Observed Hit", y = "Predicted Hit",
-    title = "Predicted vs Observed Hit count (2020 season)",
-    color = "Team"
+    title = "Predicted vs Observed Hit count (2016 season)",
+    color = "League"
   ) +
-  facet_wrap(team ~ position, scales = "free") +
+  facet_wrap(~ position, scales = "free") +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
@@ -1112,14 +1112,14 @@ plot(model_poisson)
 
 ### Applied problem: hierarchical modeling on the baseball data
 
-Using [Baseball.csv](Baseball.csv), build hierarchical models nested by year and team. Restrict to the 2018–2020 seasons and to pitchers. The relevant variables include salary, height, and weight, together with pitching performance metrics — wins (Win), losses (Lose), holds (Hold), and saves (Save).
+Using [Baseball.csv](Baseball.csv), build hierarchical models nested by year and team. Restrict to the 2014–2016 seasons and to pitchers. The relevant variables include salary, height, and weight, together with pitching performance metrics — wins (Win), losses (Lose), and saves (Save).
 
 ```{r prac_data_handling}
 #| eval: false
 #| message: false
 dat <- read_csv("Baseball.csv") %>%
-  filter(Year %in% c("2018年度", "2019年度", "2020年度")) %>%
-  filter(position == "投手") %>%
+  filter(Year %in% c(2014, 2015, 2016)) %>%
+  filter(position == "Pitcher") %>%
   filter(!is.na(Win), !is.na(Lose), !is.na(Games), !is.na(salary),
          !is.na(height), !is.na(weight)) %>%
   mutate(

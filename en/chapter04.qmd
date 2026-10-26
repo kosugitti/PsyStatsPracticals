@@ -236,10 +236,10 @@ mtcars %>%
   ) %>%
   # group by each level combination
   group_by(am, cyl) %>%
-  summarize(
+  summarise(
     M = mean(mpg), # mean fuel economy per group
     SD = sd(mpg), # standard deviation per group
-    .groups = "drop" # drop grouping after summarize
+    .groups = "drop" # drop grouping after summarise
   ) %>%
   # x = transmission, y = mean MPG, fill = cyl
   ggplot(aes(x = am, y = M, fill = cyl)) +
@@ -373,11 +373,11 @@ Many other tweaks are possible. As long as you can decompose the target figure i
 
 + Today's exercises should be written in R Markdown. Include your student ID and name in the *author* field, add appropriate headings, and clearly mark the prose corresponding to each question, so that the chunk answering each question is unambiguous.
 
-1. Read `Baseball.csv`, restrict to the 2020 season, perform any variable conversions needed for what follows, and store the result in `dat.tb`.
+1. Read `Baseball.csv`, restrict to the 2016 season, perform any variable conversions needed for what follows, and store the result in `dat.tb`.
 2. Draw a histogram of the height variable in `dat.tb`. Use `theme_classic()`.
 3. Draw a scatter plot of height against weight. Use `theme_bw()`.
-4. (Continued.) Color the points by blood type. Use the `Set3` palette.
-5. (Continued.) Use the point shape (not just color) to encode blood type.
+4. (Continued.) Color the points by position. Use the `Set3` palette.
+5. (Continued.) Use the point shape (not just color) to encode position.
 6. Make a height-vs-weight scatter plot, faceted by team.
 7. (Continued.) Add a `geom_smooth()`. The `method` argument can be left at its default.
 8. (Continued.) Now use `method = "lm"` for a linear fit.
@@ -389,7 +389,7 @@ Many other tweaks are possible. As long as you can decompose the target figure i
 #| echo: FALSE
 
 dat.tb <- read_csv("Baseball.csv", show_col_types = FALSE) %>%
-  filter(Year == "2020年度") %>%
+  filter(Year == 2016) %>%
   as_tibble()
 # histogram of height
 p1 <- ggplot(dat.tb, aes(x = height)) +
@@ -403,8 +403,8 @@ p2 <- ggplot(dat.tb, aes(x = weight)) +
   theme_classic() +
   ggtitle("Histogram of weight")
 
-# scatter plot colored by blood type
-p3 <- ggplot(dat.tb, aes(x = height, y = weight, color = bloodType)) +
+# scatter plot colored by position
+p3 <- ggplot(dat.tb, aes(x = height, y = weight, color = position)) +
   geom_point() +
   theme_bw() +
   scale_color_brewer(palette = "Set3") +
