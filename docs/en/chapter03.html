@@ -687,14 +687,14 @@ window.Quarto = {
 <ul>
 <li>Read <code>Baseball.csv</code> into a data frame named <code>df</code>.</li>
 <li>The data frame <code>df</code> contains many variables. <code>names(df)</code> returns the variable names. List them.</li>
-<li>From <code>df</code>, retain only <code>Year</code> (year), <code>Name</code> (player name), <code>team</code> (team), <code>height</code>, <code>weight</code>, <code>salary</code>, and <code>position</code>. Assign the result to <code>df2</code>.</li>
-<li><code>df2</code> covers several seasons; we want only the 2020 data. Filter accordingly.</li>
-<li>Now filter further to keep only the 2020 <em>Hanshin Tigers</em> records.</li>
-<li>Conversely, filter to the 2020 data <em>excluding</em> the Hanshin Tigers.</li>
-<li>Create a body-mass-index variable, BMI = weight (kg) / height (m)². Note that <code>height</code> is in centimetres.</li>
+<li>From <code>df</code>, retain only <code>Year</code> (year), <code>Name</code> (player name), <code>team</code> (team), <code>league</code>, <code>height</code>, <code>weight</code>, <code>salary</code>, and <code>position</code>. Assign the result to <code>df2</code>.</li>
+<li><code>df2</code> covers several seasons; we want only the 2016 data. Filter accordingly.</li>
+<li>Now filter further to keep only the 2016 <em>New York Yankees</em> records.</li>
+<li>Conversely, filter to the 2016 data <em>excluding</em> the Yankees.</li>
+<li>Create a body-mass-index variable, BMI = weight (kg) / height (m)². Note that <code>height</code> is in centimeters.</li>
 <li>Create a new factor variable <code>position2</code> distinguishing pitchers from fielders. Fielders are everyone who is not a pitcher (infielders, outfielders, and catchers).</li>
-<li>Japanese professional baseball is divided into the <em>Central League</em> and the <em>Pacific League</em>. The Central League teams are Giants, Carp, Tigers, Swallows, Dragons, and DeNA; the Pacific League is everything else. Add a factor variable <code>League</code> to <code>df2</code> accordingly.</li>
-<li>The <code>Year</code> variable is stored as a string because each value ends in 年度 (“season”). Strip that suffix and convert the variable to numeric.</li>
+<li>Major League Baseball is divided into the <em>American League</em> and the <em>National League</em>. In 2016 the American League teams were the Orioles, Red Sox, Yankees, Rays, Blue Jays, White Sox, Indians, Tigers, Royals, Twins, Astros, Angels, Athletics, Mariners, and Rangers; the National League is everything else. Using the 2016 data, add a factor variable <code>League2</code> built from these team names, and confirm that it agrees with the <code>league</code> variable already in the data.</li>
+<li>The <code>salary</code> variable is recorded in thousands of US dollars. Create a new variable <code>salary_m</code> that expresses salary in millions of dollars.</li>
 </ul>
 </section>
 <section id="sec-Long_and_Wide" class="level2" data-number="3.7">
@@ -885,7 +885,7 @@ window.Quarto = {
 </section>
 <section id="grouping-and-summary-statistics" class="level2" data-number="3.8">
 <h2 data-number="3.8" class="anchored" data-anchor-id="grouping-and-summary-statistics"><span class="header-section-number">3.8</span> Grouping and summary statistics</h2>
-<p>Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine <code>group_by()</code> with <code>summarize()</code> (or <code>reframe()</code>). An example:</p>
+<p>Once data are in long format, filtering by variable or case is easy. To compute summary statistics for each group of a categorical variable, combine <code>group_by()</code> with <code>summarise()</code> (or <code>reframe()</code>). An example:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -906,11 +906,11 @@ window.Quarto = {
 # ℹ 140 more rows</code></pre>
 </div>
 </div>
-<p>The displayed contents look unchanged, but the output now shows <code>Species[3]</code>, indicating that the data are grouped into three levels of <code>Species</code>. Now <code>summarize()</code>:</p>
+<p>The displayed contents look unchanged, but the output now shows <code>Species[3]</code>, indicating that the data are grouped into three levels of <code>Species</code>. Now <code>summarise()</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(Sepal.Length),</span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(Sepal.Length),</span>
@@ -930,7 +930,7 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(Sepal.Length, Sepal.Width, Petal.Length),</span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">mean</span>(.x)</span>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -947,7 +947,7 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(Sepal.Length, Sepal.Width, Petal.Length),</span>
 <span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x) {</span>
 <span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(x)</span>
@@ -966,7 +966,7 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"Sepal"</span>),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"Sepal"</span>),</span>
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.fns =</span> <span class="fu">list</span>(</span>
 <span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">M =</span> <span class="sc">~</span> <span class="fu">mean</span>(.x),</span>
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">Q1 =</span> <span class="sc">~</span> <span class="fu">quantile</span>(.x, <span class="fl">0.25</span>),</span>

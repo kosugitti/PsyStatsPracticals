@@ -1037,7 +1037,7 @@ F-statistic:  6420 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary statistics from the MCMC samples</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>posterior_samples <span class="sc">%&gt;%</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(person) <span class="sc">%&gt;%</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">EAP =</span> <span class="fu">mean</span>(value),</span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">quantile</span>(value, <span class="fl">0.5</span>),</span>
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">q025 =</span> <span class="fu">quantile</span>(value, <span class="fl">0.025</span>),</span>
@@ -1115,7 +1115,7 @@ F-statistic:  6420 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># credible intervals for the absolute intercepts</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>total_intercept_summary <span class="ot">&lt;-</span> total_intercept_samples <span class="sc">%&gt;%</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(person) <span class="sc">%&gt;%</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">EAP =</span> <span class="fu">mean</span>(total_intercept),</span>
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">quantile</span>(total_intercept, <span class="fl">0.5</span>),</span>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">q025 =</span> <span class="fu">quantile</span>(total_intercept, <span class="fl">0.025</span>),</span>
@@ -1234,7 +1234,7 @@ Chain 4 finished in 0.4 seconds.
 
 All 4 chains finished successfully.
 Mean chain execution time: 0.4 seconds.
-Total execution time: 0.5 seconds.</code></pre>
+Total execution time: 0.6 seconds.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result.bayes.random_slope)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1412,7 +1412,7 @@ y_{ij} = (\beta_0 + u_{0i}) + (\beta_1 + u_{1i}) x_{ij} + e_{ij}.
 
 Chain 2 finished in 2.1 seconds.
 Chain 3 finished in 2.2 seconds.
-Chain 1 finished in 2.3 seconds.
+Chain 1 finished in 2.4 seconds.
 Chain 4 finished in 2.4 seconds.
 
 All 4 chains finished successfully.
@@ -1599,24 +1599,24 @@ Y_{ij} = \gamma_{00} + \gamma_{01}W_j + \gamma_{10}X_{ij} + \gamma_{11}W_j X_{ij
 <h3 data-number="14.4.3" class="anchored" data-anchor-id="a-worked-example"><span class="header-section-number">14.4.3</span> A worked example</h3>
 <p>A concrete application. We use the baseball data introduced earlier. The data contain player-level performance (height, weight, hits, etc.) together with team and position — a hierarchical structure.</p>
 <p>A player belongs to a specific team and plays a specific position within that team — i.e., position is nested in team. Team-level features (tactics, coaching) are shared across players on the same team; within a team, similar physical and technical attributes are expected at each position. Ignoring this structure can inflate individual-difference variance and lead to faulty inference.</p>
-<p>We restrict to the 2020 season and exclude pitchers (whose characteristics differ markedly from those of fielders), yielding a more homogeneous dataset.</p>
+<p>We restrict to the 2016 season and exclude pitchers (whose characteristics differ markedly from those of fielders), yielding a more homogeneous dataset.</p>
 <p>First, the ICCs at team and team-by-position levels, using <code>multilevel::ICC1</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, brms, bayesplot, multilevel)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pin brms's backend to cmdstanr</span></span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">brms.backend =</span> <span class="st">"cmdstanr"</span>)</span>
 <span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="st">"2020年度"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="dv">2016</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">as.factor</span>(position)</span>
 <span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(position <span class="sc">!=</span> <span class="st">"投手"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(position <span class="sc">!=</span> <span class="st">"Pitcher"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Rows: 7944 Columns: 17
+<pre><code>Rows: 4858 Columns: 17
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
-chr  (6): Year, Name, team, bloodType, UniformNum, position
-dbl (11): salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save, Hold
+chr  (6): Name, team, league, bats, throws, position
+dbl (11): Year, salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -1633,18 +1633,18 @@ dbl (11): salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save, Hold
 <span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team ICC1:"</span>, <span class="fu">round</span>(icc_team, <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Team ICC1: -0.031"</code></pre>
+<pre><code>[1] "Team ICC1: -0.052"</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Team:Position ICC1:"</span>, <span class="fu">round</span>(icc_team_position, <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Team:Position ICC1: -0.029"</code></pre>
+<pre><code>[1] "Team:Position ICC1: 0"</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Position ICC1:"</span>, <span class="fu">round</span>(icc_position, <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Position ICC1: 0.046"</code></pre>
+<pre><code>[1] "Position ICC1: 0.123"</code></pre>
 </div>
 </div>
-<p>The ICCs are negative — within-group variance exceeds between-group variance, meaning the grouping is not informative. A meaningfully positive ICC would be preferred.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> The team × position combination also yields an ICC of almost 0 (slightly negative), but here, as an exercise in hierarchical modeling, we use it as the grouping variable for the fit.</p>
+<p>The team-level ICC is negative (-0.052) — within-team variance exceeds between-team variance, meaning team membership alone is not informative. Position, by contrast, yields a positive ICC (0.123). A meaningfully positive ICC would be preferred.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> The team × position combination yields an ICC of almost 0 (0.000), but here, as an exercise in hierarchical modeling, we use it as the grouping variable for the fit.</p>
 <p>We model hits (<code>Hit</code>) as a function of games played (<code>Games</code>) and player physique (<code>height</code>, <code>weight</code>), with team-by-position random intercepts. Hits are non-negative integers, so we use a Poisson family.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Poisson model with nested random intercepts</span></span>
@@ -1664,441 +1664,441 @@ dbl (11): salary, height, weight, Games, AtBats, Hit, HR, Win, Lose, Save, Hold
 
 Chain 1 Iteration:    1 / 10000 [  0%]  (Warmup) 
 Chain 1 Iteration:  100 / 10000 [  1%]  (Warmup) 
-Chain 1 Iteration:  200 / 10000 [  2%]  (Warmup) 
 Chain 2 Iteration:    1 / 10000 [  0%]  (Warmup) 
 Chain 2 Iteration:  100 / 10000 [  1%]  (Warmup) 
+Chain 2 Iteration:  200 / 10000 [  2%]  (Warmup) 
+Chain 2 Iteration:  300 / 10000 [  3%]  (Warmup) 
 Chain 4 Iteration:    1 / 10000 [  0%]  (Warmup) 
 Chain 4 Iteration:  100 / 10000 [  1%]  (Warmup) 
 Chain 3 Iteration:    1 / 10000 [  0%]  (Warmup) 
 Chain 3 Iteration:  100 / 10000 [  1%]  (Warmup) 
-Chain 2 Iteration:  200 / 10000 [  2%]  (Warmup) 
-Chain 4 Iteration:  200 / 10000 [  2%]  (Warmup) 
-Chain 1 Iteration:  300 / 10000 [  3%]  (Warmup) 
-Chain 3 Iteration:  200 / 10000 [  2%]  (Warmup) 
-Chain 4 Iteration:  300 / 10000 [  3%]  (Warmup) 
-Chain 2 Iteration:  300 / 10000 [  3%]  (Warmup) 
-Chain 3 Iteration:  300 / 10000 [  3%]  (Warmup) 
-Chain 4 Iteration:  400 / 10000 [  4%]  (Warmup) 
+Chain 1 Iteration:  200 / 10000 [  2%]  (Warmup) 
 Chain 2 Iteration:  400 / 10000 [  4%]  (Warmup) 
-Chain 3 Iteration:  400 / 10000 [  4%]  (Warmup) 
+Chain 4 Iteration:  200 / 10000 [  2%]  (Warmup) 
+Chain 3 Iteration:  200 / 10000 [  2%]  (Warmup) 
+Chain 1 Iteration:  300 / 10000 [  3%]  (Warmup) 
 Chain 2 Iteration:  500 / 10000 [  5%]  (Warmup) 
-Chain 3 Iteration:  500 / 10000 [  5%]  (Warmup) 
+Chain 4 Iteration:  300 / 10000 [  3%]  (Warmup) 
+Chain 4 Iteration:  400 / 10000 [  4%]  (Warmup) 
+Chain 3 Iteration:  300 / 10000 [  3%]  (Warmup) 
 Chain 4 Iteration:  500 / 10000 [  5%]  (Warmup) 
+Chain 3 Iteration:  400 / 10000 [  4%]  (Warmup) 
 Chain 4 Iteration:  600 / 10000 [  6%]  (Warmup) 
-Chain 2 Iteration:  600 / 10000 [  6%]  (Warmup) 
-Chain 3 Iteration:  600 / 10000 [  6%]  (Warmup) 
+Chain 3 Iteration:  500 / 10000 [  5%]  (Warmup) 
 Chain 4 Iteration:  700 / 10000 [  7%]  (Warmup) 
-Chain 2 Iteration:  700 / 10000 [  7%]  (Warmup) 
-Chain 3 Iteration:  700 / 10000 [  7%]  (Warmup) 
-Chain 4 Iteration:  800 / 10000 [  8%]  (Warmup) 
 Chain 1 Iteration:  400 / 10000 [  4%]  (Warmup) 
-Chain 2 Iteration:  800 / 10000 [  8%]  (Warmup) 
-Chain 2 Iteration:  900 / 10000 [  9%]  (Warmup) 
-Chain 3 Iteration:  800 / 10000 [  8%]  (Warmup) 
-Chain 3 Iteration:  900 / 10000 [  9%]  (Warmup) 
+Chain 4 Iteration:  800 / 10000 [  8%]  (Warmup) 
+Chain 3 Iteration:  600 / 10000 [  6%]  (Warmup) 
+Chain 3 Iteration:  700 / 10000 [  7%]  (Warmup) 
 Chain 4 Iteration:  900 / 10000 [  9%]  (Warmup) 
-Chain 2 Iteration: 1000 / 10000 [ 10%]  (Warmup) 
-Chain 3 Iteration: 1000 / 10000 [ 10%]  (Warmup) 
+Chain 2 Iteration:  600 / 10000 [  6%]  (Warmup) 
+Chain 3 Iteration:  800 / 10000 [  8%]  (Warmup) 
 Chain 4 Iteration: 1000 / 10000 [ 10%]  (Warmup) 
 Chain 4 Iteration: 1100 / 10000 [ 11%]  (Warmup) 
-Chain 2 Iteration: 1100 / 10000 [ 11%]  (Warmup) 
-Chain 2 Iteration: 1200 / 10000 [ 12%]  (Warmup) 
-Chain 3 Iteration: 1100 / 10000 [ 11%]  (Warmup) 
-Chain 3 Iteration: 1200 / 10000 [ 12%]  (Warmup) 
+Chain 3 Iteration:  900 / 10000 [  9%]  (Warmup) 
 Chain 4 Iteration: 1200 / 10000 [ 12%]  (Warmup) 
+Chain 3 Iteration: 1000 / 10000 [ 10%]  (Warmup) 
 Chain 4 Iteration: 1300 / 10000 [ 13%]  (Warmup) 
-Chain 2 Iteration: 1300 / 10000 [ 13%]  (Warmup) 
-Chain 2 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
-Chain 3 Iteration: 1300 / 10000 [ 13%]  (Warmup) 
-Chain 3 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
-Chain 4 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
-Chain 4 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
-Chain 2 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
-Chain 2 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
-Chain 3 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
-Chain 3 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
-Chain 4 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
-Chain 4 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
-Chain 2 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
-Chain 2 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
-Chain 3 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
-Chain 4 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
-Chain 4 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
 Chain 1 Iteration:  500 / 10000 [  5%]  (Warmup) 
+Chain 4 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
+Chain 3 Iteration: 1100 / 10000 [ 11%]  (Warmup) 
+Chain 4 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
 Chain 1 Iteration:  600 / 10000 [  6%]  (Warmup) 
-Chain 2 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
-Chain 2 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
-Chain 3 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
-Chain 3 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
-Chain 3 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
-Chain 4 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
-Chain 4 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
+Chain 3 Iteration: 1200 / 10000 [ 12%]  (Warmup) 
+Chain 4 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
 Chain 1 Iteration:  700 / 10000 [  7%]  (Warmup) 
-Chain 2 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
-Chain 2 Iteration: 2200 / 10000 [ 22%]  (Warmup) 
-Chain 2 Iteration: 2300 / 10000 [ 23%]  (Warmup) 
-Chain 3 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
-Chain 3 Iteration: 2200 / 10000 [ 22%]  (Warmup) 
+Chain 3 Iteration: 1300 / 10000 [ 13%]  (Warmup) 
+Chain 4 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
+Chain 3 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
+Chain 4 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
+Chain 1 Iteration:  800 / 10000 [  8%]  (Warmup) 
+Chain 3 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
+Chain 4 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
+Chain 1 Iteration:  900 / 10000 [  9%]  (Warmup) 
+Chain 3 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
+Chain 4 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
+Chain 4 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
+Chain 1 Iteration: 1000 / 10000 [ 10%]  (Warmup) 
+Chain 2 Iteration:  700 / 10000 [  7%]  (Warmup) 
+Chain 3 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
 Chain 4 Iteration: 2200 / 10000 [ 22%]  (Warmup) 
 Chain 4 Iteration: 2300 / 10000 [ 23%]  (Warmup) 
+Chain 1 Iteration: 1100 / 10000 [ 11%]  (Warmup) 
+Chain 3 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
 Chain 4 Iteration: 2400 / 10000 [ 24%]  (Warmup) 
-Chain 1 Iteration:  800 / 10000 [  8%]  (Warmup) 
-Chain 2 Iteration: 2400 / 10000 [ 24%]  (Warmup) 
-Chain 2 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
-Chain 2 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
+Chain 1 Iteration: 1200 / 10000 [ 12%]  (Warmup) 
+Chain 3 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
+Chain 4 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
+Chain 1 Iteration: 1300 / 10000 [ 13%]  (Warmup) 
+Chain 3 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
+Chain 4 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
+Chain 1 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
+Chain 3 Iteration: 2200 / 10000 [ 22%]  (Warmup) 
+Chain 4 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
+Chain 4 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
+Chain 1 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
 Chain 3 Iteration: 2300 / 10000 [ 23%]  (Warmup) 
 Chain 3 Iteration: 2400 / 10000 [ 24%]  (Warmup) 
-Chain 3 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
-Chain 4 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
-Chain 4 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
-Chain 4 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
-Chain 1 Iteration:  900 / 10000 [  9%]  (Warmup) 
-Chain 1 Iteration: 1000 / 10000 [ 10%]  (Warmup) 
-Chain 2 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
-Chain 2 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
-Chain 3 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
-Chain 3 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
-Chain 3 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
-Chain 4 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
 Chain 4 Iteration: 2900 / 10000 [ 29%]  (Warmup) 
+Chain 1 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
+Chain 3 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
 Chain 4 Iteration: 3000 / 10000 [ 30%]  (Warmup) 
-Chain 1 Iteration: 1100 / 10000 [ 11%]  (Warmup) 
-Chain 2 Iteration: 2900 / 10000 [ 29%]  (Warmup) 
-Chain 2 Iteration: 3000 / 10000 [ 30%]  (Warmup) 
-Chain 2 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
+Chain 1 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
+Chain 3 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
+Chain 4 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
+Chain 1 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
+Chain 3 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
+Chain 4 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
+Chain 4 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
+Chain 1 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
+Chain 3 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
+Chain 4 Iteration: 3400 / 10000 [ 34%]  (Warmup) 
+Chain 1 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
 Chain 3 Iteration: 2900 / 10000 [ 29%]  (Warmup) 
 Chain 3 Iteration: 3000 / 10000 [ 30%]  (Warmup) 
-Chain 4 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
-Chain 4 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
-Chain 1 Iteration: 1200 / 10000 [ 12%]  (Warmup) 
-Chain 1 Iteration: 1300 / 10000 [ 13%]  (Warmup) 
-Chain 2 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
-Chain 2 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
-Chain 2 Iteration: 3400 / 10000 [ 34%]  (Warmup) 
-Chain 3 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
-Chain 3 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
-Chain 3 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
-Chain 4 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
-Chain 4 Iteration: 3400 / 10000 [ 34%]  (Warmup) 
 Chain 4 Iteration: 3500 / 10000 [ 35%]  (Warmup) 
-Chain 1 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
-Chain 1 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
-Chain 2 Iteration: 3500 / 10000 [ 35%]  (Warmup) 
-Chain 2 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
-Chain 2 Iteration: 3700 / 10000 [ 37%]  (Warmup) 
+Chain 1 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
+Chain 3 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
+Chain 4 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
+Chain 1 Iteration: 2200 / 10000 [ 22%]  (Warmup) 
+Chain 1 Iteration: 2300 / 10000 [ 23%]  (Warmup) 
+Chain 2 Iteration:  800 / 10000 [  8%]  (Warmup) 
+Chain 3 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
+Chain 4 Iteration: 3700 / 10000 [ 37%]  (Warmup) 
+Chain 1 Iteration: 2400 / 10000 [ 24%]  (Warmup) 
+Chain 3 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
+Chain 4 Iteration: 3800 / 10000 [ 38%]  (Warmup) 
+Chain 4 Iteration: 3900 / 10000 [ 39%]  (Warmup) 
+Chain 1 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
 Chain 3 Iteration: 3400 / 10000 [ 34%]  (Warmup) 
 Chain 3 Iteration: 3500 / 10000 [ 35%]  (Warmup) 
-Chain 3 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
-Chain 4 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
-Chain 4 Iteration: 3700 / 10000 [ 37%]  (Warmup) 
-Chain 4 Iteration: 3800 / 10000 [ 38%]  (Warmup) 
-Chain 1 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
-Chain 1 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
-Chain 2 Iteration: 3800 / 10000 [ 38%]  (Warmup) 
-Chain 2 Iteration: 3900 / 10000 [ 39%]  (Warmup) 
-Chain 2 Iteration: 4000 / 10000 [ 40%]  (Warmup) 
-Chain 3 Iteration: 3700 / 10000 [ 37%]  (Warmup) 
-Chain 3 Iteration: 3800 / 10000 [ 38%]  (Warmup) 
-Chain 3 Iteration: 3900 / 10000 [ 39%]  (Warmup) 
-Chain 4 Iteration: 3900 / 10000 [ 39%]  (Warmup) 
 Chain 4 Iteration: 4000 / 10000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
+Chain 3 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
 Chain 4 Iteration: 4100 / 10000 [ 41%]  (Warmup) 
-Chain 1 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
-Chain 1 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
-Chain 2 Iteration: 4100 / 10000 [ 41%]  (Warmup) 
-Chain 2 Iteration: 4200 / 10000 [ 42%]  (Warmup) 
-Chain 2 Iteration: 4300 / 10000 [ 43%]  (Warmup) 
-Chain 3 Iteration: 4000 / 10000 [ 40%]  (Warmup) 
-Chain 3 Iteration: 4100 / 10000 [ 41%]  (Warmup) 
-Chain 3 Iteration: 4200 / 10000 [ 42%]  (Warmup) 
+Chain 1 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
+Chain 3 Iteration: 3700 / 10000 [ 37%]  (Warmup) 
 Chain 4 Iteration: 4200 / 10000 [ 42%]  (Warmup) 
+Chain 1 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
+Chain 1 Iteration: 2900 / 10000 [ 29%]  (Warmup) 
+Chain 3 Iteration: 3800 / 10000 [ 38%]  (Warmup) 
 Chain 4 Iteration: 4300 / 10000 [ 43%]  (Warmup) 
 Chain 4 Iteration: 4400 / 10000 [ 44%]  (Warmup) 
-Chain 1 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
-Chain 1 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
-Chain 1 Iteration: 2200 / 10000 [ 22%]  (Warmup) 
-Chain 2 Iteration: 4400 / 10000 [ 44%]  (Warmup) 
-Chain 2 Iteration: 4500 / 10000 [ 45%]  (Warmup) 
-Chain 2 Iteration: 4600 / 10000 [ 46%]  (Warmup) 
-Chain 3 Iteration: 4300 / 10000 [ 43%]  (Warmup) 
-Chain 3 Iteration: 4400 / 10000 [ 44%]  (Warmup) 
-Chain 3 Iteration: 4500 / 10000 [ 45%]  (Warmup) 
+Chain 1 Iteration: 3000 / 10000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 3900 / 10000 [ 39%]  (Warmup) 
 Chain 4 Iteration: 4500 / 10000 [ 45%]  (Warmup) 
+Chain 1 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
+Chain 3 Iteration: 4000 / 10000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 4100 / 10000 [ 41%]  (Warmup) 
 Chain 4 Iteration: 4600 / 10000 [ 46%]  (Warmup) 
+Chain 1 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
+Chain 3 Iteration: 4200 / 10000 [ 42%]  (Warmup) 
 Chain 4 Iteration: 4700 / 10000 [ 47%]  (Warmup) 
-Chain 1 Iteration: 2300 / 10000 [ 23%]  (Warmup) 
-Chain 1 Iteration: 2400 / 10000 [ 24%]  (Warmup) 
-Chain 2 Iteration: 4700 / 10000 [ 47%]  (Warmup) 
-Chain 2 Iteration: 4800 / 10000 [ 48%]  (Warmup) 
-Chain 2 Iteration: 4900 / 10000 [ 49%]  (Warmup) 
-Chain 3 Iteration: 4600 / 10000 [ 46%]  (Warmup) 
-Chain 3 Iteration: 4700 / 10000 [ 47%]  (Warmup) 
+Chain 1 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
+Chain 1 Iteration: 3400 / 10000 [ 34%]  (Warmup) 
+Chain 2 Iteration:  900 / 10000 [  9%]  (Warmup) 
+Chain 3 Iteration: 4300 / 10000 [ 43%]  (Warmup) 
 Chain 4 Iteration: 4800 / 10000 [ 48%]  (Warmup) 
+Chain 1 Iteration: 3500 / 10000 [ 35%]  (Warmup) 
+Chain 3 Iteration: 4400 / 10000 [ 44%]  (Warmup) 
 Chain 4 Iteration: 4900 / 10000 [ 49%]  (Warmup) 
 Chain 4 Iteration: 5000 / 10000 [ 50%]  (Warmup) 
 Chain 4 Iteration: 5001 / 10000 [ 50%]  (Sampling) 
-Chain 1 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
-Chain 1 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
-Chain 1 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
-Chain 2 Iteration: 5000 / 10000 [ 50%]  (Warmup) 
-Chain 2 Iteration: 5001 / 10000 [ 50%]  (Sampling) 
-Chain 2 Iteration: 5100 / 10000 [ 51%]  (Sampling) 
-Chain 3 Iteration: 4800 / 10000 [ 48%]  (Warmup) 
-Chain 3 Iteration: 4900 / 10000 [ 49%]  (Warmup) 
-Chain 3 Iteration: 5000 / 10000 [ 50%]  (Warmup) 
-Chain 3 Iteration: 5001 / 10000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
+Chain 3 Iteration: 4500 / 10000 [ 45%]  (Warmup) 
 Chain 4 Iteration: 5100 / 10000 [ 51%]  (Sampling) 
 Chain 4 Iteration: 5200 / 10000 [ 52%]  (Sampling) 
-Chain 4 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
-Chain 1 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
-Chain 1 Iteration: 2900 / 10000 [ 29%]  (Warmup) 
-Chain 1 Iteration: 3000 / 10000 [ 30%]  (Warmup) 
-Chain 2 Iteration: 5200 / 10000 [ 52%]  (Sampling) 
-Chain 2 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
-Chain 2 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
-Chain 2 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
-Chain 3 Iteration: 5100 / 10000 [ 51%]  (Sampling) 
-Chain 3 Iteration: 5200 / 10000 [ 52%]  (Sampling) 
-Chain 3 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
-Chain 4 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
-Chain 4 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
-Chain 4 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
-Chain 1 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
-Chain 1 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
-Chain 1 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
-Chain 2 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
-Chain 2 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
-Chain 2 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
-Chain 3 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
-Chain 3 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
-Chain 3 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
-Chain 3 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
-Chain 4 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
-Chain 4 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
-Chain 4 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
-Chain 1 Iteration: 3400 / 10000 [ 34%]  (Warmup) 
-Chain 1 Iteration: 3500 / 10000 [ 35%]  (Warmup) 
-Chain 1 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
-Chain 2 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
-Chain 2 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
-Chain 2 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
-Chain 3 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
-Chain 3 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
-Chain 3 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
-Chain 4 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
-Chain 4 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
-Chain 4 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
 Chain 1 Iteration: 3700 / 10000 [ 37%]  (Warmup) 
+Chain 2 Iteration: 1000 / 10000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 4600 / 10000 [ 46%]  (Warmup) 
+Chain 3 Iteration: 4700 / 10000 [ 47%]  (Warmup) 
+Chain 4 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
+Chain 4 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
 Chain 1 Iteration: 3800 / 10000 [ 38%]  (Warmup) 
 Chain 1 Iteration: 3900 / 10000 [ 39%]  (Warmup) 
-Chain 2 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
-Chain 2 Iteration: 6300 / 10000 [ 63%]  (Sampling) 
-Chain 2 Iteration: 6400 / 10000 [ 64%]  (Sampling) 
-Chain 3 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
-Chain 3 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
+Chain 3 Iteration: 4800 / 10000 [ 48%]  (Warmup) 
+Chain 4 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
+Chain 4 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
+Chain 1 Iteration: 4000 / 10000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 1100 / 10000 [ 11%]  (Warmup) 
+Chain 3 Iteration: 4900 / 10000 [ 49%]  (Warmup) 
+Chain 4 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
+Chain 4 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
+Chain 1 Iteration: 4100 / 10000 [ 41%]  (Warmup) 
+Chain 3 Iteration: 5000 / 10000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 5001 / 10000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 5100 / 10000 [ 51%]  (Sampling) 
+Chain 4 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
+Chain 4 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 4200 / 10000 [ 42%]  (Warmup) 
+Chain 3 Iteration: 5200 / 10000 [ 52%]  (Sampling) 
+Chain 4 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
+Chain 4 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
+Chain 1 Iteration: 4300 / 10000 [ 43%]  (Warmup) 
+Chain 2 Iteration: 1200 / 10000 [ 12%]  (Warmup) 
+Chain 3 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
 Chain 4 Iteration: 6300 / 10000 [ 63%]  (Sampling) 
 Chain 4 Iteration: 6400 / 10000 [ 64%]  (Sampling) 
+Chain 1 Iteration: 4400 / 10000 [ 44%]  (Warmup) 
+Chain 1 Iteration: 4500 / 10000 [ 45%]  (Warmup) 
+Chain 3 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
+Chain 3 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
 Chain 4 Iteration: 6500 / 10000 [ 65%]  (Sampling) 
-Chain 1 Iteration: 4000 / 10000 [ 40%]  (Warmup) 
-Chain 1 Iteration: 4100 / 10000 [ 41%]  (Warmup) 
-Chain 1 Iteration: 4200 / 10000 [ 42%]  (Warmup) 
-Chain 2 Iteration: 6500 / 10000 [ 65%]  (Sampling) 
-Chain 2 Iteration: 6600 / 10000 [ 66%]  (Sampling) 
-Chain 2 Iteration: 6700 / 10000 [ 67%]  (Sampling) 
-Chain 3 Iteration: 6300 / 10000 [ 63%]  (Sampling) 
-Chain 3 Iteration: 6400 / 10000 [ 64%]  (Sampling) 
-Chain 3 Iteration: 6500 / 10000 [ 65%]  (Sampling) 
-Chain 3 Iteration: 6600 / 10000 [ 66%]  (Sampling) 
 Chain 4 Iteration: 6600 / 10000 [ 66%]  (Sampling) 
+Chain 1 Iteration: 4600 / 10000 [ 46%]  (Warmup) 
+Chain 2 Iteration: 1300 / 10000 [ 13%]  (Warmup) 
+Chain 3 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
 Chain 4 Iteration: 6700 / 10000 [ 67%]  (Sampling) 
 Chain 4 Iteration: 6800 / 10000 [ 68%]  (Sampling) 
-Chain 1 Iteration: 4300 / 10000 [ 43%]  (Warmup) 
-Chain 1 Iteration: 4400 / 10000 [ 44%]  (Warmup) 
-Chain 2 Iteration: 6800 / 10000 [ 68%]  (Sampling) 
-Chain 2 Iteration: 6900 / 10000 [ 69%]  (Sampling) 
-Chain 2 Iteration: 7000 / 10000 [ 70%]  (Sampling) 
-Chain 3 Iteration: 6700 / 10000 [ 67%]  (Sampling) 
-Chain 3 Iteration: 6800 / 10000 [ 68%]  (Sampling) 
+Chain 1 Iteration: 4700 / 10000 [ 47%]  (Warmup) 
+Chain 3 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
+Chain 3 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
 Chain 4 Iteration: 6900 / 10000 [ 69%]  (Sampling) 
 Chain 4 Iteration: 7000 / 10000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 4800 / 10000 [ 48%]  (Warmup) 
+Chain 2 Iteration: 1400 / 10000 [ 14%]  (Warmup) 
+Chain 3 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
 Chain 4 Iteration: 7100 / 10000 [ 71%]  (Sampling) 
-Chain 1 Iteration: 4500 / 10000 [ 45%]  (Warmup) 
-Chain 1 Iteration: 4600 / 10000 [ 46%]  (Warmup) 
-Chain 1 Iteration: 4700 / 10000 [ 47%]  (Warmup) 
-Chain 2 Iteration: 7100 / 10000 [ 71%]  (Sampling) 
-Chain 2 Iteration: 7200 / 10000 [ 72%]  (Sampling) 
-Chain 2 Iteration: 7300 / 10000 [ 73%]  (Sampling) 
-Chain 3 Iteration: 6900 / 10000 [ 69%]  (Sampling) 
-Chain 3 Iteration: 7000 / 10000 [ 70%]  (Sampling) 
-Chain 3 Iteration: 7100 / 10000 [ 71%]  (Sampling) 
-Chain 3 Iteration: 7200 / 10000 [ 72%]  (Sampling) 
 Chain 4 Iteration: 7200 / 10000 [ 72%]  (Sampling) 
+Chain 1 Iteration: 4900 / 10000 [ 49%]  (Warmup) 
+Chain 3 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
 Chain 4 Iteration: 7300 / 10000 [ 73%]  (Sampling) 
 Chain 4 Iteration: 7400 / 10000 [ 74%]  (Sampling) 
-Chain 1 Iteration: 4800 / 10000 [ 48%]  (Warmup) 
-Chain 1 Iteration: 4900 / 10000 [ 49%]  (Warmup) 
 Chain 1 Iteration: 5000 / 10000 [ 50%]  (Warmup) 
 Chain 1 Iteration: 5001 / 10000 [ 50%]  (Sampling) 
 Chain 1 Iteration: 5100 / 10000 [ 51%]  (Sampling) 
-Chain 2 Iteration: 7400 / 10000 [ 74%]  (Sampling) 
-Chain 2 Iteration: 7500 / 10000 [ 75%]  (Sampling) 
-Chain 2 Iteration: 7600 / 10000 [ 76%]  (Sampling) 
-Chain 3 Iteration: 7300 / 10000 [ 73%]  (Sampling) 
-Chain 3 Iteration: 7400 / 10000 [ 74%]  (Sampling) 
-Chain 3 Iteration: 7500 / 10000 [ 75%]  (Sampling) 
+Chain 3 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
 Chain 4 Iteration: 7500 / 10000 [ 75%]  (Sampling) 
 Chain 4 Iteration: 7600 / 10000 [ 76%]  (Sampling) 
-Chain 4 Iteration: 7700 / 10000 [ 77%]  (Sampling) 
 Chain 1 Iteration: 5200 / 10000 [ 52%]  (Sampling) 
-Chain 1 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
-Chain 1 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
-Chain 2 Iteration: 7700 / 10000 [ 77%]  (Sampling) 
-Chain 2 Iteration: 7800 / 10000 [ 78%]  (Sampling) 
-Chain 2 Iteration: 7900 / 10000 [ 79%]  (Sampling) 
-Chain 3 Iteration: 7600 / 10000 [ 76%]  (Sampling) 
-Chain 3 Iteration: 7700 / 10000 [ 77%]  (Sampling) 
-Chain 3 Iteration: 7800 / 10000 [ 78%]  (Sampling) 
+Chain 2 Iteration: 1500 / 10000 [ 15%]  (Warmup) 
+Chain 3 Iteration: 6300 / 10000 [ 63%]  (Sampling) 
+Chain 3 Iteration: 6400 / 10000 [ 64%]  (Sampling) 
+Chain 4 Iteration: 7700 / 10000 [ 77%]  (Sampling) 
 Chain 4 Iteration: 7800 / 10000 [ 78%]  (Sampling) 
+Chain 1 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
+Chain 3 Iteration: 6500 / 10000 [ 65%]  (Sampling) 
 Chain 4 Iteration: 7900 / 10000 [ 79%]  (Sampling) 
 Chain 4 Iteration: 8000 / 10000 [ 80%]  (Sampling) 
-Chain 1 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
-Chain 1 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
-Chain 1 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
-Chain 2 Iteration: 8000 / 10000 [ 80%]  (Sampling) 
-Chain 2 Iteration: 8100 / 10000 [ 81%]  (Sampling) 
-Chain 2 Iteration: 8200 / 10000 [ 82%]  (Sampling) 
-Chain 3 Iteration: 7900 / 10000 [ 79%]  (Sampling) 
-Chain 3 Iteration: 8000 / 10000 [ 80%]  (Sampling) 
-Chain 3 Iteration: 8100 / 10000 [ 81%]  (Sampling) 
+Chain 1 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
+Chain 2 Iteration: 1600 / 10000 [ 16%]  (Warmup) 
+Chain 3 Iteration: 6600 / 10000 [ 66%]  (Sampling) 
+Chain 3 Iteration: 6700 / 10000 [ 67%]  (Sampling) 
 Chain 4 Iteration: 8100 / 10000 [ 81%]  (Sampling) 
 Chain 4 Iteration: 8200 / 10000 [ 82%]  (Sampling) 
+Chain 1 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
+Chain 1 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
+Chain 3 Iteration: 6800 / 10000 [ 68%]  (Sampling) 
 Chain 4 Iteration: 8300 / 10000 [ 83%]  (Sampling) 
-Chain 1 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
-Chain 1 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
-Chain 1 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
-Chain 1 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
-Chain 2 Iteration: 8300 / 10000 [ 83%]  (Sampling) 
-Chain 2 Iteration: 8400 / 10000 [ 84%]  (Sampling) 
-Chain 2 Iteration: 8500 / 10000 [ 85%]  (Sampling) 
-Chain 3 Iteration: 8200 / 10000 [ 82%]  (Sampling) 
-Chain 3 Iteration: 8300 / 10000 [ 83%]  (Sampling) 
-Chain 3 Iteration: 8400 / 10000 [ 84%]  (Sampling) 
 Chain 4 Iteration: 8400 / 10000 [ 84%]  (Sampling) 
+Chain 1 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
+Chain 2 Iteration: 1700 / 10000 [ 17%]  (Warmup) 
+Chain 3 Iteration: 6900 / 10000 [ 69%]  (Sampling) 
+Chain 3 Iteration: 7000 / 10000 [ 70%]  (Sampling) 
 Chain 4 Iteration: 8500 / 10000 [ 85%]  (Sampling) 
 Chain 4 Iteration: 8600 / 10000 [ 86%]  (Sampling) 
-Chain 1 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
-Chain 1 Iteration: 6300 / 10000 [ 63%]  (Sampling) 
-Chain 1 Iteration: 6400 / 10000 [ 64%]  (Sampling) 
-Chain 2 Iteration: 8600 / 10000 [ 86%]  (Sampling) 
-Chain 2 Iteration: 8700 / 10000 [ 87%]  (Sampling) 
-Chain 2 Iteration: 8800 / 10000 [ 88%]  (Sampling) 
-Chain 3 Iteration: 8500 / 10000 [ 85%]  (Sampling) 
-Chain 3 Iteration: 8600 / 10000 [ 86%]  (Sampling) 
-Chain 3 Iteration: 8700 / 10000 [ 87%]  (Sampling) 
+Chain 1 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
+Chain 2 Iteration: 1800 / 10000 [ 18%]  (Warmup) 
+Chain 3 Iteration: 7100 / 10000 [ 71%]  (Sampling) 
 Chain 4 Iteration: 8700 / 10000 [ 87%]  (Sampling) 
 Chain 4 Iteration: 8800 / 10000 [ 88%]  (Sampling) 
+Chain 1 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
+Chain 1 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 1900 / 10000 [ 19%]  (Warmup) 
+Chain 2 Iteration: 2000 / 10000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 7200 / 10000 [ 72%]  (Sampling) 
 Chain 4 Iteration: 8900 / 10000 [ 89%]  (Sampling) 
-Chain 1 Iteration: 6500 / 10000 [ 65%]  (Sampling) 
-Chain 1 Iteration: 6600 / 10000 [ 66%]  (Sampling) 
-Chain 1 Iteration: 6700 / 10000 [ 67%]  (Sampling) 
-Chain 2 Iteration: 8900 / 10000 [ 89%]  (Sampling) 
-Chain 2 Iteration: 9000 / 10000 [ 90%]  (Sampling) 
-Chain 2 Iteration: 9100 / 10000 [ 91%]  (Sampling) 
-Chain 3 Iteration: 8800 / 10000 [ 88%]  (Sampling) 
-Chain 3 Iteration: 8900 / 10000 [ 89%]  (Sampling) 
-Chain 3 Iteration: 9000 / 10000 [ 90%]  (Sampling) 
 Chain 4 Iteration: 9000 / 10000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
+Chain 2 Iteration: 2100 / 10000 [ 21%]  (Warmup) 
+Chain 3 Iteration: 7300 / 10000 [ 73%]  (Sampling) 
+Chain 3 Iteration: 7400 / 10000 [ 74%]  (Sampling) 
 Chain 4 Iteration: 9100 / 10000 [ 91%]  (Sampling) 
+Chain 1 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
+Chain 2 Iteration: 2200 / 10000 [ 22%]  (Warmup) 
+Chain 3 Iteration: 7500 / 10000 [ 75%]  (Sampling) 
 Chain 4 Iteration: 9200 / 10000 [ 92%]  (Sampling) 
-Chain 1 Iteration: 6800 / 10000 [ 68%]  (Sampling) 
-Chain 1 Iteration: 6900 / 10000 [ 69%]  (Sampling) 
-Chain 1 Iteration: 7000 / 10000 [ 70%]  (Sampling) 
-Chain 2 Iteration: 9200 / 10000 [ 92%]  (Sampling) 
-Chain 2 Iteration: 9300 / 10000 [ 93%]  (Sampling) 
-Chain 2 Iteration: 9400 / 10000 [ 94%]  (Sampling) 
-Chain 3 Iteration: 9100 / 10000 [ 91%]  (Sampling) 
-Chain 3 Iteration: 9200 / 10000 [ 92%]  (Sampling) 
-Chain 3 Iteration: 9300 / 10000 [ 93%]  (Sampling) 
 Chain 4 Iteration: 9300 / 10000 [ 93%]  (Sampling) 
+Chain 1 Iteration: 6300 / 10000 [ 63%]  (Sampling) 
+Chain 2 Iteration: 2300 / 10000 [ 23%]  (Warmup) 
+Chain 3 Iteration: 7600 / 10000 [ 76%]  (Sampling) 
+Chain 3 Iteration: 7700 / 10000 [ 77%]  (Sampling) 
 Chain 4 Iteration: 9400 / 10000 [ 94%]  (Sampling) 
 Chain 4 Iteration: 9500 / 10000 [ 95%]  (Sampling) 
-Chain 1 Iteration: 7100 / 10000 [ 71%]  (Sampling) 
-Chain 1 Iteration: 7200 / 10000 [ 72%]  (Sampling) 
-Chain 1 Iteration: 7300 / 10000 [ 73%]  (Sampling) 
-Chain 1 Iteration: 7400 / 10000 [ 74%]  (Sampling) 
-Chain 2 Iteration: 9500 / 10000 [ 95%]  (Sampling) 
-Chain 2 Iteration: 9600 / 10000 [ 96%]  (Sampling) 
-Chain 2 Iteration: 9700 / 10000 [ 97%]  (Sampling) 
-Chain 3 Iteration: 9400 / 10000 [ 94%]  (Sampling) 
-Chain 3 Iteration: 9500 / 10000 [ 95%]  (Sampling) 
-Chain 3 Iteration: 9600 / 10000 [ 96%]  (Sampling) 
+Chain 1 Iteration: 6400 / 10000 [ 64%]  (Sampling) 
+Chain 2 Iteration: 2400 / 10000 [ 24%]  (Warmup) 
+Chain 2 Iteration: 2500 / 10000 [ 25%]  (Warmup) 
+Chain 3 Iteration: 7800 / 10000 [ 78%]  (Sampling) 
 Chain 4 Iteration: 9600 / 10000 [ 96%]  (Sampling) 
 Chain 4 Iteration: 9700 / 10000 [ 97%]  (Sampling) 
 Chain 4 Iteration: 9800 / 10000 [ 98%]  (Sampling) 
+Chain 1 Iteration: 6500 / 10000 [ 65%]  (Sampling) 
+Chain 1 Iteration: 6600 / 10000 [ 66%]  (Sampling) 
+Chain 2 Iteration: 2600 / 10000 [ 26%]  (Warmup) 
+Chain 3 Iteration: 7900 / 10000 [ 79%]  (Sampling) 
+Chain 4 Iteration: 9900 / 10000 [ 99%]  (Sampling) 
+Chain 4 Iteration: 10000 / 10000 [100%]  (Sampling) 
+Chain 4 finished in 10.0 seconds.
+Chain 1 Iteration: 6700 / 10000 [ 67%]  (Sampling) 
+Chain 2 Iteration: 2700 / 10000 [ 27%]  (Warmup) 
+Chain 3 Iteration: 8000 / 10000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 8100 / 10000 [ 81%]  (Sampling) 
+Chain 1 Iteration: 6800 / 10000 [ 68%]  (Sampling) 
+Chain 2 Iteration: 2800 / 10000 [ 28%]  (Warmup) 
+Chain 3 Iteration: 8200 / 10000 [ 82%]  (Sampling) 
+Chain 1 Iteration: 6900 / 10000 [ 69%]  (Sampling) 
+Chain 1 Iteration: 7000 / 10000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 2900 / 10000 [ 29%]  (Warmup) 
+Chain 2 Iteration: 3000 / 10000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 8300 / 10000 [ 83%]  (Sampling) 
+Chain 3 Iteration: 8400 / 10000 [ 84%]  (Sampling) 
+Chain 1 Iteration: 7100 / 10000 [ 71%]  (Sampling) 
+Chain 2 Iteration: 3100 / 10000 [ 31%]  (Warmup) 
+Chain 3 Iteration: 8500 / 10000 [ 85%]  (Sampling) 
+Chain 1 Iteration: 7200 / 10000 [ 72%]  (Sampling) 
+Chain 2 Iteration: 3200 / 10000 [ 32%]  (Warmup) 
+Chain 3 Iteration: 8600 / 10000 [ 86%]  (Sampling) 
+Chain 3 Iteration: 8700 / 10000 [ 87%]  (Sampling) 
+Chain 1 Iteration: 7300 / 10000 [ 73%]  (Sampling) 
+Chain 1 Iteration: 7400 / 10000 [ 74%]  (Sampling) 
+Chain 2 Iteration: 3300 / 10000 [ 33%]  (Warmup) 
+Chain 2 Iteration: 3400 / 10000 [ 34%]  (Warmup) 
+Chain 3 Iteration: 8800 / 10000 [ 88%]  (Sampling) 
 Chain 1 Iteration: 7500 / 10000 [ 75%]  (Sampling) 
+Chain 2 Iteration: 3500 / 10000 [ 35%]  (Warmup) 
+Chain 3 Iteration: 8900 / 10000 [ 89%]  (Sampling) 
+Chain 3 Iteration: 9000 / 10000 [ 90%]  (Sampling) 
 Chain 1 Iteration: 7600 / 10000 [ 76%]  (Sampling) 
+Chain 2 Iteration: 3600 / 10000 [ 36%]  (Warmup) 
+Chain 3 Iteration: 9100 / 10000 [ 91%]  (Sampling) 
 Chain 1 Iteration: 7700 / 10000 [ 77%]  (Sampling) 
+Chain 1 Iteration: 7800 / 10000 [ 78%]  (Sampling) 
+Chain 2 Iteration: 3700 / 10000 [ 37%]  (Warmup) 
+Chain 3 Iteration: 9200 / 10000 [ 92%]  (Sampling) 
+Chain 3 Iteration: 9300 / 10000 [ 93%]  (Sampling) 
+Chain 1 Iteration: 7900 / 10000 [ 79%]  (Sampling) 
+Chain 2 Iteration: 3800 / 10000 [ 38%]  (Warmup) 
+Chain 2 Iteration: 3900 / 10000 [ 39%]  (Warmup) 
+Chain 3 Iteration: 9400 / 10000 [ 94%]  (Sampling) 
+Chain 1 Iteration: 8000 / 10000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 4000 / 10000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 9500 / 10000 [ 95%]  (Sampling) 
+Chain 3 Iteration: 9600 / 10000 [ 96%]  (Sampling) 
+Chain 1 Iteration: 8100 / 10000 [ 81%]  (Sampling) 
+Chain 1 Iteration: 8200 / 10000 [ 82%]  (Sampling) 
+Chain 2 Iteration: 4100 / 10000 [ 41%]  (Warmup) 
+Chain 3 Iteration: 9700 / 10000 [ 97%]  (Sampling) 
+Chain 1 Iteration: 8300 / 10000 [ 83%]  (Sampling) 
+Chain 2 Iteration: 4200 / 10000 [ 42%]  (Warmup) 
+Chain 3 Iteration: 9800 / 10000 [ 98%]  (Sampling) 
+Chain 1 Iteration: 8400 / 10000 [ 84%]  (Sampling) 
+Chain 2 Iteration: 4300 / 10000 [ 43%]  (Warmup) 
+Chain 3 Iteration: 9900 / 10000 [ 99%]  (Sampling) 
+Chain 3 Iteration: 10000 / 10000 [100%]  (Sampling) 
+Chain 3 finished in 11.3 seconds.
+Chain 1 Iteration: 8500 / 10000 [ 85%]  (Sampling) 
+Chain 2 Iteration: 4400 / 10000 [ 44%]  (Warmup) 
+Chain 2 Iteration: 4500 / 10000 [ 45%]  (Warmup) 
+Chain 1 Iteration: 8600 / 10000 [ 86%]  (Sampling) 
+Chain 1 Iteration: 8700 / 10000 [ 87%]  (Sampling) 
+Chain 2 Iteration: 4600 / 10000 [ 46%]  (Warmup) 
+Chain 1 Iteration: 8800 / 10000 [ 88%]  (Sampling) 
+Chain 2 Iteration: 4700 / 10000 [ 47%]  (Warmup) 
+Chain 1 Iteration: 8900 / 10000 [ 89%]  (Sampling) 
+Chain 2 Iteration: 4800 / 10000 [ 48%]  (Warmup) 
+Chain 2 Iteration: 4900 / 10000 [ 49%]  (Warmup) 
+Chain 1 Iteration: 9000 / 10000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 9100 / 10000 [ 91%]  (Sampling) 
+Chain 2 Iteration: 5000 / 10000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 5001 / 10000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 9200 / 10000 [ 92%]  (Sampling) 
+Chain 2 Iteration: 5100 / 10000 [ 51%]  (Sampling) 
+Chain 2 Iteration: 5200 / 10000 [ 52%]  (Sampling) 
+Chain 1 Iteration: 9300 / 10000 [ 93%]  (Sampling) 
+Chain 2 Iteration: 5300 / 10000 [ 53%]  (Sampling) 
+Chain 1 Iteration: 9400 / 10000 [ 94%]  (Sampling) 
+Chain 1 Iteration: 9500 / 10000 [ 95%]  (Sampling) 
+Chain 2 Iteration: 5400 / 10000 [ 54%]  (Sampling) 
+Chain 2 Iteration: 5500 / 10000 [ 55%]  (Sampling) 
+Chain 1 Iteration: 9600 / 10000 [ 96%]  (Sampling) 
+Chain 2 Iteration: 5600 / 10000 [ 56%]  (Sampling) 
+Chain 2 Iteration: 5700 / 10000 [ 57%]  (Sampling) 
+Chain 1 Iteration: 9700 / 10000 [ 97%]  (Sampling) 
+Chain 2 Iteration: 5800 / 10000 [ 58%]  (Sampling) 
+Chain 1 Iteration: 9800 / 10000 [ 98%]  (Sampling) 
+Chain 1 Iteration: 9900 / 10000 [ 99%]  (Sampling) 
+Chain 2 Iteration: 5900 / 10000 [ 59%]  (Sampling) 
+Chain 2 Iteration: 6000 / 10000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 10000 / 10000 [100%]  (Sampling) 
+Chain 2 Iteration: 6100 / 10000 [ 61%]  (Sampling) 
+Chain 1 finished in 12.9 seconds.
+Chain 2 Iteration: 6200 / 10000 [ 62%]  (Sampling) 
+Chain 2 Iteration: 6300 / 10000 [ 63%]  (Sampling) 
+Chain 2 Iteration: 6400 / 10000 [ 64%]  (Sampling) 
+Chain 2 Iteration: 6500 / 10000 [ 65%]  (Sampling) 
+Chain 2 Iteration: 6600 / 10000 [ 66%]  (Sampling) 
+Chain 2 Iteration: 6700 / 10000 [ 67%]  (Sampling) 
+Chain 2 Iteration: 6800 / 10000 [ 68%]  (Sampling) 
+Chain 2 Iteration: 6900 / 10000 [ 69%]  (Sampling) 
+Chain 2 Iteration: 7000 / 10000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 7100 / 10000 [ 71%]  (Sampling) 
+Chain 2 Iteration: 7200 / 10000 [ 72%]  (Sampling) 
+Chain 2 Iteration: 7300 / 10000 [ 73%]  (Sampling) 
+Chain 2 Iteration: 7400 / 10000 [ 74%]  (Sampling) 
+Chain 2 Iteration: 7500 / 10000 [ 75%]  (Sampling) 
+Chain 2 Iteration: 7600 / 10000 [ 76%]  (Sampling) 
+Chain 2 Iteration: 7700 / 10000 [ 77%]  (Sampling) 
+Chain 2 Iteration: 7800 / 10000 [ 78%]  (Sampling) 
+Chain 2 Iteration: 7900 / 10000 [ 79%]  (Sampling) 
+Chain 2 Iteration: 8000 / 10000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 8100 / 10000 [ 81%]  (Sampling) 
+Chain 2 Iteration: 8200 / 10000 [ 82%]  (Sampling) 
+Chain 2 Iteration: 8300 / 10000 [ 83%]  (Sampling) 
+Chain 2 Iteration: 8400 / 10000 [ 84%]  (Sampling) 
+Chain 2 Iteration: 8500 / 10000 [ 85%]  (Sampling) 
+Chain 2 Iteration: 8600 / 10000 [ 86%]  (Sampling) 
+Chain 2 Iteration: 8700 / 10000 [ 87%]  (Sampling) 
+Chain 2 Iteration: 8800 / 10000 [ 88%]  (Sampling) 
+Chain 2 Iteration: 8900 / 10000 [ 89%]  (Sampling) 
+Chain 2 Iteration: 9000 / 10000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 9100 / 10000 [ 91%]  (Sampling) 
+Chain 2 Iteration: 9200 / 10000 [ 92%]  (Sampling) 
+Chain 2 Iteration: 9300 / 10000 [ 93%]  (Sampling) 
+Chain 2 Iteration: 9400 / 10000 [ 94%]  (Sampling) 
+Chain 2 Iteration: 9500 / 10000 [ 95%]  (Sampling) 
+Chain 2 Iteration: 9600 / 10000 [ 96%]  (Sampling) 
+Chain 2 Iteration: 9700 / 10000 [ 97%]  (Sampling) 
 Chain 2 Iteration: 9800 / 10000 [ 98%]  (Sampling) 
 Chain 2 Iteration: 9900 / 10000 [ 99%]  (Sampling) 
 Chain 2 Iteration: 10000 / 10000 [100%]  (Sampling) 
-Chain 3 Iteration: 9700 / 10000 [ 97%]  (Sampling) 
-Chain 3 Iteration: 9800 / 10000 [ 98%]  (Sampling) 
-Chain 3 Iteration: 9900 / 10000 [ 99%]  (Sampling) 
-Chain 4 Iteration: 9900 / 10000 [ 99%]  (Sampling) 
-Chain 4 Iteration: 10000 / 10000 [100%]  (Sampling) 
-Chain 2 finished in 5.6 seconds.
-Chain 4 finished in 5.5 seconds.
-Chain 1 Iteration: 7800 / 10000 [ 78%]  (Sampling) 
-Chain 1 Iteration: 7900 / 10000 [ 79%]  (Sampling) 
-Chain 1 Iteration: 8000 / 10000 [ 80%]  (Sampling) 
-Chain 1 Iteration: 8100 / 10000 [ 81%]  (Sampling) 
-Chain 3 Iteration: 10000 / 10000 [100%]  (Sampling) 
-Chain 3 finished in 5.4 seconds.
-Chain 1 Iteration: 8200 / 10000 [ 82%]  (Sampling) 
-Chain 1 Iteration: 8300 / 10000 [ 83%]  (Sampling) 
-Chain 1 Iteration: 8400 / 10000 [ 84%]  (Sampling) 
-Chain 1 Iteration: 8500 / 10000 [ 85%]  (Sampling) 
-Chain 1 Iteration: 8600 / 10000 [ 86%]  (Sampling) 
-Chain 1 Iteration: 8700 / 10000 [ 87%]  (Sampling) 
-Chain 1 Iteration: 8800 / 10000 [ 88%]  (Sampling) 
-Chain 1 Iteration: 8900 / 10000 [ 89%]  (Sampling) 
-Chain 1 Iteration: 9000 / 10000 [ 90%]  (Sampling) 
-Chain 1 Iteration: 9100 / 10000 [ 91%]  (Sampling) 
-Chain 1 Iteration: 9200 / 10000 [ 92%]  (Sampling) 
-Chain 1 Iteration: 9300 / 10000 [ 93%]  (Sampling) 
-Chain 1 Iteration: 9400 / 10000 [ 94%]  (Sampling) 
-Chain 1 Iteration: 9500 / 10000 [ 95%]  (Sampling) 
-Chain 1 Iteration: 9600 / 10000 [ 96%]  (Sampling) 
-Chain 1 Iteration: 9700 / 10000 [ 97%]  (Sampling) 
-Chain 1 Iteration: 9800 / 10000 [ 98%]  (Sampling) 
-Chain 1 Iteration: 9900 / 10000 [ 99%]  (Sampling) 
-Chain 1 Iteration: 10000 / 10000 [100%]  (Sampling) 
-Chain 1 finished in 6.3 seconds.
+Chain 2 finished in 15.4 seconds.
 
 All 4 chains finished successfully.
-Mean chain execution time: 5.7 seconds.
-Total execution time: 6.4 seconds.</code></pre>
+Mean chain execution time: 12.4 seconds.
+Total execution time: 15.6 seconds.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_hit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: poisson 
   Links: mu = log 
 Formula: Hit ~ Games + height + weight + (1 | team:position) 
-   Data: dat (Number of observations: 329) 
+   Data: dat (Number of observations: 411) 
   Draws: 4 chains, each with iter = 10000; warmup = 5000; thin = 1;
          total post-warmup draws = 20000
 
 Multilevel Hyperparameters:
-~team:position (Number of levels: 36) 
+~team:position (Number of levels: 90) 
               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sd(Intercept)     0.15      0.02     0.11     0.20 1.00     5797     7817
+sd(Intercept)     0.09      0.01     0.07     0.12 1.00     5249     8007
 
 Regression Coefficients:
           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept     1.10      0.37     0.37     1.82 1.00    24447    16575
-Games         0.03      0.00     0.03     0.03 1.00    23831    17850
-height       -0.00      0.00    -0.01     0.00 1.00    25042    16308
-weight        0.01      0.00     0.01     0.01 1.00    24984    17293
+Intercept     3.06      0.21     2.65     3.46 1.00    23064    17071
+Games         0.02      0.00     0.02     0.02 1.00    23580    18070
+height       -0.00      0.00    -0.01    -0.00 1.00    23308    16328
+weight        0.00      0.00    -0.00     0.00 1.00    22538    17239
 
 Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
 and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -2116,7 +2116,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 </div>
 </div>
-<p>A standard model-check is the <strong>posterior predictive check</strong>: draw datasets from the fitted model and compare them visually to the observed data. <code>bayesplot::pp_check()</code> overlays a sample of model-generated densities on the data. Here the fit at very low hit counts is imperfect, which suggests room for improvement.</p>
+<p>A standard model-check is the <strong>posterior predictive check</strong>: draw datasets from the fitted model and compare them visually to the observed data. <code>bayesplot::pp_check()</code> overlays a sample of model-generated densities on the data. Here the model does not reproduce the shape of the observed distribution well between about 50 and 120 hits, which suggests room for improvement.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(model_hit, <span class="at">ndraws =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -2127,7 +2127,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 </div>
 </div>
-<p>Finally, a per-group plot. The fine adjustments across teams and positions can be seen to track the data well.</p>
+<p>Finally, a per-position plot, with points colored by league. The fine adjustments across teams and positions can be seen to track the data well.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>predicted_hit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model_hit,</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> dat,</span>
@@ -2138,19 +2138,19 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">observed =</span> dat<span class="sc">$</span>Hit,</span>
 <span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">predicted =</span> predicted_hit<span class="sc">$</span>Estimate,</span>
-<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">team =</span> dat<span class="sc">$</span>team,</span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">league =</span> dat<span class="sc">$</span>league,</span>
 <span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">position =</span> dat<span class="sc">$</span>position</span>
 <span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> observed, <span class="at">y =</span> predicted, <span class="at">color =</span> team)) <span class="sc">+</span></span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> observed, <span class="at">y =</span> predicted, <span class="at">color =</span> league)) <span class="sc">+</span></span>
 <span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
 <span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Observed Hit"</span>, <span class="at">y =</span> <span class="st">"Predicted Hit"</span>,</span>
-<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted vs Observed Hit count (2020 season)"</span>,</span>
-<span id="cb78-20"><a href="#cb78-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Team"</span></span>
+<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted vs Observed Hit count (2016 season)"</span>,</span>
+<span id="cb78-20"><a href="#cb78-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"League"</span></span>
 <span id="cb78-21"><a href="#cb78-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb78-22"><a href="#cb78-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(team <span class="sc">~</span> position, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb78-22"><a href="#cb78-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> position, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
 <span id="cb78-23"><a href="#cb78-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb78-24"><a href="#cb78-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -2243,11 +2243,11 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </section>
 <section id="applied-problem-hierarchical-modeling-on-the-baseball-data" class="level3" data-number="14.5.2">
 <h3 data-number="14.5.2" class="anchored" data-anchor-id="applied-problem-hierarchical-modeling-on-the-baseball-data"><span class="header-section-number">14.5.2</span> Applied problem: hierarchical modeling on the baseball data</h3>
-<p>Using <a href="Baseball.csv">Baseball.csv</a>, build hierarchical models nested by year and team. Restrict to the 2018–2020 seasons and to pitchers. The relevant variables include salary, height, and weight, together with pitching performance metrics — wins (Win), losses (Lose), holds (Hold), and saves (Save).</p>
+<p>Using <a href="Baseball.csv">Baseball.csv</a>, build hierarchical models nested by year and team. Restrict to the 2014–2016 seasons and to pitchers. The relevant variables include salary, height, and weight, together with pitching performance metrics — wins (Win), losses (Lose), and saves (Save).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Baseball.csv"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2018年度"</span>, <span class="st">"2019年度"</span>, <span class="st">"2020年度"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(position <span class="sc">==</span> <span class="st">"投手"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2014</span>, <span class="dv">2015</span>, <span class="dv">2016</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(position <span class="sc">==</span> <span class="st">"Pitcher"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Win), <span class="sc">!</span><span class="fu">is.na</span>(Lose), <span class="sc">!</span><span class="fu">is.na</span>(Games), <span class="sc">!</span><span class="fu">is.na</span>(salary),</span>
 <span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(height), <span class="sc">!</span><span class="fu">is.na</span>(weight)) <span class="sc">%&gt;%</span></span>
 <span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
