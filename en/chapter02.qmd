@@ -304,7 +304,21 @@ In practice, datasets are rarely entered by hand; they are imported from a datab
 
 Many statistical packages have their own native file formats and R provides functions to read each of them. Here we illustrate the simplest case: reading a CSV file.
 
-We will read the sample dataset [Baseball.csv](Baseball.csv), saved in UTF-8 encoding.[^2.2][^2.3] The base R function `read.csv()` suffices:
+Our sample data are Major League Baseball records from the Lahman Baseball Database, which is distributed as the R package `Lahman`.[^2.3] Data inside a package can be used directly, but in practice data usually arrive as files, so here we first write the data out to a CSV file and then read that file back.
+
+Download the script [make_baseball.R](make_baseball.R), place it in your project folder, and run it once. It installs the required packages if necessary, tidies the data, and writes two CSV files, `Baseball.csv` and `Baseball2016.csv`, in UTF-8 encoding.[^2.2] The script can also be run directly from the textbook's website:
+
+```{r}
+#| eval: FALSE
+source("https://kosugitti.github.io/PsyStatsPracticals/en/make_baseball.R")
+```
+
+```{r}
+#| include: FALSE
+source("make_baseball.R")
+```
+
+`Baseball.csv` is used throughout the rest of this textbook. To read it, the base R function `read.csv()` suffices:
 
 ```{r}
 dat <- read.csv("Baseball.csv")
@@ -352,7 +366,7 @@ Clean code helps with debugging. Reformatting periodically is a good habit.
 
 + Convert `Tbl` to a data frame named `df2`. Either rebuild it directly as a data frame, or use `as.data.frame()`.
 
-+ Read the sample file [Baseball2016.csv](Baseball2016.csv) into a data frame named `dat`. Note that in this file missing values are coded as the numeric value $999$.
++ Read the file `Baseball2016.csv`, created above by `make_baseball.R`, into a data frame named `dat`. Note that in this file missing values are coded as the numeric value $999$.
 
 + Display the first 10 rows of `dat`.
 
@@ -364,6 +378,6 @@ Clean code helps with debugging. Reformatting periodically is a good habit.
 
 + Apply *Reformat Code* (or similar tooling) to clean up your script.
 
-[^2.3]: The baseball data cover the 2011–2016 Major League Baseball seasons and were compiled from the Lahman Baseball Database (via the R package `Lahman`, CC BY-SA 3.0). Each row is one player in one season, restricted to players with a recorded salary (in thousands of US dollars); height and weight are converted to centimeters and kilograms. The script that builds the file is `data-raw/make_baseball.R`.
+[^2.3]: The baseball data cover the 2011–2016 Major League Baseball seasons and were compiled from the Lahman Baseball Database (via the R package `Lahman`, CC BY-SA 3.0). Each row is one player in one season, restricted to players with a recorded salary (in thousands of US dollars); height and weight are converted to centimeters and kilograms. The files in this textbook were created with version 14.0.0 of the package.
 
 [^2.2]: UTF-8 is a character encoding — a scheme for translating the 0s and 1s of computer storage into human-readable text — and is the de facto worldwide standard. Windows, however, still defaults to Shift-JIS (a Japan-specific encoding), so a CSV opened first in Windows Excel may be silently re-encoded and become mojibake (garbled). When using files in this course, read them directly from R rather than opening them in Excel first.

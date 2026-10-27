@@ -1,14 +1,22 @@
-# 英語版の野球データ(Baseball.csv・Baseball2016.csv)を Lahman から作る
-# 出典: Lahman Baseball Database (CC BY-SA 3.0)，R パッケージ Lahman 14.0.0
-# 実行: en/ をカレントにして Rscript data-raw/make_baseball.R
+# ==============================================================================
+# Build the baseball sample data used in this textbook
+#   Source : Lahman Baseball Database (CC BY-SA 3.0), via the R package Lahman
+#   Output : Baseball.csv     (2011-2016 seasons, one row per player-season)
+#            Baseball2016.csv (2016 season only, missing values coded as 999)
+#   Usage  : place this file in your project folder and run
+#            source("make_baseball.R")
+# ==============================================================================
 
 pacman::p_load(Lahman, dplyr, readr, stringr)
 
-# 対象年度 ---------------------------------------------------------------
-# Lahman の年俸表は 2016 年までなので 2011-2016 年にする
+# ------------------------------------------------------------------------------
+# Seasons (Lahman's salary table ends in 2016)
+# ------------------------------------------------------------------------------
 yrs <- 2011:2016
 
-# 球団の愛称(2016 年の名称を球団の系譜 franchID ごとに使う) ---------------
+# ------------------------------------------------------------------------------
+# Team nicknames (the 2016 name is used for each franchise)
+# ------------------------------------------------------------------------------
 nick <- Lahman::Teams |>
   dplyr::filter(yearID == 2016) |>
   dplyr::mutate(team = stringr::str_extract(name, "(Red Sox|White Sox|Blue Jays|\\S+)$"),
@@ -19,7 +27,9 @@ tm <- Lahman::Teams |>
   dplyr::select(yearID, teamID, franchID) |>
   dplyr::left_join(nick, by = "franchID")
 
-# 主ポジション(その年の守備試合数が最多のもの) ----------------------------
+# ------------------------------------------------------------------------------
+# Main position (the position with the most fielding games in the season)
+# ------------------------------------------------------------------------------
 pos <- Lahman::Fielding |>
   dplyr::filter(yearID %in% yrs) |>
   dplyr::group_by(playerID, yearID, POS) |>
@@ -35,7 +45,9 @@ pos <- Lahman::Fielding |>
   )) |>
   dplyr::select(playerID, yearID, position)
 
-# 年俸(千ドル)と所属 -------------------------------------------------------
+# ------------------------------------------------------------------------------
+# Salary (thousands of US dollars) and team
+# ------------------------------------------------------------------------------
 sal <- Lahman::Salaries |>
   dplyr::filter(yearID %in% yrs) |>
   dplyr::group_by(playerID, yearID) |>
@@ -43,7 +55,9 @@ sal <- Lahman::Salaries |>
                    teamID = dplyr::first(teamID),
                    league = as.character(dplyr::first(lgID)), .groups = "drop")
 
-# 打撃と投手の成績(シーズン途中の移籍は合算) --------------------------------
+# ------------------------------------------------------------------------------
+# Batting and pitching records (mid-season trades are summed)
+# ------------------------------------------------------------------------------
 bat <- Lahman::Batting |>
   dplyr::filter(yearID %in% yrs) |>
   dplyr::group_by(playerID, yearID) |>
@@ -54,7 +68,9 @@ pit <- Lahman::Pitching |>
   dplyr::group_by(playerID, yearID) |>
   dplyr::summarise(Win = sum(W), Lose = sum(L), Save = sum(SV), .groups = "drop")
 
-# 結合して整形 ---------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# Join and tidy
+# ------------------------------------------------------------------------------
 dat <- sal |>
   dplyr::inner_join(pos, by = c("playerID", "yearID")) |>
   dplyr::left_join(bat, by = c("playerID", "yearID")) |>
@@ -67,8 +83,8 @@ dat <- sal |>
   ) |>
   dplyr::mutate(
     Name = paste(nameFirst, nameLast),
-    height = round(height * 2.54),   # インチ → cm
-    weight = round(weight * 0.4536)  # ポンド → kg
+    height = round(height * 2.54),   # inches -> cm
+    weight = round(weight * 0.4536)  # pounds -> kg
   ) |>
   dplyr::select(Year = yearID, Name, team, league, salary, bats, throws, height, weight,
                 position, Games, AtBats, Hit, HR, Win, Lose, Save) |>
@@ -76,7 +92,9 @@ dat <- sal |>
 
 readr::write_csv(dat, "Baseball.csv")
 
-# 演習用: 2016 年だけ・欠測を 999 で表したもの -------------------------------
+# ------------------------------------------------------------------------------
+# Exercise file: 2016 only, missing values coded as 999
+# ------------------------------------------------------------------------------
 dat |>
   dplyr::filter(Year == 2016) |>
   dplyr::select(Year, Name, team, league, salary, position, Games, AtBats, Hit, Win, Lose) |>
