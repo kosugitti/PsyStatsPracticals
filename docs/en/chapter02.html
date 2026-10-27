@@ -786,10 +786,15 @@ Levels: low &lt; moderate &lt; high</code></pre>
 <h2 data-number="2.6" class="anchored" data-anchor-id="reading-external-files"><span class="header-section-number">2.6</span> Reading external files</h2>
 <p>In practice, datasets are rarely entered by hand; they are imported from a database or read from a file.</p>
 <p>Many statistical packages have their own native file formats and R provides functions to read each of them. Here we illustrate the simplest case: reading a CSV file.</p>
-<p>We will read the sample dataset <a href="Baseball.csv">Baseball.csv</a>, saved in UTF-8 encoding.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> The base R function <code>read.csv()</code> suffices:</p>
+<p>Our sample data are Major League Baseball records from the Lahman Baseball Database, which is distributed as the R package <code>Lahman</code>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Data inside a package can be used directly, but in practice data usually arrive as files, so here we first write the data out to a CSV file and then read that file back.</p>
+<p>Download the script <a href="make_baseball.R">make_baseball.R</a>, place it in your project folder, and run it once. It installs the required packages if necessary, tidies the data, and writes two CSV files, <code>Baseball.csv</code> and <code>Baseball2016.csv</code>, in UTF-8 encoding.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> The script can also be run directly from the textbook’s website:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Baseball.csv"</span>)</span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://kosugitti.github.io/PsyStatsPracticals/en/make_baseball.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>Baseball.csv</code> is used throughout the rest of this textbook. To read it, the base R function <code>read.csv()</code> suffices:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Baseball.csv"</span>)</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Year             Name   team league salary bats throws height weight
 1 2011 Alberto Callaspo Angels     AL   2000    B      R    173     95
@@ -806,7 +811,7 @@ Levels: low &lt; moderate &lt; high</code></pre>
 5  Infielder   105    250  54  7  NA   NA   NA
 6    Pitcher    35      3   1  0  16   10    0</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   4858 obs. of  17 variables:
  $ Year    : int  2011 2011 2011 2011 2011 2011 2011 2011 2011 2011 ...
@@ -887,7 +892,7 @@ Levels: low &lt; moderate &lt; high</code></pre>
 <li><p>Display the <em>Area</em> value for Tokyo from the <code>Tbl</code> object (i.e., practice accessing list elements).</p></li>
 <li><p>Compute the mean of the <em>Pop</em> variable in <code>Tbl</code>.</p></li>
 <li><p>Convert <code>Tbl</code> to a data frame named <code>df2</code>. Either rebuild it directly as a data frame, or use <code>as.data.frame()</code>.</p></li>
-<li><p>Read the sample file <a href="Baseball2016.csv">Baseball2016.csv</a> into a data frame named <code>dat</code>. Note that in this file missing values are coded as the numeric value <span class="math inline">\(999\)</span>.</p></li>
+<li><p>Read the file <code>Baseball2016.csv</code>, created above by <code>make_baseball.R</code>, into a data frame named <code>dat</code>. Note that in this file missing values are coded as the numeric value <span class="math inline">\(999\)</span>.</p></li>
 <li><p>Display the first 10 rows of <code>dat</code>.</p></li>
 <li><p>Apply <code>summary()</code> to <code>dat</code>.</p></li>
 <li><p>The variable <code>team</code> is on a nominal scale. Convert it to a factor. Two other variables in the dataset should also be converted to factors; convert those as well.</p></li>
@@ -906,8 +911,8 @@ Stevens, Stanley Smith. 1946. <span>“On the Theory of Scales of Measurement.�
 <hr>
 <ol>
 <li id="fn1"><p>One might expect the second to be called “real” rather than “double.” Here “double” refers to the IEEE 754 double-precision floating-point representation used in digital computers: a single number is stored in 64 bits, twice the 32 bits of single precision.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>UTF-8 is a character encoding — a scheme for translating the 0s and 1s of computer storage into human-readable text — and is the de facto worldwide standard. Windows, however, still defaults to Shift-JIS (a Japan-specific encoding), so a CSV opened first in Windows Excel may be silently re-encoded and become mojibake (garbled). When using files in this course, read them directly from R rather than opening them in Excel first.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>The baseball data cover the 2011–2016 Major League Baseball seasons and were compiled from the Lahman Baseball Database (via the R package <code>Lahman</code>, CC BY-SA 3.0). Each row is one player in one season, restricted to players with a recorded salary (in thousands of US dollars); height and weight are converted to centimeters and kilograms. The script that builds the file is <code>data-raw/make_baseball.R</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The baseball data cover the 2011–2016 Major League Baseball seasons and were compiled from the Lahman Baseball Database (via the R package <code>Lahman</code>, CC BY-SA 3.0). Each row is one player in one season, restricted to players with a recorded salary (in thousands of US dollars); height and weight are converted to centimeters and kilograms. The files in this textbook were created with version 14.0.0 of the package.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>UTF-8 is a character encoding — a scheme for translating the 0s and 1s of computer storage into human-readable text — and is the de facto worldwide standard. Windows, however, still defaults to Shift-JIS (a Japan-specific encoding), so a CSV opened first in Windows Excel may be silently re-encoded and become mojibake (garbled). When using files in this course, read them directly from R rather than opening them in Excel first.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
