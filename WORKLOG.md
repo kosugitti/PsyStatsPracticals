@@ -303,3 +303,30 @@
 - 手打ちの数値は再実行で動く(freeze 未設定)。今回照合して一致したもの: ch07:109，ch15:162・532，ch18 の ROPE・BF・閾上率
 - 英語版(en/)には今回の修正は未反映(事実の誤り・数値の修正は英語版にも波及させるべきもの)
 - PDF/ePub の統合時に「Duplicate note reference」警告が出る(各章で脚注[^1]から振っているため。既存)
+
+## 2026-10-26〜27 校閲の残りを日英に反映・英語版の野球データを大リーグに差し替え
+
+### やったこと
+- jp の校閲の残り(db23b05): ch12:101 前回→前章，ch12 で MCMC の1点を指す「代表値」→「MCMCサンプル」(14か所)，ch17:439，ch10:178・ch17:377 の「結果変数」，ch15:64 の三度目の繰り返しを1文に，ch15:596 の文体
+- en へ反映(36b0a59): jp の校閲のうち数式・事実・数値・コードの修正を全章へ。Stan も揃えた(`missing_corr.stan` の mu の制約・`bayes_ttest.stan` の delta→d・`missing_corr_lkj.stan` を jp からコピー)
+- 取りこぼしの修正(7839753): jp ch13:343 固有値分解の X→U，ch14:998 会期式→回帰式，ch18:113 delta→d。en は ch04 Greys・ch17 flavored・ch07 summarise・ch15:285/325 の誤訳・ch11:204 の重複節
+- **en の野球データを NPB から MLB に差し替え**(3cdbf86)。出典は R パッケージ `Lahman` 14.0.0(CC BY-SA 3.0)。年俸表が2016年までなので2011〜2016年。列= Year, Name, team(2016年の愛称を franchID ごとに。Angels は特別扱い), league, salary(千ドル), bats, throws, height(cm), weight(kg), position(守備試合数最多で Pitcher/Catcher/Infielder/Outfielder), Games, AtBats, Hit, HR, Win, Lose, Save。血液型は無し
+  - ch02 演習は `Baseball2016.csv`(Win/Lose の欠測を999)，ch03 演習は2016年・ヤンキース・ア・リーグの球団名から League2・salary_m，ch04 は血液型→position
+  - ch14 は2016年の野手。ICC は inline R(`sprintf("%.3f")`)で −0.052/0.123/0.000。演習は2014〜2016年の投手(Hold は削除)
+  - ch17 のゼロ過剰は2016年のナ・リーグ(2022年まで DH なし)。脚注[^12]を AL/NL と DH の説明に。θ0.23・μ58.9・φ0.57・0安打28.7%
+  - en のコードの `summarize(` を `summarise(` に統一(jp に合わせる・19か所)
+- **案4: 読者が Lahman から自分で CSV を作る形に変更**(a2ef08c)。先生の判断=ファイルの読み込みは練習させたいがデータはパッケージのものが分かりやすい
+  - `en/make_baseball.R`(英語コメント・`pacman::p_load(Lahman, dplyr, readr, stringr)`)を ch02 でダウンロードして1回 `source()`。紙の本向けに `source("https://kosugitti.github.io/PsyStatsPracticals/en/make_baseball.R")` も併記。本の描画時は include: FALSE のチャンクで手元のスクリプトを実行して CSV を作る
+  - ch14・ch17 の CSV へのリンクを外し「第2章で作成」と明記。install_guide に Lahman を追加
+  - CSV は compile.sh の補完で docs/en にも置かれたまま(本文からはリンクしない。パッケージを入れられない読者の予備)
+- `.gitignore` に `_work/`(4ec286d)。秘書セッションが MobileTemp から MLB の試作(`_work/mlb_data/`)を移したときのもの。中身は試作で本番は `en/make_baseball.R`
+- ビルド: 8dce935・0c9800d・e37a14c。検算は毎回 画像13/CSV12/HTML23 で ok，エラー出力の件数は前回と同じ。**すべて push 済み**(最後は 4ec286d)
+
+### 踏んだ罠
+- **en の Stan 実行ファイルが消えて ch17 が「Model not compiled」で止まる**(10/26 に2回・10/27 に1回)。1つずつ `Rscript -e "cmdstanr::cmdstan_model('X.stan', force_recompile = TRUE)"` でコンパイルし `xattr -w com.dropbox.ignored 1 X` を付けると通る。原因は未特定
+- `cd en && quarto render chapter02.qmd` は1章だけでなく本全体を `en/` 直下に描き始める(output-dir の docs に入らない)。止めたら出たファイルを個別に消す。試すときも compile.sh を使う
+- 途中で止めた compile.sh は `en/docs`・`jp/docs` を残す(次の compile.sh が消すので放置でよい)
+
+### 次回への引き継ぎ
+- **anovakun の版番号(ch09:39・42)は 11/2 の ANOVA君 4.9.0 公開後に更新**
+- KDP で英語版を売る案(先生が検討中・作業の指示はまだ)。要るもの=図の日本語ラベル(en のコードの ch04・ch14・ch16・ch17 と画像5枚)，紙の本用の PDF の設定，版の管理。紙では URL の `source()` に頼る形になる

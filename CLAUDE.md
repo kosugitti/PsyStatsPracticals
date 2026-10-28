@@ -40,6 +40,13 @@
 - 引用文献は原則そのまま（日本語文献は原タイトル＋必要に応じて英訳併記）
 - インストールガイドのリンクは英語資源（CRAN, Posit, R for Data Science, Homebrew）に置換
 
+### 英語版の野球データ(2026-10-27〜)
+
+- **en は NPB ではなく MLB**。R パッケージ `Lahman`(14.0.0・CC BY-SA 3.0)の2011〜2016年(年俸表が2016年まで)。jp は従来の NPB のまま
+- **読者が自分で作る形**＝ch02 で `en/make_baseball.R` を1回 `source()` して `Baseball.csv`・`Baseball2016.csv`(欠測999の演習用)を書き出し，以後の章はそれを読む。紙の本向けにサイトの URL から `source()` する行も載せてある
+- 本の描画では ch02 の include: FALSE のチャンクが CSV を作り直す(出力は決定的)。CSV は git にも docs/en にも残している(本文からはリンクしない)
+- スクリプトを直したら ch03・ch04・ch14・ch17 の本文の数値と演習文(球団名・リーグ・年度)を確かめる
+
 ### Phase 計画
 
 - Phase 1: ch01–05（R基礎）— **完了（2026-05-17）**
@@ -131,7 +138,7 @@ ch15で参照していた画像のプレフィックスが過去の章番号 `14
 ## レンダリング・デプロイ
 
 - ローカル（日本語版のみ）: `cd jp && quarto render` で `jp/docs/` に出力
-- ローカル（英語版のみ）: `cd en && quarto render` で `en/docs/` に出力
+- ローカル（英語版のみ）: `cd en && quarto render` で `en/docs/` に出力。**`quarto render chapter02.qmd` のように1章だけ指定すると，本全体を `en/` 直下に描き始めてしまう**(2026-10-27)。試すときも compile.sh を使う
 - 統合ビルド: `./compile.sh` が日英両方をレンダリングし `jp/docs → docs/`，`en/docs → docs/en/` に配置した上で git push まで実行
 - GitHub Pages: `docs/` をpushすると自動反映（`main` ブランチの `/docs`）
 
@@ -165,6 +172,7 @@ ch15で参照していた画像のプレフィックスが過去の章番号 `14
 |---|---|
 | `COMPILE_PREPARE_ONLY=1` | 準備段階（対策A・B）まで実行して終了 |
 | `COMPILE_VERIFY_ONLY=1` | レンダリングせず，いまの `docs/en` を検算するだけ |
+| `COMPILE_NO_COMMIT=1` | ビルドと検算まで行い，コミットもプッシュもしない(ソースと成果物を分けてコミットしたいとき) |
 | `COMPILE_NO_PUSH=1` | コミットまで行い push しない |
 
 事故った時の復旧: `git checkout HEAD -- docs/en`
@@ -178,6 +186,7 @@ ch15で参照していた画像のプレフィックスが過去の章番号 `14
 |---|---|---|
 | `jp/myBiber.bib`, `en/myBiber.bib`, `jp/jpa2.*` | 絶対パスの symlink だと相手側で切れる。文献を見失ったまま静かに完走する | **相対パスで張る**（compile.sh が毎回張り直す） |
 | `jp/`, `en/` の Stan バイナリ | rpath がビルドしたマシンの絶対パスで焼き込まれ，相手側では「Fitting failed」 | 削除＋`com.dropbox.ignored` で同期対象から外す |
+| `en/` の Stan バイナリが消える | ch17 が「Model not compiled」で止まる(2026-10-26〜27 に3回・原因未特定) | 1つずつ `Rscript -e "cmdstanr::cmdstan_model('X.stan', force_recompile = TRUE)"` でコンパイルし `xattr -w com.dropbox.ignored 1 X`。それから compile.sh をやり直す |
 | Quarto のバージョン | 生成物が版ごとに変わり，ビルドするマシンによって差分が往復する | 両マシンで版を揃える。**2026-08-01時点で両機とも 1.10.18 で一致** |
 | cmdstan のバージョン | MCMCの数値が版差で動く。同期除外済みなので衝突は起きないが再現性には影響 | 揃えることが望ましい。**2026-08-01時点で両機とも 2.39.0 で一致** |
 
